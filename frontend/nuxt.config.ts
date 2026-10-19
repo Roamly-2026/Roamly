@@ -4,11 +4,7 @@ import process from 'node:process';
 export default defineNuxtConfig({
   compatibilityDate: '2023-10-10',
 
-  css: [
-    '~/assets/css/tokens.css',
-    '~/assets/css/utilities.css',
-    '~/assets/css/main.css'
-  ],
+  css: ['~/assets/css/tokens.css', '~/assets/css/utilities.css', '~/assets/css/main.css'],
 
   modules: [
     '@pinia/nuxt',

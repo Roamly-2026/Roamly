@@ -17,7 +17,7 @@
     <ProfileModals />
     <UserProfileModal />
     <EventsModals />
-    <PrivateDocumentsModals/>
+    <PrivateDocumentsModals />
     <GroupDocumentsModals />
   </div>
 </template>
