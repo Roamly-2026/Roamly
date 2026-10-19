@@ -274,7 +274,7 @@ import { getErrorMessage } from '~/utils/error.utils';
 import type { ApiError } from '~/types/apiError.type';
 
 defineProps<{
-  documentTypes: { label: string; value: string }[];
+  documentTypes?: { label: string; value: string }[];
 }>();
 
 const appConfig = useAppConfig();

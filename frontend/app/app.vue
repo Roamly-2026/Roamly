@@ -13,7 +13,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useNuxtApp } from '#imports';
-import LoadingScreen from '~/components/LoadingScreen.vue';
 
 const isAppLoading = ref(true);
 const nuxtApp = useNuxtApp();

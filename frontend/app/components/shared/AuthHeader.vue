@@ -20,7 +20,6 @@
 
 <script setup lang="ts">
 /* --- IMPORTS --- */
-import { useAuth } from '../composables/useAuth';
 import { useAppConfig } from '#imports';
 
 /* --- COMPOSABLES --- */

@@ -59,9 +59,6 @@ import { usePrivateDocumentsQuery, useDocumentSharesQuery } from '~/queries/file
 import { useGroupsQuery } from '~/queries/groups.query';
 import { useProfileStore } from '~/stores/profile.modals.store';
 import { useDocumentsStore } from '~/stores/documents.modals.store';
-import ProfileDesktop from '~/components/views/desktop/users/ProfileDesktop.vue';
-import ProfileMobile from '~/components/views/mobile/users/ProfileMobile.vue';
-import PrivateDocumentsModals from '~/components/modals/PrivateDocumentsModals.vue';
 import type { PrivateDocumentMetadata } from '~/types/files.type';
 import { useGetPrivateDocumentUrlMutation } from '~/queries/files.mutation';
 

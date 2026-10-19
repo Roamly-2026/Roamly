@@ -152,7 +152,7 @@
         <div class="max-h-[70vh] overflow-y-auto custom-scrollbar flex flex-col gap-4 p-1">
           <div class="h-[45vh] w-full shrink-0">
             <ClientOnly>
-              <MapEventMapSelector
+              <EventMapSelector
                 :is-open="isMapSelectorOpen"
                 :initial-location="
                   formState.latitude !== null &&
@@ -512,7 +512,7 @@
                 class="w-full h-48 rounded-lg overflow-hidden border border-gray-200 mt-1 relative z-0 shrink-0"
               >
                 <ClientOnly>
-                  <MapEventMapPreview
+                  <EventMapPreview
                     :latitude="eventsStore.previewEvent.latitude"
                     :longitude="eventsStore.previewEvent.longitude"
                   />

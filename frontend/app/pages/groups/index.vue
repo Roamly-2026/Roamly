@@ -8,7 +8,7 @@
         </div>
       </template>
 
-      <IndexMobile
+      <GroupsIndexMobile
         v-if="isMobile"
         :groups-list="groupsList"
         :is-loading="isLoading"
@@ -17,7 +17,7 @@
         @load-more="fetchNextPage"
       />
 
-      <IndexDesktop
+      <GroupsIndexDesktop
         v-else
         :groups-list="groupsList"
         :is-loading="isLoading"
@@ -36,8 +36,6 @@ import { useScreenSize } from '~/composables/useScreenSize';
 import { useProtectedPage } from '~/composables/useProtectedPage';
 import { useGroupsQuery } from '~/queries/groups.query';
 import type { GroupOutDto } from '~/types/groups.type';
-import IndexDesktop from '~/components/views/desktop/groups/IndexDesktop.vue';
-import IndexMobile from '~/components/views/mobile/groups/IndexMobile.vue';
 
 /* --- PAGE CONFIGURATION --- */
 definePageMeta({ layout: 'general', middleware: ['auth'] });

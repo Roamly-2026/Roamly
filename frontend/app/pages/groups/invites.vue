@@ -36,8 +36,6 @@ import { useScreenSize } from '~/composables/useScreenSize';
 import { useProtectedPage } from '~/composables/useProtectedPage';
 import { usePendingInvitesQuery } from '~/queries/groups.query';
 import type { GroupInvitesOutDto } from '~/types/groups.type';
-import InvitesDesktop from '~/components/views/desktop/groups/InvitesDesktop.vue';
-import InvitesMobile from '~/components/views/mobile/groups/InvitesMobile.vue';
 
 /* --- PAGE CONFIGURATION --- */
 definePageMeta({ layout: 'general', middleware: ['auth'] });

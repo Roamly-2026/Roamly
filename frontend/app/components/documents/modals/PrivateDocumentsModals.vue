@@ -417,7 +417,7 @@ import type { FileShareDto } from '~/types/files.type';
 import type { GroupOutDto } from '~/types/groups.type';
 
 const props = defineProps<{
-  privateDocumentTypes: { label: string; value: string }[];
+  privateDocumentTypes?: { label: string; value: string }[];
   sharedGroups?: FileShareDto[];
   unsharedGroups?: GroupOutDto[];
   allGroups?: GroupOutDto[];
