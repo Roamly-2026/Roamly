@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { EVENT_VISIBILITY } from '../../constants/events.constants';
+import { emailSchema } from '../shared/common.validation';
 
 export const createEventSchema = z
   .object({
@@ -42,7 +43,7 @@ export const createEventSchema = z
     address: z.string().trim().max(255).nullable().optional(),
 
     participant_emails: z
-      .array(z.email('One or more email addresses does not have a valid format!'))
+      .array(emailSchema)
       .refine((emails: string[]) => new Set(emails).size === emails.length, {
         message: 'The list contains duplicate email addresses!',
       })
@@ -186,7 +187,7 @@ export const groupEventUuidParamSchema = z.object({
 
 export const addNewParticipantsBodySchema = z.object({
   participant_emails: z
-    .array(z.email('One or more email addresses does not have a valid format!'))
+    .array(emailSchema)
     .min(1, 'You need to invite at least 1 participant!')
     .max(45, 'You can not invite more users than the maximum size of the group!')
     .refine((emails: string[]) => new Set(emails).size === emails.length, {

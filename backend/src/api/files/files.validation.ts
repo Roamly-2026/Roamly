@@ -69,7 +69,7 @@ export const groupDocumentDataSchema = z
   );
 
 export const groupMediaDataSchema = z.object({
-  description: z.string().max(512, 'Description can not be longer then 512 characters!').optional(),
+  description: z.string().max(255, 'Description can not be longer than 255 characters!').optional(),
 });
 
 export const groupDocumentUpdateSchema = z
