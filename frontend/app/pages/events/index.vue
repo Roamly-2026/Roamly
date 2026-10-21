@@ -95,9 +95,6 @@ import type { UiDay, UiEvent, EventCreatorDto } from '~/types/events.type';
 import { processAvailableDates, processAndSortEvents } from '~/utils/sort.utils';
 import { filterEventsByQuery } from '~/utils/filter.utils';
 
-import EventsDesktop from '~/components/views/desktop/events/EventsDesktop.vue';
-import EventsMobile from '~/components/views/mobile/events/EventsMobile.vue';
-
 definePageMeta({ layout: 'general', middleware: ['auth'] });
 
 const route = useRoute();

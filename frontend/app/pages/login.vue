@@ -32,8 +32,6 @@ import { useRouter } from 'vue-router';
 import { useScreenSize } from '~/composables/useScreenSize';
 import { useLoginUserMutation } from '~/queries/auth.mutation';
 import type { LoginFormState } from '~/utils/schemas/login.schema';
-import LoginDesktop from '~/components/views/desktop/auth/LoginDesktop.vue';
-import LoginMobile from '~/components/views/mobile/auth/LoginMobile.vue';
 
 /* --- PAGE CONFIGURATION --- */
 definePageMeta({ layout: 'auth', middleware: ['guest'] });
