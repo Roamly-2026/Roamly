@@ -31,8 +31,6 @@
 import { ref } from 'vue';
 import { definePageMeta } from '#imports';
 import { useScreenSize } from '~/composables/useScreenSize';
-import HomeDesktop from '~/components/views/desktop/home/HomeDesktop.vue';
-import HomeMobile from '~/components/views/mobile/home/HomeMobile.vue';
 
 /* --- PAGE CONFIGURATION --- */
 definePageMeta({

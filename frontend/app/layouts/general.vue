@@ -17,23 +17,14 @@
     <ProfileModals />
     <UserProfileModal />
     <EventsModals />
-    <DocumentModals
-      :document-types="GROUP_DOCUMENT_TYPES"
-      :private-document-types="PRIVATE_DOCUMENT_TYPES"
-    />
+    <PrivateDocumentsModals />
+    <GroupDocumentsModals />
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRoute, useAppConfig } from '#imports';
-import GroupModals from '~/components/modals/GroupModals.vue';
-import GroupInvitesModals from '~/components/modals/GroupInvitesModals.vue';
-import GroupMembersModals from '~/components/modals/GroupMembersModals.vue';
-import ProfileModals from '~/components/modals/ProfileModals.vue';
-import UserProfileModal from '~/components/modals/UserProfileModal.vue';
-import EventsModals from '~/components/modals/EventsModals.vue';
-import DocumentModals from '~/components/modals/GroupDocumentsModals.vue';
 
 const route = useRoute();
 const appConfig = useAppConfig();

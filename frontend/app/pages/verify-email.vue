@@ -44,8 +44,6 @@ import { ref, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useScreenSize } from '~/composables/useScreenSize';
 import { useVerifyEmailMutation, useResendVerificationMutation } from '~/queries/auth.mutation';
-import VerifyEmailDesktop from '~/components/views/desktop/auth/VerifyEmailDesktop.vue';
-import VerifyEmailMobile from '~/components/views/mobile/auth/VerifyEmailMobile.vue';
 
 /* --- PAGE CONFIGURATION ---
  * Uses the same auth layout and guest middleware as register/login.
