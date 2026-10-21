@@ -14,14 +14,14 @@
         class="flex-1 min-w-50"
         :ui="{ leading: 'pl-3' }"
       />
-      <UTooltip :text="UI_TEXT.tooltips.createGroup ?? UI_TEXT.fallback.createGroup">
+      <UTooltip :text="UI_TEXT.tooltips.createGroup">
         <UButton
           icon="i-heroicons-plus"
           variant="glassIconButton"
           @click="groupsStore.openCreateModal()"
         />
       </UTooltip>
-      <UTooltip :text="UI_TEXT.tooltips.viewInvites ?? UI_TEXT.fallback.invites">
+      <UTooltip :text="UI_TEXT.tooltips.viewInvites">
         <UButton icon="i-heroicons-envelope" variant="glassIconButton" to="/groups/invites" />
       </UTooltip>
     </div>
@@ -48,7 +48,7 @@
           >
             <!-- LEAVE BUTTON -->
             <div class="absolute top-4 left-4 z-10">
-              <UTooltip :text="UI_TEXT.tooltips.leaveGroup ?? UI_TEXT.groups.leaveGroup">
+              <UTooltip :text="UI_TEXT.tooltips.leaveGroup">
                 <UButton
                   icon="i-heroicons-arrow-right-on-rectangle"
                   variant="ghostDangerIconButton"
@@ -59,7 +59,7 @@
 
             <!-- DELETE BUTTON -->
             <div v-if="group.role.toLowerCase() === 'leader'" class="absolute top-4 right-4 z-10">
-              <UTooltip :text="UI_TEXT.tooltips.deleteGroup ?? UI_TEXT.groups.deleteGroup">
+              <UTooltip :text="UI_TEXT.tooltips.deleteGroup">
                 <UButton
                   icon="i-heroicons-trash"
                   variant="ghostDangerIconButton"

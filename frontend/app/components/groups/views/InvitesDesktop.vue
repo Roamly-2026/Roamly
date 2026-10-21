@@ -25,7 +25,7 @@
             @click="groupsStore.openJoinModal(group)"
           >
             <div class="absolute top-4 right-4 z-10">
-              <UTooltip :text="UI_TEXT.tooltips.declineInvite ?? UI_TEXT.common.decline">
+              <UTooltip :text="UI_TEXT.tooltips.declineInvite">
                 <UButton
                   icon="i-heroicons-x-mark"
                   variant="ghostDangerIconButton"
@@ -61,7 +61,7 @@
         <!-- INFINITE SCROLL TRIGGER -->
         <div ref="loadMoreTrigger" class="h-10 w-full flex items-center justify-center">
           <span v-if="isFetchingNextPage" class="text-dark-text/70 text-sm">
-            {{ UI_TEXT.groups.loadingGroups ?? UI_TEXT.fallback.loadingMore }}
+            {{ UI_TEXT.groups.loadingGroups }}
           </span>
         </div>
       </div>

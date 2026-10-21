@@ -21,7 +21,7 @@
         <div :class="[appConfig.layout.profileCard, 'p-4! gap-4! flex-row! items-center']">
           <!-- Delete Button -->
           <div class="absolute top-2 left-2 z-10">
-            <UTooltip :text="UI_TEXT.tooltips.deleteProfile ?? UI_TEXT.fallback.deleteProfile">
+            <UTooltip :text="UI_TEXT.tooltips.deleteProfile">
               <UButton
                 icon="i-heroicons-trash"
                 variant="glassIconButtonDanger"
@@ -49,10 +49,7 @@
                 class="absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t from-black/50 to-transparent pointer-events-none"
               ></div>
 
-              <UTooltip
-                :text="UI_TEXT.tooltips.viewPicture ?? UI_TEXT.fallback.viewPicture"
-                class="absolute bottom-0.5 left-0.5"
-              >
+              <UTooltip :text="UI_TEXT.tooltips.viewPicture" class="absolute bottom-0.5 left-0.5">
                 <UButton
                   icon="i-heroicons-eye"
                   variant="ghostDangerIconButton"
@@ -62,7 +59,7 @@
               </UTooltip>
 
               <UTooltip
-                :text="UI_TEXT.tooltips.uploadPicture ?? UI_TEXT.fallback.uploadPicture"
+                :text="UI_TEXT.tooltips.uploadPicture"
                 class="absolute bottom-0.5 right-0.5"
               >
                 <UButton
@@ -92,9 +89,7 @@
                 <p :class="appConfig.typography.profileValue" class="text-sm! truncate">
                   {{ currentUser.username }}
                 </p>
-                <UTooltip
-                  :text="UI_TEXT.tooltips.editUsername ?? UI_TEXT.profile.editUsernameTitle"
-                >
+                <UTooltip :text="UI_TEXT.tooltips.editUsername">
                   <UButton
                     icon="i-heroicons-pencil"
                     variant="ghostDangerIconButton"
@@ -116,7 +111,7 @@
                 <p :class="appConfig.typography.profileValue" class="text-xs! truncate">
                   {{ currentUser.email }}
                 </p>
-                <UTooltip :text="UI_TEXT.tooltips.editEmail ?? UI_TEXT.profile.editEmailTitle">
+                <UTooltip :text="UI_TEXT.tooltips.editEmail">
                   <UButton
                     icon="i-heroicons-pencil"
                     variant="ghostDangerIconButton"
@@ -136,7 +131,7 @@
                 class="justify-between flex-1 min-w-0 gap-1!"
               >
                 <p :class="appConfig.typography.profileValueLg" class="text-sm! mt-1">********</p>
-                <UTooltip :text="UI_TEXT.tooltips.editPassword ?? UI_TEXT.fallback.editPassword">
+                <UTooltip :text="UI_TEXT.tooltips.editPassword">
                   <UButton
                     icon="i-heroicons-pencil"
                     variant="ghostDangerIconButton"
@@ -176,7 +171,7 @@
             <div :class="appConfig.layout.actionGroup" class="justify-center mt-2">
               <!-- Filter popover -->
               <UPopover>
-                <UTooltip :text="UI_TEXT.tooltips.filterDocuments ?? UI_TEXT.common.filter">
+                <UTooltip :text="UI_TEXT.tooltips.filterDocuments">
                   <UButton
                     icon="i-heroicons-funnel"
                     :label="
@@ -224,7 +219,7 @@
               </UPopover>
 
               <!-- Upload button -->
-              <UTooltip :text="UI_TEXT.tooltips.uploadDocument ?? UI_TEXT.documents.uploadTitle">
+              <UTooltip :text="UI_TEXT.tooltips.uploadDocument">
                 <UButton
                   icon="i-heroicons-plus"
                   variant="glassIconButton"
@@ -267,7 +262,7 @@
                       @click.prevent="emit('share', doc)"
                     />
                   </UTooltip>
-                  <UTooltip :text="UI_TEXT.tooltips.editDocument ?? UI_TEXT.fallback.edit">
+                  <UTooltip :text="UI_TEXT.tooltips.editDocument">
                     <UButton
                       icon="i-heroicons-pencil"
                       variant="ghostDangerIconButton"
@@ -275,7 +270,7 @@
                       @click="emit('edit', doc)"
                     />
                   </UTooltip>
-                  <UTooltip :text="UI_TEXT.tooltips.deleteDocument ?? UI_TEXT.common.delete">
+                  <UTooltip :text="UI_TEXT.tooltips.deleteDocument">
                     <UButton
                       icon="i-heroicons-trash"
                       variant="ghostDangerIconButton"
@@ -290,7 +285,7 @@
               <div :class="appConfig.layout.documentCardImage" class="h-32!">
                 <UIcon name="i-heroicons-document-text" class="w-12 h-12 text-surface-500/50" />
                 <div class="absolute bottom-2 px-4 w-full flex justify-between">
-                  <UTooltip :text="UI_TEXT.tooltips.viewDocument ?? UI_TEXT.common.view">
+                  <UTooltip :text="UI_TEXT.tooltips.viewDocument">
                     <UButton
                       icon="i-heroicons-eye"
                       variant="ghostBrandIconButton"
@@ -298,7 +293,7 @@
                       @click.prevent="emit('view', doc)"
                     />
                   </UTooltip>
-                  <UTooltip :text="UI_TEXT.tooltips.downloadDocument ?? UI_TEXT.common.download">
+                  <UTooltip :text="UI_TEXT.tooltips.downloadDocument">
                     <UButton
                       icon="i-heroicons-arrow-down-tray"
                       variant="ghostBrandIconButton"

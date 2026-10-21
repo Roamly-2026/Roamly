@@ -26,9 +26,7 @@
         >
           <!-- Choose file -->
           <UFormField
-            :label="
-              UI_TEXT.documents.selectFileWithSpace + (UI_TEXT.documents.acceptedFormats ?? '')
-            "
+            :label="UI_TEXT.documents.selectFileWithSpace + UI_TEXT.documents.acceptedFormats"
             name="file"
           >
             <template #default="{ error: fieldError }">

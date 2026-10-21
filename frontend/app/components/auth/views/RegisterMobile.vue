@@ -5,7 +5,7 @@
       <!-- TITLE -->
       <div :class="appConfig.typography.authTitleWrapper">
         <h1 :class="appConfig.typography.authTitle">
-          {{ UI_TEXT.auth.registerHeading ?? UI_TEXT.auth.registerTitle }}
+          {{ UI_TEXT.auth.registerHeading }}
         </h1>
       </div>
 
@@ -38,7 +38,7 @@
           </template>
         </UFormField>
 
-        <UFormField name="phone_number" :label="UI_TEXT.auth.phoneLabel ?? UI_TEXT.fallback.phone">
+        <UFormField name="phone_number" :label="UI_TEXT.auth.phoneLabel">
           <template #default="{ error: fieldError }">
             <UInput
               v-model="form.phone_number"
@@ -60,10 +60,7 @@
           </template>
         </UFormField>
 
-        <UFormField
-          name="repeatPassword"
-          :label="UI_TEXT.auth.repeatPasswordLabel ?? UI_TEXT.fallback.repeatPassword"
-        >
+        <UFormField name="repeatPassword" :label="UI_TEXT.auth.repeatPasswordLabel">
           <template #default="{ error: fieldError }">
             <UInput
               v-model="form.repeatPassword"
@@ -78,7 +75,7 @@
           {{ getErrorMessage(error) }}
         </div>
         <div v-if="status === 'success'" :class="appConfig.typography.formStatusSuccess">
-          {{ UI_TEXT.auth.registerSuccess ?? UI_TEXT.fallback.success }}
+          {{ UI_TEXT.auth.registerSuccess }}
         </div>
 
         <!-- ACTIONS (Mobilos elrendezés: egymás alatt, teljes szélességgel) -->

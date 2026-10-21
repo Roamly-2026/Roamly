@@ -2,10 +2,10 @@
 <template>
   <div class="flex flex-col flex-1 gap-4 w-full p-4 pb-20">
     <div :class="appConfig.calendar.mobileTopActions">
-      <UTooltip :text="UI_TEXT.tooltips.members ?? UI_TEXT.common.members">
+      <UTooltip :text="UI_TEXT.tooltips.members">
         <UButton icon="i-heroicons-users" variant="glassIconButton" :to="membersRoute" />
       </UTooltip>
-      <UTooltip :text="UI_TEXT.tooltips.calendar ?? UI_TEXT.common.calendar">
+      <UTooltip :text="UI_TEXT.tooltips.calendar">
         <UButton
           icon="i-heroicons-calendar"
           variant="glassIconButton"
@@ -13,10 +13,10 @@
           :to="eventsRoute"
         />
       </UTooltip>
-      <UTooltip :text="UI_TEXT.tooltips.photos ?? UI_TEXT.common.photos">
+      <UTooltip :text="UI_TEXT.tooltips.photos">
         <UButton icon="i-heroicons-photo" variant="glassIconButton" :to="mediaRoute" />
       </UTooltip>
-      <UTooltip :text="UI_TEXT.tooltips.documents ?? UI_TEXT.common.documents">
+      <UTooltip :text="UI_TEXT.tooltips.documents">
         <UButton icon="i-heroicons-document-text" variant="glassIconButton" :to="documentsRoute" />
       </UTooltip>
     </div>

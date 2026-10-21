@@ -127,7 +127,7 @@
               />
               <UButton
                 type="submit"
-                :label="UI_TEXT.common.add ?? UI_TEXT.common.save"
+                :label="UI_TEXT.common.add"
                 variant="actionOkButton"
                 :loading="createEventMutation.isLoading.value"
               />

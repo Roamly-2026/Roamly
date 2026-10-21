@@ -5,17 +5,14 @@
     <div class="flex flex-col gap-6 w-full">
       <div :class="appConfig.layout.pageHeader">
         <div :class="appConfig.layout.actionGroup" class="flex-1 justify-start">
-          <UTooltip
-            v-if="isCurrentUserLeader"
-            :text="UI_TEXT.tooltips.deleteGroup ?? UI_TEXT.groups.deleteGroup"
-          >
+          <UTooltip v-if="isCurrentUserLeader" :text="UI_TEXT.tooltips.deleteGroup">
             <UButton
               icon="i-heroicons-trash"
               variant="glassIconButtonDanger"
               @click="emit('deleteGroup')"
             />
           </UTooltip>
-          <UTooltip :text="UI_TEXT.tooltips.leaveGroup ?? UI_TEXT.groups.leaveGroup">
+          <UTooltip :text="UI_TEXT.tooltips.leaveGroup">
             <UButton
               icon="i-heroicons-arrow-right-on-rectangle"
               variant="glassIconButtonDanger"
@@ -27,12 +24,9 @@
         <div class="flex flex-col items-center justify-center shrink-0">
           <div class="flex items-center gap-1.5">
             <h1 :class="appConfig.typography.pageTitle">
-              {{ (groupInfos?.name || UI_TEXT.common.loading) ?? UI_TEXT.common.loading }}
+              {{ groupInfos?.name || UI_TEXT.common.loading }}
             </h1>
-            <UTooltip
-              v-if="isCurrentUserLeader"
-              :text="UI_TEXT.tooltips.editGroup ?? UI_TEXT.fallback.editGroup"
-            >
+            <UTooltip v-if="isCurrentUserLeader" :text="UI_TEXT.tooltips.editGroup">
               <UButton
                 icon="i-heroicons-pencil"
                 variant="ghostBrandIconButton"
@@ -47,7 +41,7 @@
         </div>
 
         <div :class="appConfig.layout.actionGroup" class="flex-1 justify-end">
-          <UTooltip :text="UI_TEXT.tooltips.members ?? UI_TEXT.common.members">
+          <UTooltip :text="UI_TEXT.tooltips.members">
             <UButton
               icon="i-heroicons-users"
               variant="glassIconButton"
@@ -55,13 +49,13 @@
               :to="membersRoute"
             />
           </UTooltip>
-          <UTooltip :text="UI_TEXT.tooltips.calendar ?? UI_TEXT.common.calendar">
+          <UTooltip :text="UI_TEXT.tooltips.calendar">
             <UButton icon="i-heroicons-calendar" variant="glassIconButton" :to="eventsRoute" />
           </UTooltip>
-          <UTooltip :text="UI_TEXT.tooltips.photos ?? UI_TEXT.common.photos">
+          <UTooltip :text="UI_TEXT.tooltips.photos">
             <UButton icon="i-heroicons-photo" variant="glassIconButton" :to="mediaRoute" />
           </UTooltip>
-          <UTooltip :text="UI_TEXT.tooltips.documents ?? UI_TEXT.common.documents">
+          <UTooltip :text="UI_TEXT.tooltips.documents">
             <UButton
               icon="i-heroicons-document-text"
               variant="glassIconButton"
@@ -84,10 +78,7 @@
           />
         </div>
         <div class="flex items-center gap-2 shrink-0">
-          <UTooltip
-            v-if="isCurrentUserLeader"
-            :text="UI_TEXT.tooltips.inviteUser ?? UI_TEXT.fallback.inviteUser"
-          >
+          <UTooltip v-if="isCurrentUserLeader" :text="UI_TEXT.tooltips.inviteUser">
             <UButton
               icon="i-heroicons-user-plus"
               variant="glassIconButtonHighlight"
@@ -105,7 +96,7 @@
           {{ UI_TEXT.common.loading }}
         </div>
         <div v-else-if="error" :class="appConfig.typography.statusError">
-          {{ UI_TEXT.errors.fetch ?? UI_TEXT.fallback.fetchError }}
+          {{ UI_TEXT.errors.fetch }}
         </div>
 
         <div v-else-if="filteredMembers?.length" :class="[appConfig.layout.cardGrid]">
@@ -142,7 +133,7 @@
                   </div>
                   <UTooltip
                     v-if="isCurrentUserLeader && profile.roles.type.toLowerCase() === 'member'"
-                    :text="UI_TEXT.tooltips.promoteUser ?? UI_TEXT.groups.promote"
+                    :text="UI_TEXT.tooltips.promoteUser"
                     class="shrink-0"
                   >
                     <UButton
@@ -166,7 +157,7 @@
                   </p>
                   <UTooltip
                     v-if="isCurrentUserLeader && !isCurrentUser(profile.users.email)"
-                    :text="UI_TEXT.tooltips.removeUser ?? UI_TEXT.common.remove"
+                    :text="UI_TEXT.tooltips.removeUser"
                   >
                     <UButton
                       icon="i-heroicons-user-minus"

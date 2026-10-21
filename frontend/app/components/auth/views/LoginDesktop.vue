@@ -5,7 +5,7 @@
     <UCard variant="glass">
       <div :class="appConfig.typography.authTitleWrapper">
         <h1 :class="appConfig.typography.authTitle">
-          {{ UI_TEXT.auth.loginHeading ?? UI_TEXT.fallback.login }}
+          {{ UI_TEXT.auth.loginHeading }}
         </h1>
       </div>
 
@@ -42,7 +42,7 @@
           {{ getErrorMessage(error) }}
         </div>
         <div v-if="status === 'success'" :class="appConfig.typography.formStatusSuccess">
-          {{ UI_TEXT.auth.loginSuccess ?? UI_TEXT.fallback.success }}
+          {{ UI_TEXT.auth.loginSuccess }}
         </div>
 
         <!-- REGISTRATION PROMPT BUTTON -->
@@ -55,7 +55,7 @@
           />
           <UButton
             type="submit"
-            :label="UI_TEXT.auth.loginTitle ?? UI_TEXT.fallback.login"
+            :label="UI_TEXT.auth.loginTitle"
             variant="actionOkButton"
             :loading="isLoading"
           />
@@ -64,10 +64,10 @@
     </UCard>
 
     <div :class="appConfig.layout.singleButtonWrapper">
-      <UTooltip :text="UI_TEXT.tooltips.registerPrompt ?? UI_TEXT.auth.registerTitle">
+      <UTooltip :text="UI_TEXT.tooltips.registerPrompt">
         <UButton
           to="/register"
-          :label="UI_TEXT.auth.registerPrompt ?? UI_TEXT.fallback.createAccount"
+          :label="UI_TEXT.auth.registerPrompt"
           variant="actionAccentHeroButton"
           class="w-full"
         />

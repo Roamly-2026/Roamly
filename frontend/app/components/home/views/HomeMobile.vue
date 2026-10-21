@@ -49,11 +49,7 @@
             :class="activeCard === card.id ? 'text-white hover:text-white/80' : 'text-brand-500'"
             @click="emit('toggleCard', card.id)"
           >
-            {{
-              activeCard === card.id
-                ? (UI_TEXT.home.showLess ?? UI_TEXT.fallback.showLess)
-                : (UI_TEXT.home.learnMore ?? UI_TEXT.fallback.learnMore)
-            }}
+            {{ activeCard === card.id ? UI_TEXT.home.showLess : UI_TEXT.home.learnMore }}
           </UButton>
 
           <div
