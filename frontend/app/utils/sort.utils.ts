@@ -1,3 +1,4 @@
+import { UI_TEXT } from '~/locales/en';
 // frontend/app/utils/sort.utils.ts
 import type { EventOutDto, UiDay, UiEvent } from '~/types/events.type';
 
@@ -19,7 +20,13 @@ export const processAvailableDates = (dates: string[]): UiDay[] => {
     .sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime());
 
   return [
-    { id: 'ALL', date: 'All Events', dayOfWeek: 'All', dateObj: new Date(0), isExpired: false },
+    {
+      id: 'ALL',
+      date: UI_TEXT.events.allEvents,
+      dayOfWeek: UI_TEXT.common.all,
+      dateObj: new Date(0),
+      isExpired: false,
+    },
     ...processed,
   ];
 };

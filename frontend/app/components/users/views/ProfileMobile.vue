@@ -3,17 +3,17 @@
   <div :class="[appConfig.layout.pageWrapper, 'px-4 py-6']">
     <!-- PAGE TITLE -->
     <div>
-      <h1 :class="appConfig.typography.pageTitle">{{ CONST_PROFILE_HEADING }}</h1>
+      <h1 :class="appConfig.typography.pageTitle">{{ UI_TEXT.profile.heading }}</h1>
     </div>
 
     <!-- CONTENT SECTION -->
     <ClientOnly>
       <!-- LOADING / ERROR STATES -->
       <div v-if="isLoading" :class="appConfig.typography.statusLoading">
-        {{ CONST_LOADING_TEXT }}
+        {{ UI_TEXT.common.loading }}
       </div>
       <div v-else-if="error" :class="appConfig.typography.statusError">
-        {{ CONST_FETCH_ERROR_TEXT }}
+        {{ UI_TEXT.errors.fetch }}
       </div>
 
       <div v-else-if="currentUser" class="w-full relative flex flex-col">
@@ -21,7 +21,7 @@
         <div :class="[appConfig.layout.profileCard, 'p-4! gap-4! flex-row! items-center']">
           <!-- Delete Button -->
           <div class="absolute top-2 left-2 z-10">
-            <UTooltip :text="CONST_TOOLTIP_DELETE_PROFILE ?? 'Delete Profile'">
+            <UTooltip :text="UI_TEXT.tooltips.deleteProfile ?? UI_TEXT.fallback.deleteProfile">
               <UButton
                 icon="i-heroicons-trash"
                 variant="glassIconButtonDanger"
@@ -40,7 +40,7 @@
               <img
                 v-if="currentUser.profile_image_url"
                 :src="currentUser.profile_image_url"
-                alt="Profile"
+                :alt="UI_TEXT.common.profile"
                 class="w-full h-full object-cover"
               />
               <UIcon v-else name="i-heroicons-user" class="w-10 h-10 text-surface-500" />
@@ -50,7 +50,7 @@
               ></div>
 
               <UTooltip
-                :text="CONST_TOOLTIP_VIEW_PICTURE ?? 'View Picture'"
+                :text="UI_TEXT.tooltips.viewPicture ?? UI_TEXT.fallback.viewPicture"
                 class="absolute bottom-0.5 left-0.5"
               >
                 <UButton
@@ -62,7 +62,7 @@
               </UTooltip>
 
               <UTooltip
-                :text="CONST_TOOLTIP_UPLOAD_PICTURE ?? 'Upload Picture'"
+                :text="UI_TEXT.tooltips.uploadPicture ?? UI_TEXT.fallback.uploadPicture"
                 class="absolute bottom-0.5 right-0.5"
               >
                 <UButton
@@ -83,7 +83,7 @@
             <!-- Username -->
             <div :class="appConfig.layout.profileDetailRow" class="gap-2!">
               <p :class="appConfig.typography.profileLabel" class="w-16! text-[10px]!">
-                {{ CONST_USERNAME_LABEL }}
+                {{ UI_TEXT.auth.usernameLabel }}
               </p>
               <div
                 :class="appConfig.layout.actionGroup"
@@ -92,7 +92,9 @@
                 <p :class="appConfig.typography.profileValue" class="text-sm! truncate">
                   {{ currentUser.username }}
                 </p>
-                <UTooltip :text="CONST_TOOLTIP_EDIT_USERNAME ?? 'Edit Username'">
+                <UTooltip
+                  :text="UI_TEXT.tooltips.editUsername ?? UI_TEXT.profile.editUsernameTitle"
+                >
                   <UButton
                     icon="i-heroicons-pencil"
                     variant="ghostDangerIconButton"
@@ -105,7 +107,7 @@
             <!-- Email -->
             <div :class="appConfig.layout.profileDetailRow" class="gap-2!">
               <p :class="appConfig.typography.profileLabel" class="w-16! text-[10px]!">
-                {{ CONST_EMAIL_LABEL }}
+                {{ UI_TEXT.auth.emailLabel }}
               </p>
               <div
                 :class="appConfig.layout.actionGroup"
@@ -114,7 +116,7 @@
                 <p :class="appConfig.typography.profileValue" class="text-xs! truncate">
                   {{ currentUser.email }}
                 </p>
-                <UTooltip :text="CONST_TOOLTIP_EDIT_EMAIL ?? 'Edit Email'">
+                <UTooltip :text="UI_TEXT.tooltips.editEmail ?? UI_TEXT.profile.editEmailTitle">
                   <UButton
                     icon="i-heroicons-pencil"
                     variant="ghostDangerIconButton"
@@ -127,14 +129,14 @@
             <!-- Password -->
             <div :class="appConfig.layout.profileDetailRow" class="gap-2!">
               <p :class="appConfig.typography.profileLabel" class="w-16! text-[10px]!">
-                {{ CONST_PASSWORD_LABEL }}
+                {{ UI_TEXT.auth.passwordLabel }}
               </p>
               <div
                 :class="appConfig.layout.actionGroup"
                 class="justify-between flex-1 min-w-0 gap-1!"
               >
                 <p :class="appConfig.typography.profileValueLg" class="text-sm! mt-1">********</p>
-                <UTooltip :text="CONST_TOOLTIP_EDIT_PASSWORD ?? 'Edit Password'">
+                <UTooltip :text="UI_TEXT.tooltips.editPassword ?? UI_TEXT.fallback.editPassword">
                   <UButton
                     icon="i-heroicons-pencil"
                     variant="ghostDangerIconButton"
@@ -147,7 +149,7 @@
             <!-- Registered -->
             <div :class="appConfig.layout.profileDetailRow" class="gap-2!">
               <p :class="appConfig.typography.profileLabel" class="w-16! text-[10px]!">
-                {{ CONST_REGISTERED_LABEL }}
+                {{ UI_TEXT.profile.registeredLabel }}
               </p>
               <div
                 :class="appConfig.layout.actionGroup"
@@ -157,7 +159,7 @@
                   {{
                     currentUser.created_at
                       ? new Date(currentUser.created_at).toLocaleDateString()
-                      : 'N/A'
+                      : UI_TEXT.common.notAvailable
                   }}
                 </p>
               </div>
@@ -169,17 +171,17 @@
         <div :class="appConfig.layout.sectionWrapper" class="mt-6">
           <div :class="appConfig.layout.pageHeader" class="mb-4">
             <h2 :class="appConfig.typography.sectionTitleTransparent" class="text-xl">
-              {{ CONST_DOCUMENTS_HEADING }}
+              {{ UI_TEXT.profile.documentsHeading }}
             </h2>
             <div :class="appConfig.layout.actionGroup" class="justify-center mt-2">
               <!-- Filter popover -->
               <UPopover>
-                <UTooltip :text="CONST_TOOLTIP_FILTER_DOCS ?? 'Filter'">
+                <UTooltip :text="UI_TEXT.tooltips.filterDocuments ?? UI_TEXT.common.filter">
                   <UButton
                     icon="i-heroicons-funnel"
                     :label="
                       filterType === 'ALL'
-                        ? (CONST_FILTER_LABEL ?? 'Filter')
+                        ? UI_TEXT.common.filter
                         : privateDocumentTypes.find((d) => d.value === filterType)?.label
                     "
                     variant="glassButton"
@@ -198,7 +200,7 @@
                         :name="filterType === 'ALL' ? 'i-heroicons-check' : 'i-heroicons-funnel'"
                         :class="appConfig.ui.dropdownMenu.slots.itemLeadingIcon"
                       />
-                      <span>All Types</span>
+                      <span>{{ UI_TEXT.common.allTypes }}</span>
                     </button>
                     <button
                       v-for="type in privateDocumentTypes"
@@ -222,7 +224,7 @@
               </UPopover>
 
               <!-- Upload button -->
-              <UTooltip :text="CONST_TOOLTIP_UPLOAD_DOC ?? 'Upload Document'">
+              <UTooltip :text="UI_TEXT.tooltips.uploadDocument ?? UI_TEXT.documents.uploadTitle">
                 <UButton
                   icon="i-heroicons-plus"
                   variant="glassIconButton"
@@ -234,7 +236,7 @@
 
           <!-- Loading state -->
           <div v-if="isLoadingDocuments" :class="appConfig.typography.statusLoading">
-            Loading documents...
+            {{ ' ' + UI_TEXT.documents.loading + ' ' }}
           </div>
 
           <!-- Document List (vertical on mobile) -->
@@ -249,7 +251,7 @@
               <div :class="appConfig.layout.documentCardHeader">
                 <p class="font-bold truncate pr-2 shadow-sm text-sm">{{ doc.file_name }}</p>
                 <div class="flex items-center gap-1">
-                  <UTooltip text="Access Details">
+                  <UTooltip :text="UI_TEXT.profile.accessDetails">
                     <UButton
                       icon="i-heroicons-key-solid"
                       variant="ghostBrandIconButton"
@@ -257,7 +259,7 @@
                       @click="emit('access', doc)"
                     />
                   </UTooltip>
-                  <UTooltip text="Share">
+                  <UTooltip :text="UI_TEXT.profile.share">
                     <UButton
                       icon="i-heroicons-share"
                       variant="ghostBrandIconButton"
@@ -265,7 +267,7 @@
                       @click.prevent="emit('share', doc)"
                     />
                   </UTooltip>
-                  <UTooltip :text="CONST_TOOLTIP_EDIT_DOC ?? 'Edit'">
+                  <UTooltip :text="UI_TEXT.tooltips.editDocument ?? UI_TEXT.fallback.edit">
                     <UButton
                       icon="i-heroicons-pencil"
                       variant="ghostDangerIconButton"
@@ -273,7 +275,7 @@
                       @click="emit('edit', doc)"
                     />
                   </UTooltip>
-                  <UTooltip :text="CONST_TOOLTIP_DELETE_DOC ?? 'Delete'">
+                  <UTooltip :text="UI_TEXT.tooltips.deleteDocument ?? UI_TEXT.common.delete">
                     <UButton
                       icon="i-heroicons-trash"
                       variant="ghostDangerIconButton"
@@ -288,7 +290,7 @@
               <div :class="appConfig.layout.documentCardImage" class="h-32!">
                 <UIcon name="i-heroicons-document-text" class="w-12 h-12 text-surface-500/50" />
                 <div class="absolute bottom-2 px-4 w-full flex justify-between">
-                  <UTooltip :text="CONST_TOOLTIP_VIEW_DOC ?? 'View'">
+                  <UTooltip :text="UI_TEXT.tooltips.viewDocument ?? UI_TEXT.common.view">
                     <UButton
                       icon="i-heroicons-eye"
                       variant="ghostBrandIconButton"
@@ -296,7 +298,7 @@
                       @click.prevent="emit('view', doc)"
                     />
                   </UTooltip>
-                  <UTooltip :text="CONST_TOOLTIP_DOWNLOAD_DOC ?? 'Download'">
+                  <UTooltip :text="UI_TEXT.tooltips.downloadDocument ?? UI_TEXT.common.download">
                     <UButton
                       icon="i-heroicons-arrow-down-tray"
                       variant="ghostBrandIconButton"
@@ -310,15 +312,15 @@
               <!-- Metadata -->
               <div :class="appConfig.layout.documentCardMeta">
                 <p>
-                  Uploaded at:
-                  <span class="font-bold text-dark-text">
+                  {{ ' ' + UI_TEXT.common.uploadedAt + ' '
+                  }}<span class="font-bold text-dark-text">
                     {{ new Date(doc.created_at).toLocaleDateString() }}
                   </span>
                 </p>
                 <p>
-                  Document type:
-                  <span class="font-bold text-dark-text">
-                    {{ doc.documents?.document_type ?? 'N/A' }}
+                  {{ ' ' + UI_TEXT.documents.documentType + ' '
+                  }}<span class="font-bold text-dark-text">
+                    {{ doc.documents?.document_type ?? UI_TEXT.common.notAvailable }}
                   </span>
                 </p>
 
@@ -326,38 +328,39 @@
 
                 <div :class="appConfig.layout.flexBetween">
                   <p>
-                    File type:
-                    <span class="font-bold text-dark-text">
-                      {{ doc.mime_type?.split('/')[1] ?? 'Unknown' }}
+                    {{ ' ' + UI_TEXT.documents.fileType + ' '
+                    }}<span class="font-bold text-dark-text">
+                      {{ doc.mime_type?.split('/')[1] ?? UI_TEXT.common.unknown }}
                     </span>
                   </p>
                   <p>
-                    File size:
-                    <span class="font-bold text-dark-text">
-                      {{ (doc.file_size / (1024 * 1024)).toFixed(2) }} MB
-                    </span>
+                    {{ ' ' + UI_TEXT.documents.fileSize + ' '
+                    }}<span class="font-bold text-dark-text">
+                      {{ (doc.file_size / (1024 * 1024)).toFixed(2)
+                      }}{{ ' ' + UI_TEXT.common.megabytes + ' ' }}</span
+                    >
                   </p>
                 </div>
 
                 <div :class="appConfig.layout.divider"></div>
 
                 <p>
-                  Issued:
-                  <span class="font-bold text-dark-text">
+                  {{ ' ' + UI_TEXT.documents.issued + ' '
+                  }}<span class="font-bold text-dark-text">
                     {{
                       doc.documents?.issue_date
                         ? new Date(doc.documents.issue_date).toLocaleDateString()
-                        : 'N/A'
+                        : UI_TEXT.common.notAvailable
                     }}
                   </span>
                 </p>
                 <p>
-                  Ends:
-                  <span class="font-bold text-dark-text">
+                  {{ ' ' + UI_TEXT.documents.ends + ' '
+                  }}<span class="font-bold text-dark-text">
                     {{
                       doc.documents?.expiry_date
                         ? new Date(doc.documents.expiry_date).toLocaleDateString()
-                        : 'N/A'
+                        : UI_TEXT.common.notAvailable
                     }}
                   </span>
                 </p>
@@ -369,8 +372,8 @@
           <div v-else :class="appConfig.typography.statusLoading">
             {{
               filterType !== 'ALL'
-                ? 'No documents match the selected filter.'
-                : 'No private documents yet. Upload one to get started.'
+                ? UI_TEXT.profile.noMatchingDocuments
+                : UI_TEXT.profile.noPrivateDocuments
             }}
           </div>
         </div>

@@ -4,13 +4,13 @@
     <!-- HERO SECTION -->
     <section id="home" :class="appConfig.layout.homeHeroSection" class="mt-4">
       <UButton
-        :label="CONST_GET_STARTED ?? 'Get Started'"
+        :label="UI_TEXT.home.getStarted"
         to="/groups"
         variant="actionHeroButton"
         class="mb-8"
       />
       <p :class="appConfig.typography.homeHeroText">
-        {{ CONST_HOME_DESCRIPTION }}
+        {{ UI_TEXT.home.description }}
       </p>
     </section>
 
@@ -51,8 +51,8 @@
           >
             {{
               activeCard === card.id
-                ? (CONST_SHOW_LESS ?? 'Show Less')
-                : (CONST_LEARN_MORE ?? 'Learn More')
+                ? (UI_TEXT.home.showLess ?? UI_TEXT.fallback.showLess)
+                : (UI_TEXT.home.learnMore ?? UI_TEXT.fallback.learnMore)
             }}
           </UButton>
 
@@ -72,18 +72,18 @@
 
     <!-- ABOUT SECTION -->
     <section id="about" :class="appConfig.layout.homeContentSection">
-      <h2 :class="appConfig.typography.homeSectionTitle">{{ CONST_ABOUT_HERO }}</h2>
-      <p :class="appConfig.typography.homeSectionText">{{ CONST_ABOUT_DESCRIPTION }}</p>
+      <h2 :class="appConfig.typography.homeSectionTitle">{{ UI_TEXT.home.aboutHeading }}</h2>
+      <p :class="appConfig.typography.homeSectionText">{{ UI_TEXT.home.aboutDescription }}</p>
     </section>
 
     <!-- SUPPORT SECTION -->
     <section id="support" :class="appConfig.layout.homeContentSection" class="mb-12">
-      <h2 :class="appConfig.typography.homeSectionTitle">{{ CONST_SUPPORT_HERO }}</h2>
-      <p :class="appConfig.typography.homeSectionText">{{ CONST_SUPPORT_DESCRIPTION }}</p>
+      <h2 :class="appConfig.typography.homeSectionTitle">{{ UI_TEXT.home.supportHeading }}</h2>
+      <p :class="appConfig.typography.homeSectionText">{{ UI_TEXT.home.supportDescription }}</p>
     </section>
 
     <section id="contact" :class="appConfig.layout.homeContentSection" class="mb-12">
-      <h2 :class="appConfig.typography.homeSectionTitle">Contact Us</h2>
+      <h2 :class="appConfig.typography.homeSectionTitle">{{ UI_TEXT.home.contactUs }}</h2>
       <div class="flex gap-4 mt-6 items-center justify-between">
         <UButton
           v-for="link in contactLinks"

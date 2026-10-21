@@ -13,7 +13,7 @@
       <template #default><div class="hidden"></div></template>
       <template #close><div class="hidden"></div></template>
       <template #header>
-        <h3 class="text-xl font-bold text-dark-text">Upload Private Document</h3>
+        <h3 class="text-xl font-bold text-dark-text">{{ UI_TEXT.documents.uploadPrivate }}</h3>
       </template>
       <template #body>
         <UForm
@@ -23,7 +23,7 @@
           @submit="handleUpload"
         >
           <!-- Choose file -->
-          <UFormField label="Select File" name="file">
+          <UFormField :label="UI_TEXT.documents.selectFile" name="file">
             <template #default="{ error: fieldError }">
               <UInput
                 type="file"
@@ -35,14 +35,14 @@
           </UFormField>
 
           <!-- Document type -->
-          <UFormField label="Document Type" name="documentType">
+          <UFormField :label="UI_TEXT.documents.typeLabel" name="documentType">
             <template #default>
               <USelect
                 v-model="uploadForm.documentType"
                 :items="privateDocumentTypes"
                 label-key="label"
                 value-key="value"
-                placeholder="Select a document type"
+                :placeholder="UI_TEXT.documents.selectType"
                 :popper="{ strategy: 'fixed', placement: 'bottom-start' }"
                 :ui="{ content: 'z-[10100]' }"
               />
@@ -51,7 +51,7 @@
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <!-- Issue date -->
-            <UFormField label="Issue Date (Optional)" name="issueDate">
+            <UFormField :label="UI_TEXT.documents.issueDate" name="issueDate">
               <template #default="{ error: fieldError }">
                 <UInput
                   v-model="uploadForm.issueDate"
@@ -62,7 +62,7 @@
             </UFormField>
 
             <!-- Expiry date -->
-            <UFormField label="Expiry Date (Optional)" name="expiryDate">
+            <UFormField :label="UI_TEXT.documents.expiryDate" name="expiryDate">
               <template #default="{ error: fieldError }">
                 <UInput
                   v-model="uploadForm.expiryDate"
@@ -81,14 +81,14 @@
           <!-- Buttons -->
           <div :class="[appConfig.layout.flexBetween, 'mt-4']">
             <UButton
-              label="Cancel"
+              :label="UI_TEXT.common.cancel"
               variant="actionCancelButton"
               :class="appConfig.typography.modalActionBtnCancel"
               @click="closeUploadModal"
             />
             <UButton
               type="submit"
-              label="Upload"
+              :label="UI_TEXT.common.upload"
               variant="actionOkButton"
               :class="appConfig.typography.modalActionBtnOk"
               :loading="uploadMutation.isLoading.value"
@@ -111,7 +111,7 @@
       <template #default><div class="hidden"></div></template>
       <template #close><div class="hidden"></div></template>
       <template #header>
-        <h3 class="text-xl font-bold text-dark-text">Update Private Document</h3>
+        <h3 class="text-xl font-bold text-dark-text">{{ UI_TEXT.documents.updatePrivate }}</h3>
       </template>
       <template #body>
         <UForm
@@ -130,7 +130,7 @@
           </div>
 
           <!-- Replace file (optional) -->
-          <UFormField label="Replace File (Optional)" name="file">
+          <UFormField :label="UI_TEXT.documents.replaceFile" name="file">
             <template #default="{ error: fieldError }">
               <UInput
                 type="file"
@@ -142,14 +142,14 @@
           </UFormField>
 
           <!-- Document type -->
-          <UFormField label="Document Type" name="documentType">
+          <UFormField :label="UI_TEXT.documents.typeLabel" name="documentType">
             <template #default>
               <USelect
                 v-model="updateForm.documentType"
                 :items="privateDocumentTypes"
                 label-key="label"
                 value-key="value"
-                placeholder="Select a document type"
+                :placeholder="UI_TEXT.documents.selectType"
                 :popper="{ strategy: 'fixed', placement: 'bottom-start' }"
                 :ui="{ content: 'z-[10100]' }"
               />
@@ -158,7 +158,7 @@
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <!-- Issue date -->
-            <UFormField label="Issue Date (Optional)" name="issueDate">
+            <UFormField :label="UI_TEXT.documents.issueDate" name="issueDate">
               <template #default="{ error: fieldError }">
                 <UInput
                   v-model="updateForm.issueDate"
@@ -169,7 +169,7 @@
             </UFormField>
 
             <!-- Expiry date -->
-            <UFormField label="Expiry Date (Optional)" name="expiryDate">
+            <UFormField :label="UI_TEXT.documents.expiryDate" name="expiryDate">
               <template #default="{ error: fieldError }">
                 <UInput
                   v-model="updateForm.expiryDate"
@@ -188,14 +188,14 @@
           <!-- Buttons -->
           <div :class="[appConfig.layout.flexBetween, 'mt-4']">
             <UButton
-              label="Cancel"
+              :label="UI_TEXT.common.cancel"
               variant="actionCancelButton"
               :class="appConfig.typography.modalActionBtnCancel"
               @click="closeUpdateModal"
             />
             <UButton
               type="submit"
-              label="Save"
+              :label="UI_TEXT.common.save"
               variant="actionOkButton"
               :class="appConfig.typography.modalActionBtnOk"
               :loading="isUpdating"
@@ -217,15 +217,15 @@
       <template #default><div class="hidden"></div></template>
       <template #close><div class="hidden"></div></template>
       <template #header>
-        <h3 class="text-xl font-bold text-dark-text">Delete Document</h3>
+        <h3 class="text-xl font-bold text-dark-text">{{ UI_TEXT.documents.deleteTitle }}</h3>
       </template>
       <template #body>
         <p :class="appConfig.typography.modalText">
-          Are you sure you want to delete
-          <span :class="appConfig.typography.modalInlineHighlight">{{
+          {{ ' ' + UI_TEXT.documents.deleteBeforeName + ' '
+          }}<span :class="appConfig.typography.modalInlineHighlight">{{
             privateFileToDelete?.fileName
           }}</span
-          >? This action cannot be undone.
+          >{{ UI_TEXT.documents.deleteAfterName + ' ' }}
         </p>
 
         <!-- Delete Error Display -->
@@ -236,13 +236,13 @@
       <template #footer>
         <div :class="appConfig.layout.flexBetween">
           <UButton
-            label="Cancel"
+            :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             :class="appConfig.typography.modalActionBtnCancel"
             @click="documentsStore.closePrivateDeleteModal()"
           />
           <UButton
-            label="Delete"
+            :label="UI_TEXT.common.delete"
             variant="actionOkButton"
             class="bg-error-500 hover:bg-error-600 text-white"
             :class="appConfig.typography.modalActionBtnOk"
@@ -265,7 +265,7 @@
       <template #default><div class="hidden"></div></template>
       <template #close><div class="hidden"></div></template>
       <template #header>
-        <h3 class="text-xl font-bold text-dark-text">Share Document</h3>
+        <h3 class="text-xl font-bold text-dark-text">{{ UI_TEXT.documents.share }}</h3>
       </template>
       <template #body>
         <div :class="appConfig.calendar.participantModalScroll">
@@ -294,7 +294,7 @@
                 </div>
               </div>
               <UTooltip
-                text="Share with group"
+                :text="UI_TEXT.documents.shareWithGroup"
                 :ui="{ content: 'z-[9999]' }"
                 :popper="{ placement: 'top', strategy: 'fixed' }"
               >
@@ -309,14 +309,14 @@
             </div>
           </div>
           <div v-if="!unsharedGroups?.length" class="text-sm font-medium text-dark-text/50 p-4">
-            No available groups to share with.
+            {{ ' ' + UI_TEXT.documents.noAvailableGroups + ' ' }}
           </div>
         </div>
       </template>
       <template #footer>
         <div class="flex justify-end w-full">
           <UButton
-            label="Close"
+            :label="UI_TEXT.common.close"
             variant="actionOkButton"
             :class="appConfig.typography.modalActionBtnCancel"
             @click="documentsStore.closePrivateShareModal()"
@@ -337,7 +337,7 @@
       <template #default><div class="hidden"></div></template>
       <template #close><div class="hidden"></div></template>
       <template #header>
-        <h3 class="text-xl font-bold text-dark-text">Document Access</h3>
+        <h3 class="text-xl font-bold text-dark-text">{{ UI_TEXT.documents.access }}</h3>
       </template>
       <template #body>
         <div :class="appConfig.calendar.participantModalScroll">
@@ -360,12 +360,13 @@
                     <h4 :class="appConfig.calendar.participantCardName">{{ share.groups.name }}</h4>
                   </div>
                   <p :class="appConfig.calendar.participantCardEmail">
-                    Shared at: {{ new Date(share.shared_at).toLocaleDateString() }}
+                    {{ ' ' + UI_TEXT.documents.sharedAt + ' '
+                    }}{{ new Date(share.shared_at).toLocaleDateString() }}
                   </p>
                 </div>
               </div>
               <UTooltip
-                text="Revoke Access"
+                :text="UI_TEXT.documents.revokeAccess"
                 :ui="{ content: 'z-[9999]' }"
                 :popper="{ placement: 'top', strategy: 'fixed' }"
               >
@@ -379,14 +380,14 @@
             </div>
           </div>
           <div v-if="!sharedGroups?.length" class="text-sm font-medium text-dark-text/50 p-4">
-            This document is not shared with any groups.
+            {{ ' ' + UI_TEXT.documents.notShared + ' ' }}
           </div>
         </div>
       </template>
       <template #footer>
         <div class="flex justify-end w-full">
           <UButton
-            label="Close"
+            :label="UI_TEXT.common.close"
             variant="actionOkButton"
             :class="appConfig.typography.modalActionBtnCancel"
             @click="documentsStore.closePrivateAccessModal()"
@@ -442,9 +443,9 @@ const privateFileToViewAccess = computed(() => documentsStore.privateFileToViewA
 
 const uploadDocumentSchema = z.object({
   file: z.any().refine((val) => val instanceof File, {
-    message: 'Please select a file to upload.',
+    message: UI_TEXT.validation.selectFile,
   }),
-  documentType: z.string().min(1, 'Please select a document type.'),
+  documentType: z.string().min(1, UI_TEXT.validation.selectDocumentType),
   issueDate: z.string().optional(),
   expiryDate: z.string().optional(),
 });
@@ -467,7 +468,7 @@ const onFileChange = (e: Event) => {
 const uploadMutation = useUploadPrivateDocumentMutation({
   onSuccess: () => {
     uploadError.value = null;
-    toast.add({ title: 'Success', description: 'Document uploaded successfully!' });
+    toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.documents.uploaded });
     closeUploadModal();
   },
   onError: (err: Error) => {
@@ -502,7 +503,7 @@ const handleUpload = (event: FormSubmitEvent<UploadFormState>) => {
 
 const updateDocumentSchema = z.object({
   file: z.any().optional(),
-  documentType: z.string().min(1, 'Please select a document type.'),
+  documentType: z.string().min(1, UI_TEXT.validation.selectDocumentType),
   issueDate: z.string().optional(),
   expiryDate: z.string().optional(),
 });
@@ -559,7 +560,7 @@ const handleUpdate = async (event: FormSubmitEvent<UpdateFormState>) => {
 
     await filesService.replacePrivateDocument(fileToUpdate.value.fileId, formData);
     queryCache.invalidateQueries({ key: ['private-documents'] });
-    toast.add({ title: 'Success', description: 'Document updated successfully!' });
+    toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.documents.updated });
     closeUpdateModal();
   } catch (err) {
     updateError.value = err as Error;
@@ -578,7 +579,7 @@ const deleteMutation = useDeletePrivateDocumentMutation({
   onSuccess: () => {
     deleteError.value = null;
     documentsStore.closePrivateDeleteModal();
-    toast.add({ title: 'Success', description: 'Document deleted successfully!' });
+    toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.documents.deleted });
   },
   onError: (err: Error) => {
     deleteError.value = err;
@@ -596,10 +597,10 @@ const confirmDelete = () => {
 // -------------------------
 const shareMutation = useShareDocumentMutation({
   onSuccess: () => {
-    toast.add({ title: 'Success', description: 'Document shared successfully!' });
+    toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.documents.shared });
   },
   onError: (err: Error) => {
-    toast.add({ title: 'Error', description: err.message });
+    toast.add({ title: UI_TEXT.common.error, description: err.message });
   },
 });
 
@@ -615,10 +616,10 @@ const handleShareDocument = (groupUuid: string) => {
 
 const revokeMutation = useDeleteSharingMutation({
   onSuccess: () => {
-    toast.add({ title: 'Success', description: 'Access revoked successfully!' });
+    toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.documents.accessRevoked });
   },
   onError: (err: Error) => {
-    toast.add({ title: 'Error', description: err.message });
+    toast.add({ title: UI_TEXT.common.error, description: err.message });
   },
 });
 
@@ -629,7 +630,7 @@ const handleRevokeAccess = (groupName: string) => {
   const groupUuid = props.allGroups?.find((g) => g.name === groupName)?.uuid;
 
   if (!groupUuid) {
-    toast.add({ title: 'Error', description: 'Group UUID not found.' });
+    toast.add({ title: UI_TEXT.common.error, description: UI_TEXT.errors.groupUuidNotFound });
     return;
   }
 

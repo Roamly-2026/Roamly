@@ -1,3 +1,4 @@
+import { UI_TEXT } from '~/locales/en';
 // frontend/app/schemas/events.schema.ts
 import { z } from 'zod';
 
@@ -6,28 +7,24 @@ export const createEventSchema = z
     title: z
       .string()
       .trim()
-      .min(1, 'Title must be at least 1 character long!')
-      .max(64, 'Title must be shorter than 64 characters long!'),
-    description: z
-      .string()
-      .trim()
-      .max(255, 'Description can not be longer than 255 characters!')
-      .optional(),
-    start_time: z.string().min(1, 'Start time is required!'),
+      .min(1, UI_TEXT.validation.eventTitleMin)
+      .max(64, UI_TEXT.validation.eventTitleMax),
+    description: z.string().trim().max(255, UI_TEXT.validation.eventDescriptionMax).optional(),
+    start_time: z.string().min(1, UI_TEXT.validation.startTimeRequired),
     end_time: z.string().optional(),
     is_private: z.boolean(),
 
     // map
     latitude: z
       .number()
-      .min(-90, 'Latitude must be between -90 and 90')
-      .max(90, 'Latitude must be between -90 and 90')
+      .min(-90, UI_TEXT.validation.latitude)
+      .max(90, UI_TEXT.validation.latitude)
       .nullable()
       .optional(),
     longitude: z
       .number()
-      .min(-180, 'Longitude must be between -180 and 180')
-      .max(180, 'Longitude must be between -180 and 180')
+      .min(-180, UI_TEXT.validation.longitude)
+      .max(180, UI_TEXT.validation.longitude)
       .nullable()
       .optional(),
     address: z.string().max(255).nullable().optional(),
@@ -40,7 +37,7 @@ export const createEventSchema = z
       return true;
     },
     {
-      message: 'End time must be after the start time, or the exact same!',
+      message: UI_TEXT.validation.endTime,
       path: ['end_time'],
     },
   )
@@ -58,7 +55,7 @@ export const createEventSchema = z
       return true;
     },
     {
-      message: 'Latitude, longitude and address must all be provided together, or all left empty!',
+      message: UI_TEXT.validation.location,
       path: ['address'],
     },
   );

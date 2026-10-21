@@ -1,3 +1,4 @@
+import { UI_TEXT } from '~/locales/en';
 // frontend/app/utils/error.utils.ts
 import type { ApiError } from '../types/apiError.type';
 
@@ -21,12 +22,12 @@ export const getErrorMessage = (err: unknown): string => {
     rawMessage.includes('<no response>') ||
     rawMessage.includes('fetch resource')
   ) {
-    return 'The server is not responding. Please check your internet connection or try again later.';
+    return UI_TEXT.errors.network;
   }
 
   // Server side errors
   if (error?.response?.status && error.response.status >= 500) {
-    return 'An internal server error occurred. Our team has been notified. Please try again later.';
+    return UI_TEXT.errors.server;
   }
 
   // Structured errors sent by the backend
@@ -43,5 +44,5 @@ export const getErrorMessage = (err: unknown): string => {
   }
 
   // Fallback
-  return rawMessage || 'An unexpected error occurred. Please try again.';
+  return rawMessage || UI_TEXT.errors.unexpected;
 };

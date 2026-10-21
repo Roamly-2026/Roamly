@@ -32,8 +32,7 @@ const initMap = () => {
   }
   map = L.map(mapContainer.value).setView([props.latitude, props.longitude], 15);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution:
-      '&copy; <a href=https://leafletjs.com/>Leaflet</a> | <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    attribution: UI_TEXT.map.attribution,
   }).addTo(map);
 
   map.attributionControl.setPrefix(false);

@@ -14,7 +14,7 @@
       <template #close><div class="hidden"></div></template>
       <template #header>
         <h3 class="text-xl font-bold text-dark-text">
-          {{ CONST_UPLOAD_DOCUMENT_HEADER ?? 'Upload Document' }}
+          {{ UI_TEXT.documents.uploadTitle }}
         </h3>
       </template>
       <template #body>
@@ -25,7 +25,12 @@
           @submit="handleUpload"
         >
           <!-- Choose file -->
-          <UFormField :label="'Select File ' + (CONST_ACCEPTED_FILE_FORMATS ?? '')" name="file">
+          <UFormField
+            :label="
+              UI_TEXT.documents.selectFileWithSpace + (UI_TEXT.documents.acceptedFormats ?? '')
+            "
+            name="file"
+          >
             <template #default="{ error: fieldError }">
               <UInput
                 type="file"
@@ -37,14 +42,14 @@
           </UFormField>
 
           <!-- Document type -->
-          <UFormField label="Document Type" name="documentType">
+          <UFormField :label="UI_TEXT.documents.typeLabel" name="documentType">
             <template #default>
               <USelect
                 v-model="uploadForm.documentType"
                 :items="documentTypes"
                 label-key="label"
                 value-key="value"
-                placeholder="Select a document type"
+                :placeholder="UI_TEXT.documents.selectType"
                 :popper="{ strategy: 'fixed', placement: 'bottom-start' }"
                 :ui="{ content: 'z-[10100]' }"
               />
@@ -53,7 +58,7 @@
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <!-- Issue date -->
-            <UFormField label="Issue Date (Optional)" name="issueDate">
+            <UFormField :label="UI_TEXT.documents.issueDate" name="issueDate">
               <template #default="{ error: fieldError }">
                 <UInput
                   v-model="uploadForm.issueDate"
@@ -64,7 +69,7 @@
             </UFormField>
 
             <!-- Expire date -->
-            <UFormField label="Expiry Date (Optional)" name="expiryDate">
+            <UFormField :label="UI_TEXT.documents.expiryDate" name="expiryDate">
               <template #default="{ error: fieldError }">
                 <UInput
                   v-model="uploadForm.expiryDate"
@@ -83,14 +88,14 @@
           <!-- Buttons -->
           <div :class="[appConfig.layout.flexBetween, 'mt-4']">
             <UButton
-              label="Cancel"
+              :label="UI_TEXT.common.cancel"
               variant="actionCancelButton"
               :class="appConfig.typography.modalActionBtnCancel"
               @click="closeUploadModal"
             />
             <UButton
               type="submit"
-              label="Upload"
+              :label="UI_TEXT.common.upload"
               variant="actionOkButton"
               :class="appConfig.typography.modalActionBtnOk"
               :loading="uploadMutation.isLoading.value"
@@ -113,7 +118,7 @@
       <template #default><div class="hidden"></div></template>
       <template #close><div class="hidden"></div></template>
       <template #header>
-        <h3 class="text-xl font-bold text-dark-text">Update Group Document</h3>
+        <h3 class="text-xl font-bold text-dark-text">{{ UI_TEXT.documents.updateGroup }}</h3>
       </template>
       <template #body>
         <UForm
@@ -132,7 +137,7 @@
           </div>
 
           <!-- Replace file (optional) -->
-          <UFormField label="Replace File (Optional)" name="file">
+          <UFormField :label="UI_TEXT.documents.replaceFile" name="file">
             <template #default="{ error: fieldError }">
               <UInput
                 type="file"
@@ -144,14 +149,14 @@
           </UFormField>
 
           <!-- Document type -->
-          <UFormField label="Document Type" name="documentType">
+          <UFormField :label="UI_TEXT.documents.typeLabel" name="documentType">
             <template #default>
               <USelect
                 v-model="updateForm.documentType"
                 :items="documentTypes"
                 label-key="label"
                 value-key="value"
-                placeholder="Select a document type"
+                :placeholder="UI_TEXT.documents.selectType"
                 :popper="{ strategy: 'fixed', placement: 'bottom-start' }"
                 :ui="{ content: 'z-[10100]' }"
               />
@@ -160,7 +165,7 @@
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <!-- Issue date -->
-            <UFormField label="Issue Date (Optional)" name="issueDate">
+            <UFormField :label="UI_TEXT.documents.issueDate" name="issueDate">
               <template #default="{ error: fieldError }">
                 <UInput
                   v-model="updateForm.issueDate"
@@ -171,7 +176,7 @@
             </UFormField>
 
             <!-- Expiry date -->
-            <UFormField label="Expiry Date (Optional)" name="expiryDate">
+            <UFormField :label="UI_TEXT.documents.expiryDate" name="expiryDate">
               <template #default="{ error: fieldError }">
                 <UInput
                   v-model="updateForm.expiryDate"
@@ -190,14 +195,14 @@
           <!-- Buttons -->
           <div :class="[appConfig.layout.flexBetween, 'mt-4']">
             <UButton
-              label="Cancel"
+              :label="UI_TEXT.common.cancel"
               variant="actionCancelButton"
               :class="appConfig.typography.modalActionBtnCancel"
               @click="closeUpdateModal"
             />
             <UButton
               type="submit"
-              label="Save"
+              :label="UI_TEXT.common.save"
               variant="actionOkButton"
               :class="appConfig.typography.modalActionBtnOk"
               :loading="updateMutation.isLoading.value"
@@ -220,16 +225,16 @@
       <template #close><div class="hidden"></div></template>
       <template #header>
         <h3 class="text-xl font-bold text-dark-text">
-          {{ CONST_DELETE_DOCUMENT_HEADER ?? 'Delete Document' }}
+          {{ UI_TEXT.documents.deleteTitle }}
         </h3>
       </template>
       <template #body>
         <p :class="appConfig.typography.modalText">
-          {{ CONST_CONFIRM_DELETE_DOCUMENT }}
+          {{ UI_TEXT.documents.deleteDocumentBeforeName }}
           <span :class="appConfig.typography.modalInlineHighlight">{{
             fileToDelete?.fileName
           }}</span
-          >{{ CONST_ACTION_CANNOT_BE_UNDONE }}
+          >{{ UI_TEXT.documents.cannotUndoSuffix }}
         </p>
 
         <!-- Delete Error Display -->
@@ -240,13 +245,13 @@
       <template #footer>
         <div :class="appConfig.layout.flexBetween">
           <UButton
-            label="Cancel"
+            :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             :class="appConfig.typography.modalActionBtnCancel"
             @click="documentsStore.closeDeleteModal()"
           />
           <UButton
-            label="Delete"
+            :label="UI_TEXT.common.delete"
             variant="actionOkButton"
             class="bg-error-500 hover:bg-error-600 text-white"
             :class="appConfig.typography.modalActionBtnOk"
@@ -291,9 +296,9 @@ const deleteError = ref<ApiError | Error | null>(null);
 
 const uploadDocumentSchema = z.object({
   file: z.any().refine((val) => val instanceof File, {
-    message: 'Please select a file to upload.',
+    message: UI_TEXT.validation.selectFile,
   }),
-  documentType: z.string().min(1, 'Please select a document type.'),
+  documentType: z.string().min(1, UI_TEXT.validation.selectDocumentType),
   issueDate: z.string().optional(),
   expiryDate: z.string().optional(),
 });
@@ -318,7 +323,7 @@ const uploadGroupUuidRef = computed(() => documentsStore.uploadGroupUuid || unde
 const uploadMutation = useUploadGroupDocumentMutation(uploadGroupUuidRef, {
   onSuccess: () => {
     uploadError.value = null;
-    toast.add({ title: 'Success', description: 'Document uploaded successfully!' });
+    toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.documents.uploaded });
     closeUploadModal();
   },
   onError: (err: Error) => {
@@ -354,7 +359,7 @@ const handleUpload = (event: FormSubmitEvent<UploadFormState>) => {
 
 const updateDocumentSchema = z.object({
   file: z.any().optional(),
-  documentType: z.string().min(1, 'Please select a document type.'),
+  documentType: z.string().min(1, UI_TEXT.validation.selectDocumentType),
   issueDate: z.string().optional(),
   expiryDate: z.string().optional(),
 });
@@ -402,7 +407,7 @@ const closeUpdateModal = () => {
 const updateMutation = useUpdateGroupDocumentMutation(updateGroupUuidRef, {
   onSuccess: () => {
     updateError.value = null;
-    toast.add({ title: 'Success', description: 'Document updated successfully!' });
+    toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.documents.updated });
     closeUpdateModal();
   },
   onError: (err: Error) => {
@@ -435,7 +440,7 @@ const deleteMutation = useDeleteGroupFileMutation(deleteGroupUuidRef, {
   onSuccess: () => {
     deleteError.value = null;
     documentsStore.closeDeleteModal();
-    toast.add({ title: 'Success', description: 'Document deleted successfully!' });
+    toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.documents.deleted });
   },
   onError: (err: Error) => {
     deleteError.value = err;

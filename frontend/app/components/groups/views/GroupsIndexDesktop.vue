@@ -2,26 +2,26 @@
 <template>
   <div :class="appConfig.layout.pageWrapper">
     <!-- PAGE TITLE -->
-    <h1 :class="appConfig.typography.pageTitle">{{ CONST_GROUPS_HEADING }}</h1>
+    <h1 :class="appConfig.typography.pageTitle">{{ UI_TEXT.groups.heading }}</h1>
 
     <!-- ACTION BUTTONS -->
     <div :class="appConfig.layout.actionGroup">
       <UInput
         v-model="searchQuery"
         icon="i-heroicons-magnifying-glass"
-        :placeholder="CONST_SEARCH_EVENTS_PLACEHOLDER"
+        :placeholder="UI_TEXT.events.searchPlaceholder"
         variant="search"
         :ui="{ leading: 'pl-3' }"
         class="w-full max-w-xs"
       />
-      <UTooltip :text="CONST_TOOLTIP_CREATE_GROUP ?? 'Create Group'">
+      <UTooltip :text="UI_TEXT.tooltips.createGroup ?? UI_TEXT.fallback.createGroup">
         <UButton
           icon="i-heroicons-plus"
           variant="glassIconButton"
           @click="groupsStore.openCreateModal()"
         />
       </UTooltip>
-      <UTooltip :text="CONST_TOOLTIP_VIEW_INVITES ?? 'Invites'">
+      <UTooltip :text="UI_TEXT.tooltips.viewInvites ?? UI_TEXT.fallback.invites">
         <UButton icon="i-heroicons-envelope" variant="glassIconButton" to="/groups/invites" />
       </UTooltip>
     </div>
@@ -29,10 +29,10 @@
     <!-- CONTENT SECTION -->
     <ClientOnly>
       <div v-if="isLoading && groupsList.length === 0" :class="appConfig.typography.statusLoading">
-        {{ CONST_LOADING_TEXT }}
+        {{ UI_TEXT.common.loading }}
       </div>
       <div v-else-if="error" :class="appConfig.typography.statusError">
-        {{ CONST_FETCH_ERROR_TEXT }}
+        {{ UI_TEXT.errors.fetch }}
       </div>
 
       <div v-else-if="groupsList.length > 0" class="flex flex-col gap-6 w-full">
@@ -47,7 +47,7 @@
             <div class="absolute top-4 left-4 z-10">
               <UTooltip
                 v-if="filteredGroups.length > 0"
-                :text="CONST_TOOLTIP_LEAVE_GROUP ?? 'Leave Group'"
+                :text="UI_TEXT.tooltips.leaveGroup ?? UI_TEXT.groups.leaveGroup"
               >
                 <UButton
                   icon="i-heroicons-arrow-right-on-rectangle"
@@ -58,7 +58,7 @@
             </div>
 
             <div v-if="group.role.toLowerCase() === 'leader'" class="absolute top-4 right-4 z-10">
-              <UTooltip :text="CONST_TOOLTIP_DELETE_GROUP ?? 'Delete Group'">
+              <UTooltip :text="UI_TEXT.tooltips.deleteGroup ?? UI_TEXT.groups.deleteGroup">
                 <UButton
                   icon="i-heroicons-trash"
                   variant="ghostDangerIconButton"
@@ -70,12 +70,12 @@
             <div :class="appConfig.layout.cardContent">
               <h3 :class="appConfig.typography.cardTitleCenter">{{ group.name }}</h3>
               <p class="text-sm text-center text-dark-text/80 font-medium">
-                {{ CONST_YOUR_ROLE_LABEL }}
+                {{ UI_TEXT.groups.yourRoleLabel }}
                 <span class="font-bold capitalize">{{ group.role }}</span>
               </p>
               <div :class="appConfig.layout.cardFooter">
                 <div>
-                  <p class="opacity-70">{{ CONST_CREATED_AT_LABEL }}</p>
+                  <p class="opacity-70">{{ UI_TEXT.groups.createdAtLabel }}</p>
                   <p class="font-semibold">{{ group.created_at }}</p>
                 </div>
                 <div class="flex items-center gap-1.5 font-semibold">
@@ -90,13 +90,13 @@
         <!-- INFINITE SCROLL TRIGGER -->
         <div ref="loadMoreTrigger" class="h-10 w-full flex items-center justify-center">
           <span v-if="isFetchingNextPage" class="text-dark-text/70 text-sm">
-            {{ CONST_LOADING_GROUPS_MSG }}
+            {{ UI_TEXT.groups.loadingGroups }}
           </span>
         </div>
       </div>
 
       <div v-else :class="appConfig.typography.statusLoading">
-        {{ CONST_NO_GROUPS_MSG }}
+        {{ UI_TEXT.groups.noGroups }}
       </div>
     </ClientOnly>
   </div>

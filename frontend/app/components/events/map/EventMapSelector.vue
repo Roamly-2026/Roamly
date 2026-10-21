@@ -10,11 +10,13 @@
       class="w-full bg-surface-50 border border-gray-200 rounded-b-md p-4 flex flex-col sm:flex-row justify-between items-center gap-4 z-10 shrink-0"
     >
       <div class="flex-1 min-w-0">
-        <p class="text-sm font-bold text-dark-text">Selected Location:</p>
+        <p class="text-sm font-bold text-dark-text">{{ UI_TEXT.map.selectedLocation }}</p>
         <p class="text-sm text-dark-text/80 break-words whitespace-normal w-full mt-1">
-          <span v-if="isLoadingAddress" class="opacity-60 animate-pulse">Loading address...</span>
+          <span v-if="isLoadingAddress" class="opacity-60 animate-pulse">{{
+            UI_TEXT.map.loadingAddress
+          }}</span>
           <span v-else-if="currentSelection">{{ currentSelection.address }}</span>
-          <span v-else class="opacity-60">Click on the map or search to select a location.</span>
+          <span v-else class="opacity-60">{{ UI_TEXT.map.selectLocation }}</span>
         </p>
       </div>
       <button
@@ -25,7 +27,7 @@
         :disabled="!currentSelection"
         @click="confirmSelection"
       >
-        Confirm Location
+        {{ ' ' + UI_TEXT.map.confirmLocation + ' ' }}
       </button>
     </div>
   </div>
@@ -86,8 +88,7 @@ const initmap = () => {
   map = L.map(mapContainer.value).setView([initialLat, initialLng], initialZoom);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution:
-      '&copy; <a href=https://leafletjs.com/>Leaflet</a> | <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    attribution: UI_TEXT.map.attribution,
   }).addTo(map);
 
   map.attributionControl.setPrefix(false);
@@ -111,7 +112,7 @@ const initmap = () => {
   LControl.geocoder({
     geocoder,
     defaultMarkGeocode: false,
-    placeholder: 'Search for address...',
+    placeholder: UI_TEXT.map.searchAddress,
   })
     .on('markgeocode', (e: MarkGeocodeEvent) => {
       const lat = e.geocode.center.lat;
@@ -134,7 +135,7 @@ const initmap = () => {
     currentSelection.value = {
       latitude: lat,
       longitude: lng,
-      address: `Location (${lat.toFixed(4)}, ${lng.toFixed(4)})`,
+      address: UI_TEXT.map.location(lat, lng),
     };
     isLoadingAddress.value = true;
 

@@ -10,7 +10,9 @@
     >
       <template #default><div class="hidden"></div></template>
       <template #close><div class="hidden"></div></template>
-      <template #header><h3 class="text-xl font-bold text-dark-text">Add Event</h3></template>
+      <template #header
+        ><h3 class="text-xl font-bold text-dark-text">{{ UI_TEXT.tooltips.addEvent }}</h3></template
+      >
       <template #body>
         <div
           :class="[
@@ -24,15 +26,15 @@
             :class="appConfig.layout.modalForm"
             @submit="onSubmit"
           >
-            <UFormField name="title" label="Event Title"
+            <UFormField name="title" :label="UI_TEXT.events.title"
               ><template #default="{ error }"
                 ><UInput
                   v-model="formState.title"
-                  placeholder="e.g., Morning Standup"
+                  :placeholder="UI_TEXT.events.titlePlaceholder"
                   :variant="error ? 'glassError' : 'glass'" /></template
             ></UFormField>
             <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
-              <UFormField name="start_time" label="Start Date & Time">
+              <UFormField name="start_time" :label="UI_TEXT.events.startDateTime">
                 <template #default="{ error }">
                   <div class="flex gap-2 w-full">
                     <UInput
@@ -52,7 +54,7 @@
               </UFormField>
             </div>
             <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
-              <UFormField name="end_time" label="End Date & Time">
+              <UFormField name="end_time" :label="UI_TEXT.events.endDateTime">
                 <template #default="{ error }">
                   <div class="flex gap-2 w-full">
                     <UInput
@@ -71,11 +73,11 @@
                 </template>
               </UFormField>
             </div>
-            <UFormField name="description" label="Description">
+            <UFormField name="description" :label="UI_TEXT.events.description">
               <template #default="{ error }">
                 <UTextarea
                   v-model="formState.description"
-                  placeholder="Event details..."
+                  :placeholder="UI_TEXT.events.descriptionPlaceholder"
                   :variant="error ? 'glassError' : 'glass'"
                 />
               </template>
@@ -83,10 +85,12 @@
 
             <!-- location selector button -->
             <div class="mt-4 flex flex-col gap-2">
-              <span class="text-sm font-medium text-dark-text">Location (optional)</span>
+              <span class="text-sm font-medium text-dark-text">{{
+                UI_TEXT.events.optionalLocation
+              }}</span>
               <UButton
                 icon="i-heroicons-map"
-                label="Choose Location on map"
+                :label="UI_TEXT.events.chooseLocation"
                 variant="glassOutlineButton"
                 @click="isMapSelectorOpen = true"
               />
@@ -111,19 +115,19 @@
               <UCheckbox
                 v-model="formState.is_private"
                 variant="glass"
-                :label="CONTS_MARK_EVENT_AS_PRIVATE"
+                :label="UI_TEXT.events.markPrivate"
                 :ui="{ base: 'w-5 h-5 cursor-pointer border-2 border-dark-text/30' }"
               />
             </div>
             <div :class="[appConfig.layout.flexBetween, 'mt-4']">
               <UButton
-                :label="CONST_CANCEL_BTN_TEXT ?? 'Cancel'"
+                :label="UI_TEXT.common.cancel"
                 variant="actionCancelButton"
                 @click="closeAndResetForm"
               />
               <UButton
                 type="submit"
-                :label="CONST_ADD_BTN ?? 'Save'"
+                :label="UI_TEXT.common.add ?? UI_TEXT.common.save"
                 variant="actionOkButton"
                 :loading="createEventMutation.isLoading.value"
               />
@@ -139,7 +143,7 @@
       <template #close><div class="hidden"></div></template>
       <template #header>
         <div class="flex justify-between items-center w-full">
-          <h3 class="text-xl font-bold text-dark-text">Select Location</h3>
+          <h3 class="text-xl font-bold text-dark-text">{{ UI_TEXT.events.selectLocation }}</h3>
           <UButton
             icon="i-heroicons-x-mark"
             variant="ghost"
@@ -182,21 +186,26 @@
     >
       <template #default><div class="hidden"></div></template>
       <template #close><div class="hidden"></div></template>
-      <template #header><h3 class="text-xl font-bold text-dark-text">Delete Event</h3></template>
+      <template #header
+        ><h3 class="text-xl font-bold text-dark-text">
+          {{ UI_TEXT.events.deleteEvent }}
+        </h3></template
+      >
       <template #body
         ><p :class="appConfig.typography.modalText">
-          Are you sure you want to delete "{{ eventsStore.selectedEventToDelete?.title }}"?
+          {{ ' ' + UI_TEXT.events.deleteBeforeTitle
+          }}{{ eventsStore.selectedEventToDelete?.title }}"?
         </p></template
       >
       <template #footer>
         <div :class="appConfig.layout.flexBetween">
           <UButton
-            label="Cancel"
+            :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="eventsStore.closeDeleteEventModal()"
           />
           <UButton
-            label="Delete"
+            :label="UI_TEXT.common.delete"
             variant="actionOkButton"
             class="bg-error-500 hover:bg-error-600 text-white"
             :loading="deleteEventMutation.isLoading.value"
@@ -216,7 +225,9 @@
       <template #default><div class="hidden"></div></template>
       <template #close><div class="hidden"></div></template>
       <template #header
-        ><h3 class="text-xl font-bold text-dark-text">Event Participants</h3></template
+        ><h3 class="text-xl font-bold text-dark-text">
+          {{ UI_TEXT.events.eventParticipants }}
+        </h3></template
       >
       <template #body>
         <div :class="appConfig.calendar.participantModalScroll">
@@ -241,21 +252,21 @@
                     <h4 :class="appConfig.calendar.participantCardName">{{ user.username }}</h4>
 
                     <!-- ITT a user.email helyett simán a usert adjuk át -->
-                    <UTooltip v-if="isGroupLeader(user)" text="Group Leader">
+                    <UTooltip v-if="isGroupLeader(user)" :text="UI_TEXT.events.groupLeader">
                       <UIcon name="i-heroicons-star" class="w-4 h-4 text-amber-500" />
                     </UTooltip>
                   </div>
 
                   <!-- ITT IS a teljes usert adjuk át -->
                   <span :class="appConfig.calendar.participantCardRole">
-                    {{ isEventCreator(user) ? 'Creator' : 'Participant' }}
+                    {{ isEventCreator(user) ? UI_TEXT.events.creator : UI_TEXT.events.participant }}
                   </span>
                   <p :class="appConfig.calendar.participantCardEmail">{{ user.email }}</p>
                 </div>
               </div>
               <UTooltip
                 v-if="hasPermissionToDelete && user.email !== currentUserEmail"
-                :text="CONST_REMOVE_PARTICIPANT"
+                :text="UI_TEXT.tooltips.removeParticipant"
                 :ui="{ content: 'z-[9999]' }"
                 :popper="{ placement: 'top', strategy: 'fixed' }"
               >
@@ -272,14 +283,14 @@
             v-if="eventsStore.currentEventParticipants.length === 0"
             class="text-sm font-medium text-dark-text/50 p-4"
           >
-            {{ CONST_NO_PARTICIPANTS_FOUND }}
+            {{ UI_TEXT.events.noParticipants }}
           </div>
         </div>
       </template>
       <template #footer>
         <div class="flex justify-end w-full">
           <UButton
-            label="Close"
+            :label="UI_TEXT.common.close"
             variant="actionCancelButton"
             @click="eventsStore.closeParticipantsModal()"
           />
@@ -297,23 +308,25 @@
       <template #default><div class="hidden"></div></template>
       <template #close><div class="hidden"></div></template>
       <template #header
-        ><h3 class="text-xl font-bold text-dark-text">Remove Participant</h3></template
+        ><h3 class="text-xl font-bold text-dark-text">
+          {{ UI_TEXT.events.removeParticipant }}
+        </h3></template
       >
       <template #body>
         <p :class="appConfig.typography.modalText">
-          Are you sure you want to remove "{{ eventsStore.participantToRemove?.username }}" from
-          this event?
+          {{ ' ' + UI_TEXT.events.removeBeforeName }}{{ eventsStore.participantToRemove?.username
+          }}{{ UI_TEXT.events.removeAfterName + ' ' }}
         </p>
       </template>
       <template #footer>
         <div :class="appConfig.layout.flexBetween">
           <UButton
-            label="Cancel"
+            :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="eventsStore.closeRemoveParticipantModal()"
           />
           <UButton
-            label="Remove"
+            :label="UI_TEXT.common.remove"
             variant="actionOkButton"
             class="bg-error-500 hover:bg-error-600 text-white"
             :loading="removeParticipantMutation.isLoading.value"
@@ -332,7 +345,9 @@
     >
       <template #default><div class="hidden"></div></template>
       <template #close><div class="hidden"></div></template>
-      <template #header><h3 class="text-xl font-bold text-dark-text">Event Details</h3></template>
+      <template #header
+        ><h3 class="text-xl font-bold text-dark-text">{{ UI_TEXT.events.details }}</h3></template
+      >
       <template #body>
         <div
           v-if="eventsStore.previewEvent"
@@ -353,7 +368,9 @@
                 :class="appConfig.calendar.previewTypeIcon"
               />
               <span :class="appConfig.calendar.previewTypeText">{{
-                eventsStore.previewEvent.is_private ? 'Private Event' : 'Group Event'
+                eventsStore.previewEvent.is_private
+                  ? UI_TEXT.events.privateEvent
+                  : UI_TEXT.events.groupEvent
               }}</span>
             </div>
             <div class="flex items-center gap-1">
@@ -362,7 +379,7 @@
                   eventsStore.previewEvent.creator?.email === currentUserEmail &&
                   eventsStore.previewEvent.is_private
                 "
-                text="Invite Members"
+                :text="UI_TEXT.events.inviteMembers"
               >
                 <UButton
                   icon="i-heroicons-user-plus"
@@ -371,14 +388,14 @@
                   @click="eventsStore.openAddMembersModal(eventsStore.previewEvent!)"
                 />
               </UTooltip>
-              <UTooltip v-if="hasPermissionToDelete" text="Delete Event">
+              <UTooltip v-if="hasPermissionToDelete" :text="UI_TEXT.events.deleteEvent">
                 <UButton
                   icon="i-heroicons-trash"
                   variant="ghostDangerIconButton"
                   @click="eventsStore.openDeleteEventModal(eventsStore.previewEvent!)"
                 />
               </UTooltip>
-              <UTooltip v-else-if="canLeaveEvent" text="Leave Event">
+              <UTooltip v-else-if="canLeaveEvent" :text="UI_TEXT.events.leaveEvent">
                 <UButton
                   icon="i-heroicons-arrow-right-on-rectangle"
                   variant="ghostDangerIconButton"
@@ -392,20 +409,20 @@
             <span
               v-if="eventsStore.previewEvent.isExpired"
               :class="appConfig.calendar.previewExpiredBadge"
-              >Expired</span
+              >{{ UI_TEXT.events.expired }}</span
             >
           </h2>
 
           <div :class="appConfig.calendar.previewMetaRow">
             <div :class="appConfig.calendar.metaRowItem">
-              <span :class="appConfig.calendar.metaLabel">Creator:</span
+              <span :class="appConfig.calendar.metaLabel">{{ UI_TEXT.events.creatorLabel }}</span
               ><span :class="appConfig.calendar.metaValue">{{
                 eventsStore.previewEvent.creator?.username
               }}</span>
             </div>
 
             <div :class="appConfig.calendar.metaRowItem">
-              <span :class="appConfig.calendar.metaLabel">Date:</span>
+              <span :class="appConfig.calendar.metaLabel">{{ UI_TEXT.events.dateLabel }}</span>
               <span
                 v-if="
                   new Date(eventsStore.previewEvent.start_time).toLocaleDateString() ===
@@ -422,7 +439,7 @@
             </div>
 
             <div :class="appConfig.calendar.metaRowItem">
-              <span :class="appConfig.calendar.metaLabel">Time:</span>
+              <span :class="appConfig.calendar.metaLabel">{{ UI_TEXT.events.timeLabel }}</span>
               <span
                 v-if="
                   eventsStore.previewEvent.timeStartFormatted ===
@@ -439,7 +456,7 @@
             </div>
 
             <div :class="appConfig.calendar.metaRowItemCenter">
-              <span :class="appConfig.calendar.metaLabel">Members:</span>
+              <span :class="appConfig.calendar.metaLabel">{{ UI_TEXT.events.membersLabel }}</span>
               <div :class="appConfig.calendar.participantsGroup">
                 <template v-if="eventsStore.previewEvent.is_private">
                   <div
@@ -462,7 +479,9 @@
                     </UTooltip>
                     <UTooltip
                       v-if="extraParticipantsCount > 0"
-                      :text="'+' + extraParticipantsCount.toString() + ' more participants'"
+                      :text="
+                        '+' + extraParticipantsCount.toString() + UI_TEXT.events.moreParticipants
+                      "
                     >
                       <div
                         :class="appConfig.calendar.participantMoreBadge"
@@ -476,18 +495,22 @@
                     variant="link"
                     class="p-0 text-sm h-auto font-medium"
                     @click="openAllParticipantsModal"
-                    >Show participants</UButton
+                    >{{ UI_TEXT.events.showParticipants }}</UButton
                   >
                 </template>
                 <template v-else>
                   <div class="flex items-center gap-3">
-                    <span class="text-sm font-bold text-dark-text">Everyone</span>
+                    <span class="text-sm font-bold text-dark-text">{{
+                      UI_TEXT.common.everyone
+                    }}</span>
                   </div>
                 </template>
               </div>
             </div>
             <div :class="[appConfig.calendar.metaRowItem, 'mt-2 flex-col gap-1!']">
-              <span :class="appConfig.calendar.metaLabel">Description:</span>
+              <span :class="appConfig.calendar.metaLabel">{{
+                UI_TEXT.events.descriptionLabel
+              }}</span>
               <span :class="appConfig.calendar.metaValue">{{
                 eventsStore.previewEvent.description
               }}</span>
@@ -498,7 +521,7 @@
               v-if="eventsStore.previewEvent.address || eventsStore.previewEvent.latitude !== null"
               :class="[appConfig.calendar.metaRowItem, 'mt-4 flex-col gap-2! items-start']"
             >
-              <span :class="appConfig.calendar.metaLabel">Location:</span>
+              <span :class="appConfig.calendar.metaLabel">{{ UI_TEXT.events.locationLabel }}</span>
               <span v-if="eventsStore.previewEvent.address" :class="appConfig.calendar.metaValue">
                 {{ eventsStore.previewEvent.address }}
               </span>
@@ -521,12 +544,12 @@
             </div>
           </div>
         </div>
-        <div v-else :class="appConfig.calendar.emptyPreview">Select an event to view details.</div>
+        <div v-else :class="appConfig.calendar.emptyPreview">{{ UI_TEXT.events.selectEvent }}</div>
       </template>
       <template #footer>
         <div class="flex justify-end w-full">
           <UButton
-            label="Close"
+            :label="UI_TEXT.common.close"
             variant="actionCancelButton"
             @click="eventsStore.closePreviewModal()"
           />
@@ -543,10 +566,12 @@
     >
       <template #default><div class="hidden"></div></template>
       <template #close><div class="hidden"></div></template>
-      <template #header><h3 class="text-xl font-bold text-dark-text">Add Members</h3></template>
+      <template #header
+        ><h3 class="text-xl font-bold text-dark-text">{{ UI_TEXT.events.addMembers }}</h3></template
+      >
       <template #body>
         <div class="flex flex-col gap-4">
-          <p class="text-sm text-dark-text/70">Select members to invite to this private event:</p>
+          <p class="text-sm text-dark-text/70">{{ UI_TEXT.events.selectMembers }}</p>
           <div
             :class="appConfig.calendar.participantModalScroll"
             class="flex flex-wrap gap-4 max-h-60 overflow-y-auto p-1"
@@ -592,7 +617,7 @@
               v-if="availableGroupMembers.length === 0"
               class="text-sm font-medium text-dark-text/50 p-4"
             >
-              All members are already added or no members available.
+              {{ ' ' + UI_TEXT.events.noAvailableMembers + ' ' }}
             </div>
           </div>
         </div>
@@ -600,13 +625,13 @@
       <template #footer>
         <div class="flex justify-between w-full gap-3">
           <UButton
-            label="Cancel"
+            :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             :disabled="addParticipantsMutation.isLoading.value"
             @click="closeAddMembersModal"
           />
           <UButton
-            label="Add Selected"
+            :label="UI_TEXT.events.addSelected"
             variant="actionOkButton"
             :loading="addParticipantsMutation.isLoading.value"
             :disabled="selectedEmailsToAdd.length === 0"
@@ -625,21 +650,23 @@
     >
       <template #default><div class="hidden"></div></template>
       <template #close><div class="hidden"></div></template>
-      <template #header><h3 class="text-xl font-bold text-dark-text">Leave Event</h3></template>
+      <template #header
+        ><h3 class="text-xl font-bold text-dark-text">{{ UI_TEXT.events.leaveEvent }}</h3></template
+      >
       <template #body>
         <p :class="appConfig.typography.modalText">
-          Are you sure you want to leave "{{ eventsStore.selectedEventToLeave?.title }}"?
+          {{ ' ' + UI_TEXT.events.leaveBeforeTitle }}{{ eventsStore.selectedEventToLeave?.title }}"?
         </p>
       </template>
       <template #footer>
         <div :class="appConfig.layout.flexBetween">
           <UButton
-            label="Cancel"
+            :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="eventsStore.closeLeaveEventModal()"
           />
           <UButton
-            label="Leave"
+            :label="UI_TEXT.common.leave"
             variant="actionOkButton"
             class="bg-error-500 hover:bg-error-600 text-white"
             :loading="leaveEventMutation.isLoading.value"
@@ -693,9 +720,10 @@ const deleteEventMutation = useDeleteEventMutation(
     onSuccess: () => {
       eventsStore.closeDeleteEventModal();
       eventsStore.closePreviewModal();
-      toast.add({ title: 'Success', description: 'Event deleted successfully!' });
+      toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.events.deleted });
     },
-    onError: (err: Error) => toast.add({ title: 'Error', description: getErrorMessage(err) }),
+    onError: (err: Error) =>
+      toast.add({ title: UI_TEXT.common.error, description: getErrorMessage(err) }),
   },
 );
 
@@ -704,9 +732,10 @@ const createEventMutation = useCreateEventMutation(
   {
     onSuccess: () => {
       closeAndResetForm();
-      toast.add({ title: 'Success', description: 'Event created successfully!' });
+      toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.events.created });
     },
-    onError: (err: Error) => toast.add({ title: 'Error', description: getErrorMessage(err) }),
+    onError: (err: Error) =>
+      toast.add({ title: UI_TEXT.common.error, description: getErrorMessage(err) }),
   },
 );
 
@@ -714,10 +743,11 @@ const addParticipantsMutation = useAddParticipantsMutation(
   computed(() => eventsStore.selectedGroupUuid),
   {
     onSuccess: () => {
-      toast.add({ title: 'Success', description: 'Members added successfully!' });
+      toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.events.membersAdded });
       closeAddMembersModal();
     },
-    onError: (err: Error) => toast.add({ title: 'Error', description: getErrorMessage(err) }),
+    onError: (err: Error) =>
+      toast.add({ title: UI_TEXT.common.error, description: getErrorMessage(err) }),
   },
 );
 
@@ -727,9 +757,10 @@ const leaveEventMutation = useLeaveEventMutation(
     onSuccess: () => {
       eventsStore.closeLeaveEventModal();
       eventsStore.closePreviewModal();
-      toast.add({ title: 'Success', description: 'You have successfully left the event.' });
+      toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.events.left });
     },
-    onError: (err: Error) => toast.add({ title: 'Error', description: getErrorMessage(err) }),
+    onError: (err: Error) =>
+      toast.add({ title: UI_TEXT.common.error, description: getErrorMessage(err) }),
   },
 );
 
@@ -737,7 +768,7 @@ const removeParticipantMutation = useRemoveParticipantMutation(
   computed(() => eventsStore.selectedGroupUuid),
   {
     onSuccess: () => {
-      toast.add({ title: 'Success', description: 'Participant removed.' });
+      toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.events.participantRemoved });
       if (eventsStore.participantToRemove) {
         eventsStore.currentEventParticipants = eventsStore.currentEventParticipants.filter(
           (p) => p.uuid !== eventsStore.participantToRemove!.uuid,
@@ -745,7 +776,8 @@ const removeParticipantMutation = useRemoveParticipantMutation(
       }
       eventsStore.closeRemoveParticipantModal();
     },
-    onError: (err: Error) => toast.add({ title: 'Error', description: getErrorMessage(err) }),
+    onError: (err: Error) =>
+      toast.add({ title: UI_TEXT.common.error, description: getErrorMessage(err) }),
   },
 );
 
@@ -845,9 +877,9 @@ const handleOpenUserProfile = (user: EventCreatorDto) => {
   groupsStore.selectedUserProfile = {
     userUuid: user.uuid || '',
     username: user.username,
-    email: user.email || 'N/A',
+    email: user.email || UI_TEXT.common.notAvailable,
     role: getGroupRole(user),
-    joinedAt: 'Unknown',
+    joinedAt: UI_TEXT.common.unknown,
     canViewDocuments: false,
   };
   groupsStore.isUserProfileModalOpen = true;
@@ -911,7 +943,7 @@ const availableGroupMembers = computed<EventCreatorDto[]>(() => {
 });
 
 const getGroupRole = (user?: EventCreatorDto | null): string => {
-  if (!user || !groupInfosData.value?.group_profiles) return 'Member';
+  if (!user || !groupInfosData.value?.group_profiles) return UI_TEXT.common.member;
 
   const profile = groupInfosData.value.group_profiles.find((p) => {
     const matchEmail =
@@ -928,11 +960,11 @@ const getGroupRole = (user?: EventCreatorDto | null): string => {
   });
 
   const roleType = profile?.roles?.type?.toLowerCase();
-  return roleType === 'leader' ? 'Leader' : 'Member';
+  return roleType === 'leader' ? UI_TEXT.common.leader : UI_TEXT.common.member;
 };
 
 const isGroupLeader = (user: EventCreatorDto): boolean => {
-  return getGroupRole(user) === 'Leader';
+  return getGroupRole(user) === UI_TEXT.common.leader;
 };
 const isEventCreator = (user: EventCreatorDto): boolean => {
   const creator = eventsStore.previewEvent?.creator;

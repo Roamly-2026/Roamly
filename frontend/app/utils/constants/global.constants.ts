@@ -1,20 +1,11 @@
-// frontend/app/utils/constants/global.constants.ts
-export const CONST_BRAND_NAME = 'ROAMLY';
-export const CONST_COPYRIGHT_LABEL = '© Copyright - Roamly Co. 2026 | No rights reserved.';
-export const CONST_CANCEL_BTN_TEXT = 'Cancel';
-export const CONST_LOADING_TEXT = 'Loading...';
-export const CONST_YOU_LABEL = 'You';
-
-export const CONST_INVALID_DATA_ERROR = 'Invalid data!';
-export const CONST_FETCH_ERROR_TEXT = 'An error occurred while loading data.';
-
+import { UI_TEXT } from '~/locales/en';
 export const CONST_BG_AUTH = "bg-[url('/register/register-background.jpg')]";
 export const CONST_BG_HOME = "bg-[url('/home/home-background.jpg')]";
 export const CONST_BG_GROUPS = "bg-[url('/groups/groups-background.jpg')]";
 export const CONST_BG_PROFILE = "bg-[url('/profile/profile-background.jpg')]";
 
 export const CONST_NAV_VIEWS = [
-  { label: 'Profile', value: '/users/profile' },
-  { label: 'Groups', value: '/groups' },
-  { label: 'Events', value: '/events' },
+  { label: UI_TEXT.common.profile, value: '/users/profile' },
+  { label: UI_TEXT.common.groups, value: '/groups' },
+  { label: UI_TEXT.common.events, value: '/events' },
 ];

@@ -1,3 +1,4 @@
+import { UI_TEXT } from '~/locales/en';
 // frontend/schemas/files.schema.ts
 import { z } from 'zod';
 
@@ -13,43 +14,43 @@ const dateRefine = (data: { issue_date?: string; expiry_date?: string }) => {
 export const privateDocumentSchema = z
   .object({
     file: z
-      .instanceof(File, { message: 'File is required' })
-      .refine((f) => f.size <= MAX_FILE_SIZE, 'File size must be less than 5MB'),
+      .instanceof(File, { message: UI_TEXT.validation.fileRequired })
+      .refine((f) => f.size <= MAX_FILE_SIZE, UI_TEXT.validation.fileSize),
     document_type: z.enum(['ID', 'PASSPORT', 'DRIVING_LICENSE', 'OTHER'], {
-      message: 'Invalid document type!',
+      message: UI_TEXT.validation.documentType,
     }),
     issue_date: z.string().optional(),
     expiry_date: z.string().optional(),
   })
   .refine(dateRefine, {
-    message: 'Expiry date must be after the issue date!',
+    message: UI_TEXT.validation.expiryDate,
     path: ['expiry_date'],
   });
 
 export const groupDocumentSchema = z
   .object({
-    file: z.instanceof(File, { message: 'File is required' }),
+    file: z.instanceof(File, { message: UI_TEXT.validation.fileRequired }),
     document_type: z.enum(
       ['TICKET', 'BOOKING_CONFIRMATION', 'HOTEL_VOUCHER', 'GUEST_REGISTRATION_CARD', 'OTHER'],
       {
-        message: 'Invalid document type!',
+        message: UI_TEXT.validation.documentType,
       },
     ),
     issue_date: z.string().optional(),
     expiry_date: z.string().optional(),
   })
   .refine(dateRefine, {
-    message: 'Expiry date must be after the issue date!',
+    message: UI_TEXT.validation.expiryDate,
     path: ['expiry_date'],
   });
 
 export const groupMediaSchema = z.object({
-  file: z.instanceof(File, { message: 'File is required' }),
-  description: z.string().max(512, 'Description can not be longer then 512 characters!').optional(),
+  file: z.instanceof(File, { message: UI_TEXT.validation.fileRequired }),
+  description: z.string().max(512, UI_TEXT.validation.mediaDescriptionMax).optional(),
 });
 
 export const sharingUpdateSchema = z.object({
   accessLevel: z.enum(['LEADER', 'MEMBER'], {
-    message: 'Access level must be LEADER or MEMBER!',
+    message: UI_TEXT.validation.accessLevel,
   }),
 });

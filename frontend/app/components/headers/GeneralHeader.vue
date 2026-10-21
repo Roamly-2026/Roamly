@@ -10,7 +10,7 @@
     <div class="flex-1 flex justify-center">
       <NuxtLink to="/" :class="appConfig.layout.logoWrapper">
         <UIcon name="i-heroicons-map-pin" class="w-7 h-7 text-brand-500 hidden sm:block" />
-        <span :class="appConfig.typography.logoText">{{ CONST_BRAND_NAME }}</span>
+        <span :class="appConfig.typography.logoText">{{ UI_TEXT.common.brandName }}</span>
       </NuxtLink>
     </div>
 
@@ -20,11 +20,11 @@
         <div class="flex items-center gap-2 md:gap-4">
           <template v-if="isAuthenticated">
             <span class="font-bold text-dark-text tracking-wide text-sm hidden sm:block">
-              {{ userProfile?.username || 'Loading...' }}
+              {{ userProfile?.username || UI_TEXT.common.loading }}
             </span>
             <UButton
               icon="i-heroicons-arrow-left-on-rectangle"
-              :label="CONST_LOGOUT_TITLE"
+              :label="UI_TEXT.auth.logoutTitle"
               variant="smallHollowActionButton"
               class="hidden sm:flex"
               @click="handleLogout"
@@ -42,7 +42,7 @@
               >
                 <UAvatar
                   :src="userProfile?.profile_image_url || undefined"
-                  :alt="userProfile?.username || 'User'"
+                  :alt="userProfile?.username || UI_TEXT.common.user"
                   icon="i-heroicons-user"
                 />
               </UButton>
@@ -53,7 +53,7 @@
             <UAvatar
               v-if="isMobile"
               :src="userProfile?.profile_image_url || undefined"
-              :alt="userProfile?.username || 'User'"
+              :alt="userProfile?.username || UI_TEXT.common.user"
               icon="i-heroicons-user"
             />
 
@@ -96,11 +96,11 @@ const { isMobile } = useScreenSize();
 
 /* --- MENU ITEMS --- */
 const profileDropdownItems = ref<DropdownMenuItem[]>([
-  { label: 'Profile', icon: 'i-heroicons-user-circle', to: '/users/profile' },
-  { label: 'Groups', icon: 'i-heroicons-user-group', to: '/groups' },
-  { label: 'Events', icon: 'i-heroicons-calendar-days', to: '/events' },
+  { label: UI_TEXT.common.profile, icon: 'i-heroicons-user-circle', to: '/users/profile' },
+  { label: UI_TEXT.common.groups, icon: 'i-heroicons-user-group', to: '/groups' },
+  { label: UI_TEXT.common.events, icon: 'i-heroicons-calendar-days', to: '/events' },
   {
-    label: 'Logout',
+    label: UI_TEXT.common.logout,
     icon: 'i-heroicons-arrow-left-on-rectangle',
     onSelect: () => handleLogout(),
     class: 'text-red-500 font-semibold',

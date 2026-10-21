@@ -1,3 +1,4 @@
+import { UI_TEXT } from '~/locales/en';
 // frontend/queries/files.query.ts
 import { useQuery } from '@pinia/colada';
 import { filesService } from '~/services/files.service';
@@ -14,7 +15,7 @@ export function useDocumentUrlQuery(fileId: () => number | null) {
     key: () => ['private-document-url', fileId() ?? -1],
     query: () => {
       const id = fileId();
-      if (!id) throw new Error('File ID is required');
+      if (!id) throw new Error(UI_TEXT.errors.fileIdRequired);
       return filesService.getPrivateDocumentUrl(id).then((res) => res.data);
     },
   });
@@ -64,7 +65,7 @@ export function useDocumentSharesQuery(fileId: () => number | null) {
     key: () => ['document-shares', fileId()],
     query: () => {
       const id = fileId();
-      if (!id) throw new Error('File ID is required');
+      if (!id) throw new Error(UI_TEXT.errors.fileIdRequired);
       return filesService.listDocumentShares(id).then((res) => res.data);
     },
     enabled: () => !!fileId(),

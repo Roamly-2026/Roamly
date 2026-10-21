@@ -16,7 +16,7 @@ export default defineNuxtConfig({
   ],
 
   imports: {
-    dirs: ['utils/constants', 'utils/schemas'],
+    dirs: ['utils/constants', 'utils/schemas', 'locales'],
   },
 
   postcss: {

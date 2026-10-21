@@ -4,7 +4,7 @@
     <ClientOnly>
       <template #fallback>
         <div class="min-h-screen flex items-center justify-center">
-          <span class="opacity-50 font-medium">{{ CONST_LOADING_TEXT ?? 'Loading...' }}</span>
+          <span class="opacity-50 font-medium">{{ UI_TEXT.common.loading }}</span>
         </div>
       </template>
 
@@ -50,12 +50,12 @@
       <template #default><div class="hidden"></div></template>
       <template #close><div class="hidden"></div></template>
       <template #header>
-        <h3 class="text-xl font-bold text-dark-text">Upload Photo / Video</h3>
+        <h3 class="text-xl font-bold text-dark-text">{{ UI_TEXT.media.uploadHeading }}</h3>
       </template>
       <template #body>
         <div class="flex flex-col gap-4">
           <!-- File input -->
-          <UFormField label="Select File">
+          <UFormField :label="UI_TEXT.documents.selectFile">
             <UInput
               type="file"
               accept="image/*,video/*"
@@ -66,8 +66,12 @@
           </UFormField>
 
           <!-- Description -->
-          <UFormField label="Description (Optional)">
-            <UInput v-model="uploadDescription" variant="glass" placeholder="Add a caption..." />
+          <UFormField :label="UI_TEXT.media.optionalDescription">
+            <UInput
+              v-model="uploadDescription"
+              variant="glass"
+              :placeholder="UI_TEXT.media.captionPlaceholder"
+            />
           </UFormField>
 
           <!-- Error -->
@@ -78,9 +82,13 @@
       </template>
       <template #footer>
         <div class="flex items-center justify-between w-full">
-          <UButton label="Cancel" variant="actionCancelButton" @click="closeUploadModal" />
           <UButton
-            label="Upload"
+            :label="UI_TEXT.common.cancel"
+            variant="actionCancelButton"
+            @click="closeUploadModal"
+          />
+          <UButton
+            :label="UI_TEXT.common.upload"
             variant="actionOkButton"
             :loading="isUploading"
             :disabled="!uploadFile"
@@ -102,13 +110,13 @@
       <template #default><div class="hidden"></div></template>
       <template #close><div class="hidden"></div></template>
       <template #header>
-        <h3 class="text-xl font-bold text-dark-text">Delete Photo</h3>
+        <h3 class="text-xl font-bold text-dark-text">{{ UI_TEXT.media.deletePhoto }}</h3>
       </template>
       <template #body>
         <p class="text-dark-text/80">
-          Are you sure you want to delete
-          <span class="font-bold text-dark-text">{{ fileToDelete?.file_name }}</span
-          >? This action cannot be undone.
+          {{ ' ' + UI_TEXT.documents.deleteBeforeName + ' '
+          }}<span class="font-bold text-dark-text">{{ fileToDelete?.file_name }}</span
+          >{{ UI_TEXT.documents.deleteAfterName + ' ' }}
         </p>
         <div v-if="deleteError" class="text-sm text-error-500 font-medium mt-2">
           {{ deleteError }}
@@ -117,7 +125,7 @@
       <template #footer>
         <div class="flex items-center justify-between w-full">
           <UButton
-            label="Cancel"
+            :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="
               isDeleteModalOpen = false;
@@ -125,7 +133,7 @@
             "
           />
           <UButton
-            label="Delete"
+            :label="UI_TEXT.common.delete"
             variant="actionOkButton"
             class="bg-error-500 hover:bg-error-600 text-white"
             :loading="isDeleting"
@@ -231,10 +239,10 @@ const handleUpload = async () => {
 
     await filesService.uploadGroupMediaFile(selectedGroupUuid.value, formData);
     queryCache.invalidateQueries({ key: ['group-files', selectedGroupUuid.value] });
-    toast.add({ title: 'Success', description: 'Photo uploaded successfully!' });
+    toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.media.uploaded });
     closeUploadModal();
   } catch {
-    uploadError.value = 'Upload failed. Please try again.';
+    uploadError.value = UI_TEXT.media.uploadFailed;
   } finally {
     isUploading.value = false;
   }
@@ -259,11 +267,11 @@ const confirmDelete = async () => {
   try {
     await filesService.deleteGroupFile(selectedGroupUuid.value, fileToDelete.value.file_id);
     queryCache.invalidateQueries({ key: ['group-files', selectedGroupUuid.value] });
-    toast.add({ title: 'Success', description: 'Photo deleted successfully!' });
+    toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.media.deleted });
     isDeleteModalOpen.value = false;
     fileToDelete.value = null;
   } catch {
-    deleteError.value = 'Delete failed. Please try again.';
+    deleteError.value = UI_TEXT.media.deleteFailed;
   } finally {
     isDeleting.value = false;
   }

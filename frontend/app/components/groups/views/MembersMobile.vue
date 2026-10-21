@@ -5,7 +5,7 @@
     <div class="flex flex-col gap-6">
       <!-- NAV ACTIONS (Members, Calendar, Photos, Docs) -->
       <div class="flex justify-between items-center w-full">
-        <UTooltip :text="CONST_TOOLTIP_MEMBERS ?? 'Members'">
+        <UTooltip :text="UI_TEXT.tooltips.members ?? UI_TEXT.common.members">
           <UButton
             icon="i-heroicons-users"
             variant="glassIconButton"
@@ -13,13 +13,13 @@
             :to="membersRoute"
           />
         </UTooltip>
-        <UTooltip :text="CONST_TOOLTIP_CALENDAR ?? 'Calendar'">
+        <UTooltip :text="UI_TEXT.tooltips.calendar ?? UI_TEXT.common.calendar">
           <UButton icon="i-heroicons-calendar" variant="glassIconButton" :to="eventsRoute" />
         </UTooltip>
-        <UTooltip :text="CONST_TOOLTIP_PHOTOS ?? 'Photos'">
+        <UTooltip :text="UI_TEXT.tooltips.photos ?? UI_TEXT.common.photos">
           <UButton icon="i-heroicons-photo" variant="glassIconButton" :to="mediaRoute" />
         </UTooltip>
-        <UTooltip :text="CONST_TOOLTIP_DOCUMENTS ?? 'Documents'">
+        <UTooltip :text="UI_TEXT.tooltips.documents ?? UI_TEXT.common.documents">
           <UButton
             icon="i-heroicons-document-text"
             variant="glassIconButton"
@@ -32,9 +32,12 @@
       <div class="flex flex-col items-center gap-1 my-2">
         <div class="flex items-center gap-2">
           <h1 :class="appConfig.typography.pageTitle">
-            {{ (groupInfos?.name || CONST_LOADING_TEXT) ?? 'Loading...' }}
+            {{ (groupInfos?.name || UI_TEXT.common.loading) ?? UI_TEXT.common.loading }}
           </h1>
-          <UTooltip v-if="isCurrentUserLeader" :text="CONST_TOOLTIP_EDIT_GROUP ?? 'Edit Group'">
+          <UTooltip
+            v-if="isCurrentUserLeader"
+            :text="UI_TEXT.tooltips.editGroup ?? UI_TEXT.fallback.editGroup"
+          >
             <UButton
               icon="i-heroicons-pencil"
               variant="ghostBrandIconButton"
@@ -43,7 +46,7 @@
             />
           </UTooltip>
         </div>
-        <p :class="appConfig.typography.pageSubtitle" class="mt-0!">Members</p>
+        <p :class="appConfig.typography.pageSubtitle" class="mt-0!">{{ UI_TEXT.common.members }}</p>
       </div>
 
       <!-- SEARCH & INVITE -->
@@ -53,7 +56,7 @@
           <UInput
             :model-value="searchQuery"
             icon="i-heroicons-magnifying-glass"
-            placeholder="Search members..."
+            :placeholder="UI_TEXT.groups.searchMembers"
             variant="search"
             class="w-full! max-w-none!"
             :ui="{ leading: 'pl-3' }"
@@ -61,7 +64,10 @@
           />
         </div>
         <div class="flex items-center gap-2 shrink-0">
-          <UTooltip v-if="isCurrentUserLeader" :text="CONST_TOOLTIP_INVITE_USER ?? 'Invite User'">
+          <UTooltip
+            v-if="isCurrentUserLeader"
+            :text="UI_TEXT.tooltips.inviteUser ?? UI_TEXT.fallback.inviteUser"
+          >
             <UButton
               icon="i-heroicons-user-plus"
               variant="glassIconButtonHighlight"
@@ -69,14 +75,17 @@
             />
           </UTooltip>
           <!-- MAIN ACTIONS (Leave / Delete) -->
-          <UTooltip v-if="isCurrentUserLeader" :text="CONST_TOOLTIP_DELETE_GROUP ?? 'Delete Group'">
+          <UTooltip
+            v-if="isCurrentUserLeader"
+            :text="UI_TEXT.tooltips.deleteGroup ?? UI_TEXT.groups.deleteGroup"
+          >
             <UButton
               icon="i-heroicons-trash"
               variant="glassIconButtonDanger"
               @click="emit('deleteGroup')"
             />
           </UTooltip>
-          <UTooltip :text="CONST_TOOLTIP_LEAVE_GROUP ?? 'Leave Group'">
+          <UTooltip :text="UI_TEXT.tooltips.leaveGroup ?? UI_TEXT.groups.leaveGroup">
             <UButton
               icon="i-heroicons-arrow-right-on-rectangle"
               variant="glassIconButtonDanger"
@@ -91,10 +100,10 @@
     <div class="w-full">
       <ClientOnly>
         <div v-if="isLoading" :class="appConfig.typography.statusLoading">
-          {{ CONST_LOADING_TEXT ?? 'Loading...' }}
+          {{ UI_TEXT.common.loading }}
         </div>
         <div v-else-if="error" :class="appConfig.typography.statusError">
-          {{ CONST_FETCH_ERROR_TEXT ?? 'An error occurred' }}
+          {{ UI_TEXT.errors.fetch ?? UI_TEXT.fallback.fetchError }}
         </div>
 
         <div v-else-if="filteredMembers?.length" class="flex flex-col gap-4 w-full">
@@ -126,12 +135,12 @@
                       v-if="isCurrentUser(profile.users.email)"
                       class="text-xs text-left font-bold text-brand-500 mt-0.5"
                     >
-                      You
+                      {{ ' ' + UI_TEXT.common.you + ' ' }}
                     </p>
                   </div>
                   <UTooltip
                     v-if="isCurrentUserLeader && profile.roles.type.toLowerCase() === 'member'"
-                    :text="CONST_TOOLTIP_PROMOTE_USER ?? 'Promote'"
+                    :text="UI_TEXT.tooltips.promoteUser ?? UI_TEXT.groups.promote"
                     class="shrink-0"
                   >
                     <UButton
@@ -150,11 +159,12 @@
 
                 <div :class="[appConfig.layout.flexBetween, 'items-end mt-4']">
                   <p class="text-sm font-medium text-dark-text/80">
-                    Role: <span class="font-bold capitalize">{{ profile.roles.type }}</span>
+                    {{ ' ' + UI_TEXT.groups.roleLabel + ' '
+                    }}<span class="font-bold capitalize">{{ profile.roles.type }}</span>
                   </p>
                   <UTooltip
                     v-if="isCurrentUserLeader && !isCurrentUser(profile.users.email)"
-                    :text="CONST_TOOLTIP_REMOVE_USER ?? 'Remove'"
+                    :text="UI_TEXT.tooltips.removeUser ?? UI_TEXT.common.remove"
                   >
                     <UButton
                       icon="i-heroicons-user-minus"
@@ -178,18 +188,18 @@
       ]"
     >
       <h2 :class="appConfig.typography.cardTitle" class="text-surface-600 mb-2">
-        {{ CONST_UPCOMING_EVENTS_HEADING }}
+        {{ UI_TEXT.events.upcomingHeading }}
       </h2>
 
       <ClientOnly>
         <div v-if="isLoadingEvents" class="text-sm font-medium text-dark-text/60 py-2">
-          {{ CONST_LOADING_EVENTS_MSG }}
+          {{ UI_TEXT.events.loadingEvents }}
         </div>
         <div
           v-else-if="todayUpcomingEvents.length === 0"
           class="text-sm font-medium text-dark-text/60 py-2"
         >
-          {{ CONST_NO_UPCOMING_EVENTS_MSG }}
+          {{ UI_TEXT.events.noUpcomingEvents }}
         </div>
 
         <div v-else class="flex flex-col gap-3 w-full">
@@ -203,7 +213,11 @@
             <div class="flex flex-col gap-2.5 w-full">
               <div class="flex items-start justify-between border-b border-dark-text/10 pb-2">
                 <div class="flex items-center gap-2 min-w-0 pr-2">
-                  <UTooltip :text="event.is_private ? 'Private Event' : 'Group Event'">
+                  <UTooltip
+                    :text="
+                      event.is_private ? UI_TEXT.events.privateEvent : UI_TEXT.events.groupEvent
+                    "
+                  >
                     <UIcon
                       :name="event.is_private ? 'i-heroicons-user' : 'i-heroicons-user-group'"
                       class="w-4 h-4 text-brand-500 shrink-0"
@@ -222,8 +236,8 @@
               <div class="flex flex-col gap-1.5 text-xs text-dark-text/80">
                 <div class="flex justify-between items-center">
                   <span class="font-medium opacity-70"
-                    >Creator:
-                    <span class="font-bold text-dark-text opacity-100">{{
+                    >{{ UI_TEXT.events.creatorLabel + ' '
+                    }}<span class="font-bold text-dark-text opacity-100">{{
                       event.creator?.username
                     }}</span></span
                   >
@@ -232,7 +246,7 @@
                   >
                 </div>
                 <p class="truncate opacity-80" :title="event.description || undefined">
-                  {{ event.description || 'No description provided.' }}
+                  {{ event.description || UI_TEXT.groups.noDescription }}
                 </p>
               </div>
 
@@ -242,8 +256,9 @@
                   'mt-1 pt-2 border-t border-dark-text/5 items-start',
                 ]"
               >
-                <span class="text-[11px] font-bold text-dark-text/50 uppercase tracking-wider mt-1"
-                  >Participants</span
+                <span
+                  class="text-[11px] font-bold text-dark-text/50 uppercase tracking-wider mt-1"
+                  >{{ UI_TEXT.groups.participants }}</span
                 >
 
                 <div :class="appConfig.calendar.participantsGroup">
@@ -271,7 +286,9 @@
                       <UTooltip
                         v-if="(event.members?.length || 0) > 5"
                         :text="
-                          '+' + ((event.members?.length || 0) - 5).toString() + ' more participants'
+                          '+' +
+                          ((event.members?.length || 0) - 5).toString() +
+                          UI_TEXT.events.moreParticipants
                         "
                       >
                         <button
@@ -285,7 +302,9 @@
                   </template>
                   <template v-else>
                     <div class="flex items-center gap-2">
-                      <span class="text-xs font-bold text-dark-text">Everyone</span>
+                      <span class="text-xs font-bold text-dark-text">{{
+                        UI_TEXT.common.everyone
+                      }}</span>
                     </div>
                   </template>
                 </div>

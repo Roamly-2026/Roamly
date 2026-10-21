@@ -4,7 +4,7 @@
     <!-- CREATE MODAL -->
     <UModal
       v-model:open="groupsStore.isCreateModalOpen"
-      :title="CONST_CREATE_GROUP_TITLE"
+      :title="UI_TEXT.groups.createTitle"
       :dismissible="false"
       :close="false"
       :ui="{ content: appConfig.layout.modalSizeSm }"
@@ -17,10 +17,10 @@
           @submit.prevent="handleCreateGroup"
         >
           <div>
-            <label :class="appConfig.typography.inputLabel">{{ CONST_GROUP_NAME_LABEL }}</label>
+            <label :class="appConfig.typography.inputLabel">{{ UI_TEXT.groups.nameLabel }}</label>
             <UInput
               v-model="newGroupName"
-              :placeholder="CONST_GROUP_NAME_PLACEHOLDER"
+              :placeholder="UI_TEXT.groups.namePlaceholder"
               variant="glass"
               class="w-full"
             />
@@ -32,14 +32,14 @@
         <div :class="appConfig.layout.modalActions">
           <UButton
             :class="appConfig.typography.modalActionBtnCancel"
-            :label="CONST_CANCEL_BTN_TEXT"
+            :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             type="button"
             @click="groupsStore.closeCreateModal"
           />
           <UButton
             :class="appConfig.typography.modalActionBtnOk"
-            :label="CONST_CREATE_BTN"
+            :label="UI_TEXT.common.create"
             variant="actionOkButton"
             type="submit"
             form="create-group-form"
@@ -52,7 +52,7 @@
     <!-- DELETE GROUP MODAL -->
     <UModal
       v-model:open="groupsStore.isDeleteModalOpen"
-      :title="CONST_DELETE_GROUP_TITLE"
+      :title="UI_TEXT.groups.deleteTitle"
       :dismissible="false"
       :close="false"
       :ui="{ content: appConfig.layout.modalSizeSm }"
@@ -60,7 +60,7 @@
       <template #default><div class="hidden"></div></template>
       <template #body>
         <p :class="appConfig.typography.modalText">
-          {{ CONST_DELETE_GROUP_CONFIRM }}
+          {{ UI_TEXT.groups.deleteConfirmation }}
           <span
             v-if="groupsStore.selectedGroupToDelete"
             :class="appConfig.typography.modalHighlight"
@@ -76,13 +76,13 @@
         <div :class="appConfig.layout.modalActions">
           <UButton
             :class="appConfig.typography.modalActionBtnCancel"
-            :label="CONST_CANCEL_BTN_TEXT"
+            :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="groupsStore.closeDeleteModal"
           />
           <UButton
             :class="appConfig.typography.modalActionBtnOk"
-            :label="CONST_DELETE_BTN"
+            :label="UI_TEXT.common.delete"
             variant="actionOkButton"
             :loading="isDeleting"
             @click="confirmDelete"
@@ -94,7 +94,7 @@
     <!-- LEAVE GROUP MODAL -->
     <UModal
       v-model:open="groupsStore.isLeaveModalOpen"
-      :title="CONST_LEAVE_GROUP_TITLE"
+      :title="UI_TEXT.groups.leaveTitle"
       :dismissible="false"
       :close="false"
       :ui="{ content: appConfig.layout.modalSizeSm }"
@@ -103,7 +103,7 @@
       <template #body>
         <div :class="appConfig.layout.modalForm">
           <p :class="appConfig.typography.modalText">
-            {{ CONST_LEAVE_GROUP_CONFIRM }}
+            {{ UI_TEXT.groups.leaveConfirmation }}
             <span
               v-if="groupsStore.selectedGroupToLeave"
               :class="appConfig.typography.modalHighlight"
@@ -118,7 +118,7 @@
             "
             :class="appConfig.typography.modalErrorBox"
           >
-            {{ CONST_LEAVE_GROUP_WARNING }}
+            {{ UI_TEXT.groups.leaveWarning }}
           </p>
           <p v-if="leaveErrorText" :class="appConfig.typography.modalErrorBox">
             {{ leaveErrorText }}
@@ -129,13 +129,13 @@
         <div :class="appConfig.layout.modalActions">
           <UButton
             :class="appConfig.typography.modalActionBtnCancel"
-            :label="CONST_CANCEL_BTN_TEXT"
+            :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="groupsStore.closeLeaveModal"
           />
           <UButton
             :class="appConfig.typography.modalActionBtnOk"
-            :label="CONST_LEAVE_BTN"
+            :label="UI_TEXT.common.leave"
             variant="actionOkButton"
             :loading="isLeaving"
             @click="confirmLeave"
@@ -222,7 +222,7 @@ const handleCreateGroup = () => {
   const validationResult = createGroupSchema.safeParse({ groupName: newGroupName.value });
   if (!validationResult.success) {
     formValidationError.value =
-      validationResult.error.issues[0]?.message ?? CONST_INVALID_DATA_ERROR;
+      validationResult.error.issues[0]?.message ?? UI_TEXT.errors.invalidData;
     return;
   }
   createGroup({ groupName: validationResult.data.groupName });

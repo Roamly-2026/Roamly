@@ -5,7 +5,7 @@
     <div class="flex-1">
       <NuxtLink to="/" :class="appConfig.layout.logoWrapper">
         <UIcon name="i-heroicons-map-pin" class="w-7 h-7 text-brand-500" />
-        <span :class="appConfig.typography.logoText">{{ CONST_BRAND_NAME }}</span>
+        <span :class="appConfig.typography.logoText">{{ UI_TEXT.common.brandName }}</span>
       </NuxtLink>
     </div>
 

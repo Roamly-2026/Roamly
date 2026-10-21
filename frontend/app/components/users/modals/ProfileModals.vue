@@ -4,7 +4,7 @@
     <!-- EDIT USERNAME MODAL -->
     <UModal
       v-model:open="profileStore.isEditUsernameModalOpen"
-      :title="CONST_EDIT_USERNAME_TITLE"
+      :title="UI_TEXT.profile.editUsernameTitle"
       :dismissible="false"
       :close="false"
       :ui="{ content: appConfig.layout.modalSizeSm }"
@@ -17,7 +17,7 @@
           @submit.prevent="handleUpdateUsername"
         >
           <div>
-            <label :class="appConfig.typography.inputLabel">{{ CONST_USERNAME_LABEL }}</label>
+            <label :class="appConfig.typography.inputLabel">{{ UI_TEXT.auth.usernameLabel }}</label>
             <UInput v-model="editFormData.username" variant="glass" class="w-full" />
             <p v-if="usernameError" :class="appConfig.typography.inputError">{{ usernameError }}</p>
           </div>
@@ -27,13 +27,13 @@
         <div :class="appConfig.layout.modalActions">
           <UButton
             :class="appConfig.typography.modalActionBtnCancel"
-            :label="CONST_CANCEL_BTN_TEXT"
+            :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="profileStore.closeEditUsernameModal()"
           />
           <UButton
             :class="appConfig.typography.modalActionBtnOk"
-            :label="CONST_EDIT_BTN"
+            :label="UI_TEXT.common.save"
             variant="actionOkButton"
             type="submit"
             form="edit-username-form"
@@ -46,7 +46,7 @@
     <!-- EDIT EMAIL MODAL -->
     <UModal
       v-model:open="profileStore.isEditEmailModalOpen"
-      :title="CONST_EDIT_EMAIL_TITLE"
+      :title="UI_TEXT.profile.editEmailTitle"
       :dismissible="false"
       :close="false"
       :ui="{ content: appConfig.layout.modalSizeSm }"
@@ -59,7 +59,7 @@
           @submit.prevent="handleUpdateEmail"
         >
           <div>
-            <label :class="appConfig.typography.inputLabel">{{ CONST_EMAIL_LABEL }}</label>
+            <label :class="appConfig.typography.inputLabel">{{ UI_TEXT.auth.emailLabel }}</label>
             <UInput v-model="editFormData.email" type="email" variant="glass" class="w-full" />
             <p v-if="emailError" :class="appConfig.typography.inputError">{{ emailError }}</p>
           </div>
@@ -69,13 +69,13 @@
         <div :class="appConfig.layout.modalActions">
           <UButton
             :class="appConfig.typography.modalActionBtnCancel"
-            :label="CONST_CANCEL_BTN_TEXT"
+            :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="profileStore.closeEditEmailModal()"
           />
           <UButton
             :class="appConfig.typography.modalActionBtnOk"
-            :label="CONST_EDIT_BTN"
+            :label="UI_TEXT.common.save"
             variant="actionOkButton"
             type="submit"
             form="edit-email-form"
@@ -88,7 +88,7 @@
     <!-- CHANGE PASSWORD MODAL -->
     <UModal
       v-model:open="profileStore.isChangePasswordModalOpen"
-      :title="CONST_CHANGE_PASSWORD_TITLE"
+      :title="UI_TEXT.profile.changePasswordTitle"
       :dismissible="false"
       :close="false"
       :ui="{ content: appConfig.layout.modalSizeSm }"
@@ -101,11 +101,15 @@
           @submit.prevent="handleChangePassword"
         >
           <div>
-            <label :class="appConfig.typography.inputLabel">{{ CONST_OLD_PASSWORD_LABEL }}</label>
+            <label :class="appConfig.typography.inputLabel">{{
+              UI_TEXT.profile.oldPasswordLabel
+            }}</label>
             <UInput v-model="pwdData.oldPassword" type="password" variant="glass" class="w-full" />
           </div>
           <div>
-            <label :class="appConfig.typography.inputLabel">{{ CONST_NEW_PASSWORD_LABEL }}</label>
+            <label :class="appConfig.typography.inputLabel">{{
+              UI_TEXT.profile.newPasswordLabel
+            }}</label>
             <UInput v-model="pwdData.newPassword" type="password" variant="glass" class="w-full" />
           </div>
           <p v-if="passwordError" :class="appConfig.typography.inputError">{{ passwordError }}</p>
@@ -115,13 +119,13 @@
         <div :class="appConfig.layout.modalActions">
           <UButton
             :class="appConfig.typography.modalActionBtnCancel"
-            :label="CONST_CANCEL_BTN_TEXT"
+            :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="profileStore.closeChangePasswordModal()"
           />
           <UButton
             :class="appConfig.typography.modalActionBtnOk"
-            :label="CONST_EDIT_BTN"
+            :label="UI_TEXT.common.save"
             variant="actionOkButton"
             type="submit"
             form="change-pwd-form"
@@ -134,27 +138,29 @@
     <!-- DELETE ACCOUNT MODAL -->
     <UModal
       v-model:open="profileStore.isDeleteModalOpen"
-      :title="CONST_DELETE_ACCOUNT_TITLE"
+      :title="UI_TEXT.profile.deleteAccountTitle"
       :dismissible="false"
       :close="false"
       :ui="{ content: appConfig.layout.modalSizeSm }"
     >
       <template #default><div class="hidden"></div></template>
       <template #body>
-        <p :class="appConfig.typography.modalText">{{ CONST_DELETE_ACCOUNT_CONFIRM }}</p>
+        <p :class="appConfig.typography.modalText">
+          {{ UI_TEXT.profile.deleteAccountConfirmation }}
+        </p>
         <p v-if="deleteError" :class="appConfig.typography.inputError">{{ deleteError }}</p>
       </template>
       <template #footer>
         <div :class="appConfig.layout.modalActions">
           <UButton
             :class="appConfig.typography.modalActionBtnCancel"
-            :label="CONST_CANCEL_BTN_TEXT"
+            :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="profileStore.closeDeleteModal()"
           />
           <UButton
             :class="appConfig.typography.modalActionBtnOk"
-            :label="CONST_DELETE_BTN"
+            :label="UI_TEXT.common.delete"
             variant="actionOkButton"
             :loading="isDeleting"
             @click="handleDeleteProfile"
@@ -166,7 +172,7 @@
     <!-- UPLOAD PICTURE MODAL -->
     <UModal
       v-model:open="profileStore.isUploadPictureModalOpen"
-      :title="CONST_UPLOAD_PICTURE_TITLE"
+      :title="UI_TEXT.profile.uploadPictureTitle"
       :dismissible="false"
       :close="false"
       :ui="{ content: appConfig.layout.modalSizeSm }"
@@ -179,7 +185,9 @@
           @submit.prevent="handleUploadPicture"
         >
           <div>
-            <label :class="appConfig.typography.inputLabel">{{ CONST_SELECT_FILE_LABEL }}</label>
+            <label :class="appConfig.typography.inputLabel">{{
+              UI_TEXT.profile.selectFileLabel
+            }}</label>
             <input
               type="file"
               :class="appConfig.layout.fileInput"
@@ -196,13 +204,13 @@
         <div :class="appConfig.layout.modalActions">
           <UButton
             :class="appConfig.typography.modalActionBtnCancel"
-            :label="CONST_CANCEL_BTN_TEXT"
+            :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="profileStore.closeUploadPictureModal()"
           />
           <UButton
             :class="appConfig.typography.modalActionBtnOk"
-            :label="CONST_UPLOAD_BTN"
+            :label="UI_TEXT.common.upload"
             variant="actionOkButton"
             type="submit"
             form="upload-pic-form"
@@ -215,7 +223,7 @@
     <!-- VIEW PICTURE FULL MODAL -->
     <UModal
       v-model:open="profileStore.isViewPictureModalOpen"
-      :title="CONST_VIEW_PICTURE_TITLE"
+      :title="UI_TEXT.profile.pictureTitle"
       :dismissible="false"
       :close="false"
       :ui="{ content: appConfig.layout.modalSizeLg }"
@@ -228,7 +236,7 @@
           <img
             v-if="profileStore.selectedUser?.profile_image_url"
             :src="profileStore.selectedUser.profile_image_url"
-            alt="Profile Full"
+            :alt="UI_TEXT.profile.fullPicture"
             class="max-w-full max-h-full object-contain"
           />
           <UIcon v-else name="i-heroicons-user" class="w-32 h-32 text-surface-500/50" />
@@ -238,7 +246,7 @@
         <div class="flex items-center justify-end w-full">
           <UButton
             :class="appConfig.typography.modalActionBtnOk"
-            label="OK"
+            :label="UI_TEXT.profile.ok"
             variant="actionOkButton"
             @click="profileStore.closeViewPictureModal()"
           />
@@ -249,7 +257,7 @@
     <!-- UPLOAD DOCUMENT MODAL -->
     <UModal
       v-model:open="profileStore.isUploadDocumentModalOpen"
-      :title="CONST_UPLOAD_DOCUMENT_TITLE"
+      :title="UI_TEXT.documents.uploadTitle"
       :dismissible="false"
       :close="false"
       :ui="{ content: appConfig.layout.modalSizeMd }"
@@ -262,15 +270,19 @@
           @submit.prevent="profileStore.closeUploadDocumentModal()"
         >
           <div>
-            <label :class="appConfig.typography.inputLabel">{{ CONST_SELECT_FILE_LABEL }}</label>
+            <label :class="appConfig.typography.inputLabel">{{
+              UI_TEXT.profile.selectFileLabel
+            }}</label>
             <input type="file" :class="appConfig.layout.fileInput" />
           </div>
           <div>
-            <label :class="appConfig.typography.inputLabel">{{ CONST_DOCUMENT_TYPE_LABEL }}</label>
+            <label :class="appConfig.typography.inputLabel">{{
+              UI_TEXT.documents.typeLabel
+            }}</label>
             <USelect
               :items="[
                 { label: 'ID Card', value: 'id' },
-                { label: 'Passport', value: 'passport' },
+                { label: UI_TEXT.documentTypes.passport, value: 'passport' },
               ]"
               label-key="label"
               value-key="value"
@@ -278,11 +290,15 @@
           </div>
           <div class="flex gap-4">
             <div class="flex-1">
-              <label :class="appConfig.typography.inputLabel">{{ CONST_ISSUED_AT_LABEL }}</label>
+              <label :class="appConfig.typography.inputLabel">{{
+                UI_TEXT.documents.issuedAtLabel
+              }}</label>
               <UInput type="date" variant="glass" class="w-full" />
             </div>
             <div class="flex-1">
-              <label :class="appConfig.typography.inputLabel">{{ CONST_ENDS_AT_LABEL }}</label>
+              <label :class="appConfig.typography.inputLabel">{{
+                UI_TEXT.documents.endsAtLabel
+              }}</label>
               <UInput type="date" variant="glass" class="w-full" />
             </div>
           </div>
@@ -292,13 +308,13 @@
         <div :class="appConfig.layout.modalActions">
           <UButton
             :class="appConfig.typography.modalActionBtnCancel"
-            :label="CONST_CANCEL_BTN_TEXT"
+            :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="profileStore.closeUploadDocumentModal()"
           />
           <UButton
             :class="appConfig.typography.modalActionBtnOk"
-            :label="CONST_UPLOAD_BTN"
+            :label="UI_TEXT.common.upload"
             variant="actionOkButton"
             type="submit"
             form="upload-doc-form"
@@ -342,7 +358,7 @@ const { logout } = useAuth();
 const getErrorMessage = (error: unknown) => {
   const apiErr = error as ApiError;
   const msg = apiErr?.response?._data?.message;
-  return typeof msg === 'string' ? msg : CONST_INVALID_DATA_ERROR;
+  return typeof msg === 'string' ? msg : UI_TEXT.errors.invalidData;
 };
 
 const editFormData = reactive({ username: '', email: '' });
@@ -388,7 +404,7 @@ const handleUpdateUsername = () => {
   const validationResult = updateUsernameSchema.safeParse({ username: editFormData.username });
   if (!validationResult.success) {
     usernameValidationError.value =
-      validationResult.error.issues[0]?.message ?? CONST_INVALID_DATA_ERROR;
+      validationResult.error.issues[0]?.message ?? UI_TEXT.errors.invalidData;
     return;
   }
 
@@ -424,7 +440,7 @@ const handleUpdateEmail = () => {
   const validationResult = updateEmailSchema.safeParse({ email: editFormData.email });
   if (!validationResult.success) {
     emailValidationError.value =
-      validationResult.error.issues[0]?.message ?? CONST_INVALID_DATA_ERROR;
+      validationResult.error.issues[0]?.message ?? UI_TEXT.errors.invalidData;
     return;
   }
 
@@ -475,7 +491,7 @@ const handleChangePassword = () => {
 
   if (!validationResult.success) {
     pwdValidationError.value =
-      validationResult.error.issues[0]?.message ?? CONST_INVALID_DATA_ERROR;
+      validationResult.error.issues[0]?.message ?? UI_TEXT.errors.invalidData;
     return;
   }
 
@@ -564,7 +580,7 @@ const handleUploadPicture = () => {
   resetUploadPic();
   uploadPicValidationError.value = '';
   if (!selectedPicture.value) {
-    uploadPicValidationError.value = 'Please select a file first.';
+    uploadPicValidationError.value = UI_TEXT.profile.selectFileFirst;
     return;
   }
   uploadPicture(selectedPicture.value);

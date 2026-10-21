@@ -4,7 +4,7 @@
     <ClientOnly>
       <template #fallback>
         <div class="min-h-screen flex items-center justify-center">
-          <span class="opacity-50 font-medium">{{ CONST_LOADING_TEXT ?? 'Loading...' }}</span>
+          <span class="opacity-50 font-medium">{{ UI_TEXT.common.loading }}</span>
         </div>
       </template>
       <MembersMobile
@@ -133,7 +133,7 @@ const handleOpenProfile = (profile: GroupProfileDto) => {
     username: profile.users.username,
     email: profile.users.email,
     role: profile.roles.type,
-    joinedAt: groupInfos.value?.created_at || 'Unknown',
+    joinedAt: groupInfos.value?.created_at || UI_TEXT.common.unknown,
     canViewDocuments: isCurrentUserLeader.value,
   });
 };

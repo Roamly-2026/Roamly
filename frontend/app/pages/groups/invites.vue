@@ -4,7 +4,7 @@
     <ClienOnly>
       <template #fallback>
         <div class="min-h-screen flex items-center justify-center">
-          <span class="opacity-50 font-medium">{{ CONST_LOADING_TEXT ?? 'Loading...' }}</span>
+          <span class="opacity-50 font-medium">{{ UI_TEXT.common.loading }}</span>
         </div>
       </template>
 
