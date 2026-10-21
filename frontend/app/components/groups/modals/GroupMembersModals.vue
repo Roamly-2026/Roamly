@@ -1,4 +1,4 @@
-<!-- frontend/app/components/modals/GroupMembersModals.vue -->
+<!-- frontend/app/components/groups/modals/GroupMembersModals.vue -->
 <template>
   <div>
     <!-- UPDATE MODAL -->

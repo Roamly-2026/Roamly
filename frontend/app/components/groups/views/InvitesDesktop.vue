@@ -1,4 +1,4 @@
-<!-- frontend/app/components/views/desktop/groups/InvitesDesktop.vue -->
+<!-- frontend/app/components/groups/views/InvitesDesktop.vue -->
 <template>
   <div :class="appConfig.layout.pageWrapper">
     <!-- PAGE TITLE -->

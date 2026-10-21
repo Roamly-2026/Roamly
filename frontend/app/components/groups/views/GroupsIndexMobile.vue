@@ -1,4 +1,4 @@
-<!-- frontend/app/components/views/mobile/groups/IndexMobile.vue -->
+<!-- frontend/app/components/groups/views/IndexMobile.vue -->
 <template>
   <div :class="[appConfig.layout.pageWrapper, 'px-4 py-6']">
     <!-- PAGE TITLE -->

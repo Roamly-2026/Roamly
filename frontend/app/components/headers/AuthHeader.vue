@@ -1,4 +1,4 @@
-<!-- frontend/app/components/AuthHeader.vue -->
+<!-- frontend/app/components/headers/AuthHeader.vue -->
 <template>
   <header :class="[appConfig.layout.headerBase, appConfig.layout.headerRelative]">
     <!-- LOGO SECTION -->

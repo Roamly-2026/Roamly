@@ -1,4 +1,4 @@
-<!-- frontend/app/components/modals/ProfileModals.vue -->
+<!-- frontend/app/components/users/modals/ProfileModals.vue -->
 <template>
   <div>
     <!-- EDIT USERNAME MODAL -->

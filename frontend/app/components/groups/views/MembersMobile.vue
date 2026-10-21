@@ -1,4 +1,4 @@
-<!-- frontend/app/components/views/mobile/groups/MembersMobile.vue -->
+<!-- frontend/app/components/groups/views/MembersMobile.vue -->
 <template>
   <div :class="[appConfig.layout.pageWrapper, 'px-4 py-6']">
     <!-- HEADER & SEARCH SECTION -->

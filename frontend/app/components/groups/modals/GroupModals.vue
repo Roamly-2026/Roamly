@@ -1,4 +1,4 @@
-<!-- frontend/app/components/modals/GroupModals.vue -->
+<!-- frontend/app/components/groups/modals/GroupModals.vue -->
 <template>
   <div>
     <!-- CREATE MODAL -->

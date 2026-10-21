@@ -1,4 +1,4 @@
-<!-- frontend/app/components/views/desktop/home/HomeDesktop.vue -->
+<!-- frontend/app/components/home/views/HomeDesktop.vue -->
 <template>
   <div :class="appConfig.layout.homeWrapper">
     <!-- HERO SECTION -->

@@ -1,3 +1,4 @@
+<!-- frontend/app/components/events/map/EventMapSelector -->
 <template>
   <div class="relative w-full h-full min-h-[400px] flex flex-col">
     <div

@@ -1,4 +1,4 @@
-<!-- frontend/app/components/views/desktop/files/media/MediaDesktop.vue -->
+<!-- frontend/app/components/media/views/MediaDesktop.vue -->
 <template>
   <div :class="appConfig.layout.pageWrapper">
     <!-- HEADER -->

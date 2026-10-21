@@ -1,4 +1,4 @@
-<!-- frontend/app/components/modals/UserProfileModal.vue -->
+<!-- frontend/app/components/users/modals/UserProfileModal.vue -->
 <template>
   <UModal
     v-model:open="groupsStore.isUserProfileModalOpen"

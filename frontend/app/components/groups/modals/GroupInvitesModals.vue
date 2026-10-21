@@ -1,4 +1,4 @@
-<!-- frontend/app/components/modals/GroupInvitesModals.vue -->
+<!-- frontend/app/components/groups/modals/GroupInvitesModals.vue -->
 <template>
   <div>
     <!-- JOIN MODAL -->

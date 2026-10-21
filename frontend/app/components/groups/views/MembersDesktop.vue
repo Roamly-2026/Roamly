@@ -1,4 +1,4 @@
-<!-- frontend/app/components/views/desktop/groups/MembersDesktop.vue -->
+<!-- frontend/app/components/groups/views/MembersDesktop.vue -->
 <template>
   <div :class="appConfig.layout.pageWrapper">
     <!-- HEADER & SEARCH SECTION -->

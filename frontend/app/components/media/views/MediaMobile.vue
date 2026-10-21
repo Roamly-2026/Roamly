@@ -1,4 +1,4 @@
-<!-- frontend/app/components/views/mobile/files/media/MediaMobile.vue -->
+<!-- frontend/app/components/media/views/MediaMobile.vue -->
 <template>
   <div class="flex flex-col flex-1 gap-4 w-full p-4 pb-20">
     <!-- TOP NAV BUTTONS -->

@@ -1,4 +1,4 @@
-<!-- frontend/app/components/views/desktop/files/documents/DocumentsDesktop.vue -->
+<!-- frontend/app/components/documents/views/DocumentsDesktop.vue -->
 <template>
   <div :class="appConfig.layout.pageWrapper">
     <!-- HEADER -->

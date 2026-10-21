@@ -1,4 +1,4 @@
-<!-- frontend/app/components/LoadingScreen.vue -->
+<!-- frontend/app/components/headers/LoadingScreen.vue -->
 <template>
   <div
     class="fixed inset-0 z-9999 bg-light-bg/80 backdrop-blur-md flex flex-col items-center justify-center gap-6"

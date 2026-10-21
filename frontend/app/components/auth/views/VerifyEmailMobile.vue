@@ -1,4 +1,4 @@
-<!-- frontend/app/components/views/mobile/auth/VerifyEmailMobile.vue -->
+<!-- frontend/app/components/auth/views/VerifyEmailMobile.vue -->
 <template>
   <div :class="[appConfig.layout.mobileAuthWrapper, 'px-4 py-6']">
     <UCard variant="glass">

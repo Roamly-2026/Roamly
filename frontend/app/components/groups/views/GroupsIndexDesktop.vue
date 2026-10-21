@@ -1,4 +1,4 @@
-<!-- frontend/app/components/views/desktop/groups/IndexDesktop.vue -->
+<!-- frontend/app/components/groups/views/IndexDesktop.vue -->
 <template>
   <div :class="appConfig.layout.pageWrapper">
     <!-- PAGE TITLE -->

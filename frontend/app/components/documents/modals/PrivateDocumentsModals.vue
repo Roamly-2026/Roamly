@@ -1,4 +1,4 @@
-<!-- frontend/app/components/modals/documents/PrivateDocumentsModals.vue -->
+<!-- frontend/app/components/documents/modals/PrivateDocumentsModals.vue -->
 <template>
   <div>
     <!-- ==================== -->

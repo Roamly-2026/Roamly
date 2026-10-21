@@ -1,4 +1,4 @@
-<!-- frontend/app/components/views/desktop/auth/LoginDesktop.vue -->
+<!-- frontend/app/components/auth/views/LoginDesktop.vue -->
 <template>
   <div :class="appConfig.layout.authWrapper">
     <!-- LOGIN FORM CARD -->

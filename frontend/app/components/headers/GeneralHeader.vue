@@ -1,4 +1,4 @@
-<!-- frontend/app/components/ProfileHeader.vue -->
+<!-- frontend/app/components/headers/GeneralHeader.vue -->
 <template>
   <header :class="[appConfig.layout.headerBase, appConfig.layout.headerSticky]">
     <!-- BACK BUTTON SECTION -->

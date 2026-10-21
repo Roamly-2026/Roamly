@@ -1,4 +1,4 @@
-<!-- frontend/app/components/views/desktop/auth/RegisterDesktop.vue -->
+<!-- frontend/app/components/auth/views/RegisterDesktop.vue -->
 <template>
   <div :class="appConfig.layout.authWrapper">
     <UCard variant="glass">

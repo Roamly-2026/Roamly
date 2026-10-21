@@ -1,4 +1,4 @@
-<!-- frontend/app/components/views/mobile/auth/RegisterMobile.vue -->
+<!-- frontend/app/components/auth/views/RegisterMobile.vue -->
 <template>
   <div :class="[appConfig.layout.mobileAuthWrapper, 'px-4 py-6']">
     <UCard variant="glass">

@@ -1,4 +1,4 @@
-<!-- frontend/app/components/modals/EventsModals.vue -->
+<!-- frontend/app/components/events/modals/EventsModals.vue -->
 <template>
   <div>
     <!-- ADD EVENT MODAL -->

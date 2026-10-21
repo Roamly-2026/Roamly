@@ -1,4 +1,4 @@
-<!-- frontend/app/components/AppHeader.vue -->
+<!-- frontend/app/components/headers/AppHeader.vue -->
 <template>
   <header :class="[appConfig.layout.headerBase, appConfig.layout.headerSticky]">
     <!-- LOGO SECTION -->

@@ -1,4 +1,4 @@
-<!-- frontend/app/components/views/mobile/auth/LoginMobile.vue -->
+<!-- frontend/app/components/auth/views/LoginMobile.vue -->
 <template>
   <div :class="[appConfig.layout.mobileAuthWrapper, 'px-4 py-6']">
     <!-- LOGIN FORM CARD -->

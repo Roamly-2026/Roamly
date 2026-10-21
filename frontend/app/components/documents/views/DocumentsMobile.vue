@@ -1,4 +1,4 @@
-<!-- frontend/app/components/views/mobile/files/documents/DocumentsMobile.vue -->
+<!-- frontend/app/components/documents/views/DocumentsMobile.vue -->
 <template>
   <div class="flex flex-col flex-1 gap-4 w-full p-4 pb-20">
     <div :class="appConfig.calendar.mobileTopActions">

@@ -1,4 +1,4 @@
-<!-- frontend/app/components/views/mobile/home/HomeMobile.vue -->
+<!-- frontend/app/components/home/views/HomeMobile.vue -->
 <template>
   <div class="mobile-wrapper px-4 py-8 flex flex-col gap-16 overflow-x-hidden">
     <!-- HERO SECTION -->

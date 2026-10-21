@@ -1,3 +1,4 @@
+<!-- frontend/app/components/events/map/EventMapPreview-->
 <template>
   <div ref="mapContainer" class="w-full h-full z-0"></div>
 </template>

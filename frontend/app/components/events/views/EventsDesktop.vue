@@ -1,4 +1,4 @@
-<!-- frontend/app/components/views/desktop/events/EventsDesktop.vue -->
+<!-- frontend/app/components/events/views/EventsDesktop.vue -->
 <template>
   <div :class="appConfig.calendar.eventsWrapper">
     <div :class="appConfig.calendar.eventsHeaderRow">

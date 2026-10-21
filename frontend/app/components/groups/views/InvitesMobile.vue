@@ -1,4 +1,4 @@
-<!-- frontend/app/components/views/mobile/groups/InvitesMobile.vue -->
+<!-- frontend/app/components/groups/views/InvitesMobile.vue -->
 <template>
   <div :class="[appConfig.layout.pageWrapper, 'px-4 py-6']">
     <!-- PAGE TITLE -->

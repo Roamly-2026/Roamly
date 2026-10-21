@@ -1,4 +1,4 @@
-<!-- frontend/app/components/views/desktop/auth/VerifyEmailDesktop.vue -->
+<!-- frontend/app/components/auth/views/VerifyEmailDesktop.vue -->
 <template>
   <div :class="appConfig.layout.authWrapper">
     <UCard variant="glass">
