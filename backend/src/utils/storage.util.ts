@@ -9,6 +9,7 @@ import crypto from 'crypto';
 import path from 'node:path';
 import { config } from '../config/env.config';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { logger } from '../config/logger.config';
 
 // initializing public client with S3 compatible settings
 const publicS3Client = new S3Client({
@@ -71,7 +72,7 @@ export const deletePublicFileFromCloud = async (publicUrl: string): Promise<void
 
     await publicS3Client.send(command);
   } catch (error) {
-    console.error('Error! There was an issue while deleting public files: ', error);
+    logger.error({ err: error }, 'Public file could not be deleted from R2');
   }
 };
 
@@ -147,6 +148,12 @@ export const deletePrivateFilesFromCloud = async (fileKeys: string[]): Promise<v
 
     await privateS3Client.send(command);
   } catch (error) {
-    console.error('Error! There was an issue while deleting private files: ', error);
+    logger.error(
+      {
+        err: error,
+        fileCount: fileKeys.length,
+      },
+      'Private files could not be deleted from R2',
+    );
   }
 };

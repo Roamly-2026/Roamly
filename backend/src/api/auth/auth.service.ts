@@ -10,6 +10,7 @@ import {
 } from '../../utils/ServerError';
 import * as sendMail from '../shared/email.service';
 import crypto from 'crypto';
+import { logger } from '../../config/logger.config';
 
 // 6 characters long code
 const generateOtp = (): string => crypto.randomInt(100000, 1000000).toString();
@@ -73,7 +74,7 @@ export const registerUser = async (
   try {
     await sendMail.sendOtpEmail(email, otp, username);
   } catch (error: unknown) {
-    console.error(`[EMAIL ERROR] Failed to send Otp to ${email}: `, error);
+    logger.error({ err: error }, 'Registration email could not be sent');
 
     throw new EmailDeliveryError('Failed to send email, please try again later!');
   }
@@ -104,7 +105,7 @@ export const resendVerificationEmail = async (email: string): Promise<void> => {
   try {
     await sendMail.sendOtpEmail(email, newOtp, pendingUser.username);
   } catch (error: unknown) {
-    console.error(`[EMAIL ERROR] Failed to resend verification email to ${email}: `, error);
+    logger.error({ err: error }, 'Verification email could not be resent');
 
     throw new EmailDeliveryError('Failed to send email, please try again later!');
   }
@@ -203,7 +204,7 @@ export const requestForgottenPasswordReset = async (email: string): Promise<void
   try {
     await sendMail.sendPasswordResetEmail(email, otp, user.username);
   } catch (error: unknown) {
-    console.error(`[EMAIL ERROR] Failed to send otp code to ${email}: `, error);
+    logger.error({ err: error }, 'Password reset email could not be sent');
 
     throw new EmailDeliveryError('Failed to send email, please try again later!');
   }

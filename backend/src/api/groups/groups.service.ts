@@ -9,6 +9,7 @@ import {
 import { ROLES } from '../../constants/roles.constants';
 import { BadRequestError, ConflictError, ForbiddenError } from '../../utils/ServerError';
 import * as sendMail from '../shared/email.service';
+import { logger } from '../../config/logger.config';
 
 export const createGroup = async (
   creatorUuid: string,
@@ -289,7 +290,7 @@ export const inviteUsersToYourGroup = async (
       inviteWithRole,
     )
     .catch((err: unknown) => {
-      console.error(`[EMAIL ERROR] Failed to send email to ${invitedUser.email}: `, err);
+      logger.warn({ err }, 'Group invitation email could not be sent');
     });
 
   return createdProfile;

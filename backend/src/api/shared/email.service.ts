@@ -1,6 +1,7 @@
 import * as nodemailer from 'nodemailer';
 import { Resend } from 'resend';
 import { config } from '../../config/env.config';
+import { logger } from '../../config/logger.config';
 
 interface EmailOptions {
   to: string;
@@ -55,7 +56,6 @@ const sendEmail = async ({ to, subject, html, text }: EmailOptions): Promise<voi
     });
 
     if (error) {
-      console.error('[EMAIL PROD ERROR] Failed to send via Resend:', error);
       throw new Error(`Email sending failed: ${error.message}`);
     }
   } else {
@@ -70,9 +70,10 @@ const sendEmail = async ({ to, subject, html, text }: EmailOptions): Promise<voi
       html,
     });
 
-    console.log(`[DEV EMAIL] Sent to: ${to}`);
-    // generate an openable link to view the email
-    console.log(`[DEV EMAIL PREVIEW] ${nodemailer.getTestMessageUrl(info)}`);
+    logger.info(
+      { previewUrl: nodemailer.getTestMessageUrl(info), sentTo: to },
+      'Development email sent',
+    );
   }
 };
 

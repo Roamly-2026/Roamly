@@ -4,6 +4,7 @@ import { BadRequestError, ForbiddenError } from '../../utils/ServerError';
 import { EVENT_VISIBILITY } from '../../constants/events.constants';
 import { ROLES } from '../../constants/roles.constants';
 import * as sendMail from '../shared/email.service';
+import { logger } from '../../config/logger.config';
 
 export const createEvent = async (
   userUuid: string,
@@ -419,7 +420,7 @@ export const addNewParticipants = async (
             userGroupInfo.users.username,
           )
           .catch((err: unknown) => {
-            console.error(`[EMAIL ERROR] Failed to send email to ${email}: `, err);
+            logger.warn({ err }, 'Event notification email could not be sent');
           });
       }
     });
