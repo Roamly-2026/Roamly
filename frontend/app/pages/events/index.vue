@@ -278,6 +278,7 @@ const getGroupRole = (userEmail?: string | null): string => {
 
 const handleOpenUserProfile = (user: EventCreatorDto) => {
   groupsStore.selectedUserProfile = {
+    userUuid: user.uuid,
     username: user.username,
     email: user.email || UI_TEXT.common.notAvailable,
     role: getGroupRole(user.email), // <-- ITT VOLT A HARDKÓDOLT 'Participant'!
