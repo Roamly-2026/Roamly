@@ -9,7 +9,9 @@
     "start": "node dist/server.js",
     "lint": "npx eslint .",
     "format": "prettier --write \"**/*.{js,ts,vue,json,css,scss}\"",
-    "pretty": "prettier --check \"**/*.{js,ts,vue,json,css,scss}\""
+    "pretty": "prettier --check \"**/*.{js,ts,vue,json,css,scss}\"",
+    "typecheck": "prisma generate && tsc --noEmit",
+    "check": "npm run lint && npm run pretty && npm run typecheck"
   },
   "keywords": [],
   "author": "",
