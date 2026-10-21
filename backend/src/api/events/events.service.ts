@@ -149,7 +149,7 @@ export const createEvent = async (
             userGroupInfo.users.username,
           )
           .catch((err: unknown) => {
-            console.error(`[EMAIL ERROR] Failed to send email to ${email}: `, err);
+            logger.warn({ err }, 'Event notification email could not be sent');
           });
       }
     });
@@ -184,7 +184,7 @@ export const createEvent = async (
           userGroupInfo.users.username,
         )
         .catch((err: unknown) => {
-          console.error(`[EMAIL ERROR] Failed to send email to ${member.email}: `, err);
+          logger.warn({ err }, 'Event notification email could not be sent');
         });
     });
   }
