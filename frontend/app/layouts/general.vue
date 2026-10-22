@@ -1,7 +1,7 @@
 <!-- frontend/app/layouts/general.vue -->
 <template>
   <div :class="[appConfig.layout.base, bgClass]">
-    <ProfileHeader />
+    <GeneralHeader />
 
     <main :class="appConfig.layout.mainDefault">
       <slot />

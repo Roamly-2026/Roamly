@@ -1,6 +1,6 @@
 <!-- frontend/app/components/events/map/EventMapSelector -->
 <template>
-  <div class="relative w-full h-full min-h-[400px] flex flex-col">
+  <div class="relative w-full h-full min-h-100 flex flex-col">
     <div
       ref="mapContainer"
       class="w-full h-full z-0 rounded-md border-x border-t border-gray-200"
@@ -11,7 +11,7 @@
     >
       <div class="flex-1 min-w-0">
         <p class="text-sm font-bold text-dark-text">{{ UI_TEXT.map.selectedLocation }}</p>
-        <p class="text-sm text-dark-text/80 break-words whitespace-normal w-full mt-1">
+        <p class="text-sm text-dark-text/80 wrap-break-word whitespace-normal w-full mt-1">
           <span v-if="isLoadingAddress" class="opacity-60 animate-pulse">{{
             UI_TEXT.map.loadingAddress
           }}</span>

@@ -15,6 +15,17 @@ export default defineNuxtConfig({
     '@nuxtjs/device',
   ],
 
+  vite: {
+    optimizeDeps: {
+      include: [
+        '@vue/devtools-core',
+        'zod',
+        'leaflet',
+        'leaflet-control-geocoder'
+      ]
+    }
+  },
+
   imports: {
     dirs: ['utils/constants', 'utils/schemas', 'locales'],
   },

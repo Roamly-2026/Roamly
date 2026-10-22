@@ -443,7 +443,7 @@
                 class="w-full h-48 rounded-lg overflow-hidden border border-gray-200 mt-1 relative z-0"
               >
                 <ClientOnly>
-                  <MapEventMapPreview
+                  <EventMapPreview
                     :latitude="selectedEvent.latitude"
                     :longitude="selectedEvent.longitude"
                   />
