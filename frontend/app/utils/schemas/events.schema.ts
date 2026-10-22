@@ -65,17 +65,14 @@ export const createEventSchema = z
   )
   .refine(
     (data: { is_private: boolean; participant_emails?: string[] }) => {
-      if (
-        !data.is_private &&
-        data.participant_emails &&
-        data.participant_emails.length > 0
-      ) {
+      if (!data.is_private && data.participant_emails && data.participant_emails.length > 0) {
         return false;
       }
       return true;
     },
     {
-      message: 'Public events can not have specified participants, every user in the group will be a participant!',
+      message:
+        'Public events can not have specified participants, every user in the group will be a participant!',
       path: ['participant_emails'],
     },
   )
@@ -197,5 +194,5 @@ export const eventListingFilterSchema = z
     {
       message: 'End time must be after the start time, or the exact same!',
       path: ['end_date'],
-    }
+    },
   );
