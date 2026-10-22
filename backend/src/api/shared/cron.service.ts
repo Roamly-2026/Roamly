@@ -1,5 +1,6 @@
 import cron from 'node-cron';
 import prisma from '../../prisma';
+import { logger } from '../../config/logger.config';
 
 export const startCronJobs = (): void => {
   // '0 * * * *' -> it runs at every hours first minute
@@ -25,20 +26,19 @@ export const startCronJobs = (): void => {
         },
       });
 
-      if (pendingResult.count > 0) {
-        console.log(
-          `[CRON] Successfully deleted ${pendingResult.count} expired pending_users record(s)!`,
-        );
-      }
-      if (resetResult.count > 0) {
-        console.log(
-          `[CRON] Successfully deleted ${resetResult.count} expired password_resets record(s)!`,
+      if (pendingResult.count > 0 || resetResult.count > 0) {
+        logger.info(
+          {
+            pendingUsersDeleted: pendingResult.count,
+            passwordResetsDeleted: resetResult.count,
+          },
+          'Expired authentication records deleted',
         );
       }
     } catch (error: unknown) {
-      console.error('[CRON ERROR] There was an error during the cleanup process: ', error);
+      logger.error({ err: error }, 'Authentication cleanup failed');
     }
   });
 
-  console.log('[CRON] Background processes started successfully!');
+  logger.info('Background processes started');
 };

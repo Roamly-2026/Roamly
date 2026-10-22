@@ -22,8 +22,7 @@ export const requireAuth = (req: Request, res: Response, next: NextFunction): vo
     res.locals.user = decoded;
 
     next();
-  } catch (error) {
-    console.error(error);
+  } catch {
     res.status(401).json({
       status: 'error',
       message: 'Invalid or expired token',

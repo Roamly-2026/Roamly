@@ -9,15 +9,17 @@ const storage = multer.memoryStorage();
 const ProfilePictureFilter = (
   req: Request,
   file: Express.Multer.File,
-  cb: multer.FileFilterCallback,
+  filterCallback: multer.FileFilterCallback,
 ): void => {
   const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
   if (allowedMimeTypes.includes(file.mimetype)) {
     // we accept the file
-    cb(null, true);
+    filterCallback(null, true);
   } else {
-    cb(new BadRequestError('Invalid file type! Only JPG, PNG, WEBP and GIF are allowed!'));
+    filterCallback(
+      new BadRequestError('Invalid file type! Only JPG, PNG, WEBP and GIF are allowed!'),
+    );
   }
 };
 
@@ -25,14 +27,21 @@ const ProfilePictureFilter = (
 const documentFilter = (
   req: Request,
   file: Express.Multer.File,
-  cb: multer.FileFilterCallback,
+  filterCallback: multer.FileFilterCallback,
 ): void => {
+  if (Array.from(file.originalname).length > 255) {
+    filterCallback(new BadRequestError('File name can not be longer than 255 characters!'));
+    return;
+  }
+
   const allowedMimeTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'];
 
   if (allowedMimeTypes.includes(file.mimetype)) {
-    cb(null, true);
+    filterCallback(null, true);
   } else {
-    cb(new BadRequestError('Invalid document type! Only JPG, PNG, WEBP and PDF are allowed!'));
+    filterCallback(
+      new BadRequestError('Invalid document type! Only JPG, PNG, WEBP and PDF are allowed!'),
+    );
   }
 };
 
@@ -40,8 +49,13 @@ const documentFilter = (
 const mediaFilter = (
   req: Request,
   file: Express.Multer.File,
-  cb: multer.FileFilterCallback,
+  filterCallback: multer.FileFilterCallback,
 ): void => {
+  if (Array.from(file.originalname).length > 255) {
+    filterCallback(new BadRequestError('File name can not be longer than 255 characters!'));
+    return;
+  }
+
   // video/quicktime is <.mov> type
   const allowedMimeTypes = [
     'image/jpeg',
@@ -53,9 +67,9 @@ const mediaFilter = (
   ];
 
   if (allowedMimeTypes.includes(file.mimetype)) {
-    cb(null, true);
+    filterCallback(null, true);
   } else {
-    cb(
+    filterCallback(
       new BadRequestError(
         'Invalid media file type! Only JPG, PNG, WEBP, MP4, MOV, and GIF are allowed!',
       ),

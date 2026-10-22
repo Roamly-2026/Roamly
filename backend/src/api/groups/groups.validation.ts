@@ -1,20 +1,13 @@
 import { z } from 'zod';
 import { ROLES } from '../../constants/roles.constants';
+import { emailSchema, groupNameSchema } from '../shared/common.validation';
 
 export const createGroupSchema = z.object({
-  groupName: z
-    .string()
-    .trim()
-    .min(3, 'Group name too short! It must be atleast 3 characters long!')
-    .max(64, 'Group name too long! It must be shorter than 64 characters!')
-    .regex(
-      /^[a-zA-Z0-9\s\-_]+$/,
-      'Group name can only contain letters, numbers, spaces, hyphens and underscores!',
-    ),
+  groupName: groupNameSchema,
   initialInvites: z
     .array(
       z.object({
-        email: z.email('invalid email adress format!'),
+        email: emailSchema,
         role: z.enum([ROLES.INVITEDMEMBER, ROLES.INVITEDLEADER], {
           message: `Role must be either "${ROLES.INVITEDMEMBER}" or "${ROLES.INVITEDLEADER}"!`,
         }),
@@ -43,7 +36,7 @@ export const groupUuidValidationSchema = z.object({
 });
 
 export const inviteUsersToYourGroupBodySchema = z.object({
-  invitedUserEmail: z.email('Invalid Email Format!'),
+  invitedUserEmail: emailSchema,
 
   inviteWithRole: z.enum([ROLES.INVITEDLEADER, ROLES.INVITEDMEMBER], {
     message: `Role must be either "${ROLES.INVITEDMEMBER}" or "${ROLES.INVITEDLEADER}"!`,
@@ -53,22 +46,13 @@ export const inviteUsersToYourGroupBodySchema = z.object({
 export const removeUserFromGroupByEmailSchema = z.object({
   groupUuid: z.uuid({ message: 'groupUuid parameter must be valid UUID!' }),
 
-  email: z.email('Invalid Email Format!'),
+  email: emailSchema,
 });
 
 export const updatedGroupSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(3, 'Group name too short! It must be atleast 3 characters long!')
-    .max(64, 'Group name too long! It must be shorter than 64 characters!')
-    .regex(
-      /^[a-zA-Z0-9\s\-_]+$/,
-      'Group name can only contain letters, numbers, spaces, hyphens and underscores!',
-    )
-    .optional(),
+  name: groupNameSchema.optional(),
 });
 
 export const targetUserEmailSchema = z.object({
-  email: z.email('Invalid Email Format!'),
+  email: emailSchema,
 });

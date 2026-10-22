@@ -55,8 +55,5 @@ jobs:
       - name: Install Backend Dependencies
         run: npm ci
 
-      - name: Check Backend Formatting
-        run: npx prettier --check .
-
-      - name: Run Backend Linter
-        run: npm run lint
+      - name: Check Backend
+        run: npm run check
