@@ -1,7 +1,7 @@
 <!-- frontend/app/pages/groups/invites.vue -->
 <template>
   <div>
-    <ClienOnly>
+    <ClientOnly>
       <template #fallback>
         <div class="min-h-screen flex items-center justify-center">
           <span class="opacity-50 font-medium">{{ UI_TEXT.common.loading }}</span>
@@ -25,7 +25,7 @@
         :is-fetching-next-page="isFetchingNextPage"
         @load-more="fetchNextPage"
       />
-    </ClienOnly>
+    </ClientOnly>
   </div>
 </template>
 

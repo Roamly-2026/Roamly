@@ -1,28 +1,36 @@
 import { UI_TEXT } from '~/locales/en';
-// frontend/app/utils/schemas/groups.schema.ts
 import { z } from 'zod';
+import { emailSchema, groupNameSchema } from './common.schema';
+
+const ROLES = {
+  INVITEDMEMBER: 'invitedMember',
+  INVITEDLEADER: 'invitedLeader',
+  MEMBER: 'member',
+  LEADER: 'leader',
+};
 
 export const createGroupSchema = z.object({
-  groupName: z
-    .string()
-    .trim()
-    .min(3, UI_TEXT.validation.groupNameMin)
-    .max(64, UI_TEXT.validation.groupNameMax)
-    .regex(/^[a-zA-Z0-9\s\-_]+$/, UI_TEXT.validation.groupNameCharacters),
+  groupName: groupNameSchema,
+  initialInvites: z
+    .array(
+      z.object({
+        email: emailSchema,
+        role: z.enum([ROLES.INVITEDMEMBER, ROLES.INVITEDLEADER], {
+          message: UI_TEXT.validation.inviteRole,
+        }),
+      }),
+    )
+    .max(50, 'You can only invite up to 50 users at once!')
+    .optional(),
 });
 
 export const updateGroupSchema = z.object({
-  groupName: z
-    .string()
-    .trim()
-    .min(3, UI_TEXT.validation.groupNameMin)
-    .max(64, UI_TEXT.validation.groupNameMax)
-    .regex(/^[a-zA-Z0-9\s\-_]+$/, UI_TEXT.validation.groupNameCharacters),
+  groupName: groupNameSchema,
 });
 
 export const inviteUserSchema = z.object({
-  email: z.string().email(UI_TEXT.validation.inviteEmailFormat),
-  role: z.enum(['invitedMember', 'invitedLeader'], {
+  email: emailSchema,
+  role: z.enum([ROLES.INVITEDMEMBER, ROLES.INVITEDLEADER], {
     message: UI_TEXT.validation.inviteRole,
   }),
 });

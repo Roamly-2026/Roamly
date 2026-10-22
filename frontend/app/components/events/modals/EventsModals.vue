@@ -99,7 +99,7 @@
                 class="flex items-start justify-between gap-2 p-2 bg-surface-50 border border-surface-200 rounded-md w-full overflow-hidden box-border"
               >
                 <span
-                  class="text-sm text-dark-text/80 break-words whitespace-normal min-w-0 flex-1"
+                  class="text-sm text-dark-text/80 wrap-break-word whitespace-normal min-w-0 flex-1"
                   >{{ formState.address }}</span
                 >
                 <UButton
