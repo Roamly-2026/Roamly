@@ -7,11 +7,11 @@
     ></div>
 
     <div
-      class="w-full bg-surface-50 border border-gray-200 rounded-b-md p-4 flex flex-col sm:flex-row justify-between items-center gap-4 z-10 shrink-0"
+      :class="`w-full bg-surface-50 border border-gray-200 rounded-b-md ${SPACING_TOKENS.p.md} flex flex-col sm:flex-row justify-between items-center ${SPACING_TOKENS.gap.md} z-10 shrink-0`"
     >
       <div class="flex-1 min-w-0">
         <p class="text-sm font-bold text-dark-text">{{ UI_TEXT.map.selectedLocation }}</p>
-        <p class="text-sm text-dark-text/80 wrap-break-word whitespace-normal w-full mt-1">
+        <p :class="`text-sm text-dark-text/80 break-words whitespace-normal w-full ${SPACING_TOKENS.mt.xs}`">
           <span v-if="isLoadingAddress" class="opacity-60 animate-pulse">{{
             UI_TEXT.map.loadingAddress
           }}</span>
@@ -20,10 +20,10 @@
         </p>
       </div>
       <button
-        class="px-4 py-2 rounded-md font-medium text-white transition-colors duration-200 shrink-0"
-        :class="
-          currentSelection ? 'bg-brand-500 hover:bg-brand-600' : 'bg-gray-400 cursor-not-allowed'
-        "
+        :class="[
+          `${SPACING_TOKENS.px.md} ${SPACING_TOKENS.py.sm} rounded-md font-medium text-white transition-colors duration-200 shrink-0`,
+          currentSelection ? 'bg-brand-500 hover:bg-brand-600' : 'bg-gray-400 cursor-not-allowed',
+        ]"
         :disabled="!currentSelection"
         @click="confirmSelection"
       >
@@ -39,6 +39,7 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet-control-geocoder/dist/Control.Geocoder.css';
 import L from 'leaflet';
 import 'leaflet-control-geocoder';
+import { SPACING_TOKENS } from '~/utils/spacings.tokens';
 
 import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
 import iconUrl from 'leaflet/dist/images/marker-icon.png';

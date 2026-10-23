@@ -1,6 +1,6 @@
 <!-- frontend/app/components/events/views/EventsMobile.vue -->
 <template>
-  <div class="flex flex-col flex-1 gap-4 w-full p-4 pb-20">
+  <div :class="`flex flex-col flex-1 ${SPACING_TOKENS.gap.md} w-full ${SPACING_TOKENS.p.md} pb-20`">
     <div :class="appConfig.calendar.mobileTopActions">
       <UTooltip :text="UI_TEXT.tooltips.members">
         <UButton icon="i-heroicons-users" variant="glassIconButton" :to="membersRoute" />
@@ -144,7 +144,7 @@
       </div>
 
       <div :class="appConfig.calendar.mobileContentWrapper">
-        <div class="w-full mt-2 flex items-center gap-2">
+        <div :class="`w-full ${SPACING_TOKENS.mt.xs} flex items-center ${SPACING_TOKENS.gap.sm}`">
           <UPopover
             v-model:open="isDateDropdownOpen"
             class="flex-1 min-w-0"
@@ -168,10 +168,12 @@
             </UButton>
             <template #content>
               <div
-                :class="appConfig.ui.wideDropdownMenu.slots.content"
-                class="w-[calc(100vw-3rem)] mx-2 max-h-64 overflow-y-auto mt-1"
+                :class="[
+                  appConfig.ui.wideDropdownMenu.slots.content,
+                  `w-[calc(100vw-3rem)] mx-2 max-h-64 overflow-y-auto ${SPACING_TOKENS.mt.xs}`
+                ]"
               >
-                <div v-if="isLoadingDays" class="p-4 text-center text-sm opacity-60">
+                <div v-if="isLoadingDays" :class="`${SPACING_TOKENS.p.md} text-center text-sm opacity-60`">
                   {{ UI_TEXT.events.loadingDays }}
                 </div>
                 <template v-else>
@@ -200,7 +202,7 @@
               :variant="showOnlyActiveEvents ? 'glassOutlineButton' : 'glassButton'"
               :class="[
                 showOnlyActiveEvents ? 'ring-2 ring-success-500 text-success-600' : '',
-                'shrink-0 whitespace-nowrap px-4 py-2 min-w-22!',
+                `shrink-0 whitespace-nowrap ${SPACING_TOKENS.px.md} ${SPACING_TOKENS.py.sm} min-w-22!`,
               ]"
               @click="showOnlyActiveEvents = !showOnlyActiveEvents"
             />
@@ -208,7 +210,7 @@
         </div>
 
         <div :class="appConfig.calendar.mobileEventsWrapper">
-          <div v-if="isLoadingEvents" class="p-4 text-center text-sm opacity-60">
+          <div v-if="isLoadingEvents" :class="`${SPACING_TOKENS.p.md} text-center text-sm opacity-60`">
             {{ UI_TEXT.events.loadingEvents }}
           </div>
           <template v-else>
@@ -224,7 +226,7 @@
               ]"
               @click="$emit('open-preview-modal', event)"
             >
-              <div class="flex items-center gap-3 flex-1 min-w-0 pr-2">
+              <div :class="`flex items-center ${SPACING_TOKENS.gap.sm} flex-1 min-w-0 pr-2`">
                 <UTooltip
                   :text="
                     event.is_private ? UI_TEXT.events.privateLabel : UI_TEXT.events.groupEventLabel
@@ -241,7 +243,7 @@
                   >{{ event.title }}</span
                 >
               </div>
-              <div class="flex items-center gap-3 shrink-0">
+              <div :class="`flex items-center ${SPACING_TOKENS.gap.sm} shrink-0`">
                 <span class="text-xs font-bold text-dark-text/80 whitespace-nowrap"
                   >{{ event.timeStartFormatted }} - {{ event.timeEndFormatted }}</span
                 >
@@ -249,8 +251,7 @@
             </div>
             <div
               v-if="!filteredAndSortedEventsList?.length"
-              :class="appConfig.calendar.mobileEmptyState"
-              class="flex flex-col items-center justify-center py-12 gap-2"
+              :class="[appConfig.calendar.mobileEmptyState, `flex flex-col items-center justify-center py-12 ${SPACING_TOKENS.gap.sm}`]"
             >
               <UIcon name="i-heroicons-calendar" class="w-8 h-8 opacity-40" />
               <span>{{
@@ -269,6 +270,7 @@ import { computed, ref } from 'vue';
 import { useAppConfig } from '#imports';
 import type { GroupOutDto } from '~/types/groups.type';
 import type { EventCreatorDto, UiDay, UiEvent } from '~/types/events.type';
+import { SPACING_TOKENS } from '~/utils/spacings.tokens';
 
 const props = defineProps<{
   userGroupsList: GroupOutDto[];
