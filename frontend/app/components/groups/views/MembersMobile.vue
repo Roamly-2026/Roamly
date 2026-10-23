@@ -59,13 +59,9 @@
             @update:model-value="emit('update:searchQuery', $event)"
           />
         </div>
-<<<<<<< HEAD
-        <div class="flex items-center gap-2 shrink-0">
-          <UTooltip v-if="isCurrentUserLeader" :text="UI_TEXT.tooltips.inviteUser">
-=======
+
         <div :class="`flex items-center ${SPACING_TOKENS.gap.sm} shrink-0`">
-          <UTooltip v-if="isCurrentUserLeader" :text="CONST_TOOLTIP_INVITE_USER ?? 'Invite User'">
->>>>>>> a11e5e8 (New tokens used in group views)
+          <UTooltip v-if="isCurrentUserLeader" :text="UI_TEXT.tooltips.inviteUser">
             <UButton
               icon="i-heroicons-user-plus"
               variant="glassIconButtonHighlight"
@@ -182,23 +178,13 @@
           ` shadow-md bg-surface-500/40 rounded-2xl ring-1 ring-dark-text/10 ${SPACING_TOKENS.p.md} w-full ${SPACING_TOKENS.mt.md}`,
       ]"
     >
-<<<<<<< HEAD
-      <h2 :class="appConfig.typography.cardTitle" class="text-surface-600 mb-2">
+      <h2 :class="[appConfig.typography.cardTitle, `text-surface-600 ${SPACING_TOKENS.mb.sm}`]">
         {{ UI_TEXT.events.upcomingHeading }}
       </h2>
 
       <ClientOnly>
-        <div v-if="isLoadingEvents" class="text-sm font-medium text-dark-text/60 py-2">
-          {{ UI_TEXT.events.loadingEvents }}
-=======
-      <h2 :class="[appConfig.typography.cardTitle, `text-surface-600 ${SPACING_TOKENS.mb.sm}`]">
-        {{ CONST_UPCOMING_EVENTS_HEADING }}
-      </h2>
-
-      <ClientOnly>
         <div v-if="isLoadingEvents" :class="`text-sm font-medium text-dark-text/60 ${SPACING_TOKENS.py.sm}`">
-          {{ CONST_LOADING_EVENTS_MSG }}
->>>>>>> a11e5e8 (New tokens used in group views)
+          {{ UI_TEXT.events.loadingEvents }}
         </div>
         <div
           v-else-if="todayUpcomingEvents.length === 0"
@@ -215,21 +201,14 @@
             class="w-full cursor-pointer hover:bg-surface-500/90 transition-colors"
             @click="navigateToEvent(event.uuid)"
           >
-<<<<<<< HEAD
-            <div class="flex flex-col gap-2.5 w-full">
-              <div class="flex items-start justify-between border-b border-dark-text/10 pb-2">
-                <div class="flex items-center gap-2 min-w-0 pr-2">
+            <div :class="`flex flex-col ${SPACING_TOKENS.gap.sm} w-full`">
+              <div :class="`flex items-start justify-between border-b border-dark-text/10 pb-2`">
+                <div :class="`flex items-center ${SPACING_TOKENS.gap.sm} min-w-0 pr-2`">
                   <UTooltip
                     :text="
                       event.is_private ? UI_TEXT.events.privateEvent : UI_TEXT.events.groupEvent
                     "
                   >
-=======
-            <div :class="`flex flex-col ${SPACING_TOKENS.gap.sm} w-full`">
-              <div :class="`flex items-start justify-between border-b border-dark-text/10 pb-2`">
-                <div :class="`flex items-center ${SPACING_TOKENS.gap.sm} min-w-0 pr-2`">
-                  <UTooltip :text="event.is_private ? 'Private Event' : 'Group Event'">
->>>>>>> a11e5e8 (New tokens used in group views)
                     <UIcon
                       :name="event.is_private ? 'i-heroicons-user' : 'i-heroicons-user-group'"
                       class="w-4 h-4 text-brand-500 shrink-0"
@@ -313,15 +292,10 @@
                     </div>
                   </template>
                   <template v-else>
-<<<<<<< HEAD
-                    <div class="flex items-center gap-2">
+                    <div :class="`flex items-center ${SPACING_TOKENS.gap.sm}`">
                       <span class="text-xs font-bold text-dark-text">{{
                         UI_TEXT.common.everyone
                       }}</span>
-=======
-                    <div :class="`flex items-center ${SPACING_TOKENS.gap.sm}`">
-                      <span class="text-xs font-bold text-dark-text">Everyone</span>
->>>>>>> a11e5e8 (New tokens used in group views)
                     </div>
                   </template>
                 </div>
