@@ -2,14 +2,11 @@
 <template>
   <div>
     <!-- UPDATE MODAL -->
-    <UModal
+    <BaseModal
       v-model:open="groupsStore.isUpdateModalOpen"
       :title="UI_TEXT.groups.editTitle"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeSm }"
+      :ui-size="appConfig.layout.modalSizeSm"
     >
-      <template #default><div class="hidden"></div></template>
       <template #body>
         <form
           id="update-group-form"
@@ -46,17 +43,14 @@
           />
         </div>
       </template>
-    </UModal>
+    </BaseModal>
 
     <!-- INVITE MODAL -->
-    <UModal
+    <BaseModal
       v-model:open="groupsStore.isInviteModalOpen"
       :title="UI_TEXT.groups.inviteUserTitle"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeSm }"
+      :ui-size="appConfig.layout.modalSizeSm"
     >
-      <template #default><div class="hidden"></div></template>
       <template #body>
         <form
           id="invite-user-form"
@@ -111,17 +105,20 @@
           />
         </div>
       </template>
-    </UModal>
+    </BaseModal>
 
     <!-- REMOVE USER MODAL -->
-    <UModal
+    <ConfirmModal
       v-model:open="groupsStore.isRemoveUserModalOpen"
       :title="UI_TEXT.groups.removeUserTitle"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeSm }"
+      :error-text="removeErrorText"
+      :cancel-text="UI_TEXT.common.cancel"
+      :confirm-text="UI_TEXT.common.remove"
+      :loading="isRemoving"
+      :ui-size="appConfig.layout.modalSizeSm"
+      @cancel="groupsStore.closeRemoveUserModal()"
+      @confirm="handleRemoveUser"
     >
-      <template #default><div class="hidden"></div></template>
       <template #body>
         <p :class="appConfig.typography.modalText">
           {{ UI_TEXT.groups.removeUserConfirmation }}
@@ -129,36 +126,21 @@
             >„{{ groupsStore.selectedUserEmailToRemove }}”</span
           >
         </p>
-        <p v-if="removeErrorText" :class="appConfig.typography.inputError">{{ removeErrorText }}</p>
       </template>
-      <template #footer>
-        <div :class="appConfig.layout.modalActions">
-          <UButton
-            :class="appConfig.typography.modalActionBtnCancel"
-            :label="UI_TEXT.common.cancel"
-            variant="actionCancelButton"
-            @click="groupsStore.closeRemoveUserModal()"
-          />
-          <UButton
-            :class="appConfig.typography.modalActionBtnOk"
-            :label="UI_TEXT.common.remove"
-            variant="actionOkButton"
-            :loading="isRemoving"
-            @click="handleRemoveUser"
-          />
-        </div>
-      </template>
-    </UModal>
+    </ConfirmModal>
 
     <!-- PROMOTE USER MODAL -->
-    <UModal
+    <ConfirmModal
       v-model:open="groupsStore.isPromoteUserModalOpen"
       :title="UI_TEXT.groups.promoteUser"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeSm }"
+      :error-text="promoteErrorText"
+      :cancel-text="UI_TEXT.common.cancel"
+      :confirm-text="UI_TEXT.groups.promote"
+      :loading="isPromoting"
+      :ui-size="appConfig.layout.modalSizeSm"
+      @cancel="groupsStore.closePromoteUserModal()"
+      @confirm="handlePromoteUser"
     >
-      <template #default><div class="hidden"></div></template>
       <template #body>
         <p :class="appConfig.typography.modalText">
           {{ ' ' + UI_TEXT.groups.promoteBeforeName + ' '
@@ -166,38 +148,22 @@
             >„{{ groupsStore.selectedUserNameToPromote }}”</span
           >{{ ' ' + UI_TEXT.groups.promoteAfterName + ' ' }}
         </p>
-        <p v-if="promoteErrorText" :class="appConfig.typography.inputError">
-          {{ promoteErrorText }}
-        </p>
       </template>
-      <template #footer>
-        <div :class="appConfig.layout.modalActions">
-          <UButton
-            :class="appConfig.typography.modalActionBtnCancel"
-            :label="UI_TEXT.common.cancel"
-            variant="actionCancelButton"
-            @click="groupsStore.closePromoteUserModal()"
-          />
-          <UButton
-            :class="appConfig.typography.modalActionBtnOk"
-            :label="UI_TEXT.groups.promote"
-            variant="actionOkButton"
-            :loading="isPromoting"
-            @click="handlePromoteUser"
-          />
-        </div>
-      </template>
-    </UModal>
+    </ConfirmModal>
 
     <!-- DEMOTE USER MODAL -->
-    <UModal
+    <ConfirmModal
       v-model:open="groupsStore.isDemoteUserModalOpen"
       :title="UI_TEXT.groups.demoteUser"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeSm }"
+      :error-text="demoteErrorText"
+      :cancel-text="UI_TEXT.common.cancel"
+      :confirm-text="UI_TEXT.groups.demote"
+      :loading="isDemoting"
+      :ui-size="appConfig.layout.modalSizeSm"
+      confirm-btn-class="text-orange-500 hover:text-white hover:bg-orange-600 ring-orange-500"
+      @cancel="groupsStore.closeDemoteUserModal()"
+      @confirm="handleDemoteUser"
     >
-      <template #default><div class="hidden"></div></template>
       <template #body>
         <p :class="appConfig.typography.modalText">
           {{ ' ' + UI_TEXT.groups.demoteBeforeName + ' '
@@ -205,27 +171,8 @@
             >„{{ groupsStore.selectedUserNameToDemote }}”</span
           >{{ ' ' + UI_TEXT.groups.demoteAfterName + ' ' }}
         </p>
-        <p v-if="demoteErrorText" :class="appConfig.typography.inputError">{{ demoteErrorText }}</p>
       </template>
-      <template #footer>
-        <div :class="appConfig.layout.modalActions">
-          <UButton
-            :class="appConfig.typography.modalActionBtnCancel"
-            :label="UI_TEXT.common.cancel"
-            variant="actionCancelButton"
-            @click="groupsStore.closeDemoteUserModal()"
-          />
-          <UButton
-            :class="appConfig.typography.modalActionBtnOk"
-            :label="UI_TEXT.groups.demote"
-            variant="actionCancelButton"
-            class="text-orange-500 hover:text-white hover:bg-orange-600 ring-orange-500"
-            :loading="isDemoting"
-            @click="handleDemoteUser"
-          />
-        </div>
-      </template>
-    </UModal>
+    </ConfirmModal>
   </div>
 </template>
 

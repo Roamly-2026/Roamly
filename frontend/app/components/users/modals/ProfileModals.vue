@@ -2,14 +2,11 @@
 <template>
   <div>
     <!-- EDIT USERNAME MODAL -->
-    <UModal
+    <BaseModal
       v-model:open="profileStore.isEditUsernameModalOpen"
       :title="UI_TEXT.profile.editUsernameTitle"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeSm }"
+      :ui-size="appConfig.layout.modalSizeSm"
     >
-      <template #default><div class="hidden"></div></template>
       <template #body>
         <form
           id="edit-username-form"
@@ -41,17 +38,14 @@
           />
         </div>
       </template>
-    </UModal>
+    </BaseModal>
 
     <!-- EDIT EMAIL MODAL -->
-    <UModal
+    <BaseModal
       v-model:open="profileStore.isEditEmailModalOpen"
       :title="UI_TEXT.profile.editEmailTitle"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeSm }"
+      :ui-size="appConfig.layout.modalSizeSm"
     >
-      <template #default><div class="hidden"></div></template>
       <template #body>
         <form
           id="edit-email-form"
@@ -83,17 +77,14 @@
           />
         </div>
       </template>
-    </UModal>
+    </BaseModal>
 
     <!-- CHANGE PASSWORD MODAL -->
-    <UModal
+    <BaseModal
       v-model:open="profileStore.isChangePasswordModalOpen"
       :title="UI_TEXT.profile.changePasswordTitle"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeSm }"
+      :ui-size="appConfig.layout.modalSizeSm"
     >
-      <template #default><div class="hidden"></div></template>
       <template #body>
         <form
           id="change-pwd-form"
@@ -133,51 +124,33 @@
           />
         </div>
       </template>
-    </UModal>
+    </BaseModal>
 
     <!-- DELETE ACCOUNT MODAL -->
-    <UModal
+    <ConfirmModal
       v-model:open="profileStore.isDeleteModalOpen"
       :title="UI_TEXT.profile.deleteAccountTitle"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeSm }"
+      :error-text="deleteError"
+      :cancel-text="UI_TEXT.common.cancel"
+      :confirm-text="UI_TEXT.common.delete"
+      :loading="isDeleting"
+      :ui-size="appConfig.layout.modalSizeSm"
+      @cancel="profileStore.closeDeleteModal()"
+      @confirm="handleDeleteProfile"
     >
-      <template #default><div class="hidden"></div></template>
       <template #body>
         <p :class="appConfig.typography.modalText">
           {{ UI_TEXT.profile.deleteAccountConfirmation }}
         </p>
-        <p v-if="deleteError" :class="appConfig.typography.inputError">{{ deleteError }}</p>
       </template>
-      <template #footer>
-        <div :class="appConfig.layout.modalActions">
-          <UButton
-            :class="appConfig.typography.modalActionBtnCancel"
-            :label="UI_TEXT.common.cancel"
-            variant="actionCancelButton"
-            @click="profileStore.closeDeleteModal()"
-          />
-          <UButton
-            :class="appConfig.typography.modalActionBtnOk"
-            :label="UI_TEXT.common.delete"
-            variant="actionOkButton"
-            :loading="isDeleting"
-            @click="handleDeleteProfile"
-          />
-        </div>
-      </template>
-    </UModal>
+    </ConfirmModal>
 
     <!-- UPLOAD PICTURE MODAL -->
-    <UModal
+    <BaseModal
       v-model:open="profileStore.isUploadPictureModalOpen"
       :title="UI_TEXT.profile.uploadPictureTitle"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeSm }"
+      :ui-size="appConfig.layout.modalSizeSm"
     >
-      <template #default><div class="hidden"></div></template>
       <template #body>
         <form
           id="upload-pic-form"
@@ -218,17 +191,14 @@
           />
         </div>
       </template>
-    </UModal>
+    </BaseModal>
 
     <!-- VIEW PICTURE FULL MODAL -->
-    <UModal
+    <BaseModal
       v-model:open="profileStore.isViewPictureModalOpen"
       :title="UI_TEXT.profile.pictureTitle"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeLg }"
+      :ui-size="appConfig.layout.modalSizeLg"
     >
-      <template #default><div class="hidden"></div></template>
       <template #body>
         <div
           class="w-full h-80 flex items-center justify-center bg-surface-600/10 rounded-2xl overflow-hidden mt-2"
@@ -252,17 +222,14 @@
           />
         </div>
       </template>
-    </UModal>
+    </BaseModal>
 
     <!-- UPLOAD DOCUMENT MODAL -->
-    <UModal
+    <BaseModal
       v-model:open="profileStore.isUploadDocumentModalOpen"
       :title="UI_TEXT.documents.uploadTitle"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeMd }"
+      :ui-size="appConfig.layout.modalSizeMd"
     >
-      <template #default><div class="hidden"></div></template>
       <template #body>
         <form
           id="upload-doc-form"
@@ -321,7 +288,7 @@
           />
         </div>
       </template>
-    </UModal>
+    </BaseModal>
   </div>
 </template>
 
