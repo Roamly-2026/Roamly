@@ -25,7 +25,4 @@ export const groupNameSchema = z
   .trim()
   .min(3, UI_TEXT.validation.groupNameMin)
   .max(255, UI_TEXT.validation.groupNameMax)
-  .regex(
-    /^[a-zA-Z0-9\s\-_]+$/,
-    UI_TEXT.validation.groupNameCharacters,
-  );
+  .regex(/^[a-zA-Z0-9\s\-_]+$/, UI_TEXT.validation.groupNameCharacters);

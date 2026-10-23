@@ -456,7 +456,8 @@ export const UI_TEXT = {
     longitude: 'Longitude must be between -180 and 180',
     endTime: 'End time must be after the start time, or the exact same!',
     location: 'Latitude, longitude and address must all be provided together, or all left empty!',
-    publicEventParticipants: 'Public events can not have specified participants, every user in the group will be a participant!',
+    publicEventParticipants:
+      'Public events can not have specified participants, every user in the group will be a participant!',
     minParticipants: 'Minimum 1 person must participate!',
     maxParticipantsGroup: 'Maximum number of participants is 45!',
     fileRequired: 'File is required',

@@ -1,6 +1,7 @@
 import { UI_TEXT } from '~/locales/en';
 import { z } from 'zod';
 
+// These roles are here only temporarily. In an upcoming feature the logic will be updated.
 const ROLES = {
   INVITEDMEMBER: 'invitedMember',
   INVITEDLEADER: 'invitedLeader',

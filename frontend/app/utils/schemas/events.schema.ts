@@ -10,11 +10,7 @@ export const createEventSchema = z
       .min(1, UI_TEXT.validation.eventTitleMin)
       .max(64, UI_TEXT.validation.eventTitleMax),
 
-    description: z
-      .string()
-      .trim()
-      .max(255, UI_TEXT.validation.eventDescriptionMax)
-      .optional(),
+    description: z.string().trim().max(255, UI_TEXT.validation.eventDescriptionMax).optional(),
 
     start_time: z
       .string({ message: UI_TEXT.validation.startTimeRequired })
@@ -23,7 +19,9 @@ export const createEventSchema = z
 
     end_time: z
       .string()
-      .refine((val) => !val || !isNaN(Date.parse(val)), { message: UI_TEXT.validation.invalidDateTime })
+      .refine((val) => !val || !isNaN(Date.parse(val)), {
+        message: UI_TEXT.validation.invalidDateTime,
+      })
       .optional(),
 
     is_private: z.boolean(),
@@ -102,22 +100,11 @@ export const updateEventSchema = z
       .max(64, UI_TEXT.validation.eventTitleMax)
       .optional(),
 
-    description: z
-      .string()
-      .trim()
-      .max(255, UI_TEXT.validation.eventDescriptionMax)
-      .optional(),
+    description: z.string().trim().max(255, UI_TEXT.validation.eventDescriptionMax).optional(),
 
-    start_time: z
-      .string()
-      .datetime(UI_TEXT.validation.invalidDateTime)
-      .optional(),
+    start_time: z.string().datetime(UI_TEXT.validation.invalidDateTime).optional(),
 
-    end_time: z
-      .string()
-      .datetime(UI_TEXT.validation.invalidDateTime)
-      .nullable()
-      .optional(),
+    end_time: z.string().datetime(UI_TEXT.validation.invalidDateTime).nullable().optional(),
 
     is_private: z.boolean().optional(),
 
