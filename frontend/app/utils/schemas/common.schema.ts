@@ -2,7 +2,6 @@
 import { z } from 'zod';
 
 export const emailSchema = z
-  .string({ message: 'Invalid email address format!' })
   .email('Invalid email address format!')
   .max(254, 'Email address can not be longer than 254 characters!');
 
