@@ -2,7 +2,7 @@
 <template>
   <header :class="[appConfig.layout.headerBase, appConfig.layout.headerSticky]">
     <!-- BACK BUTTON SECTION -->
-    <div class="flex-1 flex items-center gap-4">
+    <div :class="['flex-1 flex items-center', SPACING_TOKENS.gap.md]">
       <UButton icon="i-heroicons-arrow-left" variant="glassIconButton" class="shrink-0" to="/" />
     </div>
 
@@ -17,7 +17,7 @@
     <!-- USER ACTIONS SECTION -->
     <div :class="appConfig.layout.headerRight">
       <ClientOnly>
-        <div class="flex items-center gap-2 md:gap-4">
+        <div :class="['flex items-center', SPACING_TOKENS.responsive.listGap]">
           <template v-if="isAuthenticated">
             <span class="font-bold text-dark-text tracking-wide text-sm hidden sm:block">
               {{ userProfile?.username || UI_TEXT.common.loading }}
@@ -49,7 +49,6 @@
             </UDropdownMenu>
 
             <!-- Mobile menu -->
-
             <UAvatar
               v-if="isMobile"
               :src="userProfile?.profile_image_url || undefined"
@@ -63,13 +62,13 @@
               :ui="{
                 content: 'w-36',
                 itemLeadingIcon: 'w-10 h-10 text-brand-500 shrink-0',
-                item: 'gap-2 text-md',
+                item: `${SPACING_TOKENS.gap.sm} text-md`,
               }"
             >
               <UButton
                 icon="i-heroicons-bars-3"
                 variant="ghost"
-                class="md:hidden p-1 text-dark-text"
+                :class="['md:hidden text-dark-text', SPACING_TOKENS.p.xs]"
               />
             </UDropdownMenu>
           </template>
@@ -85,7 +84,9 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAppConfig } from '#imports';
 import { useCurrentUserQuery } from '~/queries/user.query';
+import { useScreenSize } from '~/composables/useScreenSize';
 import type { DropdownMenuItem } from '@nuxt/ui';
+import { SPACING_TOKENS } from '~/utils/spacings.tokens';
 
 /* --- COMPOSABLES & STATE --- */
 const appConfig = useAppConfig();
