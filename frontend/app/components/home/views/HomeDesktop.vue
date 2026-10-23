@@ -25,7 +25,7 @@
         <div
           :class="
             activeCard === card.id
-              ? 'flex flex-col md:flex-row items-center w-full gap-8 h-full'
+              ? `flex flex-col md:flex-row items-center w-full ${SPACING_TOKENS.gap.lg} h-full`
               : 'flex flex-col items-center flex-1 text-center w-full h-full'
           "
         >
@@ -36,40 +36,48 @@
                 : 'flex flex-col items-center w-full justify-between h-full'
             "
           >
-            <div class="flex flex-col items-center">
+            <!-- Card Header & Content Wrapper -->
+            <div :class="`flex flex-col items-center ${SPACING_TOKENS.gap.sm} w-full`">
               <h3
-                class="text-lg font-bold mb-4 tracking-wide transition-colors duration-500"
+                class="text-lg font-bold tracking-wide transition-colors duration-500"
                 :class="activeCard === card.id ? 'text-white' : 'text-dark-text'"
               >
                 {{ card.title }}
               </h3>
               <UIcon
                 :name="card.icon"
-                class="w-14 h-14 mb-4 opacity-80 transition-colors duration-500"
+                class="w-14 h-14 opacity-80 transition-colors duration-500"
                 :class="activeCard === card.id ? 'text-white' : 'text-brand-500'"
               />
               <p
-                class="text-sm mb-6 leading-relaxed transition-colors duration-500"
-                :class="activeCard === card.id ? 'text-white/90' : 'text-dark-text/80 text-center'"
+                :class="[
+                  `text-sm leading-relaxed transition-colors duration-500 ${SPACING_TOKENS.mb.sm}`,
+                  activeCard === card.id ? 'text-white/90' : 'text-dark-text/80 text-center'
+                ]"
               >
                 {{ card.desc }}
               </p>
             </div>
+
+            <!-- Card Bottom Action -->
             <UButton
               variant="ghost"
-              class="font-bold tracking-wide hover:underline underline-offset-4 transition-colors duration-500 cursor-pointer"
-              :class="activeCard === card.id ? 'text-white hover:text-white/80' : 'text-brand-500'"
+              :class="[
+                `font-bold tracking-wide hover:underline underline-offset-4 transition-colors duration-500 cursor-pointer ${SPACING_TOKENS.mt.sm}`,
+                activeCard === card.id ? 'text-white hover:text-white/80' : 'text-brand-500'
+              ]"
               @click="emit('toggleCard', card.id)"
             >
               {{ activeCard === card.id ? UI_TEXT.home.showLess : UI_TEXT.home.learnMore }}
             </UButton>
           </div>
 
+          <!-- Extended Description (Active State) -->
           <div
             v-if="activeCard === card.id"
-            class="w-full mt-6 pt-6 border-t border-white/20 text-white/90 leading-relaxed text-left animate-fade-in"
+            :class="`w-full ${SPACING_TOKENS.mt.md} ${SPACING_TOKENS.pt.md} border-t border-white/20 text-white/90 leading-relaxed text-left animate-fade-in`"
           >
-            <ul class="list-disc pl-5 space-y-2">
+            <ul :class="`list-disc pl-5 flex flex-col ${SPACING_TOKENS.gap.sm}`">
               <li v-for="(item, index) in card.extendedDesc" :key="index">
                 {{ item }}
               </li>
@@ -91,9 +99,10 @@
       <p :class="appConfig.typography.homeSectionText">{{ UI_TEXT.home.supportDescription }}</p>
     </section>
 
-    <section id="contact" :class="appConfig.layout.homeContentSection" class="mb-12">
+    <!-- CONTACT SECTION -->
+    <section id="contact" :class="[appConfig.layout.homeContentSection, SPACING_TOKENS.mb.xl]">
       <h2 :class="appConfig.typography.homeSectionTitle">{{ UI_TEXT.home.contactUs }}</h2>
-      <div class="flex gap-8 mt-6 items-center justify-between">
+      <div :class="`flex ${SPACING_TOKENS.gap.md} ${SPACING_TOKENS.mt.md} items-center justify-center flex-wrap`">
         <UButton
           v-for="link in contactLinks"
           :key="link.name"
@@ -112,6 +121,7 @@
 <script setup lang="ts">
 /* --- IMPORTS --- */
 import { useAppConfig } from '#imports';
+import { SPACING_TOKENS } from '~/utils/spacings.tokens';
 
 /* --- INTERFACES --- */
 interface FeatureCard {

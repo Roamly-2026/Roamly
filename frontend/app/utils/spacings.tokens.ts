@@ -16,6 +16,13 @@ export const SPACING_TOKENS = {
     lg: 'p-6',   // 24px
     xl: 'p-8',   // 32px
   },
+  pt: {
+    xs: 'pt-1',   // 4px
+    sm: 'pt-2',   // 8px
+    md: 'pt-4',   // 16px
+    lg: 'pt-6',   // 24px
+    xl: 'pt-8',   // 32px
+  },
   px: {
     xs: 'px-1',
     sm: 'px-2',
