@@ -96,7 +96,6 @@
     </UCard>
 
     <div :class="appConfig.layout.singleButtonWrapper">
-
       <UButton
         to="/login"
         :label="UI_TEXT.auth.loginInstead"

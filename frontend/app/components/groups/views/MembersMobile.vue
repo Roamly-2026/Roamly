@@ -97,7 +97,10 @@
           {{ UI_TEXT.errors.fetch }}
         </div>
 
-        <div v-else-if="filteredMembers?.length" :class="`flex flex-col ${SPACING_TOKENS.gap.md} w-full`">
+        <div
+          v-else-if="filteredMembers?.length"
+          :class="`flex flex-col ${SPACING_TOKENS.gap.md} w-full`"
+        >
           <UCard
             v-for="profile in filteredMembers"
             :key="profile.users.email"
@@ -183,7 +186,10 @@
       </h2>
 
       <ClientOnly>
-        <div v-if="isLoadingEvents" :class="`text-sm font-medium text-dark-text/60 ${SPACING_TOKENS.py.sm}`">
+        <div
+          v-if="isLoadingEvents"
+          :class="`text-sm font-medium text-dark-text/60 ${SPACING_TOKENS.py.sm}`"
+        >
           {{ UI_TEXT.events.loadingEvents }}
         </div>
         <div

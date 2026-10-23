@@ -120,11 +120,17 @@
       </div>
 
       <div :class="`${SPACING_TOKENS.px.sm} ${SPACING_TOKENS.pt.sm} ${SPACING_TOKENS.mb.xl}`">
-        <div v-if="isLoading" :class="[appConfig.typography.statusLoading, SPACING_TOKENS.py.md, 'text-center']">
+        <div
+          v-if="isLoading"
+          :class="[appConfig.typography.statusLoading, SPACING_TOKENS.py.md, 'text-center']"
+        >
           {{ ' ' + UI_TEXT.documents.loading + ' ' }}
         </div>
 
-        <div v-else-if="documents.length > 0" :class="`flex flex-col ${SPACING_TOKENS.gap.md} w-full`">
+        <div
+          v-else-if="documents.length > 0"
+          :class="`flex flex-col ${SPACING_TOKENS.gap.md} w-full`"
+        >
           <UCard
             v-for="doc in documents"
             :key="doc.file_id"
@@ -224,7 +230,10 @@
           </UCard>
         </div>
 
-        <div v-else :class="[appConfig.typography.statusLoading, SPACING_TOKENS.py.md, 'text-center']">
+        <div
+          v-else
+          :class="[appConfig.typography.statusLoading, SPACING_TOKENS.py.md, 'text-center']"
+        >
           {{
             searchQuery || filterType !== 'ALL'
               ? UI_TEXT.documents.noMatchingDocuments
@@ -288,7 +297,10 @@
         {{ ' ' + UI_TEXT.documents.loadingMemberDocuments + ' ' }}
       </div>
 
-      <div v-else :class="`${SPACING_TOKENS.px.sm} ${SPACING_TOKENS.pt.md} flex flex-col ${SPACING_TOKENS.gap.lg} w-full`">
+      <div
+        v-else
+        :class="`${SPACING_TOKENS.px.sm} ${SPACING_TOKENS.pt.md} flex flex-col ${SPACING_TOKENS.gap.lg} w-full`"
+      >
         <div
           v-for="type in privateDocumentTypes.filter(
             (t) =>

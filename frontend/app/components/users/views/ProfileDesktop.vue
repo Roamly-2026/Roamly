@@ -251,7 +251,9 @@
               <!-- File Preview -->
               <div :class="appConfig.layout.documentCardImage">
                 <UIcon name="i-heroicons-document-text" class="w-16 h-16 text-surface-500/50" />
-                <div :class="`absolute bottom-2 ${SPACING_TOKENS.px.md} w-full flex justify-between`">
+                <div
+                  :class="`absolute bottom-2 ${SPACING_TOKENS.px.md} w-full flex justify-between`"
+                >
                   <UTooltip :text="UI_TEXT.tooltips.viewDocument">
                     <UButton
                       icon="i-heroicons-eye"

@@ -15,7 +15,10 @@
       </div>
 
       <!-- INVITES GRID -->
-      <div v-else-if="invitesList.length > 0" :class="`flex flex-col ${SPACING_TOKENS.gap.lg} w-full`">
+      <div
+        v-else-if="invitesList.length > 0"
+        :class="`flex flex-col ${SPACING_TOKENS.gap.lg} w-full`"
+      >
         <div :class="appConfig.layout.cardGrid">
           <UCard
             v-for="group in invitesList"

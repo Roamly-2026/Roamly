@@ -52,7 +52,7 @@
               <p
                 :class="[
                   `text-sm leading-relaxed transition-colors duration-500 ${SPACING_TOKENS.mb.sm}`,
-                  activeCard === card.id ? 'text-white/90' : 'text-dark-text/80 text-center'
+                  activeCard === card.id ? 'text-white/90' : 'text-dark-text/80 text-center',
                 ]"
               >
                 {{ card.desc }}
@@ -64,7 +64,7 @@
               variant="ghost"
               :class="[
                 `font-bold tracking-wide hover:underline underline-offset-4 transition-colors duration-500 cursor-pointer ${SPACING_TOKENS.mt.sm}`,
-                activeCard === card.id ? 'text-white hover:text-white/80' : 'text-brand-500'
+                activeCard === card.id ? 'text-white hover:text-white/80' : 'text-brand-500',
               ]"
               @click="emit('toggleCard', card.id)"
             >
@@ -102,7 +102,9 @@
     <!-- CONTACT SECTION -->
     <section id="contact" :class="[appConfig.layout.homeContentSection, SPACING_TOKENS.mb.xl]">
       <h2 :class="appConfig.typography.homeSectionTitle">{{ UI_TEXT.home.contactUs }}</h2>
-      <div :class="`flex ${SPACING_TOKENS.gap.md} ${SPACING_TOKENS.mt.md} items-center justify-center flex-wrap`">
+      <div
+        :class="`flex ${SPACING_TOKENS.gap.md} ${SPACING_TOKENS.mt.md} items-center justify-center flex-wrap`"
+      >
         <UButton
           v-for="link in contactLinks"
           :key="link.name"

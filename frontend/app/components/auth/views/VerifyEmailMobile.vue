@@ -4,7 +4,6 @@
     <UCard variant="glass">
       <!-- TITLE -->
       <div :class="appConfig.typography.authTitleWrapper">
-
         <h1 :class="appConfig.typography.authTitle">{{ UI_TEXT.auth.verifyHeading }}</h1>
         <p :class="`text-sm text-surface-400 text-center ${SPACING_TOKENS.mt.xs} leading-relaxed`">
           {{ ' ' + UI_TEXT.auth.verifyBeforeEmail + ' '
@@ -15,7 +14,9 @@
 
       <!-- OTP INPUTS -->
       <div :class="appConfig.layout.formWrapper">
-        <div :class="`flex items-center justify-center ${SPACING_TOKENS.gap.sm} ${SPACING_TOKENS.py.sm}`">
+        <div
+          :class="`flex items-center justify-center ${SPACING_TOKENS.gap.sm} ${SPACING_TOKENS.py.sm}`"
+        >
           <input
             v-for="(_, i) in otpCells"
             :key="i"

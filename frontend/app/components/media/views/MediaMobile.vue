@@ -90,11 +90,17 @@
 
       <!-- MEDIA LIST -->
       <div :class="`${SPACING_TOKENS.px.sm} ${SPACING_TOKENS.pt.sm}`">
-        <div v-if="isLoading" :class="[appConfig.typography.statusLoading, SPACING_TOKENS.py.md, 'text-center']">
+        <div
+          v-if="isLoading"
+          :class="[appConfig.typography.statusLoading, SPACING_TOKENS.py.md, 'text-center']"
+        >
           {{ ' ' + UI_TEXT.media.loading + ' ' }}
         </div>
 
-        <div v-else-if="filteredMedia.length > 0" :class="`flex flex-col ${SPACING_TOKENS.gap.md} w-full`">
+        <div
+          v-else-if="filteredMedia.length > 0"
+          :class="`flex flex-col ${SPACING_TOKENS.gap.md} w-full`"
+        >
           <UCard
             v-for="mediaItem in filteredMedia"
             :key="mediaItem.file_id"
@@ -124,7 +130,10 @@
                 :alt="mediaItem.file_name"
                 class="w-full h-full object-cover"
               />
-              <div v-else :class="`flex flex-col items-center justify-center ${SPACING_TOKENS.gap.sm}`">
+              <div
+                v-else
+                :class="`flex flex-col items-center justify-center ${SPACING_TOKENS.gap.sm}`"
+              >
                 <UIcon name="i-heroicons-film" class="w-12 h-12 text-surface-500/50" />
                 <span class="text-xs text-surface-400">{{ mediaItem.mime_type }}</span>
               </div>
@@ -199,7 +208,10 @@
           </UCard>
         </div>
 
-        <div v-else :class="[appConfig.typography.statusLoading, SPACING_TOKENS.py.md, 'text-center']">
+        <div
+          v-else
+          :class="[appConfig.typography.statusLoading, SPACING_TOKENS.py.md, 'text-center']"
+        >
           {{ searchQuery ? UI_TEXT.media.noMatchingPhotos : UI_TEXT.media.noPhotos }}
         </div>
       </div>

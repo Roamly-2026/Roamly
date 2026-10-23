@@ -198,14 +198,14 @@
             class="w-full cursor-pointer hover:bg-surface-500/90 transition-colors"
             @click="navigateToEvent(event.uuid)"
           >
-
             <div :class="`flex flex-col ${SPACING_TOKENS.gap.sm} w-full`">
               <div :class="[appConfig.layout.flexBetween, `border-b border-dark-text/10 pb-2`]">
                 <div :class="`flex items-center ${SPACING_TOKENS.gap.sm} min-w-0 pr-2`">
-                  <UTooltip 
+                  <UTooltip
                     :text="
                       event.is_private ? UI_TEXT.events.privateEvent : UI_TEXT.events.groupEvent
-                    ">
+                    "
+                  >
                     <UIcon
                       :name="event.is_private ? 'i-heroicons-user' : 'i-heroicons-user-group'"
                       class="w-4 h-4 text-brand-500 shrink-0"

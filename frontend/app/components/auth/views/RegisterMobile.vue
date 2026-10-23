@@ -79,7 +79,9 @@
         </div>
 
         <!-- ACTIONS (Mobilos elrendezés: egymás alatt, teljes szélességgel) -->
-        <div :class="`flex flex-col-reverse ${SPACING_TOKENS.gap.md} ${SPACING_TOKENS.pt.lg} w-full`">
+        <div
+          :class="`flex flex-col-reverse ${SPACING_TOKENS.gap.md} ${SPACING_TOKENS.pt.lg} w-full`"
+        >
           <UButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
@@ -99,15 +101,12 @@
     </UCard>
 
     <div :class="appConfig.layout.singleButtonWrapper">
-      
       <UButton
         to="/login"
         :label="UI_TEXT.auth.loginInstead"
         variant="actionAccentHeroButton"
         class="w-full"
       />
-
-
     </div>
   </div>
 </template>

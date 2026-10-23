@@ -170,10 +170,13 @@
               <div
                 :class="[
                   appConfig.ui.wideDropdownMenu.slots.content,
-                  `w-[calc(100vw-3rem)] mx-2 max-h-64 overflow-y-auto ${SPACING_TOKENS.mt.xs}`
+                  `w-[calc(100vw-3rem)] mx-2 max-h-64 overflow-y-auto ${SPACING_TOKENS.mt.xs}`,
                 ]"
               >
-                <div v-if="isLoadingDays" :class="`${SPACING_TOKENS.p.md} text-center text-sm opacity-60`">
+                <div
+                  v-if="isLoadingDays"
+                  :class="`${SPACING_TOKENS.p.md} text-center text-sm opacity-60`"
+                >
                   {{ UI_TEXT.events.loadingDays }}
                 </div>
                 <template v-else>
@@ -210,7 +213,10 @@
         </div>
 
         <div :class="appConfig.calendar.mobileEventsWrapper">
-          <div v-if="isLoadingEvents" :class="`${SPACING_TOKENS.p.md} text-center text-sm opacity-60`">
+          <div
+            v-if="isLoadingEvents"
+            :class="`${SPACING_TOKENS.p.md} text-center text-sm opacity-60`"
+          >
             {{ UI_TEXT.events.loadingEvents }}
           </div>
           <template v-else>
@@ -251,7 +257,10 @@
             </div>
             <div
               v-if="!filteredAndSortedEventsList?.length"
-              :class="[appConfig.calendar.mobileEmptyState, `flex flex-col items-center justify-center py-12 ${SPACING_TOKENS.gap.sm}`]"
+              :class="[
+                appConfig.calendar.mobileEmptyState,
+                `flex flex-col items-center justify-center py-12 ${SPACING_TOKENS.gap.sm}`,
+              ]"
             >
               <UIcon name="i-heroicons-calendar" class="w-8 h-8 opacity-40" />
               <span>{{

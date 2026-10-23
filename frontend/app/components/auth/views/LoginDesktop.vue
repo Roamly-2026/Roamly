@@ -23,7 +23,6 @@
               type="email"
               :placeholder="UI_TEXT.auth.emailPlaceholder"
               :variant="fieldError ? 'glassError' : 'glass'"
-  
             />
           </template>
         </UFormField>

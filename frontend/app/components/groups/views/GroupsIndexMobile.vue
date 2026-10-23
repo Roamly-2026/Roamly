@@ -37,7 +37,10 @@
       </div>
 
       <!-- GROUPS GRID -->
-      <div v-else-if="groupsList.length > 0" :class="`flex flex-col ${SPACING_TOKENS.gap.lg} w-full`">
+      <div
+        v-else-if="groupsList.length > 0"
+        :class="`flex flex-col ${SPACING_TOKENS.gap.lg} w-full`"
+      >
         <div v-if="filteredGroups.length > 0" :class="appConfig.layout.cardGrid">
           <UCard
             v-for="group in groupsList"

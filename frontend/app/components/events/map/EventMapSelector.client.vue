@@ -11,7 +11,9 @@
     >
       <div class="flex-1 min-w-0">
         <p class="text-sm font-bold text-dark-text">{{ UI_TEXT.map.selectedLocation }}</p>
-        <p :class="`text-sm text-dark-text/80 break-words whitespace-normal w-full ${SPACING_TOKENS.mt.xs}`">
+        <p
+          :class="`text-sm text-dark-text/80 break-words whitespace-normal w-full ${SPACING_TOKENS.mt.xs}`"
+        >
           <span v-if="isLoadingAddress" class="opacity-60 animate-pulse">{{
             UI_TEXT.map.loadingAddress
           }}</span>

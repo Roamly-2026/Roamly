@@ -18,7 +18,13 @@
 
       <div v-else-if="currentUser" class="w-full relative flex flex-col">
         <!-- PROFILE CARD SECTION -->
-        <div :class="[appConfig.layout.profileCard, 'p-4! flex-row! items-center', SPACING_TOKENS.gap.md]">
+        <div
+          :class="[
+            appConfig.layout.profileCard,
+            'p-4! flex-row! items-center',
+            SPACING_TOKENS.gap.md,
+          ]"
+        >
           <!-- Delete Button -->
           <div class="absolute top-2 left-2 z-10">
             <UTooltip :text="UI_TEXT.tooltips.deleteProfile">
@@ -74,7 +80,11 @@
 
           <!-- User details -->
           <div
-            :class="[appConfig.layout.profileDetailsWrapper, 'text-sm! flex-1 min-w-0', SPACING_TOKENS.gap.xs]"
+            :class="[
+              appConfig.layout.profileDetailsWrapper,
+              'text-sm! flex-1 min-w-0',
+              SPACING_TOKENS.gap.xs,
+            ]"
           >
             <!-- Username -->
             <div :class="[appConfig.layout.profileDetailRow, SPACING_TOKENS.gap.sm]">
@@ -82,7 +92,11 @@
                 {{ UI_TEXT.auth.usernameLabel }}
               </p>
               <div
-                :class="[appConfig.layout.actionGroup, 'justify-between flex-1 min-w-0', SPACING_TOKENS.gap.xs]"
+                :class="[
+                  appConfig.layout.actionGroup,
+                  'justify-between flex-1 min-w-0',
+                  SPACING_TOKENS.gap.xs,
+                ]"
               >
                 <p :class="appConfig.typography.profileValue" class="text-sm! truncate">
                   {{ currentUser.username }}
@@ -103,7 +117,11 @@
                 {{ UI_TEXT.auth.emailLabel }}
               </p>
               <div
-                :class="[appConfig.layout.actionGroup, 'justify-between flex-1 min-w-0', SPACING_TOKENS.gap.xs]"
+                :class="[
+                  appConfig.layout.actionGroup,
+                  'justify-between flex-1 min-w-0',
+                  SPACING_TOKENS.gap.xs,
+                ]"
               >
                 <p :class="appConfig.typography.profileValue" class="text-xs! truncate">
                   {{ currentUser.email }}
@@ -124,9 +142,15 @@
                 {{ UI_TEXT.auth.passwordLabel }}
               </p>
               <div
-                :class="[appConfig.layout.actionGroup, 'justify-between flex-1 min-w-0', SPACING_TOKENS.gap.xs]"
+                :class="[
+                  appConfig.layout.actionGroup,
+                  'justify-between flex-1 min-w-0',
+                  SPACING_TOKENS.gap.xs,
+                ]"
               >
-                <p :class="[appConfig.typography.profileValueLg, 'text-sm!', SPACING_TOKENS.mt.xs]">********</p>
+                <p :class="[appConfig.typography.profileValueLg, 'text-sm!', SPACING_TOKENS.mt.xs]">
+                  ********
+                </p>
                 <UTooltip :text="UI_TEXT.tooltips.editPassword">
                   <UButton
                     icon="i-heroicons-pencil"
@@ -143,7 +167,11 @@
                 {{ UI_TEXT.profile.registeredLabel }}
               </p>
               <div
-                :class="[appConfig.layout.actionGroup, 'justify-between flex-1 min-w-0', SPACING_TOKENS.gap.xs]"
+                :class="[
+                  appConfig.layout.actionGroup,
+                  'justify-between flex-1 min-w-0',
+                  SPACING_TOKENS.gap.xs,
+                ]"
               >
                 <p :class="appConfig.typography.profileValue" class="text-xs! truncate">
                   {{
@@ -230,7 +258,10 @@
           </div>
 
           <!-- Document List (vertical on mobile) -->
-          <div v-else-if="filteredDocuments.length > 0" :class="`flex flex-col ${SPACING_TOKENS.gap.md} w-full`">
+          <div
+            v-else-if="filteredDocuments.length > 0"
+            :class="`flex flex-col ${SPACING_TOKENS.gap.md} w-full`"
+          >
             <UCard
               v-for="doc in filteredDocuments"
               :key="doc.file_id"
@@ -279,7 +310,9 @@
               <!-- File Preview -->
               <div :class="appConfig.layout.documentCardImage" class="h-32!">
                 <UIcon name="i-heroicons-document-text" class="w-12 h-12 text-surface-500/50" />
-                <div :class="`absolute bottom-2 ${SPACING_TOKENS.px.md} w-full flex justify-between`">
+                <div
+                  :class="`absolute bottom-2 ${SPACING_TOKENS.px.md} w-full flex justify-between`"
+                >
                   <UTooltip :text="UI_TEXT.tooltips.viewDocument">
                     <UButton
                       icon="i-heroicons-eye"

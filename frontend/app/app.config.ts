@@ -1,4 +1,4 @@
-import { SPACING_TOKENS } from "./utils/spacings.tokens";
+import { SPACING_TOKENS } from './utils/spacings.tokens';
 
 // frontend/app/app.config.ts
 export default defineAppConfig({
@@ -11,12 +11,9 @@ export default defineAppConfig({
     button: {
       variants: {
         variant: {
-          smallPrimaryActionButton:
-            `rounded-full bg-brand-500 hover:bg-brand-600 text-surface-500 !${SPACING_TOKENS.px.lg} !${SPACING_TOKENS.py.sm} transition-colors shadow-sm font-bold tracking-wide cursor-pointer`,
-          smallAccentActionButton:
-            `rounded-full bg-accent-500 hover:bg-accent-600 text-surface-500 !${SPACING_TOKENS.px.lg} !${SPACING_TOKENS.py.sm} transition-colors shadow-sm font-bold tracking-wide cursor-pointer`,
-          smallHollowActionButton:
-            `rounded-full text-brand-500 ring-1 ring-brand-500/40 hover:bg-brand-500/20 !${SPACING_TOKENS.px.lg} !${SPACING_TOKENS.py.sm} transition-colors text-xs font-semibold cursor-pointer`,
+          smallPrimaryActionButton: `rounded-full bg-brand-500 hover:bg-brand-600 text-surface-500 !${SPACING_TOKENS.px.lg} !${SPACING_TOKENS.py.sm} transition-colors shadow-sm font-bold tracking-wide cursor-pointer`,
+          smallAccentActionButton: `rounded-full bg-accent-500 hover:bg-accent-600 text-surface-500 !${SPACING_TOKENS.px.lg} !${SPACING_TOKENS.py.sm} transition-colors shadow-sm font-bold tracking-wide cursor-pointer`,
+          smallHollowActionButton: `rounded-full text-brand-500 ring-1 ring-brand-500/40 hover:bg-brand-500/20 !${SPACING_TOKENS.px.lg} !${SPACING_TOKENS.py.sm} transition-colors text-xs font-semibold cursor-pointer`,
 
           // Hero Buttons (Usually on Home / Landing)
           actionHeroButton:
@@ -31,10 +28,8 @@ export default defineAppConfig({
             'rounded-full !px-10 justify-center bg-surface-500/50 ring-1 ring-accent-500 text-accent-500 hover:bg-accent-500 hover:text-surface-500 h-11 font-bold tracking-wide transition-colors cursor-pointer',
 
           // Glass Buttons (General UI, Filters, Headers)
-          glassButton:
-            `h-10 ${SPACING_TOKENS.px.xl} rounded-full !min-w-18 flex items-center justify-center text-md bg-surface-500/70 backdrop-blur-xl text-dark-text ring-1 ring-dark-text/10 hover:bg-surface-500/90 transition-colors cursor-pointer`,
-          glassOutlineButton:
-            `border border-brand-500/50 !${SPACING_TOKENS.px.lg} !${SPACING_TOKENS.py.sm} rounded-full bg-surface-500/70 hover:bg-light-bg text-dark-text transition-colors backdrop-blur-md cursor-pointer`,
+          glassButton: `h-10 ${SPACING_TOKENS.px.xl} rounded-full !min-w-18 flex items-center justify-center text-md bg-surface-500/70 backdrop-blur-xl text-dark-text ring-1 ring-dark-text/10 hover:bg-surface-500/90 transition-colors cursor-pointer`,
+          glassOutlineButton: `border border-brand-500/50 !${SPACING_TOKENS.px.lg} !${SPACING_TOKENS.py.sm} rounded-full bg-surface-500/70 hover:bg-light-bg text-dark-text transition-colors backdrop-blur-md cursor-pointer`,
 
           // Icon Buttons (Toolbars, Action Groups)
           glassIconButton:
@@ -47,10 +42,8 @@ export default defineAppConfig({
             'w-10 h-10 rounded-full font-semibold flex items-center justify-center p-0 cursor-pointer bg-surface-500/70 backdrop-blur-xl text-brand-500 ring-1 ring-dark-text/10 hover:bg-brand-50 transition-colors',
 
           // Ghost Icon Buttons (Inside cards, subtle actions)
-          ghostDangerIconButton:
-            `text-dark-text/70 hover:text-error-500 transition-colors ${SPACING_TOKENS.p.xs} cursor-pointer [&>span]:!w-5 [&>span]:!h-5`,
-          ghostBrandIconButton:
-            `text-surface-500 hover:text-brand-500 ${SPACING_TOKENS.p.xs} transition-colors cursor-pointer [&>span]:!w-5 [&>span]:!h-5`,
+          ghostDangerIconButton: `text-dark-text/70 hover:text-error-500 transition-colors ${SPACING_TOKENS.p.xs} cursor-pointer [&>span]:!w-5 [&>span]:!h-5`,
+          ghostBrandIconButton: `text-surface-500 hover:text-brand-500 ${SPACING_TOKENS.p.xs} transition-colors cursor-pointer [&>span]:!w-5 [&>span]:!h-5`,
         },
       },
     },
@@ -68,9 +61,9 @@ export default defineAppConfig({
 
     // ------------------- CARDS -------------------
     card: {
-      slots: { 
-        root: 'w-full', 
-        body: `${SPACING_TOKENS.responsive.cardPadding}` 
+      slots: {
+        root: 'w-full',
+        body: `${SPACING_TOKENS.responsive.cardPadding}`,
       },
       variants: {
         variant: {
@@ -98,19 +91,22 @@ export default defineAppConfig({
     },
 
     // ------------------- FORMS & INPUTS -------------------
-   input: {
-      slots: { 
-        root: 'w-full', 
-        base: `w-full [&_input]:!${SPACING_TOKENS.px.md}`, 
+    input: {
+      slots: {
+        root: 'w-full',
+        base: `w-full [&_input]:!${SPACING_TOKENS.px.md}`,
       },
       variants: {
         variant: {
           glass: {
-            base: `bg-input-bg text-dark-text rounded-xl ring-1 ring-input-border placeholder:text-text-muted focus:ring-2 focus:ring-brand-500 transition-colors h-11 [&_input]:!${SPACING_TOKENS.px.md} shadow-none`,          },
+            base: `bg-input-bg text-dark-text rounded-xl ring-1 ring-input-border placeholder:text-text-muted focus:ring-2 focus:ring-brand-500 transition-colors h-11 [&_input]:!${SPACING_TOKENS.px.md} shadow-none`,
+          },
           glassError: {
-            base: `bg-error-50 text-error-900 rounded-xl ring-1 ring-error-500 placeholder:text-error-300 focus:ring-2 focus:ring-error-500 transition-colors h-11 [&_input]:!${SPACING_TOKENS.px.md} shadow-none`,          },
+            base: `bg-error-50 text-error-900 rounded-xl ring-1 ring-error-500 placeholder:text-error-300 focus:ring-2 focus:ring-error-500 transition-colors h-11 [&_input]:!${SPACING_TOKENS.px.md} shadow-none`,
+          },
           search: {
-            base: `bg-input-bg text-dark-text rounded-full ring-1 ring-input-border placeholder:text-text-muted focus:ring-2 focus:ring-brand-500 transition-colors h-10 !pl-8 [&_input]:!${SPACING_TOKENS.px.md} shadow-none w-full`,          },
+            base: `bg-input-bg text-dark-text rounded-full ring-1 ring-input-border placeholder:text-text-muted focus:ring-2 focus:ring-brand-500 transition-colors h-10 !pl-8 [&_input]:!${SPACING_TOKENS.px.md} shadow-none w-full`,
+          },
         },
       },
     },
@@ -155,24 +151,21 @@ export default defineAppConfig({
         base: `w-fit rounded-full text-brand-500 !ring-1 !ring-brand-500 !bg-surface-500/90 !pl-8 !${SPACING_TOKENS.px.md} !${SPACING_TOKENS.py.sm} transition-colors text-xs font-semibold shadow-sm cursor-pointer text-left`,
         trailingIcon:
           'absolute right-2 w-4 h-4 transition-transform pointer-events-none text-brand-500',
-        content:
-          `z-100 !bg-surface-500 rounded-2xl ring-1 ring-brand-500/30 shadow-xl text-dark-text ${SPACING_TOKENS.mt.sm}`,
+        content: `z-100 !bg-surface-500 rounded-2xl ring-1 ring-brand-500/30 shadow-xl text-dark-text ${SPACING_TOKENS.mt.sm}`,
         viewport: `${SPACING_TOKENS.p.xs}`,
         item: `flex items-center justify-start text-left ${SPACING_TOKENS.py.sm} ${SPACING_TOKENS.px.md} hover:bg-brand-500/20 text-dark-text cursor-pointer data-[highlighted]:bg-brand-500/20 data-[highlighted]:text-dark-text font-medium text-xs rounded-xl mx-1 my-1 whitespace-nowrap`,
       },
     },
     dropdownMenu: {
       slots: {
-        content:
-          `z-[100] bg-surface-500/90 backdrop-blur-md rounded-2xl ring-1 ring-brand-500/30 shadow-xl ${SPACING_TOKENS.p.xs} w-36`,
+        content: `z-[100] bg-surface-500/90 backdrop-blur-md rounded-2xl ring-1 ring-brand-500/30 shadow-xl ${SPACING_TOKENS.p.xs} w-36`,
         item: `flex items-center ${SPACING_TOKENS.gap.sm} w-full justify-start text-left cursor-pointer ${SPACING_TOKENS.px.md} ${SPACING_TOKENS.py.sm} text-md font-medium text-dark-text/80 hover:text-dark-text hover:bg-brand-500/20 data-[highlighted]:bg-brand-500/20 data-[highlighted]:text-dark-text rounded-xl transition-colors`,
         itemLeadingIcon: '!w-6 !h-8 !text-brand-500 shrink-0',
       },
     },
     wideDropdownMenu: {
       slots: {
-        content:
-          `z-[100] bg-surface-500/90 backdrop-blur-md rounded-2xl ring-1 ring-brand-500/30 shadow-xl ${SPACING_TOKENS.p.sm} sm:min-w-64`,
+        content: `z-[100] bg-surface-500/90 backdrop-blur-md rounded-2xl ring-1 ring-brand-500/30 shadow-xl ${SPACING_TOKENS.p.sm} sm:min-w-64`,
         item: `flex items-start ${SPACING_TOKENS.gap.sm} w-full justify-start text-left cursor-pointer ${SPACING_TOKENS.px.md} ${SPACING_TOKENS.py.sm} text-md font-medium text-dark-text/80 hover:text-dark-text hover:bg-brand-500/20 data-[highlighted]:bg-brand-500/20 data-[highlighted]:text-dark-text rounded-xl transition-colors`,
         itemLeadingIcon: '!w-6 !h-6 !text-brand-500 shrink-0',
       },
@@ -181,8 +174,7 @@ export default defineAppConfig({
       slots: {
         base: 'bg-transparent text-surface-500 font-bold text-xl border-none shadow-none ring-0 focus:ring-0 focus:outline-none cursor-pointer hover:opacity-80 transition-opacity',
         trailingIcon: 'text-surface-500 w-6 h-6',
-        content:
-          `z-[100] bg-surface-500/90 backdrop-blur-xl rounded-2xl ring-1 ring-brand-500/30 shadow-xl text-dark-text ${SPACING_TOKENS.mt.sm} min-w-56`,
+        content: `z-[100] bg-surface-500/90 backdrop-blur-xl rounded-2xl ring-1 ring-brand-500/30 shadow-xl text-dark-text ${SPACING_TOKENS.mt.sm} min-w-56`,
         item: `flex items-center text-left ${SPACING_TOKENS.py.sm} ${SPACING_TOKENS.px.md} hover:bg-brand-500/20 text-dark-text cursor-pointer data-[highlighted]:bg-brand-500/20 data-[highlighted]:text-dark-text font-medium text-sm rounded-xl mx-1 my-1`,
       },
     },
@@ -202,8 +194,7 @@ export default defineAppConfig({
     // ------------------- TOOLTIPS -------------------
     tooltip: {
       slots: {
-        content:
-          `z-[100] bg-surface-500/90 backdrop-blur-md text-dark-text ring-1 ring-brand-500/30 rounded-xl ${SPACING_TOKENS.px.sm} ${SPACING_TOKENS.py.xs} text-xs font-semibold shadow-xl`,
+        content: `z-[100] bg-surface-500/90 backdrop-blur-md text-dark-text ring-1 ring-brand-500/30 rounded-xl ${SPACING_TOKENS.px.sm} ${SPACING_TOKENS.py.xs} text-xs font-semibold shadow-xl`,
         arrow: 'fill-surface-500/90',
       },
     },
@@ -229,8 +220,7 @@ export default defineAppConfig({
     flexBetween: 'flex justify-between w-full',
 
     // ------------------- HEADER COMPONENT -------------------
-    headerBase:
-      `flex items-center justify-between ${SPACING_TOKENS.px.md} md:${SPACING_TOKENS.px.lg} ${SPACING_TOKENS.py.md} bg-surface-500/70 backdrop-blur-md shadow-sm z-50 border-b border-dark-text/10`,
+    headerBase: `flex items-center justify-between ${SPACING_TOKENS.px.md} md:${SPACING_TOKENS.px.lg} ${SPACING_TOKENS.py.md} bg-surface-500/70 backdrop-blur-md shadow-sm z-50 border-b border-dark-text/10`,
     headerSticky: 'sticky top-0',
     headerRelative: 'relative',
     logoWrapper: `flex items-center ${SPACING_TOKENS.gap.sm} text-dark-text hover:opacity-80 transition-opacity w-max`,
@@ -241,8 +231,7 @@ export default defineAppConfig({
     homeWrapper: `flex-1 flex flex-col items-center ${SPACING_TOKENS.px.md} md:${SPACING_TOKENS.px.lg} py-8 md:py-12 ${SPACING_TOKENS.responsive.containerGap} relative z-10 w-full`,
     homeHeroSection: `flex flex-col items-center text-center ${SPACING_TOKENS.mt.lg} max-w-3xl scroll-mt-24`,
     homeCardsSection: `flex flex-col md:flex-row flex-wrap ${SPACING_TOKENS.responsive.gridGap} w-full max-w-6xl ${SPACING_TOKENS.mb.xl}`,
-    homeContentSection:
-      `flex flex-col items-center text-center max-w-3xl pt-8 border-t border-dark-text/10 scroll-mt-24`,
+    homeContentSection: `flex flex-col items-center text-center max-w-3xl pt-8 border-t border-dark-text/10 scroll-mt-24`,
 
     // ------------------- AUTH PAGES (Login / Register) -------------------
     mainAuth: `flex-1 flex items-center justify-center ${SPACING_TOKENS.responsive.cardPadding}`,
@@ -254,8 +243,7 @@ export default defineAppConfig({
     // ------------------- GROUPS & MEMBERS VIEWS -------------------
     cardGrid: `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ${SPACING_TOKENS.responsive.gridGap} w-full`,
     cardContent: `flex flex-col ${SPACING_TOKENS.gap.lg} w-full pt-2`,
-    cardFooter:
-      `flex items-end justify-between w-full pt-4 border-t border-dark-text/10 text-xs text-dark-text/70`,
+    cardFooter: `flex items-end justify-between w-full pt-4 border-t border-dark-text/10 text-xs text-dark-text/70`,
 
     memberCardInner: `flex items-start ${SPACING_TOKENS.gap.md} w-full h-full min-w-0`,
     memberCardContent: 'flex-1 flex flex-col justify-between h-full min-h-16 min-w-0',
@@ -264,8 +252,7 @@ export default defineAppConfig({
     sectionWrapper: `${SPACING_TOKENS.mt.xl} flex flex-col ${SPACING_TOKENS.gap.lg}`,
 
     // User Profile Card
-    profileCard:
-      `w-full bg-surface-500/70 backdrop-blur-xl rounded-[25px] shadow-[0_15px_40px_rgba(47,62,50,0.15)] ring-1 ring-surface-500/50 ${SPACING_TOKENS.responsive.cardPadding} flex flex-col md:flex-row ${SPACING_TOKENS.gap.xl} relative`,
+    profileCard: `w-full bg-surface-500/70 backdrop-blur-xl rounded-[25px] shadow-[0_15px_40px_rgba(47,62,50,0.15)] ring-1 ring-surface-500/50 ${SPACING_TOKENS.responsive.cardPadding} flex flex-col md:flex-row ${SPACING_TOKENS.gap.xl} relative`,
     profilePictureWrapper: `relative w-40 h-40 shrink-0 mx-auto md:mx-0 md:ml-8 ${SPACING_TOKENS.mt.xl} md:mt-0`,
     profilePictureInner:
       'w-full h-full bg-brand-500 rounded-2xl overflow-hidden shadow-lg border border-surface-500/50 flex items-center justify-center relative',
@@ -274,18 +261,15 @@ export default defineAppConfig({
 
     // Documents Grid
     documentGrid: `grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 ${SPACING_TOKENS.responsive.gridGap} w-full ${SPACING_TOKENS.mt.md}`,
-    documentCardHeader:
-      `absolute top-0 left-0 w-full ${SPACING_TOKENS.p.md} flex justify-between items-start z-10 bg-linear-to-b from-black/50 to-transparent text-white`,
+    documentCardHeader: `absolute top-0 left-0 w-full ${SPACING_TOKENS.p.md} flex justify-between items-start z-10 bg-linear-to-b from-black/50 to-transparent text-white`,
     documentCardImage:
       'w-full h-40 bg-surface-600/30 flex flex-col items-center justify-center relative',
     documentCardMeta: `${SPACING_TOKENS.p.md} flex flex-col ${SPACING_TOKENS.gap.xs} text-xs text-dark-text/80`,
 
-    fileInput:
-      `w-full text-sm text-dark-text/70 file:mr-4 file:${SPACING_TOKENS.py.sm} file:${SPACING_TOKENS.px.lg} file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-transparent file:text-brand-500 file:ring-1 file:ring-brand-500/40 hover:file:bg-brand-500/20 file:transition-colors file:cursor-pointer cursor-pointer`,
+    fileInput: `w-full text-sm text-dark-text/70 file:mr-4 file:${SPACING_TOKENS.py.sm} file:${SPACING_TOKENS.px.lg} file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-transparent file:text-brand-500 file:ring-1 file:ring-brand-500/40 hover:file:bg-brand-500/20 file:transition-colors file:cursor-pointer cursor-pointer`,
     // ------------------- MODAL LAYOUTS -------------------
     modalForm: `flex flex-col ${SPACING_TOKENS.gap.md} ${SPACING_TOKENS.py.sm}`,
-    modalActions:
-      `flex flex-col-reverse sm:flex-row items-center justify-between w-full ${SPACING_TOKENS.gap.sm} sm:gap-0`,
+    modalActions: `flex flex-col-reverse sm:flex-row items-center justify-between w-full ${SPACING_TOKENS.gap.sm} sm:gap-0`,
     modalSizeSm: 'w-full sm:max-w-md !w-[90%] !mx-auto sm:!w-full',
     modalSizeMd: 'w-full sm:max-w-lg !w-[90%] !mx-auto sm:!w-full',
     modalSizeLg: 'w-full sm:max-w-3xl !w-[90%] !mx-auto sm:!w-full',
@@ -332,10 +316,8 @@ export default defineAppConfig({
     modalText: `text-sm text-dark-text/80 ${SPACING_TOKENS.py.sm}`,
     modalHighlight: `block font-semibold ${SPACING_TOKENS.mt.xs} text-brand-500`,
     modalInlineHighlight: `font-semibold ${SPACING_TOKENS.mt.xs} text-brand-500`,
-    modalErrorBox:
-      `text-xs font-semibold text-error-500 ${SPACING_TOKENS.mt.sm} bg-error-500/10 ${SPACING_TOKENS.p.sm} rounded border border-error-500/20`,
-    modalSuccessBox:
-      `text-xs font-semibold text-brand-500 ${SPACING_TOKENS.mt.sm} bg-brand-500/10 ${SPACING_TOKENS.p.sm} rounded border border-brand-500/20`,
+    modalErrorBox: `text-xs font-semibold text-error-500 ${SPACING_TOKENS.mt.sm} bg-error-500/10 ${SPACING_TOKENS.p.sm} rounded border border-error-500/20`,
+    modalSuccessBox: `text-xs font-semibold text-brand-500 ${SPACING_TOKENS.mt.sm} bg-brand-500/10 ${SPACING_TOKENS.p.sm} rounded border border-brand-500/20`,
     modalActionBtnCancel: 'w-full sm:w-auto',
     modalActionBtnOk: 'w-full sm:w-auto',
     inputLabel: `block text-sm font-medium text-dark-text ${SPACING_TOKENS.mb.xs}`,
@@ -356,8 +338,7 @@ export default defineAppConfig({
      ========================================================================== */
   calendar: {
     // Wrapper and Layouts
-    eventsWrapper:
-      `w-full max-w-360 mx-auto ${SPACING_TOKENS.px.md} md:${SPACING_TOKENS.px.lg} ${SPACING_TOKENS.py.xl} flex flex-col flex-1 min-h-0 ${SPACING_TOKENS.gap.xl} relative`,
+    eventsWrapper: `w-full max-w-360 mx-auto ${SPACING_TOKENS.px.md} md:${SPACING_TOKENS.px.lg} ${SPACING_TOKENS.py.xl} flex flex-col flex-1 min-h-0 ${SPACING_TOKENS.gap.xl} relative`,
     eventsHeaderRow: `flex flex-col md:flex-row justify-between items-center w-full ${SPACING_TOKENS.gap.lg} shrink-0`,
     headerActionLeft: `flex items-center ${SPACING_TOKENS.gap.md} flex-1 justify-start`,
     headerCenter: 'flex flex-col items-center justify-center shrink-0',
@@ -366,28 +347,23 @@ export default defineAppConfig({
 
     // Filters
     headerSearchWrapper: 'flex items-center w-full max-w-sm ml-4',
-    filterDropdownContent:
-      `z-[100] bg-surface-500/90 backdrop-blur-xl rounded-2xl ring-1 ring-brand-500/30 shadow-xl ${SPACING_TOKENS.p.md} w-72`,
+    filterDropdownContent: `z-[100] bg-surface-500/90 backdrop-blur-xl rounded-2xl ring-1 ring-brand-500/30 shadow-xl ${SPACING_TOKENS.p.md} w-72`,
     filterFormGroup: `flex flex-col ${SPACING_TOKENS.gap.sm}`,
     filterLabel: 'text-sm font-semibold text-dark-text/90',
-    filterDateInput:
-      `w-full bg-input-bg text-dark-text rounded-xl ring-1 ring-input-border focus:ring-2 focus:ring-brand-500 transition-colors h-10 ${SPACING_TOKENS.px.md}`,
+    filterDateInput: `w-full bg-input-bg text-dark-text rounded-xl ring-1 ring-input-border focus:ring-2 focus:ring-brand-500 transition-colors h-10 ${SPACING_TOKENS.px.md}`,
     filterButtonWrapper: `${SPACING_TOKENS.mt.md} flex justify-end w-full`,
 
-    eventsGrid:
-      `grid grid-cols-1 md:grid-cols-12 ${SPACING_TOKENS.gap.xs} flex-1 min-h-0 bg-surface-500/50 backdrop-blur-md border border-dark-text/20 rounded-xl overflow-hidden shadow-lg`,
+    eventsGrid: `grid grid-cols-1 md:grid-cols-12 ${SPACING_TOKENS.gap.xs} flex-1 min-h-0 bg-surface-500/50 backdrop-blur-md border border-dark-text/20 rounded-xl overflow-hidden shadow-lg`,
     // Columns
     columnBase: 'flex flex-col h-full border-dark-text/10',
     columnDays: 'col-span-12 md:col-span-3 border-r bg-surface-500/20',
     columnEvents: 'col-span-12 md:col-span-4 border-r bg-surface-500/10',
     columnPreview: 'col-span-12 md:col-span-5 bg-surface-500/20 overflow-y-auto',
-    columnHeader:
-      `${SPACING_TOKENS.p.md} font-semibold text-sm text-dark-text/80 uppercase tracking-wider shrink-0 bg-surface-600/50 flex justify-between border-b border-dark-text/10`,
+    columnHeader: `${SPACING_TOKENS.p.md} font-semibold text-sm text-dark-text/80 uppercase tracking-wider shrink-0 bg-surface-600/50 flex justify-between border-b border-dark-text/10`,
     columnBody: 'flex-1 overflow-y-auto',
 
     // List Items (Days, Events)
-    listItem:
-      `flex items-center justify-between ${SPACING_TOKENS.p.md} border-b border-dark-text/10 cursor-pointer transition-colors`,
+    listItem: `flex items-center justify-between ${SPACING_TOKENS.p.md} border-b border-dark-text/10 cursor-pointer transition-colors`,
     listItemHover: 'hover:bg-surface-500/40',
     listItemSelected: 'bg-surface-600/70 border-l-4 border-l-brand-500',
     eventListItemSelected: 'bg-brand-500/20',
@@ -417,33 +393,25 @@ export default defineAppConfig({
     metaValueLink:
       'text-brand-600 hover:text-brand-500 underline underline-offset-2 cursor-pointer transition-colors',
 
-    previewMapPlaceholder:
-      `w-full h-64 ${SPACING_TOKENS.mt.sm} rounded-xl overflow-hidden relative flex items-center justify-center shadow-inner border border-dark-text/20 bg-surface-600/30`,
+    previewMapPlaceholder: `w-full h-64 ${SPACING_TOKENS.mt.sm} rounded-xl overflow-hidden relative flex items-center justify-center shadow-inner border border-dark-text/20 bg-surface-600/30`,
     emptyPreview: 'flex-1 flex items-center justify-center text-dark-text/60 text-sm font-medium',
 
     // Mobile view styles
     mobileMainWrapper: `${SPACING_TOKENS.p.sm} flex flex-col ${SPACING_TOKENS.gap.md}`,
-    mobileContentWrapper:
-      `bg-surface-500/50 backdrop-blur-md rounded-xl ring-1 ring-dark-text/10 shadow-lg ${SPACING_TOKENS.p.sm} ${SPACING_TOKENS.mt.md} flex-1 flex flex-col ${SPACING_TOKENS.gap.sm}`,
+    mobileContentWrapper: `bg-surface-500/50 backdrop-blur-md rounded-xl ring-1 ring-dark-text/10 shadow-lg ${SPACING_TOKENS.p.sm} ${SPACING_TOKENS.mt.md} flex-1 flex flex-col ${SPACING_TOKENS.gap.sm}`,
     mobileTopActions: `flex items-center justify-between w-full ${SPACING_TOKENS.px.sm} ${SPACING_TOKENS.mb.sm}`,
     mobileHeader: 'w-full text-center flex flex-col items-center',
-    mobileHeaderButton:
-      `flex flex-col justify-center items-center ${SPACING_TOKENS.gap.xs} p-0 hover:bg-transparent cursor-pointer outline-none w-full`,
+    mobileHeaderButton: `flex flex-col justify-center items-center ${SPACING_TOKENS.gap.xs} p-0 hover:bg-transparent cursor-pointer outline-none w-full`,
     mobileHeaderTitleRow: `flex items-center ${SPACING_TOKENS.gap.sm}`,
     mobileToolbar: `flex items-center ${SPACING_TOKENS.gap.sm} w-full ${SPACING_TOKENS.mt.sm}`,
-    mobileFilterButton:
-      `rounded-full ${SPACING_TOKENS.px.md} text-sm h-10 shadow-none border-dark-text/20 bg-surface-500/70`,
-    mobileDateButton:
-      `flex justify-between items-center rounded-full ${SPACING_TOKENS.px.lg} bg-surface-500/30 border-dark-text/30 text-dark-text shadow-inner font-bold`,
-    mobileEventsWrapper:
-      `flex flex-col w-full ${SPACING_TOKENS.mt.sm} ring-1 ring-dark-text/10 rounded-xl overflow-hidden bg-surface-500/20`,
-    mobileEventItem:
-      `flex items-center justify-between ${SPACING_TOKENS.p.md} bg-surface-500/40 backdrop-blur-md cursor-pointer hover:bg-surface-500/60 transition-colors`,
+    mobileFilterButton: `rounded-full ${SPACING_TOKENS.px.md} text-sm h-10 shadow-none border-dark-text/20 bg-surface-500/70`,
+    mobileDateButton: `flex justify-between items-center rounded-full ${SPACING_TOKENS.px.lg} bg-surface-500/30 border-dark-text/30 text-dark-text shadow-inner font-bold`,
+    mobileEventsWrapper: `flex flex-col w-full ${SPACING_TOKENS.mt.sm} ring-1 ring-dark-text/10 rounded-xl overflow-hidden bg-surface-500/20`,
+    mobileEventItem: `flex items-center justify-between ${SPACING_TOKENS.p.md} bg-surface-500/40 backdrop-blur-md cursor-pointer hover:bg-surface-500/60 transition-colors`,
     mobileEventItemBorder: 'border-b border-dark-text/10',
     mobileEmptyState: `${SPACING_TOKENS.p.lg} text-center text-sm text-dark-text/60 font-medium bg-surface-500/40`,
 
-    mobileShowActiveButton:
-      `border border-brand-500/50 !${SPACING_TOKENS.px.lg} !${SPACING_TOKENS.py.sm} rounded-full bg-surface-500/70 hover:bg-light-bg text-dark-text transition-colors backdrop-blur-md cursor-pointer ring-2 ring-success-500 text-success-600`,
+    mobileShowActiveButton: `border border-brand-500/50 !${SPACING_TOKENS.px.lg} !${SPACING_TOKENS.py.sm} rounded-full bg-surface-500/70 hover:bg-light-bg text-dark-text transition-colors backdrop-blur-md cursor-pointer ring-2 ring-success-500 text-success-600`,
     mobileShowAllButton:
       'w-10 h-10 rounded-full font-semibold flex items-center justify-center p-0 cursor-pointer bg-surface-500/70 backdrop-blur-xl text-dark-text ring-1 ring-dark-text/10 hover:bg-surface-500/90 transition-colors shrink-0',
     // Participants Area (in Preview)
@@ -459,16 +427,13 @@ export default defineAppConfig({
       'text-xs text-brand-600 hover:text-brand-500 cursor-pointer font-medium underline underline-offset-2',
 
     // Participants Modal Styles (Wide Card View)
-    participantModalScroll:
-      `flex flex-col ${SPACING_TOKENS.gap.sm} overflow-y-auto max-h-[540px] pr-2 w-full custom-scrollbar`,
-    participantCard:
-      `flex items-center ${SPACING_TOKENS.gap.md} w-full !${SPACING_TOKENS.p.md} bg-surface-500/40 rounded-2xl ring-1 ring-dark-text/10 hover:bg-surface-500/60 transition-colors cursor-pointer shrink-0`,
+    participantModalScroll: `flex flex-col ${SPACING_TOKENS.gap.sm} overflow-y-auto max-h-[540px] pr-2 w-full custom-scrollbar`,
+    participantCard: `flex items-center ${SPACING_TOKENS.gap.md} w-full !${SPACING_TOKENS.p.md} bg-surface-500/40 rounded-2xl ring-1 ring-dark-text/10 hover:bg-surface-500/60 transition-colors cursor-pointer shrink-0`,
     participantCardAvatar: 'shrink-0 shadow-sm w-10 h-10',
     participantCardInfo: 'flex flex-col flex-1 min-w-0',
     participantCardHeader: `flex items-center justify-between ${SPACING_TOKENS.gap.sm}`,
     participantCardName: 'font-bold text-lg text-dark-text truncate',
-    participantCardRole:
-      `text-xs font-bold ${SPACING_TOKENS.px.sm} py-0.5 rounded-full bg-brand-500/20 text-brand-600 capitalize shrink-0`,
+    participantCardRole: `text-xs font-bold ${SPACING_TOKENS.px.sm} py-0.5 rounded-full bg-brand-500/20 text-brand-600 capitalize shrink-0`,
     participantCardEmail: 'text-sm text-dark-text/70 truncate',
     participantCardPhone: `text-xs text-dark-text/50 ${SPACING_TOKENS.mt.xs} truncate`,
   },

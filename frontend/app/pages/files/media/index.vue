@@ -118,7 +118,10 @@
           }}<span class="font-bold text-dark-text">{{ fileToDelete?.file_name }}</span
           >{{ UI_TEXT.documents.deleteAfterName + ' ' }}
         </p>
-        <div v-if="deleteError" :class="`text-sm text-error-500 font-medium ${SPACING_TOKENS.mt.sm}`">
+        <div
+          v-if="deleteError"
+          :class="`text-sm text-error-500 font-medium ${SPACING_TOKENS.mt.sm}`"
+        >
           {{ deleteError }}
         </div>
       </template>

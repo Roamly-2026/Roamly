@@ -90,7 +90,9 @@
       </div>
     </div>
 
-    <div :class="`flex flex-col sm:flex-row items-center justify-between ${SPACING_TOKENS.gap.md} w-full shrink-0`">
+    <div
+      :class="`flex flex-col sm:flex-row items-center justify-between ${SPACING_TOKENS.gap.md} w-full shrink-0`"
+    >
       <div :class="`flex items-center ${SPACING_TOKENS.gap.md} w-full sm:w-auto flex-1`">
         <UInput
           v-model="searchQuery"
@@ -183,7 +185,10 @@
           {{ UI_TEXT.events.daysHeading }}
         </div>
         <div :class="appConfig.calendar.columnBody">
-          <div v-if="isLoadingDays" :class="`${SPACING_TOKENS.p.md} text-center text-sm opacity-60`">
+          <div
+            v-if="isLoadingDays"
+            :class="`${SPACING_TOKENS.p.md} text-center text-sm opacity-60`"
+          >
             {{ UI_TEXT.events.loadingDays }}
           </div>
           <template v-else>
@@ -201,7 +206,10 @@
             >
               <span class="font-medium text-dark-text">{{ day.date }} ({{ day.dayOfWeek }})</span>
             </div>
-            <div v-if="!sortedDaysList.length" :class="`${SPACING_TOKENS.p.md} text-center text-sm opacity-60`">
+            <div
+              v-if="!sortedDaysList.length"
+              :class="`${SPACING_TOKENS.p.md} text-center text-sm opacity-60`"
+            >
               {{ ' ' + UI_TEXT.events.noDays + ' ' }}
             </div>
           </template>
@@ -214,7 +222,10 @@
           <span v-if="selectedDayDetails">{{ selectedDayDetails.date }}</span>
         </div>
         <div :class="appConfig.calendar.columnBody">
-          <div v-if="isLoadingEvents" :class="`${SPACING_TOKENS.p.md} text-center text-sm opacity-60`">
+          <div
+            v-if="isLoadingEvents"
+            :class="`${SPACING_TOKENS.p.md} text-center text-sm opacity-60`"
+          >
             {{ UI_TEXT.events.loadingEvents }}
           </div>
           <template v-else>
@@ -427,7 +438,13 @@
             </div>
             <div
               v-if="selectedEvent.address || selectedEvent.latitude !== null"
-              :class="[appConfig.calendar.metaRowItem, SPACING_TOKENS.mt.md, 'flex-col', 'items-start', SPACING_TOKENS.gap.sm]"
+              :class="[
+                appConfig.calendar.metaRowItem,
+                SPACING_TOKENS.mt.md,
+                'flex-col',
+                'items-start',
+                SPACING_TOKENS.gap.sm,
+              ]"
             >
               <span :class="appConfig.calendar.metaLabel">{{ UI_TEXT.events.locationLabel }}</span>
               <span v-if="selectedEvent.address" :class="appConfig.calendar.metaValue">
