@@ -1,6 +1,6 @@
 <!-- frontend/app/components/documents/views/DocumentsMobile.vue -->
 <template>
-  <div class="flex flex-col flex-1 gap-4 w-full p-4 pb-20">
+  <div :class="`flex flex-col flex-1 ${SPACING_TOKENS.gap.md} w-full ${SPACING_TOKENS.p.md} pb-20`">
     <div :class="appConfig.calendar.mobileTopActions">
       <UTooltip :text="UI_TEXT.common.members">
         <UButton icon="i-heroicons-users" variant="glassIconButton" :to="membersRoute" />
@@ -22,7 +22,7 @@
     </div>
 
     <div :class="appConfig.calendar.mobileMainWrapper">
-      <div :class="appConfig.calendar.mobileHeader" class="mb-8">
+      <div :class="[appConfig.calendar.mobileHeader, SPACING_TOKENS.mb.xl]">
         <UPopover v-model:open="isGroupDropdownOpen" class="w-full" :popper="{ strategy: 'fixed' }">
           <UButton block variant="ghost" :class="appConfig.calendar.mobileHeaderButton">
             <div :class="appConfig.calendar.mobileHeaderTitleRow">
@@ -119,12 +119,12 @@
         </UTooltip>
       </div>
 
-      <div class="px-2 pt-2 mb-8">
-        <div v-if="isLoading" :class="appConfig.typography.statusLoading" class="py-4 text-center">
+      <div :class="`${SPACING_TOKENS.px.sm} ${SPACING_TOKENS.pt.sm} ${SPACING_TOKENS.mb.xl}`">
+        <div v-if="isLoading" :class="[appConfig.typography.statusLoading, SPACING_TOKENS.py.md, 'text-center']">
           {{ ' ' + UI_TEXT.documents.loading + ' ' }}
         </div>
 
-        <div v-else-if="documents.length > 0" class="flex flex-col gap-4 w-full">
+        <div v-else-if="documents.length > 0" :class="`flex flex-col ${SPACING_TOKENS.gap.md} w-full`">
           <UCard
             v-for="doc in documents"
             :key="doc.file_id"
@@ -133,7 +133,7 @@
           >
             <div :class="appConfig.layout.documentCardHeader">
               <p class="font-bold truncate pr-2 shadow-sm text-sm">{{ doc.file_name }}</p>
-              <div class="flex items-center gap-1 shrink-0">
+              <div :class="`flex items-center ${SPACING_TOKENS.gap.xs} shrink-0`">
                 <UTooltip v-if="isCurrentUserLeader" :text="UI_TEXT.common.delete">
                   <UButton
                     icon="i-heroicons-trash"
@@ -147,7 +147,7 @@
 
             <div :class="appConfig.layout.documentCardImage" class="h-40!">
               <UIcon name="i-heroicons-document" class="w-12 h-12 text-surface-500/50" />
-              <div class="absolute bottom-2 px-4 w-full flex justify-between">
+              <div :class="`absolute bottom-2 ${SPACING_TOKENS.px.md} w-full flex justify-between`">
                 <UTooltip :text="UI_TEXT.common.view">
                   <UButton
                     icon="i-heroicons-eye"
@@ -224,7 +224,7 @@
           </UCard>
         </div>
 
-        <div v-else :class="appConfig.typography.statusLoading" class="py-4 text-center">
+        <div v-else :class="[appConfig.typography.statusLoading, SPACING_TOKENS.py.md, 'text-center']">
           {{
             searchQuery || filterType !== 'ALL'
               ? UI_TEXT.documents.noMatchingDocuments
@@ -283,20 +283,19 @@
       <!-- Loading -->
       <div
         v-if="isLoadingMemberDocuments"
-        :class="appConfig.typography.statusLoading"
-        class="py-4 text-center"
+        :class="[appConfig.typography.statusLoading, SPACING_TOKENS.py.md, 'text-center']"
       >
         {{ ' ' + UI_TEXT.documents.loadingMemberDocuments + ' ' }}
       </div>
 
-      <div v-else class="px-2 pt-4 flex flex-col gap-6 w-full">
+      <div v-else :class="`${SPACING_TOKENS.px.sm} ${SPACING_TOKENS.pt.md} flex flex-col ${SPACING_TOKENS.gap.lg} w-full`">
         <div
           v-for="type in privateDocumentTypes.filter(
             (t) =>
               t.value !== 'ALL' && (memberFilterType === 'ALL' || memberFilterType === t.value),
           )"
           :key="type.value"
-          class="flex flex-col gap-3 w-full"
+          :class="`flex flex-col ${SPACING_TOKENS.gap.sm} w-full`"
         >
           <h2 :class="appConfig.typography.pageTitle" class="text-xl font-bold">
             {{ type.label }}
@@ -305,7 +304,7 @@
           <!-- Documents of this type -->
           <div
             v-if="filteredMemberDocuments(type.value).length > 0"
-            class="flex flex-col gap-4 w-full"
+            :class="`flex flex-col ${SPACING_TOKENS.gap.md} w-full`"
           >
             <UCard
               v-for="doc in filteredMemberDocuments(type.value)"
@@ -319,7 +318,7 @@
 
               <div :class="appConfig.layout.documentCardImage" class="h-32!">
                 <UIcon name="i-heroicons-document-text" class="w-12 h-12 text-surface-500/50" />
-                <div class="absolute bottom-2 px-4 w-full flex justify-end">
+                <div :class="`absolute bottom-2 ${SPACING_TOKENS.px.md} w-full flex justify-end`">
                   <UTooltip :text="UI_TEXT.common.view">
                     <UButton
                       icon="i-heroicons-eye"
@@ -384,10 +383,10 @@
 
           <!-- Empty per-type state -->
           <UCard v-else variant="documentGlass" class="relative w-full">
-            <div class="py-6 text-center">
+            <div :class="`${SPACING_TOKENS.py.lg} text-center`">
               <UIcon
                 name="i-heroicons-document-text"
-                class="w-12 h-12 text-surface-500/40 mx-auto mb-2"
+                :class="`w-12 h-12 text-surface-500/40 mx-auto ${SPACING_TOKENS.mb.sm}`"
               />
               <p class="text-surface-400 italic text-sm">
                 {{ ' ' + UI_TEXT.documents.no + ' ' }}{{ type.label.toLowerCase()
@@ -409,6 +408,7 @@ import { computed, ref } from 'vue';
 import { useAppConfig } from '#imports';
 import type { GroupFile, PrivateDocumentMetadata } from '~/types/files.type';
 import type { GroupOutDto } from '~/types/groups.type';
+import { SPACING_TOKENS } from '~/utils/spacings.tokens';
 
 const appConfig = useAppConfig();
 

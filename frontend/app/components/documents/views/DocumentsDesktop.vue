@@ -25,7 +25,7 @@
         <UPopover v-model:open="isGroupDropdownOpen">
           <UButton
             variant="ghost"
-            class="group flex items-center gap-2 p-0 hover:bg-transparent cursor-pointer outline-none"
+            :class="`group flex items-center ${SPACING_TOKENS.gap.sm} p-0 hover:bg-transparent cursor-pointer outline-none`"
           >
             <h1 :class="appConfig.typography.pageTitle">
               <ClientOnly :fallback="UI_TEXT.common.loading">
@@ -95,9 +95,9 @@
     <!-- ==================== -->
     <!-- GROUP DOCUMENT SECTION -->
     <!-- ==================== -->
-    <div :class="appConfig.layout.sectionWrapper" class="mt-8!">
-      <div class="flex items-center justify-between w-full mb-6 relative">
-        <div class="flex items-center gap-3 flex-1 justify-start">
+    <div :class="[appConfig.layout.sectionWrapper, 'mt-8!']">
+      <div :class="`flex items-center justify-between w-full ${SPACING_TOKENS.mb.lg} relative`">
+        <div :class="`flex items-center ${SPACING_TOKENS.gap.sm} flex-1 justify-start`">
           <UInput
             v-model="searchQuery"
             icon="i-heroicons-magnifying-glass"
@@ -142,7 +142,7 @@
           {{ UI_TEXT.documents.groupDocumentsHeading }}
         </div>
 
-        <div class="flex items-center gap-2 flex-1 justify-end shrink-0">
+        <div :class="`flex items-center ${SPACING_TOKENS.gap.sm} flex-1 justify-end shrink-0`">
           <UTooltip v-if="isCurrentUserLeader" :text="UI_TEXT.documents.uploadTitle">
             <UButton
               icon="i-heroicons-plus"
@@ -162,7 +162,7 @@
         <UCard v-for="doc in documents" :key="doc.file_id" variant="documentGlass" class="relative">
           <div :class="appConfig.layout.documentCardHeader">
             <p class="font-bold truncate pr-2 shadow-sm text-sm">{{ doc.file_name }}</p>
-            <div class="flex items-center gap-1 shrink-0">
+            <div :class="`flex items-center ${SPACING_TOKENS.gap.xs} shrink-0`">
               <UTooltip v-if="isCurrentUserLeader" :text="UI_TEXT.common.delete">
                 <UButton
                   icon="i-heroicons-trash"
@@ -176,7 +176,7 @@
 
           <div :class="appConfig.layout.documentCardImage">
             <UIcon name="i-heroicons-document" class="w-16 h-16 text-surface-500/50" />
-            <div class="absolute bottom-2 px-4 w-full flex justify-between">
+            <div :class="`absolute bottom-2 ${SPACING_TOKENS.px.md} w-full flex justify-between`">
               <UTooltip :text="UI_TEXT.common.view">
                 <UButton
                   icon="i-heroicons-eye"
@@ -266,8 +266,8 @@
   <!-- MEMBER DOCUMENTS (leader) -->
   <!-- ========================= -->
   <div v-if="isCurrentUserLeader" :class="appConfig.layout.pageWrapper">
-    <div class="flex items-center justify-between w-full mb-6 relative">
-      <div class="flex items-center gap-3 flex-1 justify-start">
+    <div :class="`flex items-center justify-between w-full ${SPACING_TOKENS.mb.lg} relative`">
+      <div :class="`flex items-center ${SPACING_TOKENS.gap.sm} flex-1 justify-start`">
         <UInput
           v-model="memberSearchQuery"
           icon="i-heroicons-magnifying-glass"
@@ -314,7 +314,7 @@
         {{ UI_TEXT.documents.memberDocumentsHeading }}
       </div>
 
-      <div class="flex items-center gap-2 flex-1 justify-end shrink-0">
+      <div :class="`flex items-center ${SPACING_TOKENS.gap.sm} flex-1 justify-end shrink-0`">
         <!-- intentionally empty — leaders cannot upload on behalf of members -->
       </div>
     </div>
@@ -330,7 +330,7 @@
           (t) => t.value !== 'ALL' && (memberFilterType === 'ALL' || memberFilterType === t.value),
         )"
         :key="type.value"
-        class="flex flex-col gap-4 mb-8"
+        :class="`flex flex-col ${SPACING_TOKENS.gap.md} ${SPACING_TOKENS.mb.xl}`"
       >
         <h2 :class="appConfig.typography.pageTitle" class="text-xl font-bold">
           {{ type.label }}
@@ -353,7 +353,7 @@
 
             <div :class="appConfig.layout.documentCardImage">
               <UIcon name="i-heroicons-document-text" class="w-16 h-16 text-surface-500/50" />
-              <div class="absolute bottom-2 px-4 w-full flex justify-end">
+              <div :class="`absolute bottom-2 ${SPACING_TOKENS.px.md} w-full flex justify-end`">
                 <UTooltip :text="UI_TEXT.common.view">
                   <UButton
                     icon="i-heroicons-eye"
@@ -418,10 +418,10 @@
 
         <!-- Empty per-type state -->
         <UCard v-else class="relative">
-          <div class="py-6 text-center">
+          <div :class="`${SPACING_TOKENS.py.lg} text-center`">
             <UIcon
               name="i-heroicons-document-text"
-              class="w-12 h-12 text-surface-500 mx-auto mb-2"
+              :class="`w-12 h-12 text-surface-500 mx-auto ${SPACING_TOKENS.mb.sm}`"
             />
             <p class="text-surface-500 italic text-sm">
               {{ ' ' + UI_TEXT.documents.no + ' ' }}{{ type.label.toLowerCase()
@@ -442,6 +442,7 @@ import { computed, ref } from 'vue';
 import { useAppConfig } from '#imports';
 import type { GroupFile, PrivateDocumentMetadata } from '~/types/files.type';
 import type { GroupOutDto } from '~/types/groups.type';
+import { SPACING_TOKENS } from '~/utils/spacings.tokens';
 
 const appConfig = useAppConfig();
 
