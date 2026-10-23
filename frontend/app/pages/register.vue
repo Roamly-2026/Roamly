@@ -58,7 +58,7 @@ const handleRegister = (data: RegisterFormState) => {
   registerMutation.mutate({
     email: data.email,
     username: data.username,
-    phone_number: data.phone_number,
+    phone_number: data.phone_number ?? '',
     password: data.password,
   });
 };
