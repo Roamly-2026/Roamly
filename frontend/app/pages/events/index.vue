@@ -3,7 +3,7 @@
   <ClientOnly>
     <template #fallback>
       <div class="min-h-screen flex items-center justify-center">
-        <span class="opacity-50 font-medium">{{ CONST_LOADING_TEXT ?? 'Loading...' }}</span>
+        <span class="opacity-50 font-medium">{{ UI_TEXT.common.loading }}</span>
       </div>
     </template>
 
@@ -266,22 +266,23 @@ const handleOpenPreviewModal = (event: UiEvent) => {
 };
 
 const getGroupRole = (userEmail?: string | null): string => {
-  if (!userEmail || !groupInfosData.value?.group_profiles) return 'Member';
+  if (!userEmail || !groupInfosData.value?.group_profiles) return UI_TEXT.common.member;
 
   const profile = groupInfosData.value.group_profiles.find(
     (p) => p.users?.email?.toLowerCase() === userEmail.toLowerCase(),
   );
 
   const roleType = profile?.roles?.type?.toLowerCase();
-  return roleType === 'leader' ? 'Leader' : 'Member';
+  return roleType === 'leader' ? UI_TEXT.common.leader : UI_TEXT.common.member;
 };
 
 const handleOpenUserProfile = (user: EventCreatorDto) => {
   groupsStore.selectedUserProfile = {
+    userUuid: user.uuid,
     username: user.username,
-    email: user.email || 'N/A',
+    email: user.email || UI_TEXT.common.notAvailable,
     role: getGroupRole(user.email), // <-- ITT VOLT A HARDKÓDOLT 'Participant'!
-    joinedAt: 'Unknown',
+    joinedAt: UI_TEXT.common.unknown,
     canViewDocuments: false,
   };
   groupsStore.isUserProfileModalOpen = true;

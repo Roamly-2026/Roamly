@@ -3,13 +3,13 @@
   <div :class="appConfig.calendar.eventsWrapper">
     <div :class="appConfig.calendar.eventsHeaderRow">
       <div :class="appConfig.calendar.headerActionLeft">
-        <UTooltip v-if="isCurrentUserLeader" text="Delete Group"
+        <UTooltip v-if="isCurrentUserLeader" :text="UI_TEXT.groups.deleteGroup"
           ><UButton
             icon="i-heroicons-trash"
             variant="glassIconButtonDanger"
             @click="$emit('delete-group')"
         /></UTooltip>
-        <UTooltip text="Leave Group"
+        <UTooltip :text="UI_TEXT.groups.leaveGroup"
           ><UButton
             icon="i-heroicons-arrow-right-on-rectangle"
             variant="glassIconButtonDanger"
@@ -26,8 +26,8 @@
             <h1 :class="appConfig.typography.pageTitle">
               {{
                 isLoadingGroups
-                  ? 'Loading...'
-                  : selectedGroupDetails?.name || CONST_SELECT_GROUP_PROMPT
+                  ? UI_TEXT.common.loading
+                  : selectedGroupDetails?.name || UI_TEXT.events.selectGroup
               }}
             </h1>
             <UIcon
@@ -62,14 +62,14 @@
             </div>
           </template>
         </UPopover>
-        <p :class="appConfig.typography.pageSubtitle" class="mt-0">{{ CONST_CALENDAR_SUBTITLE }}</p>
+        <p :class="appConfig.typography.pageSubtitle" class="mt-0">{{ UI_TEXT.common.calendar }}</p>
       </div>
 
       <div :class="appConfig.calendar.headerActionRight">
-        <UTooltip :text="CONST_TOOLTIP_MEMBERS ?? 'Members'">
+        <UTooltip :text="UI_TEXT.tooltips.members">
           <UButton icon="i-heroicons-users" variant="glassIconButton" :to="membersRoute" />
         </UTooltip>
-        <UTooltip :text="CONST_TOOLTIP_CALENDAR ?? 'Calendar'">
+        <UTooltip :text="UI_TEXT.tooltips.calendar">
           <UButton
             icon="i-heroicons-calendar"
             variant="glassIconButton"
@@ -77,10 +77,10 @@
             :to="eventsRoute"
           />
         </UTooltip>
-        <UTooltip :text="CONST_TOOLTIP_PHOTOS ?? 'Photos'">
+        <UTooltip :text="UI_TEXT.tooltips.photos">
           <UButton icon="i-heroicons-photo" variant="glassIconButton" :to="mediaRoute" />
         </UTooltip>
-        <UTooltip :text="CONST_TOOLTIP_DOCUMENTS ?? 'Documents'">
+        <UTooltip :text="UI_TEXT.tooltips.documents">
           <UButton
             icon="i-heroicons-document-text"
             variant="glassIconButton"
@@ -95,20 +95,25 @@
         <UInput
           v-model="searchQuery"
           icon="i-heroicons-magnifying-glass"
-          :placeholder="CONST_SEARCH_EVENTS_PLACEHOLDER"
+          :placeholder="UI_TEXT.events.searchPlaceholder"
           variant="search"
           :ui="{ leading: 'pl-3' }"
           class="w-full max-w-xs"
         />
         <UPopover v-model:open="isFilterOpen">
-          <UTooltip :text="CONST_TOOLTIP_FILTER_EVENTS"
-            ><UButton icon="i-heroicons-funnel" label="Filter" variant="glassButton"
+          <UTooltip :text="UI_TEXT.tooltips.filterEvents"
+            ><UButton
+              icon="i-heroicons-funnel"
+              :label="UI_TEXT.common.filter"
+              variant="glassButton"
           /></UTooltip>
           <template #content>
             <div :class="appConfig.calendar.filterDropdownContent">
               <div :class="appConfig.calendar.filterFormGroup">
                 <div>
-                  <label :class="appConfig.calendar.filterLabel">{{ CONST_START_DATE_LABEL }}</label
+                  <label :class="appConfig.calendar.filterLabel">{{
+                    UI_TEXT.events.startDateLabel
+                  }}</label
                   ><input
                     v-model="filterStartDate"
                     type="date"
@@ -116,7 +121,9 @@
                   />
                 </div>
                 <div>
-                  <label :class="appConfig.calendar.filterLabel">{{ CONST_END_DATE_LABEL }}</label
+                  <label :class="appConfig.calendar.filterLabel">{{
+                    UI_TEXT.events.endDateLabel
+                  }}</label
                   ><input
                     v-model="filterEndDate"
                     type="date"
@@ -126,7 +133,7 @@
                 <div :class="appConfig.calendar.filterButtonWrapper">
                   <div :class="appConfig.calendar.filterButtonWrapper">
                     <UButton
-                      label="Clear Filter"
+                      :label="UI_TEXT.common.clearFilter"
                       variant="smallHollowActionButton"
                       :class="[
                         filterStartDate || filterEndDate
@@ -142,10 +149,12 @@
             </div>
           </template>
         </UPopover>
-        <UTooltip :text="showOnlyActiveEvents ? 'Show All Events' : 'Hide Expired Events'">
+        <UTooltip
+          :text="showOnlyActiveEvents ? UI_TEXT.events.showAll : UI_TEXT.events.hideExpired"
+        >
           <UButton
             icon="i-heroicons-clock"
-            :label="showOnlyActiveEvents ? 'Active' : 'All'"
+            :label="showOnlyActiveEvents ? UI_TEXT.events.active : UI_TEXT.common.all"
             :variant="showOnlyActiveEvents ? 'glassOutlineButton' : 'glassButton'"
             :class="[
               showOnlyActiveEvents ? 'ring-2 ring-success-500 text-success-600' : '',
@@ -158,7 +167,7 @@
       <div class="shrink-0 w-full sm:w-auto flex justify-end">
         <UButton
           icon="i-heroicons-calendar-days"
-          label="Add Event"
+          :label="UI_TEXT.tooltips.addEvent"
           variant="actionOkButton"
           class="h-10 text-md px-6"
           @click="$emit('open-add-event')"
@@ -171,11 +180,11 @@
     <div :class="appConfig.calendar.eventsGrid">
       <div :class="[appConfig.calendar.columnBase, appConfig.calendar.columnDays]">
         <div :class="[appConfig.calendar.columnHeader, 'rounded-tl-xl']">
-          {{ CONST_DAYS_HEADER }}
+          {{ UI_TEXT.events.daysHeading }}
         </div>
         <div :class="appConfig.calendar.columnBody">
           <div v-if="isLoadingDays" class="p-4 text-center text-sm opacity-60">
-            {{ CONST_LOADING_DAYS_MSG }}
+            {{ UI_TEXT.events.loadingDays }}
           </div>
           <template v-else>
             <div
@@ -193,7 +202,7 @@
               <span class="font-medium text-dark-text">{{ day.date }} ({{ day.dayOfWeek }})</span>
             </div>
             <div v-if="!sortedDaysList.length" class="p-4 text-center text-sm opacity-60">
-              No days added.
+              {{ ' ' + UI_TEXT.events.noDays + ' ' }}
             </div>
           </template>
         </div>
@@ -201,12 +210,12 @@
 
       <div :class="[appConfig.calendar.columnBase, appConfig.calendar.columnEvents]">
         <div :class="appConfig.calendar.columnHeader">
-          <span class="uppercase">{{ CONST_EVENTS_HEADER }}</span>
+          <span class="uppercase">{{ UI_TEXT.common.events }}</span>
           <span v-if="selectedDayDetails">{{ selectedDayDetails.date }}</span>
         </div>
         <div :class="appConfig.calendar.columnBody">
           <div v-if="isLoadingEvents" class="p-4 text-center text-sm opacity-60">
-            {{ CONST_LOADING_EVENTS_MSG }}
+            {{ UI_TEXT.events.loadingEvents }}
           </div>
           <template v-else>
             <div
@@ -222,7 +231,11 @@
               @click="$emit('update:selected-event', event)"
             >
               <div :class="appConfig.calendar.eventItemWrapper" class="flex-1 min-w-0 pr-2 gap-3!">
-                <UTooltip :text="event.is_private ? 'Private Event' : 'Public Event'">
+                <UTooltip
+                  :text="
+                    event.is_private ? UI_TEXT.events.privateEvent : UI_TEXT.events.publicEvent
+                  "
+                >
                   <UIcon
                     :name="event.is_private ? 'i-heroicons-user' : 'i-heroicons-user-group'"
                     class="w-5 h-5 text-dark-text/70 shrink-0"
@@ -248,7 +261,9 @@
               class="p-8 text-center text-sm text-dark-text/60 font-medium flex flex-col items-center justify-center h-48 gap-2"
             >
               <UIcon name="i-heroicons-calendar" class="w-8 h-8 opacity-40" />
-              <span>{{ searchQuery ? CONST_NO_MATCHING_EVENTS_MSG : CONST_NO_EVENTS_MSG }}</span>
+              <span>{{
+                searchQuery ? UI_TEXT.events.noMatchingEvents : UI_TEXT.events.noEvents
+              }}</span>
             </div>
           </template>
         </div>
@@ -256,7 +271,7 @@
 
       <div :class="[appConfig.calendar.columnBase, appConfig.calendar.columnPreview]">
         <div :class="[appConfig.calendar.columnHeader, 'rounded-tr-xl']">
-          {{ CONST_EVENT_PREVIEW_HEADER }}
+          {{ UI_TEXT.events.previewHeading }}
         </div>
         <div
           v-if="selectedEvent"
@@ -269,13 +284,15 @@
                 :class="appConfig.calendar.previewTypeIcon"
               />
               <span :class="appConfig.calendar.previewTypeText">{{
-                selectedEvent.is_private ? CONST_PRIVATE_LBL : CONST_GROUP_EVENT_LBL
+                selectedEvent.is_private
+                  ? UI_TEXT.events.privateLabel
+                  : UI_TEXT.events.groupEventLabel
               }}</span>
             </div>
             <div class="flex items-center gap-1">
               <UTooltip
                 v-if="selectedEvent.creator?.email === currentUserEmail && selectedEvent.is_private"
-                text="Add Members"
+                :text="UI_TEXT.events.addMembers"
               >
                 <UButton
                   icon="i-heroicons-user-plus"
@@ -284,7 +301,7 @@
                   @click="$emit('open-add-members', selectedEvent)"
                 />
               </UTooltip>
-              <UTooltip v-if="canManageEvent(selectedEvent)" text="Delete Event">
+              <UTooltip v-if="canManageEvent(selectedEvent)" :text="UI_TEXT.events.deleteEvent">
                 <UButton
                   icon="i-heroicons-trash"
                   variant="ghostDangerIconButton"
@@ -292,7 +309,7 @@
                   @click="$emit('open-delete-event', selectedEvent)"
                 />
               </UTooltip>
-              <UTooltip v-if="canLeaveEvent(selectedEvent)" text="Leave Event">
+              <UTooltip v-if="canLeaveEvent(selectedEvent)" :text="UI_TEXT.events.leaveEvent">
                 <UButton
                   icon="i-heroicons-arrow-right-on-rectangle"
                   variant="ghostDangerIconButton"
@@ -304,20 +321,20 @@
           </div>
           <h2 :class="appConfig.calendar.previewMainTitle">
             {{ selectedEvent.title }}
-            <span v-if="selectedEvent.isExpired" :class="appConfig.calendar.previewExpiredBadge"
-              >Expired</span
-            >
+            <span v-if="selectedEvent.isExpired" :class="appConfig.calendar.previewExpiredBadge">{{
+              UI_TEXT.events.expired
+            }}</span>
           </h2>
 
           <div :class="appConfig.calendar.previewMetaRow">
             <div :class="appConfig.calendar.metaRowItem">
-              <span :class="appConfig.calendar.metaLabel">{{ CONST_CREATOR_LBL }}</span>
+              <span :class="appConfig.calendar.metaLabel">{{ UI_TEXT.events.creatorLabel }}</span>
               <span :class="appConfig.calendar.metaValue">{{
                 selectedEvent.creator?.username
               }}</span>
             </div>
             <div :class="appConfig.calendar.metaRowItem">
-              <span :class="appConfig.calendar.metaLabel">{{ CONST_DATE_LBL }}</span>
+              <span :class="appConfig.calendar.metaLabel">{{ UI_TEXT.events.dateLabel }}</span>
               <span
                 v-if="
                   new Date(selectedEvent.start_time).toLocaleDateString() ===
@@ -333,7 +350,7 @@
               </span>
             </div>
             <div :class="appConfig.calendar.metaRowItem">
-              <span :class="appConfig.calendar.metaLabel">{{ CONST_TIME_LBL }}</span>
+              <span :class="appConfig.calendar.metaLabel">{{ UI_TEXT.events.timeLabel }}</span>
               <span
                 v-if="selectedEvent.timeStartFormatted === selectedEvent.timeEndFormatted"
                 :class="appConfig.calendar.metaValue"
@@ -346,7 +363,7 @@
             </div>
 
             <div :class="appConfig.calendar.metaRowItemCenter">
-              <span :class="appConfig.calendar.metaLabel">{{ CONST_MEMBERS_LBL }}</span>
+              <span :class="appConfig.calendar.metaLabel">{{ UI_TEXT.events.membersLabel }}</span>
               <div :class="appConfig.calendar.participantsGroup">
                 <template v-if="selectedEvent.is_private">
                   <div
@@ -375,7 +392,7 @@
                       :text="
                         '+' +
                         ((selectedEvent.members?.length || 0) - 5).toString() +
-                        ' more participants'
+                        UI_TEXT.events.moreParticipants
                       "
                     >
                       <div
@@ -390,25 +407,29 @@
                     variant="link"
                     :class="appConfig.calendar.metaValueLink"
                     @click="$emit('open-all-participants')"
-                    >Show participants</UButton
+                    >{{ UI_TEXT.events.showParticipants }}</UButton
                   >
                 </template>
                 <template v-else>
                   <div class="flex items-center gap-3">
-                    <span class="text-sm font-bold text-dark-text">Everyone</span>
+                    <span class="text-sm font-bold text-dark-text">{{
+                      UI_TEXT.common.everyone
+                    }}</span>
                   </div>
                 </template>
               </div>
             </div>
             <div :class="[appConfig.calendar.metaRowItem, 'mt-2']">
-              <span :class="appConfig.calendar.metaLabel">{{ CONST_DESC_LBL }}</span>
+              <span :class="appConfig.calendar.metaLabel">{{
+                UI_TEXT.events.descriptionLabel
+              }}</span>
               <span :class="appConfig.calendar.metaValue">{{ selectedEvent.description }}</span>
             </div>
             <div
               v-if="selectedEvent.address || selectedEvent.latitude !== null"
               :class="[appConfig.calendar.metaRowItem, 'mt-4', 'flex-col', 'items-start', 'gap-2']"
             >
-              <span :class="appConfig.calendar.metaLabel">{{ CONST_LOC_LBL }}</span>
+              <span :class="appConfig.calendar.metaLabel">{{ UI_TEXT.events.locationLabel }}</span>
               <span v-if="selectedEvent.address" :class="appConfig.calendar.metaValue">
                 {{ selectedEvent.address }}
               </span>
@@ -431,7 +452,7 @@
             </div>
           </div>
         </div>
-        <div v-else :class="appConfig.calendar.emptyPreview">{{ CONST_SELECT_EVENT_PROMPT }}</div>
+        <div v-else :class="appConfig.calendar.emptyPreview">{{ UI_TEXT.events.selectEvent }}</div>
       </div>
     </div>
   </div>
@@ -441,7 +462,6 @@
 import { useAppConfig } from '#imports';
 import type { GroupOutDto } from '~/types/groups.type';
 import type { EventCreatorDto, UiDay, UiEvent } from '~/types/events.type';
-import { CONST_LOC_LBL } from '~/utils/constants/events.constants';
 
 const props = defineProps<{
   userGroupsList: GroupOutDto[];

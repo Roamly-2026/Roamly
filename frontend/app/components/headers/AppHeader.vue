@@ -5,18 +5,20 @@
     <div class="flex-1">
       <NuxtLink to="/#home" :class="appConfig.layout.logoWrapper">
         <UIcon name="i-heroicons-map-pin" class="w-7 h-7 text-brand-500" />
-        <span :class="appConfig.typography.logoText">{{ CONST_BRAND_NAME }}</span>
+        <span :class="appConfig.typography.logoText">{{ UI_TEXT.common.brandName }}</span>
       </NuxtLink>
     </div>
 
     <!-- DESKTOP NAV SECTION -->
     <nav :class="appConfig.layout.navWrapper">
-      <NuxtLink to="/#home" :class="appConfig.typography.navLink">{{ CONST_HOME_TITLE }}</NuxtLink>
+      <NuxtLink to="/#home" :class="appConfig.typography.navLink">{{
+        UI_TEXT.home.title
+      }}</NuxtLink>
       <NuxtLink to="/#about" :class="appConfig.typography.navLink">{{
-        CONST_ABOUT_TITLE
+        UI_TEXT.home.aboutTitle
       }}</NuxtLink>
       <NuxtLink to="/#support" :class="appConfig.typography.navLink">{{
-        CONST_SUPPORT_TITLE
+        UI_TEXT.home.supportTitle
       }}</NuxtLink>
     </nav>
 
@@ -26,11 +28,11 @@
         <div class="flex items-center gap-2 md:gap-4">
           <template v-if="isAuthenticated">
             <span class="font-bold text-dark-text tracking-wide text-sm hidden sm:block">
-              {{ userProfile?.username || 'Loading...' }}
+              {{ userProfile?.username || UI_TEXT.common.loading }}
             </span>
             <UButton
               icon="i-heroicons-arrow-left-on-rectangle"
-              :label="CONST_LOGOUT_TITLE"
+              :label="UI_TEXT.auth.logoutTitle"
               variant="smallHollowActionButton"
               class="hidden sm:flex"
               @click="handleLogout"
@@ -45,7 +47,7 @@
               >
                 <UAvatar
                   :src="userProfile?.profile_image_url || undefined"
-                  :alt="userProfile?.username || 'User'"
+                  :alt="userProfile?.username || UI_TEXT.common.user"
                   icon="i-heroicons-user"
                 />
               </UButton>
@@ -59,7 +61,7 @@
           </template>
           <template v-else>
             <UButton
-              :label="CONST_LOGIN_TITLE"
+              :label="UI_TEXT.auth.loginTitle"
               to="/login"
               variant="smallHollowActionButton"
               class="hidden sm:flex"
@@ -88,9 +90,9 @@ const { data: userProfile, error } = useCurrentUserQuery();
 
 /* --- MENU ITEMS --- */
 const profileDropdownItems = ref<DropdownMenuItem[]>([
-  { label: 'Profile', icon: 'i-heroicons-user-circle', to: '/users/profile' },
-  { label: 'Groups', icon: 'i-heroicons-user-group', to: '/groups' },
-  { label: 'Events', icon: 'i-heroicons-calendar-days', to: '/events' },
+  { label: UI_TEXT.common.profile, icon: 'i-heroicons-user-circle', to: '/users/profile' },
+  { label: UI_TEXT.common.groups, icon: 'i-heroicons-user-group', to: '/groups' },
+  { label: UI_TEXT.common.events, icon: 'i-heroicons-calendar-days', to: '/events' },
 ]);
 
 /* --- WATCHERS --- */

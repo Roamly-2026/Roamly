@@ -1,25 +1,26 @@
+import { UI_TEXT } from '~/locales/en';
 // frontend/app/utils/schemas/users.validation.ts
 import { z } from 'zod';
 
 export const updateUsernameSchema = z.object({
   username: z
-    .string('Please enter a valid username!')
-    .min(3, 'Username too short! It must be atleast 3 characters long!')
-    .max(50, 'Username too long! It can not be more than 50 characters long!'),
+    .string(UI_TEXT.validation.validUsername)
+    .min(3, UI_TEXT.validation.usernameMin)
+    .max(50, UI_TEXT.validation.usernameMax),
 });
 
 export const updateEmailSchema = z.object({
-  email: z.string('Please enter a valid email!').email('Email address format not recognized'),
+  email: z.string(UI_TEXT.validation.validEmail).email(UI_TEXT.validation.emailNotRecognized),
 });
 
 export const changePasswordSchema = z.object({
-  oldPassword: z.string({ message: 'Old password is required!' }),
+  oldPassword: z.string({ message: UI_TEXT.validation.oldPasswordRequired }),
   newPassword: z
     .string()
     .trim()
-    .min(8, 'Password must be between 8-72 characters long!')
-    .max(72, 'Password must be between 8-72 characters long!')
-    .regex(/[A-Z]/, 'Password must contain at least one uppercase character!')
-    .regex(/[a-z]/, 'Password must contain at least one lowercase character!')
-    .regex(/[0-9]/, 'Password must contain at least one number!'),
+    .min(8, UI_TEXT.validation.passwordLength)
+    .max(72, UI_TEXT.validation.passwordLength)
+    .regex(/[A-Z]/, UI_TEXT.validation.passwordUppercase)
+    .regex(/[a-z]/, UI_TEXT.validation.passwordLowercase)
+    .regex(/[0-9]/, UI_TEXT.validation.passwordNumber),
 });

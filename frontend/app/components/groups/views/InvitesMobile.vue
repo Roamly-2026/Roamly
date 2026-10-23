@@ -2,16 +2,16 @@
 <template>
   <div :class="[appConfig.layout.pageWrapper, 'px-4 py-6']">
     <!-- PAGE TITLE -->
-    <h1 :class="appConfig.typography.pageTitle">{{ CONST_INVITES_HEADING }}</h1>
+    <h1 :class="appConfig.typography.pageTitle">{{ UI_TEXT.groups.invitesHeading }}</h1>
 
     <!-- CONTENT SECTION -->
     <ClientOnly>
       <!-- LOADING / ERROR STATES -->
       <div v-if="isLoading && invitesList.length === 0" :class="appConfig.typography.statusLoading">
-        {{ CONST_LOADING_TEXT }}
+        {{ UI_TEXT.common.loading }}
       </div>
       <div v-else-if="error" :class="appConfig.typography.statusError">
-        {{ CONST_FETCH_ERROR_TEXT }}
+        {{ UI_TEXT.errors.fetch }}
       </div>
 
       <!-- INVITES GRID -->
@@ -26,7 +26,7 @@
           >
             <!-- DECLINE BUTTON -->
             <div class="absolute top-4 right-4 z-10">
-              <UTooltip :text="CONST_TOOLTIP_DECLINE_INVITE ?? 'Decline'">
+              <UTooltip :text="UI_TEXT.tooltips.declineInvite">
                 <UButton
                   icon="i-heroicons-x-mark"
                   variant="ghostDangerIconButton"
@@ -39,12 +39,16 @@
             <div :class="appConfig.layout.cardContent">
               <h3 :class="appConfig.typography.cardTitleCenter">{{ group.name }}</h3>
               <p class="text-sm text-center text-dark-text/80 font-medium">
-                {{ group.leaders.length > 1 ? CONST_LEADERS_LABEL : CONST_LEADER_LABEL }}
+                {{
+                  group.leaders.length > 1
+                    ? UI_TEXT.groups.leadersLabel
+                    : UI_TEXT.groups.leaderLabel
+                }}
                 <span class="font-bold">{{ group.leaders.join(', ') }}</span>
               </p>
               <div :class="appConfig.layout.cardFooter">
                 <div>
-                  <p class="opacity-70">{{ CONST_CREATED_AT_LABEL }}</p>
+                  <p class="opacity-70">{{ UI_TEXT.groups.createdAtLabel }}</p>
                   <p class="font-semibold">{{ group.created_at }}</p>
                 </div>
                 <div class="flex items-center gap-1.5 font-semibold">
@@ -59,14 +63,14 @@
         <!-- INFINITE SCROLL TRIGGER -->
         <div ref="loadMoreTrigger" class="h-10 w-full flex items-center justify-center">
           <span v-if="isFetchingNextPage" class="text-dark-text/70 text-sm">
-            {{ CONST_LOADING_GROUPS_MSG ?? 'Loading more...' }}
+            {{ UI_TEXT.groups.loadingGroups }}
           </span>
         </div>
       </div>
 
       <!-- EMPTY STATE -->
       <div v-else :class="appConfig.typography.statusLoading">
-        {{ CONST_NO_INVITES_MSG }}
+        {{ UI_TEXT.groups.noInvites }}
       </div>
     </ClientOnly>
   </div>

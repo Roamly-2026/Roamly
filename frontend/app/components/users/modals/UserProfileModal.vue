@@ -13,17 +13,19 @@
         <!-- BASIC INFO -->
         <div class="flex flex-col gap-2">
           <div :class="appConfig.layout.profileDetailRow">
-            <p :class="appConfig.typography.profileLabel">Email</p>
+            <p :class="appConfig.typography.profileLabel">{{ UI_TEXT.auth.emailLabel }}</p>
             <p :class="appConfig.typography.profileValue">{{ userProfile?.email ?? '—' }}</p>
           </div>
           <div :class="appConfig.layout.profileDetailRow">
-            <p :class="appConfig.typography.profileLabel">Role</p>
+            <p :class="appConfig.typography.profileLabel">
+              {{ UI_TEXT.groups.roleSelectionLabel }}
+            </p>
             <p :class="[appConfig.typography.profileValue, 'capitalize']">
               {{ userProfile?.role ?? '—' }}
             </p>
           </div>
           <div :class="appConfig.layout.profileDetailRow">
-            <p :class="appConfig.typography.profileLabel">Joined</p>
+            <p :class="appConfig.typography.profileLabel">{{ UI_TEXT.common.joined }}</p>
             <p :class="appConfig.typography.profileValue">
               {{ userProfile?.joinedAt.slice(0, 10) ?? '—' }}
             </p>
@@ -35,7 +37,7 @@
     <template #footer>
       <div class="flex justify-end">
         <UButton
-          label="Close"
+          :label="UI_TEXT.common.close"
           variant="actionOkButton"
           @click="groupsStore.closeUserProfileModal()"
         />

@@ -1,3 +1,4 @@
+import { UI_TEXT } from '~/locales/en';
 // frontend/app/services/groupsService.ts
 import type {
   GroupOutDto,
@@ -27,7 +28,7 @@ const mapGroupInviteData = (item: RawGroupInvitesDto): GroupInvitesOutDto => {
   const leaders =
     item.group_profiles
       ?.filter((p) => p.roles?.type?.toLowerCase() === 'leader')
-      .map((p) => p.users?.username ?? 'Unknown') ?? [];
+      .map((p) => p.users?.username ?? UI_TEXT.common.unknown) ?? [];
 
   return {
     uuid: item.uuid,

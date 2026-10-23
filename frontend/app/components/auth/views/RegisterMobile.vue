@@ -4,7 +4,9 @@
     <UCard variant="glass">
       <!-- TITLE -->
       <div :class="appConfig.typography.authTitleWrapper">
-        <h1 :class="appConfig.typography.authTitle">{{ CONST_REGISTER_HEADING ?? 'Register' }}</h1>
+        <h1 :class="appConfig.typography.authTitle">
+          {{ UI_TEXT.auth.registerHeading }}
+        </h1>
       </div>
 
       <!-- FORM -->
@@ -14,56 +16,56 @@
         :class="appConfig.layout.formWrapper"
         @submit="onSubmit"
       >
-        <UFormField name="email" :label="CONST_EMAIL_LABEL ?? 'Email'">
+        <UFormField name="email" :label="UI_TEXT.auth.emailLabel">
           <template #default="{ error: fieldError }">
             <UInput
               v-model="form.email"
               type="email"
-              placeholder="ex. sir_real_99@roamly.com"
+              :placeholder="UI_TEXT.auth.emailPlaceholder"
               :variant="fieldError ? 'glassError' : 'glass'"
             />
           </template>
         </UFormField>
 
-        <UFormField name="username" :label="CONST_USERNAME_LABEL ?? 'Username'">
+        <UFormField name="username" :label="UI_TEXT.auth.usernameLabel">
           <template #default="{ error: fieldError }">
             <UInput
               v-model="form.username"
               type="text"
-              placeholder="ex. sir_real_99"
+              :placeholder="UI_TEXT.auth.usernamePlaceholder"
               :variant="fieldError ? 'glassError' : 'glass'"
             />
           </template>
         </UFormField>
 
-        <UFormField name="phone_number" :label="CONST_PHONE_LABEL ?? 'Phone'">
+        <UFormField name="phone_number" :label="UI_TEXT.auth.phoneLabel">
           <template #default="{ error: fieldError }">
             <UInput
               v-model="form.phone_number"
               type="tel"
-              placeholder="ex. +40 712 345 678"
+              :placeholder="UI_TEXT.auth.phonePlaceholder"
               :variant="fieldError ? 'glassError' : 'glass'"
             />
           </template>
         </UFormField>
 
-        <UFormField name="password" :label="CONST_PASSWORD_LABEL ?? 'Password'">
+        <UFormField name="password" :label="UI_TEXT.auth.passwordLabel">
           <template #default="{ error: fieldError }">
             <UInput
               v-model="form.password"
               type="password"
-              placeholder="********"
+              :placeholder="UI_TEXT.auth.passwordPlaceholder"
               :variant="fieldError ? 'glassError' : 'glass'"
             />
           </template>
         </UFormField>
 
-        <UFormField name="repeatPassword" :label="CONST_REPEAT_PASSWORD_LABEL ?? 'Repeat Password'">
+        <UFormField name="repeatPassword" :label="UI_TEXT.auth.repeatPasswordLabel">
           <template #default="{ error: fieldError }">
             <UInput
               v-model="form.repeatPassword"
               type="password"
-              placeholder="********"
+              :placeholder="UI_TEXT.auth.passwordPlaceholder"
               :variant="fieldError ? 'glassError' : 'glass'"
             />
           </template>
@@ -73,13 +75,13 @@
           {{ getErrorMessage(error) }}
         </div>
         <div v-if="status === 'success'" :class="appConfig.typography.formStatusSuccess">
-          {{ CONST_REGISTER_SUCCESS ?? 'Success!' }}
+          {{ UI_TEXT.auth.registerSuccess }}
         </div>
 
         <!-- ACTIONS (Mobilos elrendezés: egymás alatt, teljes szélességgel) -->
         <div class="flex flex-col-reverse gap-4 pt-6 w-full">
           <UButton
-            :label="CONST_CANCEL_BTN_TEXT ?? 'Cancel'"
+            :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             :disabled="isLoading"
             class="w-full"
@@ -87,7 +89,7 @@
           />
           <UButton
             type="submit"
-            :label="CONST_REGISTER_TITLE ?? 'Register'"
+            :label="UI_TEXT.auth.registerTitle"
             variant="actionOkButton"
             class="w-full"
             :loading="isLoading"
@@ -97,7 +99,12 @@
     </UCard>
 
     <div :class="appConfig.layout.singleButtonWrapper">
-      <UButton to="/login" label="Log in instead" variant="actionOkButton" class="w-full" />
+      <UButton
+        to="/login"
+        :label="UI_TEXT.auth.loginInstead"
+        variant="actionOkButton"
+        class="w-full"
+      />
     </div>
   </div>
 </template>

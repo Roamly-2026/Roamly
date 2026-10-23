@@ -4,7 +4,9 @@
     <!-- LOGIN FORM CARD -->
     <UCard variant="glass">
       <div :class="appConfig.typography.authTitleWrapper">
-        <h1 :class="appConfig.typography.authTitle">{{ CONST_LOGIN_HEADING ?? 'Login' }}</h1>
+        <h1 :class="appConfig.typography.authTitle">
+          {{ UI_TEXT.auth.loginHeading }}
+        </h1>
       </div>
 
       <!-- FORM -->
@@ -14,23 +16,23 @@
         :class="appConfig.layout.formWrapper"
         @submit="onSubmit"
       >
-        <UFormField name="email" :label="CONST_EMAIL_LABEL ?? 'Email'">
+        <UFormField name="email" :label="UI_TEXT.auth.emailLabel">
           <template #default="{ error: fieldError }">
             <UInput
               v-model="form.email"
               type="email"
-              placeholder="ex. sir_real_99@roamly.com"
+              :placeholder="UI_TEXT.auth.emailPlaceholder"
               :variant="fieldError ? 'glassError' : 'glass'"
             />
           </template>
         </UFormField>
 
-        <UFormField name="password" :label="CONST_PASSWORD_LABEL ?? 'Password'">
+        <UFormField name="password" :label="UI_TEXT.auth.passwordLabel">
           <template #default="{ error: fieldError }">
             <UInput
               v-model="form.password"
               type="password"
-              placeholder="********"
+              :placeholder="UI_TEXT.auth.passwordPlaceholder"
               :variant="fieldError ? 'glassError' : 'glass'"
             />
           </template>
@@ -40,13 +42,13 @@
           {{ getErrorMessage(error) }}
         </div>
         <div v-if="status === 'success'" :class="appConfig.typography.formStatusSuccess">
-          {{ CONST_LOGIN_SUCCESS ?? 'Success!' }}
+          {{ UI_TEXT.auth.loginSuccess }}
         </div>
 
         <!-- ACTIONS (Mobilos elrendezés: egymás alatt, teljes szélességgel) -->
         <div class="flex flex-col-reverse gap-4 pt-6 w-full">
           <UButton
-            :label="CONST_CANCEL_BTN_TEXT ?? 'Cancel'"
+            :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             :disabled="isLoading"
             class="w-full"
@@ -54,7 +56,7 @@
           />
           <UButton
             type="submit"
-            :label="CONST_LOGIN_TITLE ?? 'Login'"
+            :label="UI_TEXT.auth.loginTitle"
             variant="actionOkButton"
             class="w-full"
             :loading="isLoading"
@@ -65,10 +67,10 @@
 
     <!-- REGISTRATION PROMPT BUTTON -->
     <div :class="appConfig.layout.singleButtonWrapper">
-      <UTooltip :text="CONST_TOOLTIP_REGISTER_PROMPT ?? 'Register'">
+      <UTooltip :text="UI_TEXT.tooltips.registerPrompt">
         <UButton
           to="/register"
-          :label="CONST_REGISTER_PROMPT_BTN ?? 'Create account'"
+          :label="UI_TEXT.auth.registerPrompt"
           variant="actionAccentHeroButton"
           class="w-full"
         />

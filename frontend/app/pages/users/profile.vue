@@ -76,10 +76,10 @@ const getUrlMutation = useGetPrivateDocumentUrlMutation();
 
 /* --- DOCUMENT TYPES --- */
 const privateDocumentTypes = [
-  { label: 'Personal ID', value: 'ID' },
-  { label: 'Passport', value: 'PASSPORT' },
-  { label: 'Driving License', value: 'DRIVING_LICENSE' },
-  { label: 'Other', value: 'OTHER' },
+  { label: UI_TEXT.documentTypes.personalID, value: 'ID' },
+  { label: UI_TEXT.documentTypes.passport, value: 'PASSPORT' },
+  { label: UI_TEXT.documentTypes.drivingLicense, value: 'DRIVING_LICENSE' },
+  { label: UI_TEXT.documentTypes.other, value: 'OTHER' },
 ];
 
 /* --- API QUERIES --- */

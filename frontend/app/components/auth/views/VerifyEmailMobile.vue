@@ -4,11 +4,11 @@
     <UCard variant="glass">
       <!-- TITLE -->
       <div :class="appConfig.typography.authTitleWrapper">
-        <h1 :class="appConfig.typography.authTitle">Verify your email</h1>
+        <h1 :class="appConfig.typography.authTitle">{{ UI_TEXT.auth.verifyHeading }}</h1>
         <p class="text-sm text-surface-400 text-center mt-1 leading-relaxed">
-          We sent a 6-digit code to
-          <span class="font-semibold text-dark-text break-all">{{ email }}</span
-          >. Enter it below to complete your registration.
+          {{ ' ' + UI_TEXT.auth.verifyBeforeEmail + ' '
+          }}<span class="font-semibold text-dark-text break-all">{{ email }}</span
+          >{{ UI_TEXT.auth.verifyAfterEmail + ' ' }}
         </p>
       </div>
 
@@ -43,13 +43,13 @@
 
         <!-- Success -->
         <div v-if="isVerified" :class="appConfig.typography.formStatusSuccess" class="text-center">
-          Email verified! Redirecting to login...
+          {{ ' ' + UI_TEXT.auth.verified + ' ' }}
         </div>
 
         <!-- Verify button -->
         <div class="flex flex-col gap-3 pt-2 w-full">
           <UButton
-            label="Verify"
+            :label="UI_TEXT.auth.verify"
             variant="actionOkButton"
             class="w-full"
             :loading="isVerifying"
@@ -61,15 +61,15 @@
         <!-- Divider -->
         <div class="flex items-center gap-3 py-1">
           <div class="flex-1 h-px bg-surface-500/20" />
-          <span class="text-xs text-surface-400">or</span>
+          <span class="text-xs text-surface-400">{{ UI_TEXT.auth.or }}</span>
           <div class="flex-1 h-px bg-surface-500/20" />
         </div>
 
         <!-- Resend -->
         <div class="flex flex-col items-center gap-1.5">
-          <p class="text-xs text-surface-400">Didn't receive a code?</p>
+          <p class="text-xs text-surface-400">{{ UI_TEXT.auth.noCode }}</p>
           <UButton
-            label="Resend code"
+            :label="UI_TEXT.auth.resend"
             variant="link"
             class="text-sm font-semibold text-brand-500 hover:text-brand-400 disabled:opacity-40 disabled:cursor-not-allowed"
             :disabled="isResending || resendCooldown > 0 || isVerified"
@@ -77,14 +77,15 @@
             @click="emit('resend')"
           />
           <p v-if="resendCooldown > 0" class="text-xs text-surface-400">
-            Resend available in {{ resendCooldown }}s
+            {{ ' ' + UI_TEXT.auth.resendAvailable + ' ' }}{{ resendCooldown
+            }}{{ UI_TEXT.auth.seconds + ' ' }}
           </p>
           <div
             v-if="resendSuccess"
             :class="appConfig.typography.formStatusSuccess"
             class="text-xs text-center"
           >
-            A new code was sent to your email!
+            {{ ' ' + UI_TEXT.auth.resent + ' ' }}
           </div>
           <div
             v-if="resendError"
@@ -99,7 +100,12 @@
 
     <!-- Back to register -->
     <div :class="appConfig.layout.singleButtonWrapper">
-      <UButton to="/register" label="Back to Register" variant="actionOkButton" class="w-full" />
+      <UButton
+        to="/register"
+        :label="UI_TEXT.auth.backToRegister"
+        variant="actionOkButton"
+        class="w-full"
+      />
     </div>
   </div>
 </template>

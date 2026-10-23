@@ -1,3 +1,4 @@
+import { UI_TEXT } from '~/locales/en';
 // frontend/app/queries/events.mutation.ts
 import { useMutation, useQueryCache } from '@pinia/colada';
 import type { Ref } from 'vue';
@@ -17,7 +18,7 @@ export const useCreateEventMutation = (
 
   return useMutation({
     mutation: (data: EventInDto) => {
-      if (!groupUuid.value) throw new Error('Group UUID is required.');
+      if (!groupUuid.value) throw new Error(UI_TEXT.errors.groupUuidRequired);
       return eventsService.createEvent(groupUuid.value, data);
     },
     onSuccess: () => {
@@ -39,7 +40,7 @@ export const useDeleteEventMutation = (
 
   return useMutation({
     mutation: (eventUuid: string) => {
-      if (!groupUuid.value) throw new Error('Group UUID is required.');
+      if (!groupUuid.value) throw new Error(UI_TEXT.errors.groupUuidRequired);
       return eventsService.deleteEvent(groupUuid.value, eventUuid);
     },
     onSuccess: () => {
@@ -61,7 +62,7 @@ export const useAddParticipantsMutation = (
 
   return useMutation({
     mutation: (data: { eventUuid: string; participant_emails: string[] }) => {
-      if (!groupUuid.value) throw new Error('Group UUID is required.');
+      if (!groupUuid.value) throw new Error(UI_TEXT.errors.groupUuidRequired);
       return eventsService.addParticipants(
         groupUuid.value,
         data.eventUuid,
@@ -86,7 +87,7 @@ export const useLeaveEventMutation = (
 
   return useMutation({
     mutation: (data: { eventUuid: string; targetUuid: string }) => {
-      if (!groupUuid.value) throw new Error('Group UUID is required.');
+      if (!groupUuid.value) throw new Error(UI_TEXT.errors.groupUuidRequired);
       return eventsService.removeParticipant(groupUuid.value, data.eventUuid, data.targetUuid);
     },
     onSuccess: () => {
@@ -107,7 +108,7 @@ export const useRemoveParticipantMutation = (
 
   return useMutation({
     mutation: (data: { eventUuid: string; targetUuid: string }) => {
-      if (!groupUuid.value) throw new Error('Group UUID is required.');
+      if (!groupUuid.value) throw new Error(UI_TEXT.errors.groupUuidRequired);
       return eventsService.removeParticipant(groupUuid.value, data.eventUuid, data.targetUuid);
     },
     onSuccess: () => {

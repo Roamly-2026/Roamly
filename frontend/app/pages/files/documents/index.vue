@@ -4,7 +4,7 @@
     <ClientOnly>
       <template #fallback>
         <div class="min-h-screen flex items-center justify-center">
-          <span class="opacity-50 font-medium">{{ CONST_LOADING_TEXT ?? 'Loading...' }}</span>
+          <span class="opacity-50 font-medium">{{ UI_TEXT.common.loading }}</span>
         </div>
       </template>
 
@@ -88,20 +88,20 @@ const memberSearchQuery = ref('');
 const memberFilterType = ref('ALL');
 
 const documentTypes = [
-  { label: 'All Types', value: 'ALL' },
-  { label: 'Ticket', value: 'TICKET' },
-  { label: 'Booking Confirmation', value: 'BOOKING_CONFIRMATION' },
-  { label: 'Hotel Voucher', value: 'HOTEL_VOUCHER' },
-  { label: 'Guest Registration Card', value: 'GUEST_REGISTRATION_CARD' },
-  { label: 'Other', value: 'OTHER' },
+  { label: UI_TEXT.common.allTypes, value: 'ALL' },
+  { label: UI_TEXT.documentTypes.ticket, value: 'TICKET' },
+  { label: UI_TEXT.documentTypes.bookingConfirmation, value: 'BOOKING_CONFIRMATION' },
+  { label: UI_TEXT.documentTypes.hotelVoucher, value: 'HOTEL_VOUCHER' },
+  { label: UI_TEXT.documentTypes.guestRegistrationCard, value: 'GUEST_REGISTRATION_CARD' },
+  { label: UI_TEXT.documentTypes.other, value: 'OTHER' },
 ];
 
 const privateDocumentTypes = [
-  { label: 'All Types', value: 'ALL' },
-  { label: 'Personal Id', value: 'ID' },
-  { label: 'Passport', value: 'PASSPORT' },
-  { label: 'Driving License', value: 'DRIVING_LICENSE' },
-  { label: 'Other', value: 'OTHER' },
+  { label: UI_TEXT.common.allTypes, value: 'ALL' },
+  { label: UI_TEXT.documentTypes.personalId, value: 'ID' },
+  { label: UI_TEXT.documentTypes.passport, value: 'PASSPORT' },
+  { label: UI_TEXT.documentTypes.drivingLicense, value: 'DRIVING_LICENSE' },
+  { label: UI_TEXT.documentTypes.other, value: 'OTHER' },
 ];
 
 const { data: groupsData } = useGroupsQuery();
@@ -164,7 +164,7 @@ const openUploadModal = () => {
   if (selectedGroupUuid.value) {
     documentsStore.openUploadModal(selectedGroupUuid.value);
   } else {
-    toast.add({ title: 'Warning', description: 'Please select a group first.' });
+    toast.add({ title: UI_TEXT.common.warning, description: UI_TEXT.errors.selectGroupFirst });
   }
 };
 

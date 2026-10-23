@@ -4,7 +4,7 @@
     <ClientOnly>
       <template #fallback>
         <div class="min-h-screen flex items-center justify-center">
-          <span class="opacity-50 font-medium">{{ CONST_LOADING_TEXT ?? 'Loading...' }}</span>
+          <span class="opacity-50 font-medium">{{ UI_TEXT.common.loading }}</span>
         </div>
       </template>
 
@@ -51,32 +51,52 @@ const toggleCard = (id: string) => {
 const featureCards = [
   {
     id: 'docs',
-    title: CONST_DOCUMENT_MANAGEMENT,
+    title: UI_TEXT.home.documentManagementTitle,
     icon: 'i-heroicons-document-text',
-    desc: CONST_DOCUMENT_MANAGEMENT_DESCRIPTION,
-    extendedDesc: CONST_DOCUMENT_MANAGEMENT_EXTENDED,
+    desc: UI_TEXT.home.documentManagementDescription,
+    extendedDesc: UI_TEXT.home.documentManagementExtended,
   },
   {
     id: 'calendar',
-    title: CONST_EVENT_CALENDAR,
+    title: UI_TEXT.home.eventCalendarTitle,
     icon: 'i-heroicons-calendar-days',
-    desc: CONST_EVENT_CALENDAR_DESCRIPTION,
-    extendedDesc: CONST_EVENT_CALENDAR_EXTENDED,
+    desc: UI_TEXT.home.eventCalendarDescription,
+    extendedDesc: UI_TEXT.home.eventCalendarExtended,
   },
   {
     id: 'gallery',
-    title: CONST_GROUP_GALLERY,
+    title: UI_TEXT.home.groupGalleryTitle,
     icon: 'i-heroicons-photo',
-    desc: CONST_GROUP_GALLERY_DESCRIPTION,
-    extendedDesc: CONST_GROUP_GALLERY_EXTENDED,
+    desc: UI_TEXT.home.groupGalleryDescription,
+    extendedDesc: UI_TEXT.home.groupGalleryExtended,
   },
 ];
 
 const contactLinks = [
-  { name: 'Discord', icon: 'i-mdi-discord', url: 'https://discord.com', target: '_blank' },
-  { name: 'Instagram', icon: 'i-mdi-instagram', url: 'https://instagram.com', target: '_blank' },
-  { name: 'Facebook', icon: 'i-mdi-facebook', url: 'https://facebook.com', target: '_blank' },
-  { name: 'Email', icon: 'i-mdi-envelope', url: 'mailto:support@roamly.com', target: '_self' },
-  { name: 'Phone', icon: 'i-mdi-phone', url: 'tel:+1234567890', target: '_self' },
+  {
+    name: UI_TEXT.home.discord,
+    icon: 'i-mdi-discord',
+    url: 'https://discord.com',
+    target: '_blank',
+  },
+  {
+    name: UI_TEXT.home.instagram,
+    icon: 'i-mdi-instagram',
+    url: 'https://instagram.com',
+    target: '_blank',
+  },
+  {
+    name: UI_TEXT.home.facebook,
+    icon: 'i-mdi-facebook',
+    url: 'https://facebook.com',
+    target: '_blank',
+  },
+  {
+    name: UI_TEXT.auth.emailLabel,
+    icon: 'i-mdi-envelope',
+    url: 'mailto:support@roamly.com',
+    target: '_self',
+  },
+  { name: UI_TEXT.fallback.phone, icon: 'i-mdi-phone', url: 'tel:+1234567890', target: '_self' },
 ];
 </script>

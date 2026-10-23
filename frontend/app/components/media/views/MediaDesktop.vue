@@ -4,14 +4,14 @@
     <!-- HEADER -->
     <div :class="appConfig.layout.pageHeader">
       <div :class="appConfig.layout.actionGroup" class="flex-1 justify-start">
-        <UTooltip v-if="isCurrentUserLeader" text="Delete Group">
+        <UTooltip v-if="isCurrentUserLeader" :text="UI_TEXT.groups.deleteGroup">
           <UButton
             icon="i-heroicons-trash"
             variant="glassIconButtonDanger"
             @click="emit('delete-group')"
           />
         </UTooltip>
-        <UTooltip text="Leave Group">
+        <UTooltip :text="UI_TEXT.groups.leaveGroup">
           <UButton
             icon="i-heroicons-arrow-right-on-rectangle"
             variant="glassIconButtonDanger"
@@ -28,8 +28,12 @@
             class="group flex items-center gap-2 p-0 hover:bg-transparent cursor-pointer outline-none"
           >
             <h1 :class="appConfig.typography.pageTitle">
-              <ClientOnly fallback="Loading...">
-                {{ isLoading ? 'Loading...' : currentGroupDetails?.name || 'Select a Group' }}
+              <ClientOnly :fallback="UI_TEXT.common.loading">
+                {{
+                  isLoading
+                    ? UI_TEXT.common.loading
+                    : currentGroupDetails?.name || UI_TEXT.documents.selectGroup
+                }}
               </ClientOnly>
             </h1>
             <UIcon
@@ -62,17 +66,19 @@
             </div>
           </template>
         </UPopover>
-        <p :class="appConfig.typography.pageSubtitle" class="mt-0">Group Photos</p>
+        <p :class="appConfig.typography.pageSubtitle" class="mt-0">
+          {{ UI_TEXT.media.groupPhotos }}
+        </p>
       </div>
 
       <div :class="appConfig.layout.actionGroup" class="flex-1 justify-end">
-        <UTooltip text="Members">
+        <UTooltip :text="UI_TEXT.common.members">
           <UButton icon="i-heroicons-users" variant="glassIconButton" :to="membersRoute" />
         </UTooltip>
-        <UTooltip text="Calendar">
+        <UTooltip :text="UI_TEXT.common.calendar">
           <UButton icon="i-heroicons-calendar" variant="glassIconButton" :to="eventsRoute" />
         </UTooltip>
-        <UTooltip text="Photos">
+        <UTooltip :text="UI_TEXT.common.photos">
           <UButton
             icon="i-heroicons-photo"
             variant="glassIconButton"
@@ -80,7 +86,7 @@
             :to="mediaRoute"
           />
         </UTooltip>
-        <UTooltip text="Documents">
+        <UTooltip :text="UI_TEXT.common.documents">
           <UButton
             icon="i-heroicons-document-text"
             variant="glassIconButton"
@@ -97,17 +103,19 @@
           <UInput
             v-model="searchQuery"
             icon="i-heroicons-magnifying-glass"
-            placeholder="Search photos..."
+            :placeholder="UI_TEXT.media.search"
             variant="search"
             class="w-1/3! max-w-none!"
             :ui="{ leading: 'pl-3' }"
           />
         </div>
 
-        <div :class="appConfig.typography.pageTitle" class="text-2xl font-bold">Group Photos</div>
+        <div :class="appConfig.typography.pageTitle" class="text-2xl font-bold">
+          {{ UI_TEXT.media.groupPhotos }}
+        </div>
 
         <div class="flex items-center gap-2 flex-1 justify-end shrink-0">
-          <UTooltip text="Upload Photo">
+          <UTooltip :text="UI_TEXT.media.uploadPhoto">
             <UButton
               icon="i-heroicons-plus"
               variant="glassIconButtonHighlight"
@@ -118,7 +126,9 @@
       </div>
 
       <!-- Loading -->
-      <div v-if="isLoading" :class="appConfig.typography.statusLoading">Loading photos...</div>
+      <div v-if="isLoading" :class="appConfig.typography.statusLoading">
+        {{ UI_TEXT.media.loading }}
+      </div>
 
       <!-- Media Grid -->
       <div v-else-if="filteredMedia.length > 0" :class="appConfig.layout.documentGrid">
@@ -132,7 +142,7 @@
           <div :class="appConfig.layout.documentCardHeader">
             <p class="font-bold truncate pr-2 shadow-sm text-sm">{{ mediaItem.file_name }}</p>
             <div class="flex items-center gap-1 shrink-0">
-              <UTooltip v-if="isCurrentUserLeader" text="Delete">
+              <UTooltip v-if="isCurrentUserLeader" :text="UI_TEXT.common.delete">
                 <UButton
                   icon="i-heroicons-trash"
                   variant="ghostDangerIconButton"
@@ -157,7 +167,7 @@
             </div>
 
             <div class="absolute bottom-2 px-4 w-full flex justify-between">
-              <UTooltip text="View">
+              <UTooltip :text="UI_TEXT.common.view">
                 <UButton
                   icon="i-heroicons-eye"
                   variant="ghostDangerIconButton"
@@ -166,7 +176,7 @@
                   target="_blank"
                 />
               </UTooltip>
-              <UTooltip text="Download">
+              <UTooltip :text="UI_TEXT.common.download">
                 <UButton
                   icon="i-heroicons-arrow-down-tray"
                   variant="ghostDangerIconButton"
@@ -186,22 +196,22 @@
           <!-- Metadata -->
           <div :class="appConfig.layout.documentCardMeta">
             <p>
-              Uploaded by:
-              <span class="font-bold text-dark-text">{{
-                mediaItem.creator?.username || 'Unknown'
+              {{ ' ' + UI_TEXT.common.uploadedBy + ' '
+              }}<span class="font-bold text-dark-text">{{
+                mediaItem.creator?.username || UI_TEXT.common.unknown
               }}</span>
             </p>
             <p>
-              Uploaded at:
-              <span class="font-bold text-dark-text">{{
+              {{ ' ' + UI_TEXT.common.uploadedAt + ' '
+              }}<span class="font-bold text-dark-text">{{
                 new Date(mediaItem.created_at).toLocaleDateString()
               }}</span>
             </p>
             <div v-if="mediaItem.media_files?.description">
               <div :class="appConfig.layout.divider"></div>
               <p>
-                Description:
-                <span class="font-bold text-dark-text">{{
+                {{ ' ' + UI_TEXT.events.descriptionLabel + ' '
+                }}<span class="font-bold text-dark-text">{{
                   mediaItem.media_files.description
                 }}</span>
               </p>
@@ -209,15 +219,16 @@
             <div :class="appConfig.layout.divider"></div>
             <div :class="appConfig.layout.flexBetween">
               <p>
-                Type:
-                <span class="font-bold text-dark-text">{{
-                  mediaItem.mime_type?.split('/')[1] || 'Unknown'
+                {{ ' ' + UI_TEXT.media.type + ' '
+                }}<span class="font-bold text-dark-text">{{
+                  mediaItem.mime_type?.split('/')[1] || UI_TEXT.common.unknown
                 }}</span>
               </p>
               <p>
-                Size:
-                <span class="font-bold text-dark-text"
-                  >{{ (mediaItem.file_size / (1024 * 1024)).toFixed(2) }} MB</span
+                {{ ' ' + UI_TEXT.media.size + ' '
+                }}<span class="font-bold text-dark-text"
+                  >{{ (mediaItem.file_size / (1024 * 1024)).toFixed(2)
+                  }}{{ ' ' + UI_TEXT.common.megabytes }}</span
                 >
               </p>
             </div>
@@ -227,9 +238,7 @@
 
       <!-- Empty state -->
       <div v-else :class="appConfig.typography.statusLoading">
-        {{
-          searchQuery ? 'No photos match your search.' : 'No photos yet. Upload one to get started.'
-        }}
+        {{ searchQuery ? UI_TEXT.media.noMatchingPhotos : UI_TEXT.media.noPhotos }}
       </div>
     </div>
   </div>

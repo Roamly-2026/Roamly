@@ -8,7 +8,7 @@
     </main>
 
     <footer :class="appConfig.footer.base">
-      <div :class="appConfig.footer.text">{{ CONST_COPYRIGHT_LABEL }}</div>
+      <div :class="appConfig.footer.text">{{ UI_TEXT.common.copyright }}</div>
     </footer>
 
     <GroupModals />

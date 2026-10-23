@@ -4,7 +4,7 @@
     <!-- JOIN MODAL -->
     <UModal
       v-model:open="groupsStore.isJoinModalOpen"
-      :title="CONST_JOIN_GROUP_TITLE"
+      :title="UI_TEXT.groups.joinTitle"
       :dismissible="false"
       :close="false"
       :ui="{ content: appConfig.layout.modalSizeSm }"
@@ -12,7 +12,7 @@
       <template #default><div class="hidden"></div></template>
       <template #body>
         <p :class="appConfig.typography.modalText">
-          {{ CONST_JOIN_GROUP_CONFIRM }}
+          {{ UI_TEXT.groups.joinConfirmation }}
           <span v-if="groupsStore.selectedGroupToJoin" :class="appConfig.typography.modalHighlight">
             „{{ groupsStore.selectedGroupToJoin.name }}”
           </span>
@@ -25,13 +25,13 @@
         <div :class="appConfig.layout.modalActions">
           <UButton
             :class="appConfig.typography.modalActionBtnCancel"
-            :label="CONST_CANCEL_BTN_TEXT"
+            :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="groupsStore.closeJoinModal"
           />
           <UButton
             :class="appConfig.typography.modalActionBtnOk"
-            :label="CONST_JOIN_BTN"
+            :label="UI_TEXT.common.join"
             variant="actionOkButton"
             :loading="isJoining"
             @click="confirmJoin"
@@ -43,7 +43,7 @@
     <!-- DECLINE MODAL -->
     <UModal
       v-model:open="groupsStore.isDeclineModalOpen"
-      :title="CONST_DECLINE_INVITE_TITLE"
+      :title="UI_TEXT.groups.declineInviteTitle"
       :dismissible="false"
       :close="false"
       :ui="{ content: appConfig.layout.modalSizeSm }"
@@ -51,7 +51,7 @@
       <template #default><div class="hidden"></div></template>
       <template #body>
         <p :class="appConfig.typography.modalText">
-          {{ CONST_DECLINE_INVITE_CONFIRM }}
+          {{ UI_TEXT.groups.declineInviteConfirmation }}
           <span
             v-if="groupsStore.selectedGroupToDecline"
             :class="appConfig.typography.modalHighlight"
@@ -67,13 +67,13 @@
         <div :class="appConfig.layout.modalActions">
           <UButton
             :class="appConfig.typography.modalActionBtnCancel"
-            :label="CONST_CANCEL_BTN_TEXT"
+            :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="groupsStore.closeDeclineModal"
           />
           <UButton
             :class="appConfig.typography.modalActionBtnOk"
-            :label="CONST_DECLINE_BTN"
+            :label="UI_TEXT.common.decline"
             variant="actionOkButton"
             :loading="isLeaving"
             @click="confirmDecline"

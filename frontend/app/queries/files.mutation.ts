@@ -1,3 +1,4 @@
+import { UI_TEXT } from '~/locales/en';
 // frontend/app/queries/files.mutation.ts
 import { useMutation, useQueryCache } from '@pinia/colada';
 import { filesService } from '~/services/files.service';
@@ -62,7 +63,7 @@ export const useUploadGroupDocumentMutation = (
 
   const mutation = useMutation({
     mutation: (formData: FormData) => {
-      if (!groupUuid.value) throw new Error('Group UUID is required.');
+      if (!groupUuid.value) throw new Error(UI_TEXT.errors.groupUuidRequired);
       return filesService.uploadGroupDocument(groupUuid.value, formData);
     },
     onSuccess: () => {
@@ -85,7 +86,7 @@ export const useUpdateGroupDocumentMutation = (
 
   const mutation = useMutation({
     mutation: ({ fileId, formData }: { fileId: number; formData: FormData }) => {
-      if (!groupUuid.value) throw new Error('Group UUID is required.');
+      if (!groupUuid.value) throw new Error(UI_TEXT.errors.groupUuidRequired);
       return filesService.updateGroupDocument(groupUuid.value, fileId, formData);
     },
     onSuccess: () => {
@@ -108,7 +109,7 @@ export const useDeleteGroupFileMutation = (
 
   const mutation = useMutation({
     mutation: (fileId: number) => {
-      if (!groupUuid.value) throw new Error('Group UUID is required.');
+      if (!groupUuid.value) throw new Error(UI_TEXT.errors.groupUuidRequired);
       return filesService.deleteGroupFile(groupUuid.value, fileId);
     },
     onSuccess: () => {

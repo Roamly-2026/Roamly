@@ -2,16 +2,16 @@
 <template>
   <div class="flex flex-col flex-1 gap-4 w-full p-4 pb-20">
     <div :class="appConfig.calendar.mobileTopActions">
-      <UTooltip text="Members">
+      <UTooltip :text="UI_TEXT.common.members">
         <UButton icon="i-heroicons-users" variant="glassIconButton" :to="membersRoute" />
       </UTooltip>
-      <UTooltip text="Calendar">
+      <UTooltip :text="UI_TEXT.common.calendar">
         <UButton icon="i-heroicons-calendar" variant="glassIconButton" :to="eventsRoute" />
       </UTooltip>
-      <UTooltip text="Photos">
+      <UTooltip :text="UI_TEXT.common.photos">
         <UButton icon="i-heroicons-photo" variant="glassIconButton" :to="mediaRoute" />
       </UTooltip>
-      <UTooltip text="Documents">
+      <UTooltip :text="UI_TEXT.common.documents">
         <UButton
           icon="i-heroicons-document-text"
           variant="glassIconButton"
@@ -27,8 +27,12 @@
           <UButton block variant="ghost" :class="appConfig.calendar.mobileHeaderButton">
             <div :class="appConfig.calendar.mobileHeaderTitleRow">
               <h1 :class="appConfig.typography.pageTitle" class="text-2xl! truncate">
-                <ClientOnly fallback="Loading...">
-                  {{ isLoading ? 'Loading...' : currentGroupDetails?.name || 'Select a Group' }}
+                <ClientOnly :fallback="UI_TEXT.common.loading">
+                  {{
+                    isLoading
+                      ? UI_TEXT.common.loading
+                      : currentGroupDetails?.name || UI_TEXT.documents.selectGroup
+                  }}
                 </ClientOnly>
               </h1>
               <UIcon
@@ -37,7 +41,9 @@
                 :class="{ 'rotate-180': isGroupDropdownOpen }"
               />
             </div>
-            <p :class="appConfig.typography.pageSubtitle" class="mt-0">Group Documents</p>
+            <p :class="appConfig.typography.pageSubtitle" class="mt-0">
+              {{ UI_TEXT.documents.groupDocuments }}
+            </p>
           </UButton>
           <template #content>
             <div
@@ -70,11 +76,11 @@
       <!-- ====================== -->
 
       <div :class="appConfig.typography.pageTitle" class="text-2xl font-bold">
-        {{ CONST_GROUP_DOCUMENTS_HEADER }}
+        {{ UI_TEXT.documents.groupDocumentsHeading }}
       </div>
 
       <div :class="appConfig.calendar.mobileToolbar">
-        <UTooltip text="Filter">
+        <UTooltip :text="UI_TEXT.common.filter">
           <UPopover>
             <UButton icon="i-heroicons-funnel" variant="glassIconButton" />
             <template #content="{ close }">
@@ -101,21 +107,21 @@
 
         <UInput
           v-model="searchQuery"
-          placeholder="Search documents..."
+          :placeholder="UI_TEXT.documents.search"
           icon="i-heroicons-magnifying-glass"
           class="flex-1"
           :ui="{ leading: 'pl-3' }"
           variant="search"
         />
 
-        <UTooltip v-if="isCurrentUserLeader" text="Upload Document">
+        <UTooltip v-if="isCurrentUserLeader" :text="UI_TEXT.documents.uploadTitle">
           <UButton icon="i-heroicons-plus" variant="glassIconButton" @click="emit('upload')" />
         </UTooltip>
       </div>
 
       <div class="px-2 pt-2 mb-8">
         <div v-if="isLoading" :class="appConfig.typography.statusLoading" class="py-4 text-center">
-          Loading documents...
+          {{ ' ' + UI_TEXT.documents.loading + ' ' }}
         </div>
 
         <div v-else-if="documents.length > 0" class="flex flex-col gap-4 w-full">
@@ -128,7 +134,7 @@
             <div :class="appConfig.layout.documentCardHeader">
               <p class="font-bold truncate pr-2 shadow-sm text-sm">{{ doc.file_name }}</p>
               <div class="flex items-center gap-1 shrink-0">
-                <UTooltip v-if="isCurrentUserLeader" text="Delete">
+                <UTooltip v-if="isCurrentUserLeader" :text="UI_TEXT.common.delete">
                   <UButton
                     icon="i-heroicons-trash"
                     variant="ghostDangerIconButton"
@@ -142,7 +148,7 @@
             <div :class="appConfig.layout.documentCardImage" class="h-40!">
               <UIcon name="i-heroicons-document" class="w-12 h-12 text-surface-500/50" />
               <div class="absolute bottom-2 px-4 w-full flex justify-between">
-                <UTooltip text="View">
+                <UTooltip :text="UI_TEXT.common.view">
                   <UButton
                     icon="i-heroicons-eye"
                     variant="ghostDangerIconButton"
@@ -151,7 +157,7 @@
                     target="_blank"
                   />
                 </UTooltip>
-                <UTooltip text="Download">
+                <UTooltip :text="UI_TEXT.common.download">
                   <UButton
                     icon="i-heroicons-arrow-down-tray"
                     variant="ghostDangerIconButton"
@@ -164,53 +170,54 @@
 
             <div :class="appConfig.layout.documentCardMeta">
               <p>
-                Uploaded by:
-                <span class="font-bold text-dark-text">{{
-                  doc.creator?.username || 'Unknown'
+                {{ ' ' + UI_TEXT.common.uploadedBy + ' '
+                }}<span class="font-bold text-dark-text">{{
+                  doc.creator?.username || UI_TEXT.common.unknown
                 }}</span>
               </p>
               <p>
-                Uploaded at:
-                <span class="font-bold text-dark-text">{{
+                {{ ' ' + UI_TEXT.common.uploadedAt + ' '
+                }}<span class="font-bold text-dark-text">{{
                   new Date(doc.created_at).toLocaleDateString()
                 }}</span>
               </p>
               <p>
-                Document type:
-                <span class="font-bold text-dark-text">{{
-                  doc.documents?.document_type.toLocaleLowerCase() || 'N/A'
+                {{ ' ' + UI_TEXT.documents.documentType + ' '
+                }}<span class="font-bold text-dark-text">{{
+                  doc.documents?.document_type.toLocaleLowerCase() || UI_TEXT.common.notAvailable
                 }}</span>
               </p>
               <div :class="appConfig.layout.divider"></div>
               <div :class="appConfig.layout.flexBetween">
                 <p>
-                  File type:
-                  <span class="font-bold text-dark-text">{{
-                    doc.mime_type.split('/')[1] || 'Unknown'
+                  {{ ' ' + UI_TEXT.documents.fileType + ' '
+                  }}<span class="font-bold text-dark-text">{{
+                    doc.mime_type.split('/')[1] || UI_TEXT.common.unknown
                   }}</span>
                 </p>
                 <p>
-                  File size:
-                  <span class="font-bold text-dark-text"
-                    >{{ (doc.file_size / (1024 * 1024)).toFixed(2) }} MB</span
+                  {{ ' ' + UI_TEXT.documents.fileSize + ' '
+                  }}<span class="font-bold text-dark-text"
+                    >{{ (doc.file_size / (1024 * 1024)).toFixed(2)
+                    }}{{ ' ' + UI_TEXT.common.megabytes }}</span
                   >
                 </p>
               </div>
               <div :class="appConfig.layout.divider"></div>
               <p>
-                Issued:
-                <span class="font-bold text-dark-text">{{
+                {{ ' ' + UI_TEXT.documents.issued + ' '
+                }}<span class="font-bold text-dark-text">{{
                   doc.documents?.issue_date
                     ? new Date(doc.documents.issue_date).toLocaleDateString()
-                    : 'N/A'
+                    : UI_TEXT.common.notAvailable
                 }}</span>
               </p>
               <p>
-                Ends:
-                <span class="font-bold text-dark-text">{{
+                {{ ' ' + UI_TEXT.documents.ends + ' '
+                }}<span class="font-bold text-dark-text">{{
                   doc.documents?.expiry_date
                     ? new Date(doc.documents.expiry_date).toLocaleDateString()
-                    : 'N/A'
+                    : UI_TEXT.common.notAvailable
                 }}</span>
               </p>
             </div>
@@ -220,8 +227,8 @@
         <div v-else :class="appConfig.typography.statusLoading" class="py-4 text-center">
           {{
             searchQuery || filterType !== 'ALL'
-              ? 'No matching documents found.'
-              : 'No documents found for this group.'
+              ? UI_TEXT.documents.noMatchingDocuments
+              : UI_TEXT.documents.noDocuments
           }}
         </div>
       </div>
@@ -232,11 +239,11 @@
     <!-- ========================= -->
     <template v-if="isCurrentUserLeader">
       <div :class="appConfig.typography.pageTitle" class="text-2xl font-bold">
-        {{ CONST_MEMBER_DOCUMENTS_HEADER }}
+        {{ UI_TEXT.documents.memberDocumentsHeading }}
       </div>
 
       <div :class="appConfig.calendar.mobileToolbar">
-        <UTooltip text="Filter">
+        <UTooltip :text="UI_TEXT.common.filter">
           <UPopover>
             <UButton icon="i-heroicons-funnel" variant="glassIconButton" />
             <template #content="{ close }">
@@ -265,7 +272,7 @@
 
         <UInput
           v-model="memberSearchQuery"
-          placeholder="Search private documents..."
+          :placeholder="UI_TEXT.documents.searchPrivate"
           icon="i-heroicons-magnifying-glass"
           class="flex-1"
           :ui="{ leading: 'pl-3' }"
@@ -279,7 +286,7 @@
         :class="appConfig.typography.statusLoading"
         class="py-4 text-center"
       >
-        Loading member documents...
+        {{ ' ' + UI_TEXT.documents.loadingMemberDocuments + ' ' }}
       </div>
 
       <div v-else class="px-2 pt-4 flex flex-col gap-6 w-full">
@@ -313,7 +320,7 @@
               <div :class="appConfig.layout.documentCardImage" class="h-32!">
                 <UIcon name="i-heroicons-document-text" class="w-12 h-12 text-surface-500/50" />
                 <div class="absolute bottom-2 px-4 w-full flex justify-end">
-                  <UTooltip text="View">
+                  <UTooltip :text="UI_TEXT.common.view">
                     <UButton
                       icon="i-heroicons-eye"
                       variant="ghostDangerIconButton"
@@ -327,47 +334,48 @@
 
               <div :class="appConfig.layout.documentCardMeta">
                 <p>
-                  Uploaded at:
-                  <span class="font-bold text-dark-text">{{
+                  {{ ' ' + UI_TEXT.common.uploadedAt + ' '
+                  }}<span class="font-bold text-dark-text">{{
                     new Date(doc.created_at).toLocaleDateString()
                   }}</span>
                 </p>
                 <p>
-                  Document type:
-                  <span class="font-bold text-dark-text">{{
-                    doc.documents?.document_type ?? 'N/A'
+                  {{ ' ' + UI_TEXT.documents.documentType + ' '
+                  }}<span class="font-bold text-dark-text">{{
+                    doc.documents?.document_type ?? UI_TEXT.common.notAvailable
                   }}</span>
                 </p>
                 <div :class="appConfig.layout.divider"></div>
                 <div :class="appConfig.layout.flexBetween">
                   <p>
-                    File type:
-                    <span class="font-bold text-dark-text">{{
-                      doc.mime_type.split('/')[1] || 'Unknown'
+                    {{ ' ' + UI_TEXT.documents.fileType + ' '
+                    }}<span class="font-bold text-dark-text">{{
+                      doc.mime_type.split('/')[1] || UI_TEXT.common.unknown
                     }}</span>
                   </p>
                   <p>
-                    File size:
-                    <span class="font-bold text-dark-text"
-                      >{{ (doc.file_size / (1024 * 1024)).toFixed(2) }} MB</span
+                    {{ ' ' + UI_TEXT.documents.fileSize + ' '
+                    }}<span class="font-bold text-dark-text"
+                      >{{ (doc.file_size / (1024 * 1024)).toFixed(2)
+                      }}{{ ' ' + UI_TEXT.common.megabytes }}</span
                     >
                   </p>
                 </div>
                 <div :class="appConfig.layout.divider"></div>
                 <p>
-                  Issued:
-                  <span class="font-bold text-dark-text">{{
+                  {{ ' ' + UI_TEXT.documents.issued + ' '
+                  }}<span class="font-bold text-dark-text">{{
                     doc.documents?.issue_date
                       ? new Date(doc.documents.issue_date).toLocaleDateString()
-                      : 'N/A'
+                      : UI_TEXT.common.notAvailable
                   }}</span>
                 </p>
                 <p>
-                  Ends:
-                  <span class="font-bold text-dark-text">{{
+                  {{ ' ' + UI_TEXT.documents.ends + ' '
+                  }}<span class="font-bold text-dark-text">{{
                     doc.documents?.expiry_date
                       ? new Date(doc.documents.expiry_date).toLocaleDateString()
-                      : 'N/A'
+                      : UI_TEXT.common.notAvailable
                   }}</span>
                 </p>
               </div>
@@ -382,8 +390,11 @@
                 class="w-12 h-12 text-surface-500/40 mx-auto mb-2"
               />
               <p class="text-surface-400 italic text-sm">
-                No {{ type.label.toLowerCase() }} documents found
-                <template v-if="memberSearchQuery"> matching "{{ memberSearchQuery }}"</template>.
+                {{ ' ' + UI_TEXT.documents.no + ' ' }}{{ type.label.toLowerCase()
+                }}{{ ' ' + UI_TEXT.documents.found + ' '
+                }}<template v-if="memberSearchQuery"
+                  >{{ ' ' + UI_TEXT.documents.matching }}{{ memberSearchQuery }}"</template
+                >.
               </p>
             </div>
           </UCard>

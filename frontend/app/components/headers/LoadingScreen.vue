@@ -5,7 +5,7 @@
   >
     <UIcon name="i-heroicons-arrow-path" class="w-16 h-16 text-brand-500 animate-spin" />
     <h2 class="text-2xl font-bold text-dark-text tracking-widest animate-pulse">
-      {{ CONST_BRAND_NAME }}
+      {{ UI_TEXT.common.brandName }}
     </h2>
   </div>
 </template>

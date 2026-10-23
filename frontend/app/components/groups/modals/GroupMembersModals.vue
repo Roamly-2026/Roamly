@@ -4,7 +4,7 @@
     <!-- UPDATE MODAL -->
     <UModal
       v-model:open="groupsStore.isUpdateModalOpen"
-      :title="CONST_EDIT_GROUP_TITLE"
+      :title="UI_TEXT.groups.editTitle"
       :dismissible="false"
       :close="false"
       :ui="{ content: appConfig.layout.modalSizeSm }"
@@ -17,10 +17,10 @@
           @submit.prevent="handleUpdateGroup"
         >
           <div>
-            <label :class="appConfig.typography.inputLabel">{{ CONST_GROUP_NAME_LABEL }}</label>
+            <label :class="appConfig.typography.inputLabel">{{ UI_TEXT.groups.nameLabel }}</label>
             <UInput
               v-model="updateGroupName"
-              :placeholder="CONST_GROUP_NAME_PLACEHOLDER"
+              :placeholder="UI_TEXT.groups.namePlaceholder"
               variant="glass"
               class="w-full"
             />
@@ -32,13 +32,13 @@
         <div :class="appConfig.layout.modalActions">
           <UButton
             :class="appConfig.typography.modalActionBtnCancel"
-            :label="CONST_CANCEL_BTN_TEXT"
+            :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="groupsStore.closeUpdateModal()"
           />
           <UButton
             :class="appConfig.typography.modalActionBtnOk"
-            :label="CONST_EDIT_BTN"
+            :label="UI_TEXT.common.save"
             variant="actionOkButton"
             type="submit"
             form="update-group-form"
@@ -51,7 +51,7 @@
     <!-- INVITE MODAL -->
     <UModal
       v-model:open="groupsStore.isInviteModalOpen"
-      :title="CONST_INVITE_USER_TITLE"
+      :title="UI_TEXT.groups.inviteUserTitle"
       :dismissible="false"
       :close="false"
       :ui="{ content: appConfig.layout.modalSizeSm }"
@@ -64,16 +64,18 @@
           @submit.prevent="handleInviteUser"
         >
           <div>
-            <label :class="appConfig.typography.inputLabel">{{ CONST_USER_EMAIL_LABEL }}</label>
+            <label :class="appConfig.typography.inputLabel">{{ UI_TEXT.groups.emailLabel }}</label>
             <UInput
               v-model="inviteEmail"
-              :placeholder="CONST_USER_EMAIL_PLACEHOLDER"
+              :placeholder="UI_TEXT.groups.emailPlaceholder"
               variant="glass"
               class="w-full"
             />
           </div>
           <div>
-            <label :class="appConfig.typography.inputLabel">{{ CONST_ROLE_SELECTION_LABEL }}</label>
+            <label :class="appConfig.typography.inputLabel">{{
+              UI_TEXT.groups.roleSelectionLabel
+            }}</label>
             <USelect
               v-model="inviteRole"
               :items="roleOptions"
@@ -93,14 +95,14 @@
         <div :class="appConfig.layout.modalActions">
           <UButton
             :class="appConfig.typography.modalActionBtnCancel"
-            :label="CONST_CANCEL_BTN_TEXT"
+            :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             :disabled="!!inviteSuccess"
             @click="groupsStore.closeInviteModal()"
           />
           <UButton
             :class="appConfig.typography.modalActionBtnOk"
-            :label="CONST_INVITE_BTN"
+            :label="UI_TEXT.groups.sendInvite"
             variant="actionOkButton"
             type="submit"
             form="invite-user-form"
@@ -114,7 +116,7 @@
     <!-- REMOVE USER MODAL -->
     <UModal
       v-model:open="groupsStore.isRemoveUserModalOpen"
-      :title="CONST_REMOVE_USER_TITLE"
+      :title="UI_TEXT.groups.removeUserTitle"
       :dismissible="false"
       :close="false"
       :ui="{ content: appConfig.layout.modalSizeSm }"
@@ -122,7 +124,7 @@
       <template #default><div class="hidden"></div></template>
       <template #body>
         <p :class="appConfig.typography.modalText">
-          {{ CONST_REMOVE_USER_CONFIRM }}
+          {{ UI_TEXT.groups.removeUserConfirmation }}
           <span :class="appConfig.typography.modalHighlight"
             >„{{ groupsStore.selectedUserEmailToRemove }}”</span
           >
@@ -133,13 +135,13 @@
         <div :class="appConfig.layout.modalActions">
           <UButton
             :class="appConfig.typography.modalActionBtnCancel"
-            :label="CONST_CANCEL_BTN_TEXT"
+            :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="groupsStore.closeRemoveUserModal()"
           />
           <UButton
             :class="appConfig.typography.modalActionBtnOk"
-            :label="CONST_REMOVE_BTN"
+            :label="UI_TEXT.common.remove"
             variant="actionOkButton"
             :loading="isRemoving"
             @click="handleRemoveUser"
@@ -151,7 +153,7 @@
     <!-- PROMOTE USER MODAL -->
     <UModal
       v-model:open="groupsStore.isPromoteUserModalOpen"
-      title="Promote User"
+      :title="UI_TEXT.groups.promoteUser"
       :dismissible="false"
       :close="false"
       :ui="{ content: appConfig.layout.modalSizeSm }"
@@ -159,11 +161,10 @@
       <template #default><div class="hidden"></div></template>
       <template #body>
         <p :class="appConfig.typography.modalText">
-          Are you sure you want to promote
-          <span :class="appConfig.typography.modalInlineHighlight"
+          {{ ' ' + UI_TEXT.groups.promoteBeforeName + ' '
+          }}<span :class="appConfig.typography.modalInlineHighlight"
             >„{{ groupsStore.selectedUserNameToPromote }}”</span
-          >
-          to leader?
+          >{{ ' ' + UI_TEXT.groups.promoteAfterName + ' ' }}
         </p>
         <p v-if="promoteErrorText" :class="appConfig.typography.inputError">
           {{ promoteErrorText }}
@@ -173,13 +174,13 @@
         <div :class="appConfig.layout.modalActions">
           <UButton
             :class="appConfig.typography.modalActionBtnCancel"
-            :label="CONST_CANCEL_BTN_TEXT"
+            :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="groupsStore.closePromoteUserModal()"
           />
           <UButton
             :class="appConfig.typography.modalActionBtnOk"
-            label="Promote"
+            :label="UI_TEXT.groups.promote"
             variant="actionOkButton"
             :loading="isPromoting"
             @click="handlePromoteUser"
@@ -191,7 +192,7 @@
     <!-- DEMOTE USER MODAL -->
     <UModal
       v-model:open="groupsStore.isDemoteUserModalOpen"
-      title="Demote User"
+      :title="UI_TEXT.groups.demoteUser"
       :dismissible="false"
       :close="false"
       :ui="{ content: appConfig.layout.modalSizeSm }"
@@ -199,11 +200,10 @@
       <template #default><div class="hidden"></div></template>
       <template #body>
         <p :class="appConfig.typography.modalText">
-          Are you sure you want to demote
-          <span :class="appConfig.typography.modalInlineHighlight"
+          {{ ' ' + UI_TEXT.groups.demoteBeforeName + ' '
+          }}<span :class="appConfig.typography.modalInlineHighlight"
             >„{{ groupsStore.selectedUserNameToDemote }}”</span
-          >
-          to a regular member? They will lose their leadership privileges.
+          >{{ ' ' + UI_TEXT.groups.demoteAfterName + ' ' }}
         </p>
         <p v-if="demoteErrorText" :class="appConfig.typography.inputError">{{ demoteErrorText }}</p>
       </template>
@@ -211,13 +211,13 @@
         <div :class="appConfig.layout.modalActions">
           <UButton
             :class="appConfig.typography.modalActionBtnCancel"
-            :label="CONST_CANCEL_BTN_TEXT"
+            :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="groupsStore.closeDemoteUserModal()"
           />
           <UButton
             :class="appConfig.typography.modalActionBtnOk"
-            label="Demote"
+            :label="UI_TEXT.groups.demote"
             variant="actionCancelButton"
             class="text-orange-500 hover:text-white hover:bg-orange-600 ring-orange-500"
             :loading="isDemoting"
@@ -282,7 +282,7 @@ const handleUpdateGroup = () => {
   const validationResult = updateGroupSchema.safeParse({ groupName: updateGroupName.value });
   if (!validationResult.success) {
     updateValidationError.value =
-      validationResult.error.issues[0]?.message ?? CONST_INVALID_DATA_ERROR;
+      validationResult.error.issues[0]?.message ?? UI_TEXT.errors.invalidData;
     return;
   }
   if (membersGroupUuid.value)
@@ -294,8 +294,8 @@ const inviteEmail = ref('');
 const inviteRole = ref('invitedMember');
 const inviteValidationError = ref('');
 const roleOptions = [
-  { label: 'Member', value: 'invitedMember' },
-  { label: 'Leader', value: 'invitedLeader' },
+  { label: UI_TEXT.common.member, value: 'invitedMember' },
+  { label: UI_TEXT.common.leader, value: 'invitedLeader' },
 ];
 const {
   mutate: inviteUser,
@@ -312,7 +312,7 @@ const inviteError = computed(
     (inviteApiError.value ? getErrorMessage(inviteApiError.value) : ''),
 );
 const inviteSuccess = computed(() =>
-  inviteStatus.value === 'success' ? CONST_INVITE_SUCCESS_MSG : '',
+  inviteStatus.value === 'success' ? UI_TEXT.groups.inviteSuccess : '',
 );
 
 watch(
@@ -334,7 +334,7 @@ const handleInviteUser = () => {
   });
   if (!validationResult.success) {
     inviteValidationError.value =
-      validationResult.error.issues[0]?.message ?? CONST_INVALID_DATA_ERROR;
+      validationResult.error.issues[0]?.message ?? UI_TEXT.errors.invalidData;
     return;
   }
   if (membersGroupUuid.value)
