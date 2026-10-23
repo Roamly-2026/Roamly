@@ -23,6 +23,7 @@
               type="email"
               :placeholder="UI_TEXT.auth.emailPlaceholder"
               :variant="fieldError ? 'glassError' : 'glass'"
+  
             />
           </template>
         </UFormField>
@@ -45,7 +46,7 @@
           {{ UI_TEXT.auth.loginSuccess }}
         </div>
 
-        <!-- REGISTRATION PROMPT BUTTON -->
+        <!-- FORM BUTTONS -->
         <div :class="appConfig.layout.formActions">
           <UButton
             :label="UI_TEXT.common.cancel"

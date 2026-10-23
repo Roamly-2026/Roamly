@@ -47,3 +47,9 @@ html {
 body {
   padding-right: 0 !important;
 }
+
+/*Global input padding override to fix tailwinf v4 universal reset*/
+input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='button']):not([type='submit']) {
+  padding-left: 1rem !important;  /* 16px - SPACING_TOKENS.px.md */
+  padding-right: 1rem !important; /* 16px - SPACING_TOKENS.px.md */
+}

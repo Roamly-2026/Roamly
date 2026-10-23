@@ -101,22 +101,16 @@ export default defineAppConfig({
    input: {
       slots: { 
         root: 'w-full', 
-        input: `!${SPACING_TOKENS.px.md}`,  
+        base: `w-full [&_input]:!${SPACING_TOKENS.px.md}`, 
       },
       variants: {
         variant: {
           glass: {
-            base: `bg-input-bg text-dark-text rounded-xl ring-1 ring-input-border placeholder:text-text-muted focus:ring-2 focus:ring-brand-500 transition-colors h-11 !${SPACING_TOKENS.px.md} shadow-none`,
-            input: `!${SPACING_TOKENS.px.md}`,
-          },
+            base: `bg-input-bg text-dark-text rounded-xl ring-1 ring-input-border placeholder:text-text-muted focus:ring-2 focus:ring-brand-500 transition-colors h-11 [&_input]:!${SPACING_TOKENS.px.md} shadow-none`,          },
           glassError: {
-            base: `bg-error-50 text-error-900 rounded-xl ring-1 ring-error-500 placeholder:text-error-300 focus:ring-2 focus:ring-error-500 transition-colors h-11 !${SPACING_TOKENS.px.md} shadow-none`,
-            input: `!${SPACING_TOKENS.px.md}`,
-          },
+            base: `bg-error-50 text-error-900 rounded-xl ring-1 ring-error-500 placeholder:text-error-300 focus:ring-2 focus:ring-error-500 transition-colors h-11 [&_input]:!${SPACING_TOKENS.px.md} shadow-none`,          },
           search: {
-            base: `bg-input-bg text-dark-text rounded-full ring-1 ring-input-border placeholder:text-text-muted focus:ring-2 focus:ring-brand-500 transition-colors h-10 !pl-8 !${SPACING_TOKENS.px.md} shadow-none w-full`,
-            input: `!${SPACING_TOKENS.px.md}`,
-          },
+            base: `bg-input-bg text-dark-text rounded-full ring-1 ring-input-border placeholder:text-text-muted focus:ring-2 focus:ring-brand-500 transition-colors h-10 !pl-8 [&_input]:!${SPACING_TOKENS.px.md} shadow-none w-full`,          },
         },
       },
     },
