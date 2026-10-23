@@ -2,17 +2,11 @@
 <template>
   <div>
     <!-- ADD EVENT MODAL -->
-    <UModal
+    <BaseModal
       v-model:open="eventsStore.isAddEventModalOpen"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeMd }"
+      :title="UI_TEXT.tooltips.addEvent"
+      :ui-size="appConfig.layout.modalSizeMd"
     >
-      <template #default><div class="hidden"></div></template>
-      <template #close><div class="hidden"></div></template>
-      <template #header
-        ><h3 class="text-xl font-bold text-dark-text">{{ UI_TEXT.tooltips.addEvent }}</h3></template
-      >
       <template #body>
         <div
           :class="[
@@ -21,18 +15,22 @@
           ]"
         >
           <UForm
+            id="add-event-form"
             :schema="createEventSchema"
             :state="formState"
             :class="appConfig.layout.modalForm"
             @submit="onSubmit"
           >
-            <UFormField name="title" :label="UI_TEXT.events.title"
-              ><template #default="{ error }"
-                ><UInput
+            <UFormField name="title" :label="UI_TEXT.events.title">
+              <template #default="{ error }">
+                <UInput
                   v-model="formState.title"
                   :placeholder="UI_TEXT.events.titlePlaceholder"
-                  :variant="error ? 'glassError' : 'glass'" /></template
-            ></UFormField>
+                  :variant="error ? 'glassError' : 'glass'"
+                />
+              </template>
+            </UFormField>
+            
             <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
               <UFormField name="start_time" :label="UI_TEXT.events.startDateTime">
                 <template #default="{ error }">
@@ -53,6 +51,7 @@
                 </template>
               </UFormField>
             </div>
+            
             <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
               <UFormField name="end_time" :label="UI_TEXT.events.endDateTime">
                 <template #default="{ error }">
@@ -73,6 +72,7 @@
                 </template>
               </UFormField>
             </div>
+            
             <UFormField name="description" :label="UI_TEXT.events.description">
               <template #default="{ error }">
                 <UTextarea
@@ -83,7 +83,7 @@
               </template>
             </UFormField>
 
-            <!-- location selector button -->
+            <!-- Location selector -->
             <div class="mt-4 flex flex-col gap-2">
               <span class="text-sm font-medium text-dark-text">{{
                 UI_TEXT.events.optionalLocation
@@ -100,8 +100,9 @@
               >
                 <span
                   class="text-sm text-dark-text/80 wrap-break-word whitespace-normal min-w-0 flex-1"
-                  >{{ formState.address }}</span
                 >
+                  {{ formState.address }}
+                </span>
                 <UButton
                   icon="i-heroicons-x-mark"
                   variant="ghostDangerIconButton"
@@ -111,6 +112,7 @@
                 />
               </div>
             </div>
+            
             <div class="mt-2 flex items-center justify-between">
               <UCheckbox
                 v-model="formState.is_private"
@@ -119,28 +121,32 @@
                 :ui="{ base: 'w-5 h-5 cursor-pointer border-2 border-dark-text/30' }"
               />
             </div>
-            <div :class="[appConfig.layout.flexBetween, 'mt-4']">
-              <UButton
-                :label="UI_TEXT.common.cancel"
-                variant="actionCancelButton"
-                @click="closeAndResetForm"
-              />
-              <UButton
-                type="submit"
-                :label="UI_TEXT.common.add"
-                variant="actionOkButton"
-                :loading="createEventMutation.isLoading.value"
-              />
-            </div>
           </UForm>
         </div>
       </template>
-    </UModal>
+      <template #footer>
+        <div :class="[appConfig.layout.flexBetween, 'mt-4']">
+          <UButton
+            :label="UI_TEXT.common.cancel"
+            variant="actionCancelButton"
+            @click="closeAndResetForm"
+          />
+          <UButton
+            type="submit"
+            form="add-event-form"
+            :label="UI_TEXT.common.add"
+            variant="actionOkButton"
+            :loading="createEventMutation.isLoading.value"
+          />
+        </div>
+      </template>
+    </BaseModal>
 
-    <!-- map selector modal -->
-    <UModal v-model:open="isMapSelectorOpen" :ui="{ content: appConfig.layout.modalSizeLg }">
-      <template #default><div class="hidden"></div></template>
-      <template #close><div class="hidden"></div></template>
+    <!-- MAP SELECTOR MODAL -->
+    <BaseModal 
+      v-model:open="isMapSelectorOpen" 
+      :ui-size="appConfig.layout.modalSizeLg"
+    >
       <template #header>
         <div class="flex justify-between items-center w-full">
           <h3 class="text-xl font-bold text-dark-text">{{ UI_TEXT.events.selectLocation }}</h3>
@@ -175,60 +181,33 @@
           </div>
         </div>
       </template>
-    </UModal>
+    </BaseModal>
 
     <!-- DELETE EVENT MODAL -->
-    <UModal
+    <ConfirmModal
       v-model:open="eventsStore.isDeleteEventModalOpen"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeMd }"
+      :title="UI_TEXT.events.deleteEvent"
+      :cancel-text="UI_TEXT.common.cancel"
+      :confirm-text="UI_TEXT.common.delete"
+      :loading="deleteEventMutation.isLoading.value"
+      :ui-size="appConfig.layout.modalSizeMd"
+      @cancel="eventsStore.closeDeleteEventModal()"
+      @confirm="handleConfirmDelete"
     >
-      <template #default><div class="hidden"></div></template>
-      <template #close><div class="hidden"></div></template>
-      <template #header
-        ><h3 class="text-xl font-bold text-dark-text">
-          {{ UI_TEXT.events.deleteEvent }}
-        </h3></template
-      >
-      <template #body
-        ><p :class="appConfig.typography.modalText">
+      <template #body>
+        <p :class="appConfig.typography.modalText">
           {{ ' ' + UI_TEXT.events.deleteBeforeTitle
           }}{{ eventsStore.selectedEventToDelete?.title }}"?
-        </p></template
-      >
-      <template #footer>
-        <div :class="appConfig.layout.flexBetween">
-          <UButton
-            :label="UI_TEXT.common.cancel"
-            variant="actionCancelButton"
-            @click="eventsStore.closeDeleteEventModal()"
-          />
-          <UButton
-            :label="UI_TEXT.common.delete"
-            variant="actionOkButton"
-            class="bg-error-500 hover:bg-error-600 text-white"
-            :loading="deleteEventMutation.isLoading.value"
-            @click="handleConfirmDelete"
-          />
-        </div>
+        </p>
       </template>
-    </UModal>
+    </ConfirmModal>
 
     <!-- PARTICIPANTS MODAL -->
-    <UModal
+    <BaseModal
       v-model:open="eventsStore.isParticipantsModalOpen"
-      :ui="{ content: appConfig.layout.modalSizeMd }"
-      :close="false"
-      :dismissible="false"
+      :title="UI_TEXT.events.eventParticipants"
+      :ui-size="appConfig.layout.modalSizeMd"
     >
-      <template #default><div class="hidden"></div></template>
-      <template #close><div class="hidden"></div></template>
-      <template #header
-        ><h3 class="text-xl font-bold text-dark-text">
-          {{ UI_TEXT.events.eventParticipants }}
-        </h3></template
-      >
       <template #body>
         <div :class="appConfig.calendar.participantModalScroll">
           <div
@@ -251,13 +230,11 @@
                   <div class="flex items-center gap-1.5">
                     <h4 :class="appConfig.calendar.participantCardName">{{ user.username }}</h4>
 
-                    <!-- ITT a user.email helyett simán a usert adjuk át -->
                     <UTooltip v-if="isGroupLeader(user)" :text="UI_TEXT.events.groupLeader">
                       <UIcon name="i-heroicons-star" class="w-4 h-4 text-amber-500" />
                     </UTooltip>
                   </div>
 
-                  <!-- ITT IS a teljes usert adjuk át -->
                   <span :class="appConfig.calendar.participantCardRole">
                     {{ isEventCreator(user) ? UI_TEXT.events.creator : UI_TEXT.events.participant }}
                   </span>
@@ -296,58 +273,33 @@
           />
         </div>
       </template>
-    </UModal>
+    </BaseModal>
 
     <!-- REMOVE PARTICIPANT MODAL -->
-    <UModal
+    <ConfirmModal
       v-model:open="eventsStore.isRemoveParticipantModalOpen"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeMd }"
+      :title="UI_TEXT.events.removeParticipant"
+      :cancel-text="UI_TEXT.common.cancel"
+      :confirm-text="UI_TEXT.common.remove"
+      :loading="removeParticipantMutation.isLoading.value"
+      :ui-size="appConfig.layout.modalSizeMd"
+      @cancel="eventsStore.closeRemoveParticipantModal()"
+      @confirm="confirmRemoveParticipant"
     >
-      <template #default><div class="hidden"></div></template>
-      <template #close><div class="hidden"></div></template>
-      <template #header
-        ><h3 class="text-xl font-bold text-dark-text">
-          {{ UI_TEXT.events.removeParticipant }}
-        </h3></template
-      >
       <template #body>
         <p :class="appConfig.typography.modalText">
           {{ ' ' + UI_TEXT.events.removeBeforeName }}{{ eventsStore.participantToRemove?.username
           }}{{ UI_TEXT.events.removeAfterName + ' ' }}
         </p>
       </template>
-      <template #footer>
-        <div :class="appConfig.layout.flexBetween">
-          <UButton
-            :label="UI_TEXT.common.cancel"
-            variant="actionCancelButton"
-            @click="eventsStore.closeRemoveParticipantModal()"
-          />
-          <UButton
-            :label="UI_TEXT.common.remove"
-            variant="actionOkButton"
-            class="bg-error-500 hover:bg-error-600 text-white"
-            :loading="removeParticipantMutation.isLoading.value"
-            @click="confirmRemoveParticipant"
-          />
-        </div>
-      </template>
-    </UModal>
+    </ConfirmModal>
 
     <!-- EVENT PREVIEW MODAL (MOBILE ONLY) -->
-    <UModal
+    <BaseModal
       v-model:open="eventsStore.isPreviewModalOpen"
-      :ui="{ content: appConfig.layout.modalSizeMd }"
-      :close="false"
-      :dismissible="false"
+      :title="UI_TEXT.events.details"
+      :ui-size="appConfig.layout.modalSizeMd"
     >
-      <template #default><div class="hidden"></div></template>
-      <template #close><div class="hidden"></div></template>
-      <template #header
-        ><h3 class="text-xl font-bold text-dark-text">{{ UI_TEXT.events.details }}</h3></template
-      >
       <template #body>
         <div
           v-if="eventsStore.previewEvent"
@@ -555,20 +507,14 @@
           />
         </div>
       </template>
-    </UModal>
+    </BaseModal>
 
     <!-- ADD MEMBERS MODAL -->
-    <UModal
+    <BaseModal
       v-model:open="eventsStore.isAddMembersModalOpen"
-      :ui="{ content: appConfig.layout.modalSizeMd }"
-      :close="false"
-      :dismissible="false"
+      :title="UI_TEXT.events.addMembers"
+      :ui-size="appConfig.layout.modalSizeMd"
     >
-      <template #default><div class="hidden"></div></template>
-      <template #close><div class="hidden"></div></template>
-      <template #header
-        ><h3 class="text-xl font-bold text-dark-text">{{ UI_TEXT.events.addMembers }}</h3></template
-      >
       <template #body>
         <div class="flex flex-col gap-4">
           <p class="text-sm text-dark-text/70">{{ UI_TEXT.events.selectMembers }}</p>
@@ -639,42 +585,25 @@
           />
         </div>
       </template>
-    </UModal>
+    </BaseModal>
 
     <!-- LEAVE EVENT MODAL -->
-    <UModal
+    <ConfirmModal
       v-model:open="eventsStore.isLeaveEventModalOpen"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeMd }"
+      :title="UI_TEXT.events.leaveEvent"
+      :cancel-text="UI_TEXT.common.cancel"
+      :confirm-text="UI_TEXT.common.leave"
+      :loading="leaveEventMutation.isLoading.value"
+      :ui-size="appConfig.layout.modalSizeMd"
+      @cancel="eventsStore.closeLeaveEventModal()"
+      @confirm="handleConfirmLeave"
     >
-      <template #default><div class="hidden"></div></template>
-      <template #close><div class="hidden"></div></template>
-      <template #header
-        ><h3 class="text-xl font-bold text-dark-text">{{ UI_TEXT.events.leaveEvent }}</h3></template
-      >
       <template #body>
         <p :class="appConfig.typography.modalText">
           {{ ' ' + UI_TEXT.events.leaveBeforeTitle }}{{ eventsStore.selectedEventToLeave?.title }}"?
         </p>
       </template>
-      <template #footer>
-        <div :class="appConfig.layout.flexBetween">
-          <UButton
-            :label="UI_TEXT.common.cancel"
-            variant="actionCancelButton"
-            @click="eventsStore.closeLeaveEventModal()"
-          />
-          <UButton
-            :label="UI_TEXT.common.leave"
-            variant="actionOkButton"
-            class="bg-error-500 hover:bg-error-600 text-white"
-            :loading="leaveEventMutation.isLoading.value"
-            @click="handleConfirmLeave"
-          />
-        </div>
-      </template>
-    </UModal>
+    </ConfirmModal>
   </div>
 </template>
 

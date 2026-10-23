@@ -2,14 +2,17 @@
 <template>
   <div>
     <!-- JOIN MODAL -->
-    <UModal
+    <ConfirmModal
       v-model:open="groupsStore.isJoinModalOpen"
       :title="UI_TEXT.groups.joinTitle"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeSm }"
+      :error-text="joinErrorText"
+      :cancel-text="UI_TEXT.common.cancel"
+      :confirm-text="UI_TEXT.common.join"
+      :loading="isJoining"
+      :ui-size="appConfig.layout.modalSizeSm"
+      @cancel="groupsStore.closeJoinModal"
+      @confirm="confirmJoin"
     >
-      <template #default><div class="hidden"></div></template>
       <template #body>
         <p :class="appConfig.typography.modalText">
           {{ UI_TEXT.groups.joinConfirmation }}
@@ -17,38 +20,21 @@
             „{{ groupsStore.selectedGroupToJoin.name }}”
           </span>
         </p>
-        <p v-if="joinErrorText" :class="appConfig.typography.modalErrorBox">
-          {{ joinErrorText }}
-        </p>
       </template>
-      <template #footer>
-        <div :class="appConfig.layout.modalActions">
-          <UButton
-            :class="appConfig.typography.modalActionBtnCancel"
-            :label="UI_TEXT.common.cancel"
-            variant="actionCancelButton"
-            @click="groupsStore.closeJoinModal"
-          />
-          <UButton
-            :class="appConfig.typography.modalActionBtnOk"
-            :label="UI_TEXT.common.join"
-            variant="actionOkButton"
-            :loading="joinMutation.isLoading.value"
-            @click="confirmJoin"
-          />
-        </div>
-      </template>
-    </UModal>
+    </ConfirmModal>
 
     <!-- DECLINE MODAL -->
-    <UModal
+    <ConfirmModal
       v-model:open="groupsStore.isDeclineModalOpen"
       :title="UI_TEXT.groups.declineInviteTitle"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeSm }"
+      :error-text="declineErrorText"
+      :cancel-text="UI_TEXT.common.cancel"
+      :confirm-text="UI_TEXT.common.decline"
+      :loading="isLeaving"
+      :ui-size="appConfig.layout.modalSizeSm"
+      @cancel="groupsStore.closeDeclineModal"
+      @confirm="confirmDecline"
     >
-      <template #default><div class="hidden"></div></template>
       <template #body>
         <p :class="appConfig.typography.modalText">
           {{ UI_TEXT.groups.declineInviteConfirmation }}
@@ -59,28 +45,8 @@
             „{{ groupsStore.selectedGroupToDecline.name }}”
           </span>
         </p>
-        <p v-if="declineErrorText" :class="appConfig.typography.modalErrorBox">
-          {{ declineErrorText }}
-        </p>
       </template>
-      <template #footer>
-        <div :class="appConfig.layout.modalActions">
-          <UButton
-            :class="appConfig.typography.modalActionBtnCancel"
-            :label="UI_TEXT.common.cancel"
-            variant="actionCancelButton"
-            @click="groupsStore.closeDeclineModal"
-          />
-          <UButton
-            :class="appConfig.typography.modalActionBtnOk"
-            :label="UI_TEXT.common.decline"
-            variant="actionOkButton"
-            :loading="leaveMutation.isLoading.value"
-            @click="confirmDecline"
-          />
-        </div>
-      </template>
-    </UModal>
+    </ConfirmModal>
   </div>
 </template>
 
