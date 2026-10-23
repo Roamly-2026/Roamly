@@ -1,6 +1,6 @@
 <!-- frontend/app/components/media/views/MediaMobile.vue -->
 <template>
-  <div class="flex flex-col flex-1 gap-4 w-full p-4 pb-20">
+  <div :class="`flex flex-col flex-1 ${SPACING_TOKENS.gap.md} w-full ${SPACING_TOKENS.p.md} pb-20`">
     <!-- TOP NAV BUTTONS -->
     <div :class="appConfig.calendar.mobileTopActions">
       <UTooltip :text="UI_TEXT.common.members">
@@ -24,7 +24,7 @@
 
     <div :class="appConfig.calendar.mobileMainWrapper">
       <!-- GROUP DROPDOWN HEADER -->
-      <div :class="appConfig.calendar.mobileHeader" class="mb-4">
+      <div :class="[appConfig.calendar.mobileHeader, SPACING_TOKENS.mb.md]">
         <UPopover v-model:open="isGroupDropdownOpen" class="w-full" :popper="{ strategy: 'fixed' }">
           <UButton block variant="ghost" :class="appConfig.calendar.mobileHeaderButton">
             <div :class="appConfig.calendar.mobileHeaderTitleRow">
@@ -89,12 +89,12 @@
       </div>
 
       <!-- MEDIA LIST -->
-      <div class="px-2 pt-2">
-        <div v-if="isLoading" :class="appConfig.typography.statusLoading" class="py-4 text-center">
+      <div :class="`${SPACING_TOKENS.px.sm} ${SPACING_TOKENS.pt.sm}`">
+        <div v-if="isLoading" :class="[appConfig.typography.statusLoading, SPACING_TOKENS.py.md, 'text-center']">
           {{ ' ' + UI_TEXT.media.loading + ' ' }}
         </div>
 
-        <div v-else-if="filteredMedia.length > 0" class="flex flex-col gap-4 w-full">
+        <div v-else-if="filteredMedia.length > 0" :class="`flex flex-col ${SPACING_TOKENS.gap.md} w-full`">
           <UCard
             v-for="mediaItem in filteredMedia"
             :key="mediaItem.file_id"
@@ -104,7 +104,7 @@
             <!-- Title + delete -->
             <div :class="appConfig.layout.documentCardHeader">
               <p class="font-bold truncate pr-2 shadow-sm text-sm">{{ mediaItem.file_name }}</p>
-              <div class="flex items-center gap-1 shrink-0">
+              <div :class="`flex items-center ${SPACING_TOKENS.gap.xs} shrink-0`">
                 <UTooltip v-if="isCurrentUserLeader" :text="UI_TEXT.common.delete">
                   <UButton
                     icon="i-heroicons-trash"
@@ -124,12 +124,12 @@
                 :alt="mediaItem.file_name"
                 class="w-full h-full object-cover"
               />
-              <div v-else class="flex flex-col items-center justify-center gap-2">
+              <div v-else :class="`flex flex-col items-center justify-center ${SPACING_TOKENS.gap.sm}`">
                 <UIcon name="i-heroicons-film" class="w-12 h-12 text-surface-500/50" />
                 <span class="text-xs text-surface-400">{{ mediaItem.mime_type }}</span>
               </div>
 
-              <div class="absolute bottom-2 px-4 w-full flex justify-between">
+              <div :class="`absolute bottom-2 ${SPACING_TOKENS.px.md} w-full flex justify-between`">
                 <UTooltip :text="UI_TEXT.common.view">
                   <UButton
                     icon="i-heroicons-eye"
@@ -199,7 +199,7 @@
           </UCard>
         </div>
 
-        <div v-else :class="appConfig.typography.statusLoading" class="py-4 text-center">
+        <div v-else :class="[appConfig.typography.statusLoading, SPACING_TOKENS.py.md, 'text-center']">
           {{ searchQuery ? UI_TEXT.media.noMatchingPhotos : UI_TEXT.media.noPhotos }}
         </div>
       </div>
@@ -212,6 +212,7 @@ import { computed, ref } from 'vue';
 import { useAppConfig } from '#imports';
 import type { GroupFile } from '~/types/files.type';
 import type { GroupOutDto } from '~/types/groups.type';
+import { SPACING_TOKENS } from '~/utils/spacings.tokens';
 
 const appConfig = useAppConfig();
 
