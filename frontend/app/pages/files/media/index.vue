@@ -192,7 +192,6 @@ const currentGroup = computed(() =>
 
 const isCurrentUserLeader = computed(() => {
   const role = currentGroup.value?.role ?? '';
-  console.log(role);
   return role.toLowerCase() === 'leader';
 });
 

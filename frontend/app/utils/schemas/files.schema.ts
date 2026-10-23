@@ -1,6 +1,13 @@
 import { UI_TEXT } from '~/locales/en';
-// frontend/schemas/files.schema.ts
 import { z } from 'zod';
+
+// These roles are here only temporarily. In an upcoming feature the logic will be updated.
+const ROLES = {
+  INVITEDMEMBER: 'invitedMember',
+  INVITEDLEADER: 'invitedLeader',
+  MEMBER: 'member',
+  LEADER: 'leader',
+};
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
@@ -50,7 +57,7 @@ export const groupMediaSchema = z.object({
 });
 
 export const sharingUpdateSchema = z.object({
-  accessLevel: z.enum(['LEADER', 'MEMBER'], {
+  accessLevel: z.enum([ROLES.LEADER, ROLES.MEMBER], {
     message: UI_TEXT.validation.accessLevel,
   }),
 });

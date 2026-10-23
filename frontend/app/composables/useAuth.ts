@@ -11,7 +11,7 @@ export const useAuth = () => {
 
   const clearAppDataAndCache = () => {
     queryCache.cancelQueries();
-    queryCache.getEntries().forEach((entry) => queryCache.remove(entry));
+    queryCache.invalidateQueries();
   };
 
   const user = useState<UserOutDto | null>('user_profile', () => null);

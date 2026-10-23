@@ -343,7 +343,7 @@ import {
   updateUsernameSchema,
   updateEmailSchema,
   changePasswordSchema,
-} from '~/utils/schemas/users.validation';
+} from '~/utils/schemas/users.schema';
 import type { ApiError } from '~/types/apiError.type';
 import { useAppConfig } from '#imports';
 
