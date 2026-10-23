@@ -15,7 +15,7 @@
       </div>
 
       <!-- INVITES GRID -->
-      <div v-else-if="invitesList.length > 0" class="flex flex-col gap-6 w-full">
+      <div v-else-if="invitesList.length > 0" :class="`flex flex-col ${SPACING_TOKENS.gap.lg} w-full`">
         <div :class="appConfig.layout.cardGrid">
           <UCard
             v-for="group in invitesList"
@@ -49,7 +49,7 @@
                   <p class="opacity-70">{{ UI_TEXT.groups.createdAtLabel }}</p>
                   <p class="font-semibold">{{ group.created_at }}</p>
                 </div>
-                <div class="flex items-center gap-1.5 font-semibold">
+                <div :class="`flex items-center ${SPACING_TOKENS.gap.xs} font-semibold`">
                   <span>{{ group.current_size }}</span>
                   <UIcon name="i-heroicons-user" class="w-5 h-5 text-brand-500" />
                 </div>
@@ -82,6 +82,7 @@ import { useIntersectionObserver } from '@vueuse/core';
 import { useGroupsStore } from '~/stores/groups.modals.store';
 import type { GroupInvitesOutDto } from '~/types/groups.type';
 import type { ApiError } from '~/types/apiError.type';
+import { SPACING_TOKENS } from '~/utils/spacings.tokens';
 
 /* --- COMPOSABLES & STORES --- */
 const appConfig = useAppConfig();

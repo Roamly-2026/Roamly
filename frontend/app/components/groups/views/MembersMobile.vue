@@ -1,8 +1,8 @@
 <!-- frontend/app/components/groups/views/MembersMobile.vue -->
 <template>
-  <div :class="[appConfig.layout.pageWrapper, 'px-4 py-6']">
+  <div :class="appConfig.layout.pageWrapper">
     <!-- HEADER & SEARCH SECTION -->
-    <div class="flex flex-col gap-6">
+    <div :class="`flex flex-col ${SPACING_TOKENS.gap.lg}`">
       <!-- NAV ACTIONS (Members, Calendar, Photos, Docs) -->
       <div class="flex justify-between items-center w-full">
         <UTooltip :text="UI_TEXT.tooltips.members">
@@ -29,8 +29,8 @@
       </div>
 
       <!-- TITLE & ACTIONS -->
-      <div class="flex flex-col items-center gap-1 my-2">
-        <div class="flex items-center gap-2">
+      <div :class="`flex flex-col items-center ${SPACING_TOKENS.gap.xs} ${SPACING_TOKENS.my.sm}`">
+        <div :class="`flex items-center ${SPACING_TOKENS.gap.sm}`">
           <h1 :class="appConfig.typography.pageTitle">
             {{ groupInfos?.name || UI_TEXT.common.loading }}
           </h1>
@@ -47,8 +47,7 @@
       </div>
 
       <!-- SEARCH & INVITE -->
-      <div class="flex items-center gap-3 w-full">
-        <!-- flex-1 kiterjeszti a searchbart -->
+      <div :class="`flex items-center ${SPACING_TOKENS.gap.sm} w-full`">
         <div class="flex-1">
           <UInput
             :model-value="searchQuery"
@@ -60,8 +59,13 @@
             @update:model-value="emit('update:searchQuery', $event)"
           />
         </div>
+<<<<<<< HEAD
         <div class="flex items-center gap-2 shrink-0">
           <UTooltip v-if="isCurrentUserLeader" :text="UI_TEXT.tooltips.inviteUser">
+=======
+        <div :class="`flex items-center ${SPACING_TOKENS.gap.sm} shrink-0`">
+          <UTooltip v-if="isCurrentUserLeader" :text="CONST_TOOLTIP_INVITE_USER ?? 'Invite User'">
+>>>>>>> a11e5e8 (New tokens used in group views)
             <UButton
               icon="i-heroicons-user-plus"
               variant="glassIconButtonHighlight"
@@ -97,7 +101,7 @@
           {{ UI_TEXT.errors.fetch }}
         </div>
 
-        <div v-else-if="filteredMembers?.length" class="flex flex-col gap-4 w-full">
+        <div v-else-if="filteredMembers?.length" :class="`flex flex-col ${SPACING_TOKENS.gap.md} w-full`">
           <UCard
             v-for="profile in filteredMembers"
             :key="profile.users.email"
@@ -106,7 +110,7 @@
             @click="emit('openProfile', profile)"
           >
             <div :class="appConfig.layout.memberCardInner">
-              <div class="shrink-0 pt-1">
+              <div :class="`shrink-0 ${SPACING_TOKENS.pt.xs}`">
                 <UAvatar
                   :src="profile.users.profile_image_url || undefined"
                   :alt="profile.users.username"
@@ -118,13 +122,13 @@
 
               <div :class="appConfig.layout.memberCardContent">
                 <div :class="[appConfig.layout.flexBetween, 'min-w-0']">
-                  <div class="min-w-0 flex-1 pr-2">
+                  <div :class="`min-w-0 flex-1 pr-2`">
                     <h3 :class="appConfig.typography.cardTitle" :title="profile.users.username">
                       {{ profile.users.username }}
                     </h3>
                     <p
                       v-if="isCurrentUser(profile.users.email)"
-                      class="text-xs text-left font-bold text-brand-500 mt-0.5"
+                      :class="`text-xs text-left font-bold text-brand-500 ${SPACING_TOKENS.mt.xs}`"
                     >
                       {{ ' ' + UI_TEXT.common.you + ' ' }}
                     </p>
@@ -148,7 +152,7 @@
                   </UTooltip>
                 </div>
 
-                <div :class="[appConfig.layout.flexBetween, 'items-end mt-4']">
+                <div :class="[appConfig.layout.flexBetween, `items-end ${SPACING_TOKENS.mt.md}`]">
                   <p class="text-sm font-medium text-dark-text/80">
                     {{ ' ' + UI_TEXT.groups.roleLabel + ' '
                     }}<span class="font-bold capitalize">{{ profile.roles.type }}</span>
@@ -175,9 +179,10 @@
     <div
       :class="[
         appConfig.layout.cardGrid +
-          'shadow-md bg-surface-500/40 rounded-2xl ring-1 ring-dark-text/10 p-4 w-full mt-4',
+          ` shadow-md bg-surface-500/40 rounded-2xl ring-1 ring-dark-text/10 ${SPACING_TOKENS.p.md} w-full ${SPACING_TOKENS.mt.md}`,
       ]"
     >
+<<<<<<< HEAD
       <h2 :class="appConfig.typography.cardTitle" class="text-surface-600 mb-2">
         {{ UI_TEXT.events.upcomingHeading }}
       </h2>
@@ -185,15 +190,24 @@
       <ClientOnly>
         <div v-if="isLoadingEvents" class="text-sm font-medium text-dark-text/60 py-2">
           {{ UI_TEXT.events.loadingEvents }}
+=======
+      <h2 :class="[appConfig.typography.cardTitle, `text-surface-600 ${SPACING_TOKENS.mb.sm}`]">
+        {{ CONST_UPCOMING_EVENTS_HEADING }}
+      </h2>
+
+      <ClientOnly>
+        <div v-if="isLoadingEvents" :class="`text-sm font-medium text-dark-text/60 ${SPACING_TOKENS.py.sm}`">
+          {{ CONST_LOADING_EVENTS_MSG }}
+>>>>>>> a11e5e8 (New tokens used in group views)
         </div>
         <div
           v-else-if="todayUpcomingEvents.length === 0"
-          class="text-sm font-medium text-dark-text/60 py-2"
+          :class="`text-sm font-medium text-dark-text/60 ${SPACING_TOKENS.py.sm}`"
         >
           {{ UI_TEXT.events.noUpcomingEvents }}
         </div>
 
-        <div v-else class="flex flex-col gap-3 w-full">
+        <div v-else :class="`flex flex-col ${SPACING_TOKENS.gap.sm} w-full`">
           <UCard
             v-for="event in todayUpcomingEvents"
             :key="event.uuid"
@@ -201,6 +215,7 @@
             class="w-full cursor-pointer hover:bg-surface-500/90 transition-colors"
             @click="navigateToEvent(event.uuid)"
           >
+<<<<<<< HEAD
             <div class="flex flex-col gap-2.5 w-full">
               <div class="flex items-start justify-between border-b border-dark-text/10 pb-2">
                 <div class="flex items-center gap-2 min-w-0 pr-2">
@@ -209,6 +224,12 @@
                       event.is_private ? UI_TEXT.events.privateEvent : UI_TEXT.events.groupEvent
                     "
                   >
+=======
+            <div :class="`flex flex-col ${SPACING_TOKENS.gap.sm} w-full`">
+              <div :class="`flex items-start justify-between border-b border-dark-text/10 pb-2`">
+                <div :class="`flex items-center ${SPACING_TOKENS.gap.sm} min-w-0 pr-2`">
+                  <UTooltip :text="event.is_private ? 'Private Event' : 'Group Event'">
+>>>>>>> a11e5e8 (New tokens used in group views)
                     <UIcon
                       :name="event.is_private ? 'i-heroicons-user' : 'i-heroicons-user-group'"
                       class="w-4 h-4 text-brand-500 shrink-0"
@@ -217,14 +238,14 @@
                   <h3 class="text-sm font-bold text-dark-text truncate">{{ event.title }}</h3>
                 </div>
                 <div
-                  class="flex items-center gap-1 text-brand-600 shrink-0 bg-brand-500/10 px-1.5 py-0.5 rounded text-xs font-bold"
+                  :class="`flex items-center ${SPACING_TOKENS.gap.xs} text-brand-600 shrink-0 bg-brand-500/10 ${SPACING_TOKENS.px.xs} ${SPACING_TOKENS.py.xs} rounded text-xs font-bold`"
                 >
                   <UIcon name="i-heroicons-clock" class="w-3.5 h-3.5" />
                   <span>{{ event.timeStartFormatted }}</span>
                 </div>
               </div>
 
-              <div class="flex flex-col gap-1.5 text-xs text-dark-text/80">
+              <div :class="`flex flex-col ${SPACING_TOKENS.gap.xs} text-xs text-dark-text/80`">
                 <div class="flex justify-between items-center">
                   <span class="font-medium opacity-70"
                     >{{ UI_TEXT.events.creatorLabel + ' '
@@ -244,7 +265,7 @@
               <div
                 :class="[
                   appConfig.layout.flexBetween,
-                  'mt-1 pt-2 border-t border-dark-text/5 items-start',
+                  `${SPACING_TOKENS.mt.xs} ${SPACING_TOKENS.pt.sm} border-t border-dark-text/5 items-start`,
                 ]"
               >
                 <span
@@ -292,10 +313,15 @@
                     </div>
                   </template>
                   <template v-else>
+<<<<<<< HEAD
                     <div class="flex items-center gap-2">
                       <span class="text-xs font-bold text-dark-text">{{
                         UI_TEXT.common.everyone
                       }}</span>
+=======
+                    <div :class="`flex items-center ${SPACING_TOKENS.gap.sm}`">
+                      <span class="text-xs font-bold text-dark-text">Everyone</span>
+>>>>>>> a11e5e8 (New tokens used in group views)
                     </div>
                   </template>
                 </div>
@@ -320,6 +346,7 @@ import { processAndSortEvents } from '~/utils/sort.utils';
 import type { GroupInfosOutDto, GroupProfileDto } from '~/types/groups.type';
 import type { UiEvent } from '~/types/events.type';
 import type { ApiError } from '~/types/apiError.type';
+import { SPACING_TOKENS } from '~/utils/spacings.tokens';
 
 /* --- COMPOSABLES & STORES --- */
 const appConfig = useAppConfig();
@@ -379,7 +406,7 @@ const todayUpcomingEvents = computed(() => {
       return eventStart <= endOfToday && eventEnd >= startOfToday;
     })
     .sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime())
-    .slice(0, 3); // Maximum a 3 legközelebbi
+    .slice(0, 3);
 });
 
 // Contextual nav
