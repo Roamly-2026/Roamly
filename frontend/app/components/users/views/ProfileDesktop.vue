@@ -212,7 +212,7 @@
               <!-- Title and action buttons -->
               <div :class="appConfig.layout.documentCardHeader">
                 <p class="font-bold truncate pr-2 shadow-sm">{{ doc.file_name }}</p>
-                <div class="flex items-center gap-1">
+                <div :class="`flex items-center ${SPACING_TOKENS.gap.xs}`">
                   <UTooltip :text="UI_TEXT.profile.accessDetails">
                     <UButton
                       icon="i-heroicons-key"
@@ -251,7 +251,7 @@
               <!-- File Preview -->
               <div :class="appConfig.layout.documentCardImage">
                 <UIcon name="i-heroicons-document-text" class="w-16 h-16 text-surface-500/50" />
-                <div class="absolute bottom-2 px-4 w-full flex justify-between">
+                <div :class="`absolute bottom-2 ${SPACING_TOKENS.px.md} w-full flex justify-between`">
                   <UTooltip :text="UI_TEXT.tooltips.viewDocument">
                     <UButton
                       icon="i-heroicons-eye"
@@ -353,6 +353,7 @@ import type { useDocumentsStore } from '~/stores/documents.modals.store';
 import type { UserOutDto } from '~/types/user.type';
 import type { ApiError } from '~/types/apiError.type';
 import type { PrivateDocumentMetadata } from '~/types/files.type';
+import { SPACING_TOKENS } from '~/utils/spacings.tokens';
 
 /* --- COMPOSABLES --- */
 const appConfig = useAppConfig();
