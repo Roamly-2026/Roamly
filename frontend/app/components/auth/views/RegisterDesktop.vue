@@ -96,10 +96,11 @@
     </UCard>
 
     <div :class="appConfig.layout.singleButtonWrapper">
+
       <UButton
         to="/login"
         :label="UI_TEXT.auth.loginInstead"
-        variant="actionOkButton"
+        variant="actionAccentHeroButton"
         class="w-full"
       />
     </div>

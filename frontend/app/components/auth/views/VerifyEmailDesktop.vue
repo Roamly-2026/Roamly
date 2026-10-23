@@ -5,16 +5,17 @@
       <!-- TITLE -->
       <div :class="appConfig.typography.authTitleWrapper">
         <h1 :class="appConfig.typography.authTitle">{{ UI_TEXT.auth.verifyHeading }}</h1>
-        <p class="text-sm text-surface-400 text-center mt-1 max-w-xs mx-auto leading-relaxed">
+        <p :class="`text-sm text-surface-400 text-center ${SPACING_TOKENS.mt.xs} max-w-xs mx-auto leading-relaxed`">
           {{ ' ' + UI_TEXT.auth.verifyBeforeEmail + ' '
           }}<span class="font-semibold text-dark-text">{{ email }}</span
           >{{ UI_TEXT.auth.verifyAfterEmail + ' ' }}
+
         </p>
       </div>
 
       <!-- OTP INPUTS -->
       <div :class="appConfig.layout.formWrapper">
-        <div class="flex items-center justify-center gap-3 py-2">
+        <div :class="`flex items-center justify-center ${SPACING_TOKENS.gap.sm} ${SPACING_TOKENS.py.sm}`">
           <input
             v-for="(_, i) in otpCells"
             :key="i"
@@ -59,14 +60,15 @@
         </div>
 
         <!-- Divider -->
-        <div class="flex items-center gap-3 py-1">
+        <div :class="`flex items-center ${SPACING_TOKENS.gap.sm} ${SPACING_TOKENS.py.xs}`">
           <div class="flex-1 h-px bg-surface-500/20" />
           <span class="text-xs text-surface-400">{{ UI_TEXT.auth.or }}</span>
           <div class="flex-1 h-px bg-surface-500/20" />
         </div>
 
         <!-- Resend -->
-        <div class="flex flex-col items-center gap-1.5">
+
+        <div :class="`flex flex-col items-center ${SPACING_TOKENS.gap.xs}`">
           <p class="text-xs text-surface-400">{{ UI_TEXT.auth.noCode }}</p>
           <UButton
             :label="UI_TEXT.auth.resend"
@@ -103,7 +105,7 @@
       <UButton
         to="/register"
         :label="UI_TEXT.auth.backToRegister"
-        variant="actionOkButton"
+        variant="actionAccentHeroButton"
         class="w-full"
       />
     </div>
@@ -116,6 +118,7 @@ import { reactive, ref, computed, watch } from 'vue';
 import { useAppConfig } from '#imports';
 import { getErrorMessage } from '~/utils/error.utils';
 import type { ApiError } from '~/types/apiError.type';
+import { SPACING_TOKENS } from '~/utils/spacings.tokens';
 
 /* --- COMPOSABLES --- */
 const appConfig = useAppConfig();
@@ -158,7 +161,6 @@ const focusCell = (index: number) => {
 
 const onInput = (index: number, event: Event) => {
   const target = event.target as HTMLInputElement;
-  // Accept only digits; strip extras that mobile autocomplete may inject
   const val = target.value.replace(/\D/g, '').slice(-1);
   otpCells[index] = val;
 
