@@ -22,7 +22,7 @@ export const updateProfileSchema = z.object({
       if (!phoneNumber || !phoneNumber.isValid()) {
         ctx.addIssue({
           code: 'custom',
-          message: 'Invalid phone number! Regional code must be included (e.g. +40)',
+          message: UI_TEXT.validation.phoneFormat,
         });
         return z.NEVER;
       }
@@ -33,7 +33,7 @@ export const updateProfileSchema = z.object({
 
 export const changePasswordSchema = z.object({
   oldPassword: z
-    .string({ message: 'Old password is required!' })
-    .min(1, 'Old password is required!'),
+    .string({ message: UI_TEXT.validation.oldPasswordRequired })
+    .min(1, UI_TEXT.validation.oldPasswordRequired),
   newPassword: newPasswordSchema,
 });

@@ -1,30 +1,31 @@
 // frontend/app/utils/schemas/common.schema.ts
+import { UI_TEXT } from '~/locales/en';
 import { z } from 'zod';
 
 export const emailSchema = z
-  .email('Invalid email address format!')
-  .max(254, 'Email address can not be longer than 254 characters!');
+  .email(UI_TEXT.validation.validEmail)
+  .max(254, UI_TEXT.validation.emailMax);
 
 export const usernameSchema = z
-  .string({ message: 'Username is required!' })
-  .min(3, 'Username must be at least 3 characters long!')
-  .max(64, 'Username can not be longer than 64 characters!');
+  .string({ message: UI_TEXT.validation.usernameRequired })
+  .min(3, UI_TEXT.validation.usernameMin)
+  .max(64, UI_TEXT.validation.usernameMax);
 
 export const newPasswordSchema = z
-  .string({ message: 'Password is required!' })
+  .string({ message: UI_TEXT.validation.passwordRequired })
   .trim()
-  .min(8, 'Password must be between 8-72 characters long!')
-  .max(72, 'Password must be between 8-72 characters long!')
-  .regex(/[A-Z]/, 'Password must contain at least one uppercase character!')
-  .regex(/[a-z]/, 'Password must contain at least one lowercase character!')
-  .regex(/[0-9]/, 'Password must contain at least one number!');
+  .min(8, UI_TEXT.validation.passwordLength)
+  .max(72, UI_TEXT.validation.passwordLength)
+  .regex(/[A-Z]/, UI_TEXT.validation.passwordUppercase)
+  .regex(/[a-z]/, UI_TEXT.validation.passwordLowercase)
+  .regex(/[0-9]/, UI_TEXT.validation.passwordNumber);
 
 export const groupNameSchema = z
   .string()
   .trim()
-  .min(3, 'Group name must be at least 3 characters long!')
-  .max(255, 'Group name can not be longer than 255 characters!')
+  .min(3, UI_TEXT.validation.groupNameMin)
+  .max(255, UI_TEXT.validation.groupNameMax)
   .regex(
     /^[a-zA-Z0-9\s\-_]+$/,
-    'Group name can only contain letters, numbers, spaces, hyphens and underscores!',
+    UI_TEXT.validation.groupNameCharacters,
   );

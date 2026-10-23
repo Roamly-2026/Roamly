@@ -20,7 +20,7 @@ export const createGroupSchema = z.object({
         }),
       }),
     )
-    .max(50, 'You can only invite up to 50 users at once!')
+    .max(50, UI_TEXT.validation.maxInvites)
     .optional(),
 });
 

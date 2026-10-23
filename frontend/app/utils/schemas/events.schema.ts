@@ -19,11 +19,11 @@ export const createEventSchema = z
     start_time: z
       .string({ message: UI_TEXT.validation.startTimeRequired })
       .min(1, UI_TEXT.validation.startTimeRequired)
-      .refine((val) => !isNaN(Date.parse(val)), { message: 'Invalid date/time!' }),
+      .refine((val) => !isNaN(Date.parse(val)), { message: UI_TEXT.validation.invalidDateTime }),
 
     end_time: z
       .string()
-      .refine((val) => !val || !isNaN(Date.parse(val)), { message: 'Invalid date/time!' })
+      .refine((val) => !val || !isNaN(Date.parse(val)), { message: UI_TEXT.validation.invalidDateTime })
       .optional(),
 
     is_private: z.boolean(),
@@ -47,7 +47,7 @@ export const createEventSchema = z
     participant_emails: z
       .array(emailSchema)
       .refine((emails: string[]) => new Set(emails).size === emails.length, {
-        message: 'The list contains duplicate email addresses!',
+        message: UI_TEXT.validation.duplicateEmails,
       })
       .optional(),
   })
@@ -59,7 +59,7 @@ export const createEventSchema = z
       return true;
     },
     {
-      message: 'End time must be after the start time, or the exact same!',
+      message: UI_TEXT.validation.endTime,
       path: ['end_time'],
     },
   )
@@ -71,8 +71,7 @@ export const createEventSchema = z
       return true;
     },
     {
-      message:
-        'Public events can not have specified participants, every user in the group will be a participant!',
+      message: UI_TEXT.validation.publicEventParticipants,
       path: ['participant_emails'],
     },
   )
@@ -89,7 +88,7 @@ export const createEventSchema = z
       return true;
     },
     {
-      message: 'Latitude, longitude and address must all be provided together, or all left empty!',
+      message: UI_TEXT.validation.location,
       path: ['address'],
     },
   );
@@ -111,12 +110,12 @@ export const updateEventSchema = z
 
     start_time: z
       .string()
-      .datetime('Invalid date format! Use ISO format (YYYY-MM-DDTHH:MM:SS.MSZ)')
+      .datetime(UI_TEXT.validation.invalidDateTime)
       .optional(),
 
     end_time: z
       .string()
-      .datetime('Invalid date format! Use ISO format (YYYY-MM-DDTHH:MM:SS.MSZ)')
+      .datetime(UI_TEXT.validation.invalidDateTime)
       .nullable()
       .optional(),
 
@@ -171,18 +170,18 @@ export const updateEventSchema = z
 export const addNewParticipantsSchema = z.object({
   participant_emails: z
     .array(emailSchema)
-    .min(1, 'You need to invite at least 1 participant!')
-    .max(45, 'You can not invite more users than the maximum size of the group!')
+    .min(1, UI_TEXT.validation.minParticipants)
+    .max(45, UI_TEXT.validation.maxParticipantsGroup)
     .refine((emails: string[]) => new Set(emails).size === emails.length, {
-      message: 'The list contains duplicate email addresses!',
+      message: UI_TEXT.validation.duplicateEmails,
     }),
 });
 
 export const eventListingFilterSchema = z
   .object({
-    start_date: z.string().date('Invalid date format! Use ISO format (YYYY-MM-DD)').optional(),
-    end_date: z.string().date('Invalid date format! Use ISO format (YYYY-MM-DD)').optional(),
-    title: z.string().trim().max(64, 'Title must be shorter than 64 characters long!').optional(),
+    start_date: z.string().date(UI_TEXT.validation.invalidDateTime).optional(),
+    end_date: z.string().date(UI_TEXT.validation.invalidDateTime).optional(),
+    title: z.string().trim().max(64, UI_TEXT.validation.eventTitleMax).optional(),
   })
   .refine(
     (data: { start_date?: string; end_date?: string }) => {
@@ -192,7 +191,7 @@ export const eventListingFilterSchema = z
       return true;
     },
     {
-      message: 'End time must be after the start time, or the exact same!',
+      message: UI_TEXT.validation.endTime,
       path: ['end_date'],
     },
   );
