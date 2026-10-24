@@ -1,0 +1,65 @@
+:root,
+[data-theme='default'] {
+    /* Surfaces and Backgrounds */
+  --theme-bg-page: #faf9f6;
+  --theme-bg-card: #edf1ee;
+  --theme-bg-card-hover: #e2e8e4;
+  --theme-bg-modal: #faf9f6;
+  --theme-bg-subtle: #f0fdf4;
+  --theme-bg-overlay: rgba(5, 46, 22, 0.5);
+
+  /* (Buttons) */
+  /* Primary (Brand green) */
+  --theme-btn-primary-bg: #7a9a82;
+  --theme-btn-primary-hover: #68856f;
+  --theme-btn-primary-active: #233d2e;
+  --theme-btn-primary-text: #faf9f6;
+
+  /* Secondary (Accent yellow) */
+  --theme-btn-secondary-bg: #e5a93b;
+  --theme-btn-secondary-hover: #d49933;
+  --theme-btn-secondary-active: #b88228;
+  --theme-btn-secondary-text: #2f3e32;
+
+  /* Tertiary (Surface / Ghost) */
+  --theme-btn-tertiary-bg: #edf1ee;
+  --theme-btn-tertiary-hover: #e2e8e4;
+  --theme-btn-tertiary-active: #d0e0eb;
+  --theme-btn-tertiary-text: #2f3e32;
+
+  /* Danger (Delete / Error) */
+  --theme-btn-danger-bg: #ef4444;
+  --theme-btn-danger-hover: #f87171;
+  --theme-btn-danger-active: #7f1d1d;
+  --theme-btn-danger-text: #fef2f2;
+
+  /* Disabled */
+  --theme-btn-disabled-bg: #e2e8e4;
+  --theme-btn-disabled-text: #9ca3af;
+
+  /* Text / Content */
+  --theme-text-primary: #2f3e32;
+  --theme-text-secondary: #6b7280;
+  --theme-text-muted: #9ca3af;
+  --theme-text-inverse: #faf9f6;
+  --theme-text-brand: #052e16;
+
+  /* Inputs */
+  --theme-input-bg: #e8f0f5;
+  --theme-input-border: #d0e0eb;
+  --theme-input-focus-border: #7a9a82;
+  --theme-input-placeholder: #9ca3af;
+  --theme-input-disabled-bg: #edf1ee;
+
+  /* 5Borders */
+  --theme-border-default: #e2e8e4;
+  --theme-border-strong: #d0e0eb;
+  --theme-border-focus: #7a9a82;
+
+  /* Status / Feedback */
+  --theme-status-success: #4ade80;
+  --theme-status-error: #ef4444;
+  --theme-status-error-bg: #fef2f2;
+  --theme-status-error-border: #fca5a5;
+  --theme-status-error-text: #7f1d1d;
+}
