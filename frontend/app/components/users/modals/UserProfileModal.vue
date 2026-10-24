@@ -1,13 +1,15 @@
 <!-- frontend/app/components/users/modals/UserProfileModal.vue -->
 <template>
-  <UModal
+  <BaseModal
     v-model:open="groupsStore.isUserProfileModalOpen"
     :dismissible="true"
-    :close="false"
-    :ui="{ content: 'sm:max-w-lg w-full max-h-[85vh] flex flex-col' }"
+    ui-size="sm:max-w-lg w-full max-h-[85vh] flex flex-col"
   >
-    <template #default><div class="hidden"></div></template>
-    <!-- Scrollable body -->
+    <!-- Override default header to keep the original headerless design -->
+    <template #header>
+      <div class="hidden"></div>
+    </template>
+
     <template #body>
       <div class="flex flex-col gap-5 overflow-y-auto custom-scrollbar pr-1">
         <!-- BASIC INFO -->
@@ -43,7 +45,7 @@
         />
       </div>
     </template>
-  </UModal>
+  </BaseModal>
 </template>
 
 <script setup lang="ts">
