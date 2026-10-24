@@ -9,7 +9,7 @@
     <template #header>
       <div class="hidden"></div>
     </template>
-    
+
     <template #body>
       <div class="flex flex-col gap-5 overflow-y-auto custom-scrollbar pr-1">
         <!-- BASIC INFO -->
