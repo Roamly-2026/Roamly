@@ -18,7 +18,7 @@
 
       <div v-else-if="currentUser" class="w-full relative">
         <!-- PROFILE CARD SECTION -->
-        <div :class="appConfig.layout.profileCard">
+        <div :class="appConfig.layout.sectionWrapper">
           <!-- Delete Button -->
           <div class="absolute top-4 right-4 z-10">
             <UTooltip :text="UI_TEXT.tooltips.deleteProfile">
