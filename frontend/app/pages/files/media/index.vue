@@ -53,7 +53,7 @@
         <h3 class="text-xl font-bold text-dark-text">{{ UI_TEXT.media.uploadHeading }}</h3>
       </template>
       <template #body>
-        <div class="flex flex-col gap-4">
+        <div :class="`flex flex-col ${SPACING_TOKENS.gap.md}`">
           <!-- File input -->
           <UFormField :label="UI_TEXT.documents.selectFile">
             <UInput
@@ -118,7 +118,10 @@
           }}<span class="font-bold text-dark-text">{{ fileToDelete?.file_name }}</span
           >{{ UI_TEXT.documents.deleteAfterName + ' ' }}
         </p>
-        <div v-if="deleteError" class="text-sm text-error-500 font-medium mt-2">
+        <div
+          v-if="deleteError"
+          :class="`text-sm text-error-500 font-medium ${SPACING_TOKENS.mt.sm}`"
+        >
           {{ deleteError }}
         </div>
       </template>

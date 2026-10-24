@@ -21,7 +21,7 @@
         <UPopover v-model:open="isGroupDropdownOpen">
           <UButton
             variant="ghost"
-            class="group flex items-center gap-2 p-0 hover:bg-transparent cursor-pointer outline-none"
+            :class="`group flex items-center ${SPACING_TOKENS.gap.sm} p-0 hover:bg-transparent cursor-pointer outline-none`"
           >
             <h1 :class="appConfig.typography.pageTitle">
               {{
@@ -90,8 +90,10 @@
       </div>
     </div>
 
-    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 w-full shrink-0">
-      <div class="flex items-center gap-4 w-full sm:w-auto flex-1">
+    <div
+      :class="`flex flex-col sm:flex-row items-center justify-between ${SPACING_TOKENS.gap.md} w-full shrink-0`"
+    >
+      <div :class="`flex items-center ${SPACING_TOKENS.gap.md} w-full sm:w-auto flex-1`">
         <UInput
           v-model="searchQuery"
           icon="i-heroicons-magnifying-glass"
@@ -158,7 +160,7 @@
             :variant="showOnlyActiveEvents ? 'glassOutlineButton' : 'glassButton'"
             :class="[
               showOnlyActiveEvents ? 'ring-2 ring-success-500 text-success-600' : '',
-              'shrink-0 whitespace-nowrap px-4 py-2 min-w-22!',
+              `shrink-0 whitespace-nowrap ${SPACING_TOKENS.px.md} ${SPACING_TOKENS.py.sm} min-w-22!`,
             ]"
             @click="showOnlyActiveEvents = !showOnlyActiveEvents"
           />
@@ -169,7 +171,7 @@
           icon="i-heroicons-calendar-days"
           :label="UI_TEXT.tooltips.addEvent"
           variant="actionOkButton"
-          class="h-10 text-md px-6"
+          :class="`h-10 text-md ${SPACING_TOKENS.px.lg}`"
           @click="$emit('open-add-event')"
         >
           <template #leading><UIcon name="i-heroicons-plus" class="w-5 h-5 mr-1" /></template>
@@ -183,7 +185,10 @@
           {{ UI_TEXT.events.daysHeading }}
         </div>
         <div :class="appConfig.calendar.columnBody">
-          <div v-if="isLoadingDays" class="p-4 text-center text-sm opacity-60">
+          <div
+            v-if="isLoadingDays"
+            :class="`${SPACING_TOKENS.p.md} text-center text-sm opacity-60`"
+          >
             {{ UI_TEXT.events.loadingDays }}
           </div>
           <template v-else>
@@ -201,7 +206,10 @@
             >
               <span class="font-medium text-dark-text">{{ day.date }} ({{ day.dayOfWeek }})</span>
             </div>
-            <div v-if="!sortedDaysList.length" class="p-4 text-center text-sm opacity-60">
+            <div
+              v-if="!sortedDaysList.length"
+              :class="`${SPACING_TOKENS.p.md} text-center text-sm opacity-60`"
+            >
               {{ ' ' + UI_TEXT.events.noDays + ' ' }}
             </div>
           </template>
@@ -214,7 +222,10 @@
           <span v-if="selectedDayDetails">{{ selectedDayDetails.date }}</span>
         </div>
         <div :class="appConfig.calendar.columnBody">
-          <div v-if="isLoadingEvents" class="p-4 text-center text-sm opacity-60">
+          <div
+            v-if="isLoadingEvents"
+            :class="`${SPACING_TOKENS.p.md} text-center text-sm opacity-60`"
+          >
             {{ UI_TEXT.events.loadingEvents }}
           </div>
           <template v-else>
@@ -250,7 +261,7 @@
                   >{{ event.title }}</span
                 >
               </div>
-              <div class="flex items-center gap-2 shrink-0">
+              <div :class="`flex items-center ${SPACING_TOKENS.gap.sm} shrink-0`">
                 <span :class="appConfig.calendar.eventItemTime"
                   >{{ event.timeStartFormatted }} - {{ event.timeEndFormatted }}</span
                 >
@@ -258,7 +269,7 @@
             </div>
             <div
               v-if="!filteredAndSortedEventsList?.length"
-              class="p-8 text-center text-sm text-dark-text/60 font-medium flex flex-col items-center justify-center h-48 gap-2"
+              :class="`${SPACING_TOKENS.p.xl} text-center text-sm text-dark-text/60 font-medium flex flex-col items-center justify-center h-48 ${SPACING_TOKENS.gap.sm}`"
             >
               <UIcon name="i-heroicons-calendar" class="w-8 h-8 opacity-40" />
               <span>{{
@@ -289,7 +300,7 @@
                   : UI_TEXT.events.groupEventLabel
               }}</span>
             </div>
-            <div class="flex items-center gap-1">
+            <div :class="`flex items-center ${SPACING_TOKENS.gap.xs}`">
               <UTooltip
                 v-if="selectedEvent.creator?.email === currentUserEmail && selectedEvent.is_private"
                 :text="UI_TEXT.events.addMembers"
@@ -411,7 +422,7 @@
                   >
                 </template>
                 <template v-else>
-                  <div class="flex items-center gap-3">
+                  <div :class="`flex items-center ${SPACING_TOKENS.gap.sm}`">
                     <span class="text-sm font-bold text-dark-text">{{
                       UI_TEXT.common.everyone
                     }}</span>
@@ -419,7 +430,7 @@
                 </template>
               </div>
             </div>
-            <div :class="[appConfig.calendar.metaRowItem, 'mt-2']">
+            <div :class="[appConfig.calendar.metaRowItem, SPACING_TOKENS.mt.sm]">
               <span :class="appConfig.calendar.metaLabel">{{
                 UI_TEXT.events.descriptionLabel
               }}</span>
@@ -427,7 +438,13 @@
             </div>
             <div
               v-if="selectedEvent.address || selectedEvent.latitude !== null"
-              :class="[appConfig.calendar.metaRowItem, 'mt-4', 'flex-col', 'items-start', 'gap-2']"
+              :class="[
+                appConfig.calendar.metaRowItem,
+                SPACING_TOKENS.mt.md,
+                'flex-col',
+                'items-start',
+                SPACING_TOKENS.gap.sm,
+              ]"
             >
               <span :class="appConfig.calendar.metaLabel">{{ UI_TEXT.events.locationLabel }}</span>
               <span v-if="selectedEvent.address" :class="appConfig.calendar.metaValue">
@@ -440,7 +457,7 @@
                   selectedEvent.longitude !== null &&
                   selectedEvent.longitude !== undefined
                 "
-                class="w-full h-48 rounded-lg overflow-hidden border border-gray-200 mt-1 relative z-0"
+                :class="`w-full h-48 rounded-lg overflow-hidden border border-gray-200 ${SPACING_TOKENS.mt.xs} relative z-0`"
               >
                 <ClientOnly>
                   <EventMapPreview
@@ -459,6 +476,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import { useAppConfig } from '#imports';
 import type { GroupOutDto } from '~/types/groups.type';
 import type { EventCreatorDto, UiDay, UiEvent } from '~/types/events.type';

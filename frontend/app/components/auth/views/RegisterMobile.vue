@@ -1,6 +1,6 @@
 <!-- frontend/app/components/auth/views/RegisterMobile.vue -->
 <template>
-  <div :class="[appConfig.layout.mobileAuthWrapper, 'px-4 py-6']">
+  <div :class="appConfig.layout.mobileAuthWrapper">
     <UCard variant="glass">
       <!-- TITLE -->
       <div :class="appConfig.typography.authTitleWrapper">
@@ -79,7 +79,9 @@
         </div>
 
         <!-- ACTIONS (Mobilos elrendezés: egymás alatt, teljes szélességgel) -->
-        <div class="flex flex-col-reverse gap-4 pt-6 w-full">
+        <div
+          :class="`flex flex-col-reverse ${SPACING_TOKENS.gap.md} ${SPACING_TOKENS.pt.lg} w-full`"
+        >
           <UButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
@@ -102,7 +104,7 @@
       <UButton
         to="/login"
         :label="UI_TEXT.auth.loginInstead"
-        variant="actionOkButton"
+        variant="actionAccentHeroButton"
         class="w-full"
       />
     </div>

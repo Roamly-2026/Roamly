@@ -1,6 +1,6 @@
 <!-- frontend/app/components/views/mobile/users/ProfileMobile.vue -->
 <template>
-  <div :class="[appConfig.layout.pageWrapper, 'px-4 py-6']">
+  <div :class="appConfig.layout.pageWrapper">
     <!-- PAGE TITLE -->
     <div>
       <h1 :class="appConfig.typography.pageTitle">{{ UI_TEXT.profile.heading }}</h1>
@@ -18,7 +18,13 @@
 
       <div v-else-if="currentUser" class="w-full relative flex flex-col">
         <!-- PROFILE CARD SECTION -->
-        <div :class="[appConfig.layout.profileCard, 'p-4! gap-4! flex-row! items-center']">
+        <div
+          :class="[
+            appConfig.layout.profileCard,
+            'p-4! flex-row! items-center',
+            SPACING_TOKENS.gap.md,
+          ]"
+        >
           <!-- Delete Button -->
           <div class="absolute top-2 left-2 z-10">
             <UTooltip :text="UI_TEXT.tooltips.deleteProfile">
@@ -74,17 +80,23 @@
 
           <!-- User details -->
           <div
-            :class="appConfig.layout.profileDetailsWrapper"
-            class="gap-1! text-sm! flex-1 min-w-0"
+            :class="[
+              appConfig.layout.profileDetailsWrapper,
+              'text-sm! flex-1 min-w-0',
+              SPACING_TOKENS.gap.xs,
+            ]"
           >
             <!-- Username -->
-            <div :class="appConfig.layout.profileDetailRow" class="gap-2!">
+            <div :class="[appConfig.layout.profileDetailRow, SPACING_TOKENS.gap.sm]">
               <p :class="appConfig.typography.profileLabel" class="w-16! text-[10px]!">
                 {{ UI_TEXT.auth.usernameLabel }}
               </p>
               <div
-                :class="appConfig.layout.actionGroup"
-                class="justify-between flex-1 min-w-0 gap-1!"
+                :class="[
+                  appConfig.layout.actionGroup,
+                  'justify-between flex-1 min-w-0',
+                  SPACING_TOKENS.gap.xs,
+                ]"
               >
                 <p :class="appConfig.typography.profileValue" class="text-sm! truncate">
                   {{ currentUser.username }}
@@ -100,13 +112,16 @@
               </div>
             </div>
             <!-- Email -->
-            <div :class="appConfig.layout.profileDetailRow" class="gap-2!">
+            <div :class="[appConfig.layout.profileDetailRow, SPACING_TOKENS.gap.sm]">
               <p :class="appConfig.typography.profileLabel" class="w-16! text-[10px]!">
                 {{ UI_TEXT.auth.emailLabel }}
               </p>
               <div
-                :class="appConfig.layout.actionGroup"
-                class="justify-between flex-1 min-w-0 gap-1!"
+                :class="[
+                  appConfig.layout.actionGroup,
+                  'justify-between flex-1 min-w-0',
+                  SPACING_TOKENS.gap.xs,
+                ]"
               >
                 <p :class="appConfig.typography.profileValue" class="text-xs! truncate">
                   {{ currentUser.email }}
@@ -122,15 +137,20 @@
               </div>
             </div>
             <!-- Password -->
-            <div :class="appConfig.layout.profileDetailRow" class="gap-2!">
+            <div :class="[appConfig.layout.profileDetailRow, SPACING_TOKENS.gap.sm]">
               <p :class="appConfig.typography.profileLabel" class="w-16! text-[10px]!">
                 {{ UI_TEXT.auth.passwordLabel }}
               </p>
               <div
-                :class="appConfig.layout.actionGroup"
-                class="justify-between flex-1 min-w-0 gap-1!"
+                :class="[
+                  appConfig.layout.actionGroup,
+                  'justify-between flex-1 min-w-0',
+                  SPACING_TOKENS.gap.xs,
+                ]"
               >
-                <p :class="appConfig.typography.profileValueLg" class="text-sm! mt-1">********</p>
+                <p :class="[appConfig.typography.profileValueLg, 'text-sm!', SPACING_TOKENS.mt.xs]">
+                  ********
+                </p>
                 <UTooltip :text="UI_TEXT.tooltips.editPassword">
                   <UButton
                     icon="i-heroicons-pencil"
@@ -142,13 +162,16 @@
               </div>
             </div>
             <!-- Registered -->
-            <div :class="appConfig.layout.profileDetailRow" class="gap-2!">
+            <div :class="[appConfig.layout.profileDetailRow, SPACING_TOKENS.gap.sm]">
               <p :class="appConfig.typography.profileLabel" class="w-16! text-[10px]!">
                 {{ UI_TEXT.profile.registeredLabel }}
               </p>
               <div
-                :class="appConfig.layout.actionGroup"
-                class="justify-between flex-1 min-w-0 gap-1!"
+                :class="[
+                  appConfig.layout.actionGroup,
+                  'justify-between flex-1 min-w-0',
+                  SPACING_TOKENS.gap.xs,
+                ]"
               >
                 <p :class="appConfig.typography.profileValue" class="text-xs! truncate">
                   {{
@@ -163,12 +186,12 @@
         </div>
 
         <!-- DOCUMENT SECTION -->
-        <div :class="appConfig.layout.sectionWrapper" class="mt-6">
-          <div :class="appConfig.layout.pageHeader" class="mb-4">
+        <div :class="[appConfig.layout.sectionWrapper, SPACING_TOKENS.mt.lg]">
+          <div :class="[appConfig.layout.pageHeader, SPACING_TOKENS.mb.md]">
             <h2 :class="appConfig.typography.sectionTitleTransparent" class="text-xl">
               {{ UI_TEXT.profile.documentsHeading }}
             </h2>
-            <div :class="appConfig.layout.actionGroup" class="justify-center mt-2">
+            <div :class="[appConfig.layout.actionGroup, 'justify-center', SPACING_TOKENS.mt.sm]">
               <!-- Filter popover -->
               <UPopover>
                 <UTooltip :text="UI_TEXT.tooltips.filterDocuments">
@@ -235,7 +258,10 @@
           </div>
 
           <!-- Document List (vertical on mobile) -->
-          <div v-else-if="filteredDocuments.length > 0" class="flex flex-col gap-4 w-full">
+          <div
+            v-else-if="filteredDocuments.length > 0"
+            :class="`flex flex-col ${SPACING_TOKENS.gap.md} w-full`"
+          >
             <UCard
               v-for="doc in filteredDocuments"
               :key="doc.file_id"
@@ -245,7 +271,7 @@
               <!-- Title and action buttons -->
               <div :class="appConfig.layout.documentCardHeader">
                 <p class="font-bold truncate pr-2 shadow-sm text-sm">{{ doc.file_name }}</p>
-                <div class="flex items-center gap-1">
+                <div :class="`flex items-center ${SPACING_TOKENS.gap.xs}`">
                   <UTooltip :text="UI_TEXT.profile.accessDetails">
                     <UButton
                       icon="i-heroicons-key-solid"
@@ -284,7 +310,9 @@
               <!-- File Preview -->
               <div :class="appConfig.layout.documentCardImage" class="h-32!">
                 <UIcon name="i-heroicons-document-text" class="w-12 h-12 text-surface-500/50" />
-                <div class="absolute bottom-2 px-4 w-full flex justify-between">
+                <div
+                  :class="`absolute bottom-2 ${SPACING_TOKENS.px.md} w-full flex justify-between`"
+                >
                   <UTooltip :text="UI_TEXT.tooltips.viewDocument">
                     <UButton
                       icon="i-heroicons-eye"

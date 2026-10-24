@@ -1,6 +1,6 @@
 <!-- frontend/app/components/auth/views/LoginMobile.vue -->
 <template>
-  <div :class="[appConfig.layout.mobileAuthWrapper, 'px-4 py-6']">
+  <div :class="appConfig.layout.mobileAuthWrapper">
     <!-- LOGIN FORM CARD -->
     <UCard variant="glass">
       <div :class="appConfig.typography.authTitleWrapper">
@@ -23,6 +23,7 @@
               type="email"
               :placeholder="UI_TEXT.auth.emailPlaceholder"
               :variant="fieldError ? 'glassError' : 'glass'"
+              :ui="{ base: `!${SPACING_TOKENS.px.md}` }"
             />
           </template>
         </UFormField>
@@ -34,6 +35,7 @@
               type="password"
               :placeholder="UI_TEXT.auth.passwordPlaceholder"
               :variant="fieldError ? 'glassError' : 'glass'"
+              :ui="{ base: `!${SPACING_TOKENS.px.md}` }"
             />
           </template>
         </UFormField>
@@ -46,7 +48,9 @@
         </div>
 
         <!-- ACTIONS (Mobilos elrendezés: egymás alatt, teljes szélességgel) -->
-        <div class="flex flex-col-reverse gap-4 pt-6 w-full">
+        <div
+          :class="`flex flex-col-reverse ${SPACING_TOKENS.gap.md} ${SPACING_TOKENS.pt.lg} w-full`"
+        >
           <UButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"

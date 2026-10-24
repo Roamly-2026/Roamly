@@ -45,7 +45,7 @@
           {{ UI_TEXT.auth.loginSuccess }}
         </div>
 
-        <!-- REGISTRATION PROMPT BUTTON -->
+        <!-- FORM BUTTONS -->
         <div :class="appConfig.layout.formActions">
           <UButton
             :label="UI_TEXT.common.cancel"

@@ -1,6 +1,6 @@
 <!-- frontend/app/components/groups/views/IndexMobile.vue -->
 <template>
-  <div :class="[appConfig.layout.pageWrapper, 'px-4 py-6']">
+  <div :class="appConfig.layout.pageWrapper">
     <!-- PAGE TITLE -->
     <h1 :class="appConfig.typography.pageTitle">{{ UI_TEXT.groups.heading }}</h1>
 
@@ -37,7 +37,10 @@
       </div>
 
       <!-- GROUPS GRID -->
-      <div v-else-if="groupsList.length > 0" class="flex flex-col gap-6 w-full">
+      <div
+        v-else-if="groupsList.length > 0"
+        :class="`flex flex-col ${SPACING_TOKENS.gap.lg} w-full`"
+      >
         <div v-if="filteredGroups.length > 0" :class="appConfig.layout.cardGrid">
           <UCard
             v-for="group in groupsList"
@@ -80,7 +83,7 @@
                   <p class="opacity-70">{{ UI_TEXT.groups.createdAtLabel }}</p>
                   <p class="font-semibold">{{ group.created_at }}</p>
                 </div>
-                <div class="flex items-center gap-1.5 font-semibold">
+                <div :class="`flex items-center ${SPACING_TOKENS.gap.xs} font-semibold`">
                   <span>{{ group.current_size }}</span>
                   <UIcon name="i-heroicons-user" class="w-5 h-5 text-brand-500" />
                 </div>
@@ -109,7 +112,7 @@
 /* --- IMPORTS --- */
 import { useAppConfig } from '#imports';
 import { useRouter } from 'vue-router';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useIntersectionObserver } from '@vueuse/core';
 import { useGroupsStore } from '~/stores/groups.modals.store';
 import type { GroupOutDto } from '~/types/groups.type';

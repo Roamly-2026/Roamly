@@ -25,7 +25,7 @@
     <!-- USER ACTIONS SECTION -->
     <div :class="appConfig.layout.headerRight">
       <ClientOnly>
-        <div class="flex items-center gap-2 md:gap-4">
+        <div :class="['flex items-center', SPACING_TOKENS.responsive.listGap]">
           <template v-if="isAuthenticated">
             <span class="font-bold text-dark-text tracking-wide text-sm hidden sm:block">
               {{ userProfile?.username || UI_TEXT.common.loading }}
@@ -56,7 +56,7 @@
             <UButton
               icon="i-heroicons-bars-3"
               variant="ghost"
-              class="md:hidden p-1 text-dark-text"
+              :class="['md:hidden text-dark-text', SPACING_TOKENS.p.xs]"
             />
           </template>
           <template v-else>

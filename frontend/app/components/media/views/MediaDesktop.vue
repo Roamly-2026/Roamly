@@ -25,7 +25,7 @@
         <UPopover v-model:open="isGroupDropdownOpen">
           <UButton
             variant="ghost"
-            class="group flex items-center gap-2 p-0 hover:bg-transparent cursor-pointer outline-none"
+            :class="`group flex items-center ${SPACING_TOKENS.gap.sm} p-0 hover:bg-transparent cursor-pointer outline-none`"
           >
             <h1 :class="appConfig.typography.pageTitle">
               <ClientOnly :fallback="UI_TEXT.common.loading">
@@ -97,9 +97,9 @@
     </div>
 
     <!-- MEDIA SECTION -->
-    <div :class="appConfig.layout.sectionWrapper" class="mt-8!">
-      <div class="flex items-center justify-between w-full mb-6 relative">
-        <div class="flex items-center gap-3 flex-1 justify-start">
+    <div :class="[appConfig.layout.sectionWrapper, 'mt-8!']">
+      <div :class="`flex items-center justify-between w-full ${SPACING_TOKENS.mb.lg} relative`">
+        <div :class="`flex items-center ${SPACING_TOKENS.gap.sm} flex-1 justify-start`">
           <UInput
             v-model="searchQuery"
             icon="i-heroicons-magnifying-glass"
@@ -114,7 +114,7 @@
           {{ UI_TEXT.media.groupPhotos }}
         </div>
 
-        <div class="flex items-center gap-2 flex-1 justify-end shrink-0">
+        <div :class="`flex items-center ${SPACING_TOKENS.gap.sm} flex-1 justify-end shrink-0`">
           <UTooltip :text="UI_TEXT.media.uploadPhoto">
             <UButton
               icon="i-heroicons-plus"
@@ -141,7 +141,7 @@
           <!-- Title + delete -->
           <div :class="appConfig.layout.documentCardHeader">
             <p class="font-bold truncate pr-2 shadow-sm text-sm">{{ mediaItem.file_name }}</p>
-            <div class="flex items-center gap-1 shrink-0">
+            <div :class="`flex items-center ${SPACING_TOKENS.gap.xs} shrink-0`">
               <UTooltip v-if="isCurrentUserLeader" :text="UI_TEXT.common.delete">
                 <UButton
                   icon="i-heroicons-trash"
@@ -161,12 +161,15 @@
               :alt="mediaItem.file_name"
               class="w-full h-full object-cover"
             />
-            <div v-else class="flex flex-col items-center justify-center gap-2">
+            <div
+              v-else
+              :class="`flex flex-col items-center justify-center ${SPACING_TOKENS.gap.sm}`"
+            >
               <UIcon name="i-heroicons-film" class="w-16 h-16 text-surface-500/50" />
               <span class="text-xs text-surface-400">{{ mediaItem.mime_type }}</span>
             </div>
 
-            <div class="absolute bottom-2 px-4 w-full flex justify-between">
+            <div :class="`absolute bottom-2 ${SPACING_TOKENS.px.md} w-full flex justify-between`">
               <UTooltip :text="UI_TEXT.common.view">
                 <UButton
                   icon="i-heroicons-eye"
