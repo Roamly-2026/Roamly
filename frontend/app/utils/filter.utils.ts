@@ -2,9 +2,9 @@
 import type { UiEvent } from '~/types/events.type';
 import type { GroupFile } from '~/types/files.type';
 
-/**
- * Filters the list of events based on a search query applied to the title or description.
- */
+// filters the list of events based on a search query applied to the title or description
+// [input value]: events: UiEvent[], query: string
+// [return value]: UiEvent[]
 export const filterEventsByQuery = (events: UiEvent[], query: string): UiEvent[] => {
   const lowerCaseQuery = query.toLowerCase().trim();
   if (!lowerCaseQuery) return events;
@@ -16,9 +16,9 @@ export const filterEventsByQuery = (events: UiEvent[], query: string): UiEvent[]
   );
 };
 
-/**
- * Filters the list of group documents based on document type and search query (file name).
- */
+// filters the list of group documents based on document type and search query (file name)
+// [input value]: documents: GroupFile[], query?: string, filterType?: string
+// [return value]: GroupFile[]
 export const filterGroupDocuments = (
   documents: GroupFile[],
   query?: string,
