@@ -27,14 +27,13 @@
         >
           <!-- Delete Button -->
           <div class="absolute top-2 left-2 z-10">
-            <UTooltip :text="UI_TEXT.tooltips.deleteProfile">
-              <UButton
-                icon="i-heroicons-trash"
-                variant="glassIconButtonDanger"
-                class="w-7! h-7!"
-                @click="profileStore.openDeleteModal(currentUser)"
-              />
-            </UTooltip>
+            <BaseButton
+              icon="i-heroicons-trash"
+              variant="glassIconButtonDanger"
+              class="w-7! h-7!"
+              :tooltip="UI_TEXT.tooltips.deleteProfile"
+              @click="profileStore.openDeleteModal(currentUser)"
+            />
           </div>
 
           <!-- Profile picture -->
@@ -55,26 +54,21 @@
                 class="absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t from-black/50 to-transparent pointer-events-none"
               ></div>
 
-              <UTooltip :text="UI_TEXT.tooltips.viewPicture" class="absolute bottom-0.5 left-0.5">
-                <UButton
-                  icon="i-heroicons-eye"
-                  variant="ghostDangerIconButton"
-                  class="text-surface-500 w-6! h-6! p-0"
-                  @click="profileStore.openViewPictureModal(currentUser)"
-                />
-              </UTooltip>
+              <BaseButton
+                icon="i-heroicons-eye"
+                variant="ghostDangerIconButton"
+                class="text-surface-500 w-6! h-6! p-0 absolute bottom-0.5 left-0.5"
+                :tooltip="UI_TEXT.tooltips.viewPicture"
+                @click="profileStore.openViewPictureModal(currentUser)"
+              />
 
-              <UTooltip
-                :text="UI_TEXT.tooltips.uploadPicture"
-                class="absolute bottom-0.5 right-0.5"
-              >
-                <UButton
-                  icon="i-heroicons-arrow-up-tray"
-                  variant="ghostDangerIconButton"
-                  class="text-surface-500 w-6! h-6! p-0"
-                  @click="profileStore.openUploadPictureModal()"
-                />
-              </UTooltip>
+              <BaseButton
+                icon="i-heroicons-arrow-up-tray"
+                variant="ghostDangerIconButton"
+                class="text-surface-500 w-6! h-6! p-0 absolute bottom-0.5 right-0.5"
+                :tooltip="UI_TEXT.tooltips.uploadPicture"
+                @click="profileStore.openUploadPictureModal()"
+              />
             </div>
           </div>
 
@@ -101,14 +95,13 @@
                 <p :class="appConfig.typography.profileValue" class="text-sm! truncate">
                   {{ currentUser.username }}
                 </p>
-                <UTooltip :text="UI_TEXT.tooltips.editUsername">
-                  <UButton
-                    icon="i-heroicons-pencil"
-                    variant="ghostDangerIconButton"
-                    class="w-6! h-6! p-0 shrink-0"
-                    @click="profileStore.openEditUsernameModal(currentUser)"
-                  />
-                </UTooltip>
+                <BaseButton
+                  icon="i-heroicons-pencil"
+                  variant="ghostDangerIconButton"
+                  :tooltip="UI_TEXT.tooltips.editUsername"
+                  class="w-6! h-6! p-0 shrink-0"
+                  @click="profileStore.openEditUsernameModal(currentUser)"
+                />
               </div>
             </div>
             <!-- Email -->
@@ -126,14 +119,13 @@
                 <p :class="appConfig.typography.profileValue" class="text-xs! truncate">
                   {{ currentUser.email }}
                 </p>
-                <UTooltip :text="UI_TEXT.tooltips.editEmail">
-                  <UButton
-                    icon="i-heroicons-pencil"
-                    variant="ghostDangerIconButton"
-                    class="w-6! h-6! p-0 shrink-0"
-                    @click="profileStore.openEditEmailModal(currentUser)"
-                  />
-                </UTooltip>
+                <BaseButton
+                  icon="i-heroicons-pencil"
+                  variant="ghostDangerIconButton"
+                  class="w-6! h-6! p-0 shrink-0"
+                  :tooltip="UI_TEXT.tooltips.editEmail"
+                  @click="profileStore.openEditEmailModal(currentUser)"
+                />
               </div>
             </div>
             <!-- Password -->
@@ -151,14 +143,13 @@
                 <p :class="[appConfig.typography.profileValueLg, 'text-sm!', SPACING_TOKENS.mt.xs]">
                   ********
                 </p>
-                <UTooltip :text="UI_TEXT.tooltips.editPassword">
-                  <UButton
-                    icon="i-heroicons-pencil"
-                    variant="ghostDangerIconButton"
-                    class="w-6! h-6! p-0 shrink-0"
-                    @click="profileStore.openChangePasswordModal()"
-                  />
-                </UTooltip>
+                <BaseButton
+                  icon="i-heroicons-pencil"
+                  variant="ghostDangerIconButton"
+                  class="w-6! h-6! p-0 shrink-0"
+                  :tooltip="UI_TEXT.tooltips.editPassword"
+                  @click="profileStore.openChangePasswordModal()"
+                />
               </div>
             </div>
             <!-- Registered -->
@@ -194,17 +185,16 @@
             <div :class="[appConfig.layout.actionGroup, 'justify-center', SPACING_TOKENS.mt.sm]">
               <!-- Filter popover -->
               <UPopover>
-                <UTooltip :text="UI_TEXT.tooltips.filterDocuments">
-                  <UButton
-                    icon="i-heroicons-funnel"
-                    :label="
-                      filterType === 'ALL'
-                        ? UI_TEXT.common.filter
-                        : privateDocumentTypes.find((d) => d.value === filterType)?.label
-                    "
-                    variant="glassButton"
-                  />
-                </UTooltip>
+                <BaseButton
+                  icon="i-heroicons-funnel"
+                  :label="
+                    filterType === 'ALL'
+                      ? UI_TEXT.common.filter
+                      : privateDocumentTypes.find((d) => d.value === filterType)?.label
+                  "
+                  variant="glassButton"
+                  :tooltip="UI_TEXT.tooltips.filterDocuments"
+                />
                 <template #content="{ close }">
                   <div :class="[appConfig.ui.dropdownMenu.slots.content, 'w-fit']">
                     <button
@@ -242,13 +232,12 @@
               </UPopover>
 
               <!-- Upload button -->
-              <UTooltip :text="UI_TEXT.tooltips.uploadDocument">
-                <UButton
-                  icon="i-heroicons-plus"
-                  variant="glassIconButton"
-                  @click="emit('upload')"
-                />
-              </UTooltip>
+              <BaseButton
+                icon="i-heroicons-plus"
+                variant="glassIconButton"
+                :tooltip="UI_TEXT.tooltips.uploadDocument"
+                @click="emit('upload')"
+              />
             </div>
           </div>
 
@@ -272,38 +261,34 @@
               <div :class="appConfig.layout.documentCardHeader">
                 <p class="font-bold truncate pr-2 shadow-sm text-sm">{{ doc.file_name }}</p>
                 <div :class="`flex items-center ${SPACING_TOKENS.gap.xs}`">
-                  <UTooltip :text="UI_TEXT.profile.accessDetails">
-                    <UButton
-                      icon="i-heroicons-key-solid"
-                      variant="ghostBrandIconButton"
-                      class="text-surface-500"
-                      @click="emit('access', doc)"
-                    />
-                  </UTooltip>
-                  <UTooltip :text="UI_TEXT.profile.share">
-                    <UButton
-                      icon="i-heroicons-share"
-                      variant="ghostBrandIconButton"
-                      class="text-surface-500"
-                      @click.prevent="emit('share', doc)"
-                    />
-                  </UTooltip>
-                  <UTooltip :text="UI_TEXT.tooltips.editDocument">
-                    <UButton
-                      icon="i-heroicons-pencil"
-                      variant="ghostDangerIconButton"
-                      class="text-surface-500"
-                      @click="emit('edit', doc)"
-                    />
-                  </UTooltip>
-                  <UTooltip :text="UI_TEXT.tooltips.deleteDocument">
-                    <UButton
-                      icon="i-heroicons-trash"
-                      variant="ghostDangerIconButton"
-                      class="text-surface-500"
-                      @click="emit('delete', doc)"
-                    />
-                  </UTooltip>
+                  <BaseButton
+                    icon="i-heroicons-key-solid"
+                    variant="ghostBrandIconButton"
+                    class="text-surface-500"
+                    :tooltip="UI_TEXT.profile.accessDetails"
+                    @click="emit('access', doc)"
+                  />
+                  <BaseButton
+                    icon="i-heroicons-share"
+                    variant="ghostBrandIconButton"
+                    class="text-surface-500"
+                    :tooltip="UI_TEXT.profile.share"
+                    @click.prevent="emit('share', doc)"
+                  />
+                  <BaseButton
+                    icon="i-heroicons-pencil"
+                    variant="ghostDangerIconButton"
+                    class="text-surface-500"
+                    :tooltip="UI_TEXT.tooltips.editDocument"
+                    @click="emit('edit', doc)"
+                  />
+                  <BaseButton
+                    icon="i-heroicons-trash"
+                    variant="ghostDangerIconButton"
+                    class="text-surface-500"
+                    :tooltip="UI_TEXT.tooltips.deleteDocument"
+                    @click="emit('delete', doc)"
+                  />
                 </div>
               </div>
 
@@ -313,22 +298,20 @@
                 <div
                   :class="`absolute bottom-2 ${SPACING_TOKENS.px.md} w-full flex justify-between`"
                 >
-                  <UTooltip :text="UI_TEXT.tooltips.viewDocument">
-                    <UButton
-                      icon="i-heroicons-eye"
-                      variant="ghostBrandIconButton"
-                      class="text-dark-text/70"
-                      @click.prevent="emit('view', doc)"
-                    />
-                  </UTooltip>
-                  <UTooltip :text="UI_TEXT.tooltips.downloadDocument">
-                    <UButton
-                      icon="i-heroicons-arrow-down-tray"
-                      variant="ghostBrandIconButton"
-                      class="text-dark-text/70"
-                      @click.prevent="emit('download', doc)"
-                    />
-                  </UTooltip>
+                  <BaseButton
+                    icon="i-heroicons-eye"
+                    variant="ghostBrandIconButton"
+                    class="text-dark-text/70"
+                    :tooltip="UI_TEXT.tooltips.viewDocument"
+                    @click.prevent="emit('view', doc)"
+                  />
+                  <BaseButton
+                    icon="i-heroicons-arrow-down-tray"
+                    variant="ghostBrandIconButton"
+                    class="text-dark-text/70"
+                    :tooltip="UI_TEXT.tooltips.downloadDocument"
+                    @click.prevent="emit('download', doc)"
+                  />
                 </div>
               </div>
 

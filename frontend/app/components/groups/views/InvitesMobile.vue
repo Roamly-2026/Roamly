@@ -29,13 +29,12 @@
           >
             <!-- DECLINE BUTTON -->
             <div class="absolute top-4 right-4 z-10">
-              <UTooltip :text="UI_TEXT.tooltips.declineInvite">
-                <UButton
-                  icon="i-heroicons-x-mark"
-                  variant="ghostDangerIconButton"
-                  @click.stop="groupsStore.openDeclineModal(group)"
-                />
-              </UTooltip>
+              <BaseButton
+                icon="i-heroicons-x-mark"
+                variant="ghostDangerIconButton"
+                :tooltip="UI_TEXT.tooltips.declineInvite"
+                @click.stop="groupsStore.openDeclineModal(group)"
+              />
             </div>
 
             <!-- CARD CONTENT -->

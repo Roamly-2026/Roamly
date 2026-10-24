@@ -2,29 +2,37 @@
 <template>
   <div :class="`flex flex-col flex-1 ${SPACING_TOKENS.gap.md} w-full ${SPACING_TOKENS.p.md} pb-20`">
     <div :class="appConfig.calendar.mobileTopActions">
-      <UTooltip :text="UI_TEXT.tooltips.members">
-        <UButton icon="i-heroicons-users" variant="glassIconButton" :to="membersRoute" />
-      </UTooltip>
-      <UTooltip :text="UI_TEXT.tooltips.calendar">
-        <UButton
-          icon="i-heroicons-calendar"
-          variant="glassIconButton"
-          class="text-brand-500"
-          :to="eventsRoute"
-        />
-      </UTooltip>
-      <UTooltip :text="UI_TEXT.tooltips.photos">
-        <UButton icon="i-heroicons-photo" variant="glassIconButton" :to="mediaRoute" />
-      </UTooltip>
-      <UTooltip :text="UI_TEXT.tooltips.documents">
-        <UButton icon="i-heroicons-document-text" variant="glassIconButton" :to="documentsRoute" />
-      </UTooltip>
+      <BaseButton
+        icon="i-heroicons-users"
+        variant="glassIconButton"
+        :to="membersRoute"
+        :tooltip="UI_TEXT.tooltips.members"
+      />
+      <BaseButton
+        icon="i-heroicons-calendar"
+        variant="glassIconButton"
+        class="text-brand-500"
+        :to="eventsRoute"
+        :tooltip="UI_TEXT.tooltips.calendar"
+      />
+      <BaseButton
+        icon="i-heroicons-photo"
+        variant="glassIconButton"
+        :to="mediaRoute"
+        :tooltip="UI_TEXT.tooltips.photos"
+      />
+      <BaseButton
+        icon="i-heroicons-document-text"
+        variant="glassIconButton"
+        :to="documentsRoute"
+        :tooltip="UI_TEXT.tooltips.documents"
+      />
     </div>
 
     <div :class="appConfig.calendar.mobileMainWrapper">
       <div :class="appConfig.calendar.mobileHeader">
         <UPopover v-model:open="isGroupDropdownOpen" class="w-full" :popper="{ strategy: 'fixed' }">
-          <UButton block variant="ghost" :class="appConfig.calendar.mobileHeaderButton">
+          <BaseButton block variant="ghost" :class="appConfig.calendar.mobileHeaderButton">
             <div :class="appConfig.calendar.mobileHeaderTitleRow">
               <h1 :class="appConfig.typography.pageTitle" class="text-2xl! truncate">
                 {{
@@ -42,7 +50,7 @@
             <p :class="appConfig.typography.pageSubtitle" class="mt-0">
               {{ UI_TEXT.common.calendar }}
             </p>
-          </UButton>
+          </BaseButton>
           <template #content>
             <div
               :class="[
@@ -76,13 +84,13 @@
           v-model:open="isFilterOpen"
           :popper="{ strategy: 'fixed', placement: 'bottom-end' }"
         >
-          <UTooltip :text="UI_TEXT.tooltips.filterEvents"
-            ><UButton
-              icon="i-heroicons-funnel"
-              :label="UI_TEXT.common.filter"
-              variant="glassOutlineButton"
-              :class="appConfig.calendar.mobileFilterButton"
-          /></UTooltip>
+          ><BaseButton
+            icon="i-heroicons-funnel"
+            :label="UI_TEXT.common.filter"
+            variant="glassOutlineButton"
+            :class="appConfig.calendar.mobileFilterButton"
+            :tooltip="UI_TEXT.tooltips.filterEvents"
+          />
           <template #content>
             <div
               :class="appConfig.calendar.filterDropdownContent"
@@ -110,7 +118,7 @@
                   />
                 </div>
                 <div :class="appConfig.calendar.filterButtonWrapper">
-                  <UButton
+                  <BaseButton
                     :label="UI_TEXT.common.clearFilter"
                     variant="smallHollowActionButton"
                     :class="[
@@ -134,13 +142,12 @@
           class="flex-1"
           :ui="{ leading: 'pl-3' }"
         />
-        <UTooltip :text="UI_TEXT.tooltips.addEvent">
-          <UButton
-            icon="i-heroicons-plus"
-            variant="glassIconButton"
-            @click="$emit('open-add-event')"
-          />
-        </UTooltip>
+        <BaseButton
+          icon="i-heroicons-plus"
+          variant="glassIconButton"
+          :tooltip="UI_TEXT.tooltips.addEvent"
+          @click="$emit('open-add-event')"
+        />
       </div>
 
       <div :class="appConfig.calendar.mobileContentWrapper">
@@ -150,7 +157,7 @@
             class="flex-1 min-w-0"
             :popper="{ strategy: 'fixed', placement: 'bottom-start' }"
           >
-            <UButton
+            <BaseButton
               block
               variant="glassOutlineButton"
               :class="appConfig.calendar.mobileDateButton"
@@ -165,7 +172,7 @@
                 class="w-5 h-5 text-dark-text/70 transition-transform duration-200"
                 :class="{ 'rotate-180': isDateDropdownOpen }"
               />
-            </UButton>
+            </BaseButton>
             <template #content>
               <div
                 :class="[
@@ -196,20 +203,17 @@
               </div>
             </template>
           </UPopover>
-          <UTooltip
-            :text="showOnlyActiveEvents ? UI_TEXT.events.showAll : UI_TEXT.events.hideExpired"
-          >
-            <UButton
-              icon="i-heroicons-clock"
-              :label="showOnlyActiveEvents ? UI_TEXT.events.active : UI_TEXT.common.all"
-              :variant="showOnlyActiveEvents ? 'glassOutlineButton' : 'glassButton'"
-              :class="[
-                showOnlyActiveEvents ? 'ring-2 ring-success-500 text-success-600' : '',
-                `shrink-0 whitespace-nowrap ${SPACING_TOKENS.px.md} ${SPACING_TOKENS.py.sm} min-w-22!`,
-              ]"
-              @click="showOnlyActiveEvents = !showOnlyActiveEvents"
-            />
-          </UTooltip>
+          <BaseButton
+            icon="i-heroicons-clock"
+            :label="showOnlyActiveEvents ? UI_TEXT.events.active : UI_TEXT.common.all"
+            :variant="showOnlyActiveEvents ? 'glassOutlineButton' : 'glassButton'"
+            :class="[
+              showOnlyActiveEvents ? 'ring-2 ring-success-500 text-success-600' : '',
+              `shrink-0 whitespace-nowrap ${SPACING_TOKENS.px.md} ${SPACING_TOKENS.py.sm} min-w-22!`,
+            ]"
+            :tooltip="showOnlyActiveEvents ? UI_TEXT.events.showAll : UI_TEXT.events.hideExpired"
+            @click="showOnlyActiveEvents = !showOnlyActiveEvents"
+          />
         </div>
 
         <div :class="appConfig.calendar.mobileEventsWrapper">

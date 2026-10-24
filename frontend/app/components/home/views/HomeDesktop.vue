@@ -3,7 +3,7 @@
   <div :class="appConfig.layout.homeWrapper">
     <!-- HERO SECTION -->
     <section id="home" :class="appConfig.layout.homeHeroSection">
-      <UButton :label="UI_TEXT.home.getStarted" to="/groups" variant="actionHeroButton" />
+      <BaseButton :label="UI_TEXT.home.getStarted" to="/groups" variant="actionHeroButton" />
       <p :class="appConfig.typography.homeHeroText">{{ UI_TEXT.home.description }}</p>
     </section>
 
@@ -58,9 +58,8 @@
                 {{ card.desc }}
               </p>
             </div>
-
             <!-- Card Bottom Action -->
-            <UButton
+            <BaseButton
               variant="ghost"
               :class="[
                 `font-bold tracking-wide hover:underline underline-offset-4 transition-colors duration-500 cursor-pointer ${SPACING_TOKENS.mt.sm}`,
@@ -69,7 +68,7 @@
               @click="emit('toggleCard', card.id)"
             >
               {{ activeCard === card.id ? UI_TEXT.home.showLess : UI_TEXT.home.learnMore }}
-            </UButton>
+            </BaseButton>
           </div>
 
           <!-- Extended Description (Active State) -->
@@ -105,7 +104,7 @@
       <div
         :class="`flex ${SPACING_TOKENS.gap.md} ${SPACING_TOKENS.mt.md} items-center justify-center flex-wrap`"
       >
-        <UButton
+        <BaseButton
           v-for="link in contactLinks"
           :key="link.name"
           :icon="link.icon"
