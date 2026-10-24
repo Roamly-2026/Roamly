@@ -1,7 +1,10 @@
-import { UI_TEXT } from '~/locales/en';
 // frontend/app/utils/error.utils.ts
+import { UI_TEXT } from '~/locales/en';
 import type { ApiError } from '../types/apiError.type';
 
+// extracts and formats a user-friendly error message from various error types
+// [input value]: err: unknown
+// [return value]: string
 export const getErrorMessage = (err: unknown): string => {
   const error = err as ApiError;
 
