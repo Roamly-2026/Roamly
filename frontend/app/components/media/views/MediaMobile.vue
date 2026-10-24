@@ -83,14 +83,7 @@
 
       <!-- TOOLBAR: search + upload -->
       <div :class="appConfig.calendar.mobileToolbar">
-        <UInput
-          v-model="searchQuery"
-          :placeholder="UI_TEXT.media.search"
-          icon="i-heroicons-magnifying-glass"
-          class="flex-1"
-          variant="search"
-          :ui="{ leading: 'pl-3' }"
-        />
+        <BaseSearchInput v-model="searchQuery" :placeholder="UI_TEXT.media.search" class="flex-1" />
         <BaseButton
           icon="i-heroicons-plus"
           variant="glassIconButton"

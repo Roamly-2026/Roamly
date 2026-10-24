@@ -53,13 +53,10 @@
       <!-- SEARCH & INVITE -->
       <div :class="`flex items-center ${SPACING_TOKENS.gap.sm} w-full`">
         <div class="flex-1">
-          <UInput
+          <BaseSearchInput
             :model-value="searchQuery"
-            icon="i-heroicons-magnifying-glass"
             :placeholder="UI_TEXT.groups.searchMembers"
-            variant="search"
             class="w-full! max-w-none!"
-            :ui="{ leading: 'pl-3' }"
             @update:model-value="emit('update:searchQuery', $event)"
           />
         </div>

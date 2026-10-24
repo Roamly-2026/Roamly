@@ -105,14 +105,12 @@
     <div :class="[appConfig.layout.sectionWrapper, 'mt-8!']">
       <div :class="`flex items-center justify-between w-full ${SPACING_TOKENS.mb.lg} relative`">
         <div :class="`flex items-center ${SPACING_TOKENS.gap.sm} flex-1 justify-start`">
-          <UInput
+          <BaseSearchInput
             v-model="searchQuery"
-            icon="i-heroicons-magnifying-glass"
             :placeholder="UI_TEXT.documents.search"
-            variant="search"
             class="w-1/2! max-w-none!"
-            :ui="{ leading: 'pl-3' }"
           />
+
           <UPopover>
             <BaseButton
               icon="i-heroicons-funnel"
@@ -275,14 +273,12 @@
   <div v-if="isCurrentUserLeader" :class="appConfig.layout.pageWrapper">
     <div :class="`flex items-center justify-between w-full ${SPACING_TOKENS.mb.lg} relative`">
       <div :class="`flex items-center ${SPACING_TOKENS.gap.sm} flex-1 justify-start`">
-        <UInput
+        <BaseSearchInput
           v-model="memberSearchQuery"
-          icon="i-heroicons-magnifying-glass"
           :placeholder="UI_TEXT.documents.searchPrivate"
-          variant="search"
           class="w-1/2! max-w-none!"
-          :ui="{ leading: 'pl-3' }"
         />
+
         <UPopover>
           <BaseButton
             icon="i-heroicons-funnel"

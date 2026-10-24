@@ -6,12 +6,9 @@
 
     <!-- ACTION BUTTONS -->
     <div :class="appConfig.layout.actionGroup">
-      <UInput
+      <BaseSearchInput
         v-model="searchQuery"
-        icon="i-heroicons-magnifying-glass"
         :placeholder="UI_TEXT.events.searchPlaceholder"
-        variant="search"
-        :ui="{ leading: 'pl-3' }"
         class="w-full max-w-xs"
       />
       <BaseButton
