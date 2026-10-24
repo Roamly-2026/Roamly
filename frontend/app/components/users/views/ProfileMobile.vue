@@ -20,7 +20,7 @@
         <!-- PROFILE CARD SECTION -->
         <div
           :class="[
-            appConfig.layout.profileCard,
+            appConfig.layout.sectionWrapper,
             'p-4! flex-row! items-center',
             SPACING_TOKENS.gap.md,
           ]"

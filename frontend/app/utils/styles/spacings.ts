@@ -1,7 +1,7 @@
 // frontend/app/utils/spacing.tokens.ts
 
 export const SPACING_TOKENS = {
-  // 1. Base spacings
+  // Base spacings
   gap: {
     xs: 'gap-1', // 4px
     sm: 'gap-2', // 8px
@@ -66,7 +66,7 @@ export const SPACING_TOKENS = {
     xl: 'mb-8', // 32px
   },
 
-  // 2. Mobile and desktop spacings
+  // Mobile and desktop spacings
   mobile: {
     screenPadding: 'p-4',
     cardPadding: 'p-4',
@@ -80,7 +80,7 @@ export const SPACING_TOKENS = {
     listGap: 'gap-4',
   },
 
-  // 3. Responsive shared spacings
+  // Responsive shared spacings
   responsive: {
     screenPadding: 'px-4 py-4 sm:px-6 sm:py-6 md:px-8 md:py-8',
     containerGap: 'gap-4 md:gap-6 lg:gap-8',
