@@ -2,110 +2,70 @@
 <template>
   <div>
     <!-- UPDATE MODAL -->
-    <BaseModal
+    <FormModal
       v-model:open="groupsStore.isUpdateModalOpen"
       :title="UI_TEXT.groups.editTitle"
+      form-id="update-group-form"
+      :cancel-text="UI_TEXT.common.cancel"
+      :submit-text="UI_TEXT.common.save"
+      :loading="isUpdating"
       :ui-size="appConfig.layout.modalSizeSm"
+      @cancel="groupsStore.closeUpdateModal()"
+      @submit="handleUpdateGroup"
     >
-      <template #body>
-        <form
-          id="update-group-form"
-          :class="appConfig.layout.modalForm"
-          @submit.prevent="handleUpdateGroup"
-        >
-          <div>
-            <label :class="appConfig.typography.inputLabel">{{ UI_TEXT.groups.nameLabel }}</label>
-            <UInput
-              v-model="updateGroupName"
-              :placeholder="UI_TEXT.groups.namePlaceholder"
-              variant="glass"
-              class="w-full"
-            />
-            <p v-if="updateError" :class="appConfig.typography.inputError">{{ updateError }}</p>
-          </div>
-        </form>
-      </template>
-      <template #footer>
-        <div :class="appConfig.layout.modalActions">
-          <UButton
-            :class="appConfig.typography.modalActionBtnCancel"
-            :label="UI_TEXT.common.cancel"
-            variant="actionCancelButton"
-            @click="groupsStore.closeUpdateModal()"
-          />
-          <UButton
-            :class="appConfig.typography.modalActionBtnOk"
-            :label="UI_TEXT.common.save"
-            variant="actionOkButton"
-            type="submit"
-            form="update-group-form"
-            :loading="isUpdating"
-          />
-        </div>
-      </template>
-    </BaseModal>
+      <div>
+        <label :class="appConfig.typography.inputLabel">{{ UI_TEXT.groups.nameLabel }}</label>
+        <UInput
+          v-model="updateGroupName"
+          :placeholder="UI_TEXT.groups.namePlaceholder"
+          variant="glass"
+          class="w-full"
+        />
+        <p v-if="updateError" :class="appConfig.typography.inputError">{{ updateError }}</p>
+      </div>
+    </FormModal>
 
     <!-- INVITE MODAL -->
-    <BaseModal
+    <FormModal
       v-model:open="groupsStore.isInviteModalOpen"
       :title="UI_TEXT.groups.inviteUserTitle"
+      form-id="invite-user-form"
+      :cancel-text="UI_TEXT.common.cancel"
+      :submit-text="UI_TEXT.groups.sendInvite"
+      :loading="isInviting"
+      :disable-cancel="!!inviteSuccess"
+      :disable-submit="!!inviteSuccess"
       :ui-size="appConfig.layout.modalSizeSm"
+      @cancel="groupsStore.closeInviteModal()"
+      @submit="handleInviteUser"
     >
-      <template #body>
-        <form
-          id="invite-user-form"
-          :class="appConfig.layout.modalForm"
-          @submit.prevent="handleInviteUser"
-        >
-          <div>
-            <label :class="appConfig.typography.inputLabel">{{ UI_TEXT.groups.emailLabel }}</label>
-            <UInput
-              v-model="inviteEmail"
-              :placeholder="UI_TEXT.groups.emailPlaceholder"
-              variant="glass"
-              class="w-full"
-            />
-          </div>
-          <div>
-            <label :class="appConfig.typography.inputLabel">{{
-              UI_TEXT.groups.roleSelectionLabel
-            }}</label>
-            <USelect
-              v-model="inviteRole"
-              :items="roleOptions"
-              label-key="label"
-              value-key="value"
-              :popper="{ strategy: 'fixed', placement: 'bottom-start' }"
-              :ui="{ content: 'z-[9999]' }"
-            />
-          </div>
-          <p v-if="inviteError" :class="appConfig.typography.modalErrorBox">{{ inviteError }}</p>
-          <p v-if="inviteSuccess" :class="appConfig.typography.modalSuccessBox">
-            {{ inviteSuccess }}
-          </p>
-        </form>
-      </template>
-      <template #footer>
-        <div :class="appConfig.layout.modalActions">
-          <UButton
-            :class="appConfig.typography.modalActionBtnCancel"
-            :label="UI_TEXT.common.cancel"
-            variant="actionCancelButton"
-            :disabled="!!inviteSuccess"
-            @click="groupsStore.closeInviteModal()"
-          />
-          <UButton
-            :class="appConfig.typography.modalActionBtnOk"
-            :label="UI_TEXT.groups.sendInvite"
-            variant="actionOkButton"
-            type="submit"
-            form="invite-user-form"
-            :loading="isInviting"
-            :disabled="!!inviteSuccess"
-          />
-        </div>
-      </template>
-    </BaseModal>
+      <div>
+        <label :class="appConfig.typography.inputLabel">{{ UI_TEXT.groups.emailLabel }}</label>
+        <UInput
+          v-model="inviteEmail"
+          :placeholder="UI_TEXT.groups.emailPlaceholder"
+          variant="glass"
+          class="w-full"
+        />
+      </div>
+      <div>
+        <label :class="appConfig.typography.inputLabel">{{
+          UI_TEXT.groups.roleSelectionLabel
+        }}</label>
+        <USelect
+          v-model="inviteRole"
+          :items="roleOptions"
+          label-key="label"
+          value-key="value"
+          :popper="{ strategy: 'fixed', placement: 'bottom-start' }"
+          :ui="{ content: 'z-[9999]' }"
+        />
+      </div>
+      <p v-if="inviteError" :class="appConfig.typography.modalErrorBox">{{ inviteError }}</p>
+      <p v-if="inviteSuccess" :class="appConfig.typography.modalSuccessBox">
+        {{ inviteSuccess }}
+      </p>
+    </FormModal>
 
     <!-- REMOVE USER MODAL -->
     <ConfirmModal

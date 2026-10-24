@@ -1,13 +1,12 @@
+<!-- components/common/modals/BaseModal.vue -->
 <template>
   <UModal
     :open="open"
     :dismissible="dismissible"
     :close="closeIcon"
     :ui="{ content: uiSize }"
-    prevent-close
     @update:open="$emit('update:open', $event)"
   >
-    <!-- Hiding default Nuxt UI slots -->
     <template #default><div class="hidden"></div></template>
     <template #close><div class="hidden"></div></template>
     
@@ -28,13 +27,21 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
-  open: boolean;
-  title?: string;
-  uiSize?: string;
-  dismissible?: boolean;
-  closeIcon?: boolean;
-}>();
+withDefaults(
+  defineProps<{
+    open: boolean;
+    title?: string;
+    uiSize?: string;
+    dismissible?: boolean;
+    closeIcon?: boolean;
+  }>(),
+  {
+    title: '',
+    uiSize: undefined,
+    dismissible: false, 
+    closeIcon: false,
+  },
+);
 
 defineEmits(['update:open']);
 </script>

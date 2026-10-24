@@ -1,130 +1,66 @@
 <!-- frontend/app/components/users/modals/ProfileModals.vue -->
 <template>
   <div>
-    <!-- EDIT USERNAME MODAL -->
-    <BaseModal
+<!-- EDIT USERNAME MODAL -->
+    <FormModal
       v-model:open="profileStore.isEditUsernameModalOpen"
       :title="UI_TEXT.profile.editUsernameTitle"
+      form-id="edit-username-form"
+      :cancel-text="UI_TEXT.common.cancel"
+      :submit-text="UI_TEXT.common.save"
+      :loading="isUpdatingProfile"
       :ui-size="appConfig.layout.modalSizeSm"
+      @cancel="profileStore.closeEditUsernameModal()"
+      @submit="handleUpdateUsername"
     >
-      <template #body>
-        <form
-          id="edit-username-form"
-          :class="appConfig.layout.modalForm"
-          @submit.prevent="handleUpdateUsername"
-        >
-          <div>
-            <label :class="appConfig.typography.inputLabel">{{ UI_TEXT.auth.usernameLabel }}</label>
-            <UInput v-model="editFormData.username" variant="glass" class="w-full" />
-            <p v-if="usernameError" :class="appConfig.typography.inputError">{{ usernameError }}</p>
-          </div>
-        </form>
-      </template>
-      <template #footer>
-        <div :class="appConfig.layout.modalActions">
-          <UButton
-            :class="appConfig.typography.modalActionBtnCancel"
-            :label="UI_TEXT.common.cancel"
-            variant="actionCancelButton"
-            @click="profileStore.closeEditUsernameModal()"
-          />
-          <UButton
-            :class="appConfig.typography.modalActionBtnOk"
-            :label="UI_TEXT.common.save"
-            variant="actionOkButton"
-            type="submit"
-            form="edit-username-form"
-            :loading="isUpdatingProfile"
-          />
-        </div>
-      </template>
-    </BaseModal>
+      <div>
+        <label :class="appConfig.typography.inputLabel">{{ UI_TEXT.auth.usernameLabel }}</label>
+        <UInput v-model="editFormData.username" variant="glass" class="w-full" />
+        <p v-if="usernameError" :class="appConfig.typography.inputError">{{ usernameError }}</p>
+      </div>
+    </FormModal>
 
     <!-- EDIT EMAIL MODAL -->
-    <BaseModal
+    <FormModal
       v-model:open="profileStore.isEditEmailModalOpen"
       :title="UI_TEXT.profile.editEmailTitle"
+      form-id="edit-email-form"
+      :cancel-text="UI_TEXT.common.cancel"
+      :submit-text="UI_TEXT.common.save"
+      :loading="isUpdatingProfile"
       :ui-size="appConfig.layout.modalSizeSm"
+      @cancel="profileStore.closeEditEmailModal()"
+      @submit="handleUpdateEmail"
     >
-      <template #body>
-        <form
-          id="edit-email-form"
-          :class="appConfig.layout.modalForm"
-          @submit.prevent="handleUpdateEmail"
-        >
-          <div>
-            <label :class="appConfig.typography.inputLabel">{{ UI_TEXT.auth.emailLabel }}</label>
-            <UInput v-model="editFormData.email" type="email" variant="glass" class="w-full" />
-            <p v-if="emailError" :class="appConfig.typography.inputError">{{ emailError }}</p>
-          </div>
-        </form>
-      </template>
-      <template #footer>
-        <div :class="appConfig.layout.modalActions">
-          <UButton
-            :class="appConfig.typography.modalActionBtnCancel"
-            :label="UI_TEXT.common.cancel"
-            variant="actionCancelButton"
-            @click="profileStore.closeEditEmailModal()"
-          />
-          <UButton
-            :class="appConfig.typography.modalActionBtnOk"
-            :label="UI_TEXT.common.save"
-            variant="actionOkButton"
-            type="submit"
-            form="edit-email-form"
-            :loading="isUpdatingProfile"
-          />
-        </div>
-      </template>
-    </BaseModal>
+      <div>
+        <label :class="appConfig.typography.inputLabel">{{ UI_TEXT.auth.emailLabel }}</label>
+        <UInput v-model="editFormData.email" type="email" variant="glass" class="w-full" />
+        <p v-if="emailError" :class="appConfig.typography.inputError">{{ emailError }}</p>
+      </div>
+    </FormModal>
 
     <!-- CHANGE PASSWORD MODAL -->
-    <BaseModal
+    <FormModal
       v-model:open="profileStore.isChangePasswordModalOpen"
       :title="UI_TEXT.profile.changePasswordTitle"
+      form-id="change-pwd-form"
+      :cancel-text="UI_TEXT.common.cancel"
+      :submit-text="UI_TEXT.common.save"
+      :loading="isChangingPwd"
       :ui-size="appConfig.layout.modalSizeSm"
+      @cancel="profileStore.closeChangePasswordModal()"
+      @submit="handleChangePassword"
     >
-      <template #body>
-        <form
-          id="change-pwd-form"
-          :class="appConfig.layout.modalForm"
-          @submit.prevent="handleChangePassword"
-        >
-          <div>
-            <label :class="appConfig.typography.inputLabel">{{
-              UI_TEXT.profile.oldPasswordLabel
-            }}</label>
-            <UInput v-model="pwdData.oldPassword" type="password" variant="glass" class="w-full" />
-          </div>
-          <div>
-            <label :class="appConfig.typography.inputLabel">{{
-              UI_TEXT.profile.newPasswordLabel
-            }}</label>
-            <UInput v-model="pwdData.newPassword" type="password" variant="glass" class="w-full" />
-          </div>
-          <p v-if="passwordError" :class="appConfig.typography.inputError">{{ passwordError }}</p>
-        </form>
-      </template>
-      <template #footer>
-        <div :class="appConfig.layout.modalActions">
-          <UButton
-            :class="appConfig.typography.modalActionBtnCancel"
-            :label="UI_TEXT.common.cancel"
-            variant="actionCancelButton"
-            @click="profileStore.closeChangePasswordModal()"
-          />
-          <UButton
-            :class="appConfig.typography.modalActionBtnOk"
-            :label="UI_TEXT.common.save"
-            variant="actionOkButton"
-            type="submit"
-            form="change-pwd-form"
-            :loading="isChangingPwd"
-          />
-        </div>
-      </template>
-    </BaseModal>
+      <div>
+        <label :class="appConfig.typography.inputLabel">{{ UI_TEXT.profile.oldPasswordLabel }}</label>
+        <UInput v-model="pwdData.oldPassword" type="password" variant="glass" class="w-full" />
+      </div>
+      <div>
+        <label :class="appConfig.typography.inputLabel">{{ UI_TEXT.profile.newPasswordLabel }}</label>
+        <UInput v-model="pwdData.newPassword" type="password" variant="glass" class="w-full" />
+      </div>
+      <p v-if="passwordError" :class="appConfig.typography.inputError">{{ passwordError }}</p>
+    </FormModal>
 
     <!-- DELETE ACCOUNT MODAL -->
     <ConfirmModal

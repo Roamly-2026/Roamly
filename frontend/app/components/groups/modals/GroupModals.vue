@@ -2,49 +2,28 @@
 <template>
   <div>
     <!-- CREATE MODAL -->
-    <BaseModal
+    <FormModal
       v-model:open="groupsStore.isCreateModalOpen"
       :title="UI_TEXT.groups.createTitle"
+      form-id="create-group-form"
+      :cancel-text="UI_TEXT.common.cancel"
+      :submit-text="UI_TEXT.common.create"
+      :loading="isCreating"
       :ui-size="appConfig.layout.modalSizeSm"
+      @cancel="groupsStore.closeCreateModal"
+      @submit="handleCreateGroup"
     >
-      <template #body>
-        <form
-          id="create-group-form"
-          :class="appConfig.layout.modalForm"
-          @submit.prevent="handleCreateGroup"
-        >
-          <div>
-            <label :class="appConfig.typography.inputLabel">{{ UI_TEXT.groups.nameLabel }}</label>
-            <UInput
-              v-model="newGroupName"
-              :placeholder="UI_TEXT.groups.namePlaceholder"
-              variant="glass"
-              class="w-full"
-            />
-            <p v-if="createError" :class="appConfig.typography.inputError">{{ createError }}</p>
-          </div>
-        </form>
-      </template>
-      <template #footer>
-        <div :class="appConfig.layout.modalActions">
-          <UButton
-            :class="appConfig.typography.modalActionBtnCancel"
-            :label="UI_TEXT.common.cancel"
-            variant="actionCancelButton"
-            type="button"
-            @click="groupsStore.closeCreateModal"
-          />
-          <UButton
-            :class="appConfig.typography.modalActionBtnOk"
-            :label="UI_TEXT.common.create"
-            variant="actionOkButton"
-            type="submit"
-            form="create-group-form"
-            :loading="isCreating"
-          />
-        </div>
-      </template>
-    </BaseModal>
+      <div>
+        <label :class="appConfig.typography.inputLabel">{{ UI_TEXT.groups.nameLabel }}</label>
+        <UInput
+          v-model="newGroupName"
+          :placeholder="UI_TEXT.groups.namePlaceholder"
+          variant="glass"
+          class="w-full"
+        />
+        <p v-if="createError" :class="appConfig.typography.inputError">{{ createError }}</p>
+      </div>
+    </FormModal>
 
     <!-- DELETE GROUP MODAL -->
     <ConfirmModal
