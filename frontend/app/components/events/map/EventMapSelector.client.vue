@@ -45,7 +45,9 @@ import iconUrl from 'leaflet/dist/images/marker-icon.png';
 import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
 
 const props = defineProps<{
+  // the starting location to display on the map, including coordinates and a formatted address
   initialLocation?: { latitude: number; longitude: number; address: string } | null;
+  // indicates whether the map modal or container is currently open (used to resize the map correctly)
   isOpen?: boolean;
 }>();
 
@@ -64,6 +66,8 @@ interface MarkGeocodeEvent {
 }
 
 const emit = defineEmits<{
+  // triggers when the user confirms their selected location on the map
+  // [emit value]: location: { latitude: number; longitude: number; address: string }
   (e: 'confirm-location', location: { latitude: number; longitude: number; address: string }): void;
 }>();
 

@@ -42,7 +42,7 @@
             variant="actionOkButton"
             type="submit"
             form="update-group-form"
-            :loading="isUpdating"
+            :loading="updateMutation.isLoading.value"
           />
         </div>
       </template>
@@ -106,7 +106,7 @@
             variant="actionOkButton"
             type="submit"
             form="invite-user-form"
-            :loading="isInviting"
+            :loading="inviteMutation.isLoading.value"
             :disabled="!!inviteSuccess"
           />
         </div>
@@ -143,7 +143,7 @@
             :class="appConfig.typography.modalActionBtnOk"
             :label="UI_TEXT.common.remove"
             variant="actionOkButton"
-            :loading="isRemoving"
+            :loading="removeMutation.isLoading.value"
             @click="handleRemoveUser"
           />
         </div>
@@ -182,7 +182,7 @@
             :class="appConfig.typography.modalActionBtnOk"
             :label="UI_TEXT.groups.promote"
             variant="actionOkButton"
-            :loading="isPromoting"
+            :loading="promoteMutation.isLoading.value"
             @click="handlePromoteUser"
           />
         </div>
@@ -220,7 +220,7 @@
             :label="UI_TEXT.groups.demote"
             variant="actionCancelButton"
             class="text-orange-500 hover:text-white hover:bg-orange-600 ring-orange-500"
-            :loading="isDemoting"
+            :loading="demoteMutation.isLoading.value"
             @click="handleDemoteUser"
           />
         </div>
@@ -252,18 +252,14 @@ const membersGroupUuid = computed(() => route.params.uuid as string);
 /* --- UPDATE LOGIC --- */
 const updateGroupName = ref('');
 const updateValidationError = ref('');
-const {
-  mutate: updateGroup,
-  isLoading: isUpdating,
-  error: updateApiError,
-  reset: resetUpdate,
-} = useUpdateGroupMutation({
+const updateMutation = useUpdateGroupMutation({
   onSuccess: () => groupsStore.closeUpdateModal(),
 });
+
 const updateError = computed(
   () =>
     updateValidationError.value ||
-    (updateApiError.value ? getErrorMessage(updateApiError.value) : ''),
+    (updateMutation.error.value ? getErrorMessage(updateMutation.error.value) : ''),
 );
 
 watch(
@@ -272,12 +268,12 @@ watch(
     if (!isOpen) {
       updateGroupName.value = '';
       updateValidationError.value = '';
-      resetUpdate();
+      updateMutation.reset();
     }
   },
 );
 const handleUpdateGroup = () => {
-  resetUpdate();
+  updateMutation.reset();
   updateValidationError.value = '';
   const validationResult = updateGroupSchema.safeParse({ groupName: updateGroupName.value });
   if (!validationResult.success) {
@@ -286,7 +282,10 @@ const handleUpdateGroup = () => {
     return;
   }
   if (membersGroupUuid.value)
-    updateGroup({ groupUuid: membersGroupUuid.value, name: validationResult.data.groupName });
+    updateMutation.mutate({
+      groupUuid: membersGroupUuid.value,
+      name: validationResult.data.groupName,
+    });
 };
 
 /* --- INVITE LOGIC --- */
@@ -297,22 +296,16 @@ const roleOptions = [
   { label: UI_TEXT.common.member, value: 'invitedMember' },
   { label: UI_TEXT.common.leader, value: 'invitedLeader' },
 ];
-const {
-  mutate: inviteUser,
-  isLoading: isInviting,
-  error: inviteApiError,
-  status: inviteStatus,
-  reset: resetInvite,
-} = useInviteUserMutation({
+const inviteMutation = useInviteUserMutation({
   onSuccess: () => setTimeout(() => groupsStore.closeInviteModal(), 2000),
 });
 const inviteError = computed(
   () =>
     inviteValidationError.value ||
-    (inviteApiError.value ? getErrorMessage(inviteApiError.value) : ''),
+    (inviteMutation.error.value ? getErrorMessage(inviteMutation.error.value) : ''),
 );
 const inviteSuccess = computed(() =>
-  inviteStatus.value === 'success' ? UI_TEXT.groups.inviteSuccess : '',
+  inviteMutation.status.value === 'success' ? UI_TEXT.groups.inviteSuccess : '',
 );
 
 watch(
@@ -321,12 +314,12 @@ watch(
     if (!isOpen) {
       inviteEmail.value = '';
       inviteValidationError.value = '';
-      resetInvite();
+      inviteMutation.reset();
     }
   },
 );
 const handleInviteUser = () => {
-  resetInvite();
+  inviteMutation.reset();
   inviteValidationError.value = '';
   const validationResult = inviteUserSchema.safeParse({
     email: inviteEmail.value,
@@ -338,7 +331,7 @@ const handleInviteUser = () => {
     return;
   }
   if (membersGroupUuid.value)
-    inviteUser({
+    inviteMutation.mutate({
       groupUuid: membersGroupUuid.value,
       data: {
         invitedUserEmail: validationResult.data.email,
@@ -348,77 +341,71 @@ const handleInviteUser = () => {
 };
 
 /* --- REMOVE LOGIC --- */
-const {
-  mutate: removeUser,
-  isLoading: isRemoving,
-  error: removeApiError,
-  reset: resetRemove,
-} = useRemoveUserMutation({
+const removeMutation = useRemoveUserMutation({
   onSuccess: () => groupsStore.closeRemoveUserModal(),
 });
 const removeErrorText = computed(() =>
-  removeApiError.value ? getErrorMessage(removeApiError.value) : '',
+  removeMutation.error.value ? getErrorMessage(removeMutation.error.value) : '',
 );
 
 watch(
   () => groupsStore.isRemoveUserModalOpen,
   (isOpen: boolean) => {
-    if (!isOpen) resetRemove();
+    if (!isOpen) removeMutation.reset();
   },
 );
 const handleRemoveUser = () => {
   if (!groupsStore.selectedUserEmailToRemove || !membersGroupUuid.value) return;
-  resetRemove();
-  removeUser({ groupUuid: membersGroupUuid.value, email: groupsStore.selectedUserEmailToRemove });
+  removeMutation.reset();
+  removeMutation.mutate({
+    groupUuid: membersGroupUuid.value,
+    email: groupsStore.selectedUserEmailToRemove,
+  });
 };
 
 /* --- PROMOTE LOGIC --- */
-const {
-  mutate: promoteUser,
-  isLoading: isPromoting,
-  error: promoteApiError,
-  reset: resetPromote,
-} = usePromoteUserMutation({
+const promoteMutation = usePromoteUserMutation({
   onSuccess: () => groupsStore.closePromoteUserModal(),
 });
 const promoteErrorText = computed(() =>
-  promoteApiError.value ? getErrorMessage(promoteApiError.value) : '',
+  promoteMutation.error.value ? getErrorMessage(promoteMutation.error.value) : '',
 );
 
 watch(
   () => groupsStore.isPromoteUserModalOpen,
   (isOpen: boolean) => {
-    if (!isOpen) resetPromote();
+    if (!isOpen) promoteMutation.reset();
   },
 );
 const handlePromoteUser = () => {
   if (!groupsStore.selectedUserEmailToPromote || !membersGroupUuid.value) return;
-  resetPromote();
-  promoteUser({ groupUuid: membersGroupUuid.value, email: groupsStore.selectedUserEmailToPromote });
+  promoteMutation.reset();
+  promoteMutation.mutate({
+    groupUuid: membersGroupUuid.value,
+    email: groupsStore.selectedUserEmailToPromote,
+  });
 };
 
 /* --- DEMOTE LOGIC --- */
-const {
-  mutate: demoteUser,
-  isLoading: isDemoting,
-  error: demoteApiError,
-  reset: resetDemote,
-} = useDemoteUserMutation({
+const demoteMutation = useDemoteUserMutation({
   onSuccess: () => groupsStore.closeDemoteUserModal(),
 });
 const demoteErrorText = computed(() =>
-  demoteApiError.value ? getErrorMessage(demoteApiError.value) : '',
+  demoteMutation.error.value ? getErrorMessage(demoteMutation.error.value) : '',
 );
 
 watch(
   () => groupsStore.isDemoteUserModalOpen,
   (isOpen: boolean) => {
-    if (!isOpen) resetDemote();
+    if (!isOpen) demoteMutation.reset();
   },
 );
 const handleDemoteUser = () => {
   if (!groupsStore.selectedUserEmailToDemote || !membersGroupUuid.value) return;
-  resetDemote();
-  demoteUser({ groupUuid: membersGroupUuid.value, email: groupsStore.selectedUserEmailToDemote });
+  demoteMutation.reset();
+  demoteMutation.mutate({
+    groupUuid: membersGroupUuid.value,
+    email: groupsStore.selectedUserEmailToDemote,
+  });
 };
 </script>

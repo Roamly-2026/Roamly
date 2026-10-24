@@ -89,13 +89,18 @@ const groupsStore = useGroupsStore();
 
 /* --- PROPS & EMITS --- */
 defineProps<{
+  // the list of group invitations to be displayed
   invitesList: GroupInvitesOutDto[];
+  // indicates whether the initial list of invitations is currently being loaded
   isLoading: boolean;
+  // the error object returned from a failed fetch attempt, if any
   error: ApiError | Error | null | undefined;
+  // indicates whether the next page of invitations is currently being fetched
   isFetchingNextPage: boolean;
 }>();
 
 const emit = defineEmits<{
+  // triggers when the user scrolls to the bottom of the list, requesting the next set of invitations
   (e: 'loadMore'): void;
 }>();
 

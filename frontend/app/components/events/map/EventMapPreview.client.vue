@@ -15,7 +15,13 @@ import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
 const defaultIconPrototype = L.Icon.Default.prototype as L.Icon & { _getIconUrl?: () => string };
 delete defaultIconPrototype._getIconUrl;
 
-const props = defineProps<{ latitude: number; longitude: number }>();
+const props = defineProps<{
+  // the latitude coordinate for the map center and marker position
+  latitude: number;
+  // the longitude coordinate for the map center and marker position
+  longitude: number;
+}>();
+
 const mapContainer = ref<HTMLElement | null>(null);
 let map: L.Map | null = null;
 let marker: L.Marker | null = null;

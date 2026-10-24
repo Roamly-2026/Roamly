@@ -123,12 +123,17 @@ const appConfig = useAppConfig();
 
 /* --- PROPS & EMITS --- */
 defineProps<{
+  // indicates whether the registration request is currently in progress
   isLoading: boolean;
+  // the error object returned from a failed registration attempt, if any
   error: ApiError | Error | null | undefined;
+  // the current state of the registration request lifecycle
   status: 'idle' | 'pending' | 'success' | 'error';
 }>();
 
 const emit = defineEmits<{
+  // triggers when the user submits the registration form
+  // [emit value]: data: RegisterFormState
   (e: 'submit', data: RegisterFormState): void;
 }>();
 

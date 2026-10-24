@@ -334,18 +334,30 @@ const navigateToEvent = (eventUuid: string) => {
 
 /* --- PROPS & EMITS --- */
 const props = defineProps<{
+  // the detailed information and metadata of the current group
   groupInfos: GroupInfosOutDto | undefined | null;
+  // the list of group members, filtered based on the current search query
   filteredMembers: GroupProfileDto[];
+  // indicates whether the group information and members are currently being loaded
   isLoading: boolean;
+  // the error object returned from a failed fetch attempt, if any
   error: ApiError | Error | null | undefined;
+  // the current text used to search or filter through the group members
   searchQuery: string;
+  // indicates whether the current user has leader privileges in this group
   isCurrentUserLeader: boolean;
+  // the email address of the logged-in user, used to identify their own profile or check permissions
   currentUserEmail: string | undefined;
 }>();
 
 const emit = defineEmits<{
+  // triggers when the search input changes, updating the bound query in the parent component
+  // [emit value]: val: string
   (e: 'update:searchQuery', val: string): void;
+  // triggers when the user attempts to delete the entire group or leave it
   (e: 'deleteGroup' | 'leaveGroup'): void;
+  // triggers when the user clicks on a specific member to view their detailed profile
+  // [emit value]: profile: GroupProfileDto
   (e: 'openProfile', profile: GroupProfileDto): void;
 }>();
 
