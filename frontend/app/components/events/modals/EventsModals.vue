@@ -30,7 +30,7 @@
                 />
               </template>
             </UFormField>
-            
+
             <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
               <UFormField name="start_time" :label="UI_TEXT.events.startDateTime">
                 <template #default="{ error }">
@@ -51,7 +51,7 @@
                 </template>
               </UFormField>
             </div>
-            
+
             <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
               <UFormField name="end_time" :label="UI_TEXT.events.endDateTime">
                 <template #default="{ error }">
@@ -72,7 +72,7 @@
                 </template>
               </UFormField>
             </div>
-            
+
             <UFormField name="description" :label="UI_TEXT.events.description">
               <template #default="{ error }">
                 <UTextarea
@@ -112,7 +112,7 @@
                 />
               </div>
             </div>
-            
+
             <div class="mt-2 flex items-center justify-between">
               <UCheckbox
                 v-model="formState.is_private"
@@ -143,10 +143,7 @@
     </BaseModal>
 
     <!-- MAP SELECTOR MODAL -->
-    <BaseModal 
-      v-model:open="isMapSelectorOpen" 
-      :ui-size="appConfig.layout.modalSizeLg"
-    >
+    <BaseModal v-model:open="isMapSelectorOpen" :ui-size="appConfig.layout.modalSizeLg">
       <template #header>
         <div class="flex justify-between items-center w-full">
           <h3 class="text-xl font-bold text-dark-text">{{ UI_TEXT.events.selectLocation }}</h3>

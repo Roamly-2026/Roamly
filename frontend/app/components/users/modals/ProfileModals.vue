@@ -1,7 +1,7 @@
 <!-- frontend/app/components/users/modals/ProfileModals.vue -->
 <template>
   <div>
-<!-- EDIT USERNAME MODAL -->
+    <!-- EDIT USERNAME MODAL -->
     <FormModal
       v-model:open="profileStore.isEditUsernameModalOpen"
       :title="UI_TEXT.profile.editUsernameTitle"
@@ -52,11 +52,15 @@
       @submit="handleChangePassword"
     >
       <div>
-        <label :class="appConfig.typography.inputLabel">{{ UI_TEXT.profile.oldPasswordLabel }}</label>
+        <label :class="appConfig.typography.inputLabel">{{
+          UI_TEXT.profile.oldPasswordLabel
+        }}</label>
         <UInput v-model="pwdData.oldPassword" type="password" variant="glass" class="w-full" />
       </div>
       <div>
-        <label :class="appConfig.typography.inputLabel">{{ UI_TEXT.profile.newPasswordLabel }}</label>
+        <label :class="appConfig.typography.inputLabel">{{
+          UI_TEXT.profile.newPasswordLabel
+        }}</label>
         <UInput v-model="pwdData.newPassword" type="password" variant="glass" class="w-full" />
       </div>
       <p v-if="passwordError" :class="appConfig.typography.inputError">{{ passwordError }}</p>

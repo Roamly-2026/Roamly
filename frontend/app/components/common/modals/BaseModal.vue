@@ -9,17 +9,17 @@
   >
     <template #default><div class="hidden"></div></template>
     <template #close><div class="hidden"></div></template>
-    
+
     <template #header>
       <slot name="header">
         <h3 class="text-xl font-bold text-dark-text">{{ title }}</h3>
       </slot>
     </template>
-    
+
     <template #body>
       <slot name="body"></slot>
     </template>
-    
+
     <template v-if="$slots.footer" #footer>
       <slot name="footer"></slot>
     </template>
@@ -38,7 +38,7 @@ withDefaults(
   {
     title: '',
     uiSize: undefined,
-    dismissible: false, 
+    dismissible: false,
     closeIcon: false,
   },
 );
