@@ -3,6 +3,7 @@
     :open="open" 
     :title="title" 
     :ui-size="uiSize"
+    :dismissible="dismissible"
     @update:open="$emit('update:open', $event)" 
   >
     <template #body>
@@ -49,12 +50,14 @@ withDefaults(defineProps<{
   loading?: boolean;
   uiSize?: string;
   confirmBtnClass?: string;
+  dismissible?: boolean;
 }>(), {
   message: '',
   errorText: '',
   loading: false,
   uiSize: undefined,
-  confirmBtnClass: 'bg-error-500 hover:bg-error-600 text-white'
+  confirmBtnClass: 'bg-error-500 hover:bg-error-600 text-white',
+  dismissible: true,
 });
 
 defineEmits(['update:open', 'cancel', 'confirm']);
