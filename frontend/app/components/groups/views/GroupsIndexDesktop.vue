@@ -121,13 +121,18 @@ const searchQuery = defineModel<string>('searchQuery', { default: '' });
 
 /* --- PROPS & EMITS --- */
 const props = defineProps<{
+  // the list of groups to be displayed
   groupsList: GroupOutDto[];
+  // indicates whether the initial list of groups is currently being loaded
   isLoading: boolean;
+  // the error object returned from a failed fetch attempt, if any
   error: ApiError | Error | null | undefined;
+  // indicates whether the next page of groups is currently being fetched
   isFetchingNextPage: boolean;
 }>();
 
 const emit = defineEmits<{
+  // triggers when the user requests to load the next set of groups (e.g., scrolling to the bottom)
   (e: 'loadMore'): void;
 }>();
 

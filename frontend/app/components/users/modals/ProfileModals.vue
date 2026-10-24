@@ -37,7 +37,7 @@
             variant="actionOkButton"
             type="submit"
             form="edit-username-form"
-            :loading="isUpdatingProfile"
+            :loading="updateProfileMutation.isLoading.value"
           />
         </div>
       </template>
@@ -79,7 +79,7 @@
             variant="actionOkButton"
             type="submit"
             form="edit-email-form"
-            :loading="isUpdatingProfile"
+            :loading="updateProfileMutation.isLoading.value"
           />
         </div>
       </template>
@@ -129,7 +129,7 @@
             variant="actionOkButton"
             type="submit"
             form="change-pwd-form"
-            :loading="isChangingPwd"
+            :loading="changePwdMutation.isLoading.value"
           />
         </div>
       </template>
@@ -162,7 +162,7 @@
             :class="appConfig.typography.modalActionBtnOk"
             :label="UI_TEXT.common.delete"
             variant="actionOkButton"
-            :loading="isDeleting"
+            :loading="deleteProfileMutation.isLoading.value"
             @click="handleDeleteProfile"
           />
         </div>
@@ -214,7 +214,7 @@
             variant="actionOkButton"
             type="submit"
             form="upload-pic-form"
-            :loading="isUploadingPic"
+            :loading="uploadPictureMutation.isLoading.value"
           />
         </div>
       </template>
@@ -363,12 +363,7 @@ const getErrorMessage = (error: unknown) => {
 
 const editFormData = reactive({ username: '', email: '' });
 
-const {
-  mutate: updateProfile,
-  isLoading: isUpdatingProfile,
-  error: updateApiError,
-  reset: resetUpdateProfile,
-} = useUpdateProfileMutation({
+const updateProfileMutation = useUpdateProfileMutation({
   onSuccess: () => {
     profileStore.closeEditUsernameModal();
     profileStore.closeEditEmailModal();
@@ -383,7 +378,7 @@ const usernameValidationError = ref('');
 const usernameError = computed(
   () =>
     usernameValidationError.value ||
-    (updateApiError.value ? getErrorMessage(updateApiError.value) : ''),
+    (updateProfileMutation.error.value ? getErrorMessage(updateProfileMutation.error.value) : ''),
 );
 
 watch(
@@ -392,13 +387,13 @@ watch(
     if (isOpen && profileStore.selectedUser) {
       editFormData.username = profileStore.selectedUser.username || '';
       usernameValidationError.value = '';
-      resetUpdateProfile();
+      updateProfileMutation.reset();
     }
   },
 );
 
 const handleUpdateUsername = () => {
-  resetUpdateProfile();
+  updateProfileMutation.reset();
   usernameValidationError.value = '';
 
   const validationResult = updateUsernameSchema.safeParse({ username: editFormData.username });
@@ -408,7 +403,7 @@ const handleUpdateUsername = () => {
     return;
   }
 
-  updateProfile({ username: validationResult.data.username });
+  updateProfileMutation.mutate({ username: validationResult.data.username });
 };
 
 /* ==========================================
@@ -419,7 +414,7 @@ const emailValidationError = ref('');
 const emailError = computed(
   () =>
     emailValidationError.value ||
-    (updateApiError.value ? getErrorMessage(updateApiError.value) : ''),
+    (updateProfileMutation.error.value ? getErrorMessage(updateProfileMutation.error.value) : ''),
 );
 
 watch(
@@ -428,13 +423,13 @@ watch(
     if (isOpen && profileStore.selectedUser) {
       editFormData.email = profileStore.selectedUser.email || '';
       emailValidationError.value = '';
-      resetUpdateProfile();
+      updateProfileMutation.reset();
     }
   },
 );
 
 const handleUpdateEmail = () => {
-  resetUpdateProfile();
+  updateProfileMutation.reset();
   emailValidationError.value = '';
 
   const validationResult = updateEmailSchema.safeParse({ email: editFormData.email });
@@ -444,7 +439,7 @@ const handleUpdateEmail = () => {
     return;
   }
 
-  updateProfile({ email: validationResult.data.email });
+  updateProfileMutation.mutate({ email: validationResult.data.email });
 };
 
 /* ==========================================
@@ -453,19 +448,16 @@ const handleUpdateEmail = () => {
 const pwdData = reactive({ oldPassword: '', newPassword: '' });
 const pwdValidationError = ref('');
 
-const {
-  mutate: changePwd,
-  isLoading: isChangingPwd,
-  error: pwdApiError,
-  reset: resetPwd,
-} = useChangePasswordMutation({
+const changePwdMutation = useChangePasswordMutation({
   onSuccess: () => {
     profileStore.closeChangePasswordModal();
   },
 });
 
 const passwordError = computed(
-  () => pwdValidationError.value || (pwdApiError.value ? getErrorMessage(pwdApiError.value) : ''),
+  () =>
+    pwdValidationError.value ||
+    (changePwdMutation.error.value ? getErrorMessage(changePwdMutation.error.value) : ''),
 );
 
 watch(
@@ -475,13 +467,13 @@ watch(
       pwdData.oldPassword = '';
       pwdData.newPassword = '';
       pwdValidationError.value = '';
-      resetPwd();
+      changePwdMutation.reset();
     }
   },
 );
 
 const handleChangePassword = () => {
-  resetPwd();
+  changePwdMutation.reset();
   pwdValidationError.value = '';
 
   const validationResult = changePasswordSchema.safeParse({
@@ -495,7 +487,7 @@ const handleChangePassword = () => {
     return;
   }
 
-  changePwd({
+  changePwdMutation.mutate({
     oldPassword: validationResult.data.oldPassword,
     newPassword: validationResult.data.newPassword,
   });
@@ -504,12 +496,7 @@ const handleChangePassword = () => {
 /* ==========================================
    FEATURE: DELETE ACCOUNT
 ========================================== */
-const {
-  mutate: deleteProfile,
-  isLoading: isDeleting,
-  error: deleteApiError,
-  reset: resetDelete,
-} = useDeleteProfileMutation({
+const deleteProfileMutation = useDeleteProfileMutation({
   onSuccess: () => {
     profileStore.closeDeleteModal();
     logout();
@@ -518,19 +505,19 @@ const {
 });
 
 const deleteError = computed(() =>
-  deleteApiError.value ? getErrorMessage(deleteApiError.value) : '',
+  deleteProfileMutation.error.value ? getErrorMessage(deleteProfileMutation.error.value) : '',
 );
 
 watch(
   () => profileStore.isDeleteModalOpen,
   (isOpen) => {
-    if (isOpen) resetDelete();
+    if (isOpen) deleteProfileMutation.reset();
   },
 );
 
 const handleDeleteProfile = () => {
-  resetDelete();
-  deleteProfile();
+  deleteProfileMutation.reset();
+  deleteProfileMutation.mutate();
 };
 
 /* ==========================================
@@ -539,12 +526,7 @@ const handleDeleteProfile = () => {
 const selectedPicture = ref<File | null>(null);
 const uploadPicValidationError = ref('');
 
-const {
-  mutate: uploadPicture,
-  isLoading: isUploadingPic,
-  error: uploadPicApiError,
-  reset: resetUploadPic,
-} = useUploadProfilePictureMutation({
+const uploadPictureMutation = useUploadProfilePictureMutation({
   onSuccess: () => {
     profileStore.closeUploadPictureModal();
   },
@@ -553,7 +535,7 @@ const {
 const uploadPicError = computed(
   () =>
     uploadPicValidationError.value ||
-    (uploadPicApiError.value ? getErrorMessage(uploadPicApiError.value) : ''),
+    (uploadPictureMutation.error.value ? getErrorMessage(uploadPictureMutation.error.value) : ''),
 );
 
 watch(
@@ -562,7 +544,7 @@ watch(
     if (isOpen) {
       selectedPicture.value = null;
       uploadPicValidationError.value = '';
-      resetUploadPic();
+      uploadPictureMutation.reset();
     }
   },
 );
@@ -577,12 +559,12 @@ const onPictureSelected = (event: Event) => {
 };
 
 const handleUploadPicture = () => {
-  resetUploadPic();
+  uploadPictureMutation.reset();
   uploadPicValidationError.value = '';
   if (!selectedPicture.value) {
     uploadPicValidationError.value = UI_TEXT.profile.selectFileFirst;
     return;
   }
-  uploadPicture(selectedPicture.value);
+  uploadPictureMutation.mutate(selectedPicture.value);
 };
 </script>

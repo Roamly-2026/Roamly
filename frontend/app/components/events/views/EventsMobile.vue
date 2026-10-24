@@ -281,34 +281,60 @@ import type { GroupOutDto } from '~/types/groups.type';
 import type { EventCreatorDto, UiDay, UiEvent } from '~/types/events.type';
 
 const props = defineProps<{
+  // the list of groups the user belongs to or has access to
   userGroupsList: GroupOutDto[];
+  // the unique identifier of the currently selected group
   selectedGroupUuid?: string;
+  // the detailed information of the currently selected group
   selectedGroupDetails?: GroupOutDto;
+  // the unique identifier of the currently selected day in the timeline/calendar
   selectedDayId?: string;
+  // the currently selected event to display its details
   selectedEvent: UiEvent | null | undefined;
+  // indicates whether the list of groups is currently being loaded
   isLoadingGroups: boolean;
+  // indicates whether the timeline or list of days is currently being loaded
   isLoadingDays: boolean;
+  // indicates whether the events are currently being loaded
   isLoadingEvents: boolean;
+  // the chronological list of days that contain events
   sortedDaysList: UiDay[];
+  // the list of events to display, applying current filters and sorting
   filteredAndSortedEventsList: UiEvent[];
+  // the detailed information about the currently selected day
   selectedDayDetails?: UiDay;
+  // indicates whether the current user has leader privileges in the selected group
   isCurrentUserLeader: boolean;
+  // the email address of the logged-in user, used for permission checks (e.g., managing or leaving events)
   currentUserEmail?: string;
 }>();
 
 const appConfig = useAppConfig();
 
 const emit = defineEmits<{
+  // triggers when the user selects a different group from the list
+  // [emit value]: uuid: string
   (e: 'select-group', uuid: string): void;
+  // triggers to update the active day in the view
+  // [emit value]: id: string | undefined
   (e: 'update:selected-day-id', id: string | undefined): void;
+  // triggers to update the currently active event selection
+  // [emit value]: event: UiEvent | null
   (e: 'update:selected-event', event: UiEvent | null): void;
+  // triggers for various actions that do not require a data payload
+  // (e.g., group actions, modal toggles, filtering)
   (
     e: 'delete-group' | 'leave-group' | 'apply-filter' | 'open-add-event' | 'open-all-participants',
   ): void;
+  // triggers when opening modals targeted at a specific event
+  // (e.g., deleting, leaving, inviting members, or previewing)
+  // [emit value]: event: UiEvent
   (
     e: 'open-delete-event' | 'open-leave-event' | 'open-add-members' | 'open-preview-modal',
     event: UiEvent,
   ): void;
+  // triggers when the user clicks to view a specific participant's profile
+  // [emit value]: user: EventCreatorDto
   (e: 'open-user-profile', user: EventCreatorDto): void;
 }>();
 

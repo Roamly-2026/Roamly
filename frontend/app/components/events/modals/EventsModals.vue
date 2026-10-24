@@ -682,7 +682,7 @@
 import { computed, reactive, ref } from 'vue';
 import type { z } from 'zod';
 import type { FormSubmitEvent } from '#ui/types';
-import { useAppConfig, useToast } from '#imports';
+import { useAppConfig } from '#imports';
 import { useEventsStore } from '~/stores/events.modals.store';
 import { useGroupsStore } from '~/stores/groups.modals.store';
 import { useCurrentUserQuery } from '~/queries/user.query';
@@ -696,10 +696,8 @@ import {
 } from '~/queries/events.mutation';
 import type { EventCreatorDto } from '~/types/events.type';
 import { createEventSchema } from '~/utils/schemas/events.schema';
-import { getErrorMessage } from '~/utils/error.utils';
 
 const appConfig = useAppConfig();
-const toast = useToast();
 const eventsStore = useEventsStore();
 const groupsStore = useGroupsStore();
 
@@ -720,10 +718,7 @@ const deleteEventMutation = useDeleteEventMutation(
     onSuccess: () => {
       eventsStore.closeDeleteEventModal();
       eventsStore.closePreviewModal();
-      toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.events.deleted });
     },
-    onError: (err: Error) =>
-      toast.add({ title: UI_TEXT.common.error, description: getErrorMessage(err) }),
   },
 );
 
@@ -732,10 +727,7 @@ const createEventMutation = useCreateEventMutation(
   {
     onSuccess: () => {
       closeAndResetForm();
-      toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.events.created });
     },
-    onError: (err: Error) =>
-      toast.add({ title: UI_TEXT.common.error, description: getErrorMessage(err) }),
   },
 );
 
@@ -743,11 +735,8 @@ const addParticipantsMutation = useAddParticipantsMutation(
   computed(() => eventsStore.selectedGroupUuid),
   {
     onSuccess: () => {
-      toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.events.membersAdded });
       closeAddMembersModal();
     },
-    onError: (err: Error) =>
-      toast.add({ title: UI_TEXT.common.error, description: getErrorMessage(err) }),
   },
 );
 
@@ -757,10 +746,7 @@ const leaveEventMutation = useLeaveEventMutation(
     onSuccess: () => {
       eventsStore.closeLeaveEventModal();
       eventsStore.closePreviewModal();
-      toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.events.left });
     },
-    onError: (err: Error) =>
-      toast.add({ title: UI_TEXT.common.error, description: getErrorMessage(err) }),
   },
 );
 
@@ -768,7 +754,6 @@ const removeParticipantMutation = useRemoveParticipantMutation(
   computed(() => eventsStore.selectedGroupUuid),
   {
     onSuccess: () => {
-      toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.events.participantRemoved });
       if (eventsStore.participantToRemove) {
         eventsStore.currentEventParticipants = eventsStore.currentEventParticipants.filter(
           (p) => p.uuid !== eventsStore.participantToRemove!.uuid,
@@ -776,8 +761,6 @@ const removeParticipantMutation = useRemoveParticipantMutation(
       }
       eventsStore.closeRemoveParticipantModal();
     },
-    onError: (err: Error) =>
-      toast.add({ title: UI_TEXT.common.error, description: getErrorMessage(err) }),
   },
 );
 

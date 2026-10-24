@@ -141,7 +141,7 @@ export const useDocumentsStore = defineStore('documentsModals', () => {
     closeAllPrivateModals();
     isPrivateUploadModalOpen.value = true;
   };
-  
+
   // closes the private document upload modal
   const closePrivateUploadModal = () => {
     isPrivateUploadModalOpen.value = false;

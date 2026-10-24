@@ -10,16 +10,16 @@
 
       <LoginMobile
         v-if="isMobile"
-        :is-loading="isLoading"
-        :error="error"
-        :status="status"
+        :is-loading="loginMutation.isLoading.value"
+        :error="loginMutation.error.value"
+        :status="loginMutation.status.value"
         @submit="handleLogin"
       />
       <LoginDesktop
         v-else
-        :is-loading="isLoading"
-        :error="error"
-        :status="status"
+        :is-loading="loginMutation.isLoading.value"
+        :error="loginMutation.error.value"
+        :status="loginMutation.status.value"
         @submit="handleLogin"
       />
     </ClientOnly>
@@ -41,16 +41,11 @@ const { isMobile } = useScreenSize();
 const router = useRouter();
 
 /* --- API MUTATIONS --- */
-const {
-  mutate: loginUser,
-  isLoading,
-  error,
-  status,
-} = useLoginUserMutation(() => router.push('/groups'));
+const loginMutation = useLoginUserMutation(() => router.push('/groups'));
 
 /* --- EVENT HANDLERS --- */
 const handleLogin = (data: LoginFormState) => {
-  loginUser({
+  loginMutation.mutate({
     email: data.email,
     password: data.password,
   });

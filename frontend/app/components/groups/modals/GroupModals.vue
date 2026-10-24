@@ -43,7 +43,7 @@
             variant="actionOkButton"
             type="submit"
             form="create-group-form"
-            :loading="isCreating"
+            :loading="createMutation.isLoading.value"
           />
         </div>
       </template>
@@ -84,7 +84,7 @@
             :class="appConfig.typography.modalActionBtnOk"
             :label="UI_TEXT.common.delete"
             variant="actionOkButton"
-            :loading="isDeleting"
+            :loading="deleteMutation.isLoading.value"
             @click="confirmDelete"
           />
         </div>
@@ -137,7 +137,7 @@
             :class="appConfig.typography.modalActionBtnOk"
             :label="UI_TEXT.common.leave"
             variant="actionOkButton"
-            :loading="isLeaving"
+            :loading="leaveMutation.isLoading.value"
             @click="confirmLeave"
           />
         </div>
@@ -168,34 +168,21 @@ const newGroupName = ref('');
 const formValidationError = ref('');
 
 /* --- API MUTATIONS --- */
-const {
-  mutate: createGroup,
-  isLoading: isCreating,
-  error: createApiError,
-  reset: resetCreate,
-} = useCreateGroupMutation({
+const createMutation = useCreateGroupMutation({
   onSuccess: () => {
     groupsStore.closeCreateModal();
     newGroupName.value = '';
   },
 });
-const {
-  mutate: deleteGroup,
-  isLoading: isDeleting,
-  error: deleteApiError,
-  reset: resetDelete,
-} = useDeleteGroupMutation({
+
+const deleteMutation = useDeleteGroupMutation({
   onSuccess: () => {
     groupsStore.closeDeleteModal();
     router.push('/groups');
   },
 });
-const {
-  mutate: leaveGroup,
-  isLoading: isLeaving,
-  error: leaveApiError,
-  reset: resetLeave,
-} = useLeaveGroupMutation({
+
+const leaveMutation = useLeaveGroupMutation({
   onSuccess: () => {
     groupsStore.closeLeaveModal();
     router.push('/groups');
@@ -206,18 +193,18 @@ const {
 const createError = computed(
   () =>
     formValidationError.value ||
-    (createApiError.value ? getErrorMessage(createApiError.value) : ''),
+    (createMutation.error.value ? getErrorMessage(createMutation.error.value) : ''),
 );
 const deleteErrorText = computed(() =>
-  deleteApiError.value ? getErrorMessage(deleteApiError.value) : '',
+  deleteMutation.error.value ? getErrorMessage(deleteMutation.error.value) : '',
 );
 const leaveErrorText = computed(() =>
-  leaveApiError.value ? getErrorMessage(leaveApiError.value) : '',
+  leaveMutation.error.value ? getErrorMessage(leaveMutation.error.value) : '',
 );
 
 /* --- HANDLERS --- */
 const handleCreateGroup = () => {
-  resetCreate();
+  createMutation.reset();
   formValidationError.value = '';
   const validationResult = createGroupSchema.safeParse({ groupName: newGroupName.value });
   if (!validationResult.success) {
@@ -225,18 +212,18 @@ const handleCreateGroup = () => {
       validationResult.error.issues[0]?.message ?? UI_TEXT.errors.invalidData;
     return;
   }
-  createGroup({ groupName: validationResult.data.groupName });
+  createMutation.mutate({ groupName: validationResult.data.groupName });
 };
 
 const confirmDelete = () => {
   if (!groupsStore.selectedGroupToDelete) return;
-  resetDelete();
-  deleteGroup(groupsStore.selectedGroupToDelete.uuid);
+  deleteMutation.reset();
+  deleteMutation.mutate(groupsStore.selectedGroupToDelete.uuid);
 };
 
 const confirmLeave = () => {
   if (!groupsStore.selectedGroupToLeave) return;
-  resetLeave();
-  leaveGroup(groupsStore.selectedGroupToLeave.uuid);
+  leaveMutation.reset();
+  leaveMutation.mutate(groupsStore.selectedGroupToLeave.uuid);
 };
 </script>

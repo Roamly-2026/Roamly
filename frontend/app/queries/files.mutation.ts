@@ -1,21 +1,31 @@
-import { UI_TEXT } from '~/locales/en';
 // frontend/app/queries/files.mutation.ts
 import { useMutation, useQueryCache } from '@pinia/colada';
 import { filesService } from '~/services/files.service';
 import type { Ref } from 'vue';
+import { useToast } from '#imports';
+import { getErrorMessage } from '../utils/error.utils';
+import { UI_TEXT } from '~/locales/en';
 
 interface MutationOptions {
   onSuccess?: () => void;
-  onError?: (error: Error) => void;
+  onError?: (error: unknown) => void;
 }
 
 export const useGetPrivateDocumentUrlMutation = (options?: MutationOptions) => {
+  const toast = useToast();
+
   return useMutation({
     mutation: (fileId: number) => filesService.getPrivateDocumentUrl(fileId),
     onSuccess: () => {
+      // no toast, it just starts the downloading
       options?.onSuccess?.();
     },
-    onError: (error: Error) => {
+    onError: (error) => {
+      toast.add({
+        title: UI_TEXT.common.error,
+        description: getErrorMessage(error),
+        color: 'error',
+      });
       options?.onError?.(error);
     },
   });
@@ -23,14 +33,25 @@ export const useGetPrivateDocumentUrlMutation = (options?: MutationOptions) => {
 
 export const useUploadPrivateDocumentMutation = (options?: MutationOptions) => {
   const queryCache = useQueryCache();
+  const toast = useToast();
 
   const mutation = useMutation({
     mutation: (formData: FormData) => filesService.uploadPrivateDocument(formData),
     onSuccess: () => {
+      toast.add({
+        title: UI_TEXT.common.success,
+        description: UI_TEXT.documents.uploaded,
+        color: 'success',
+      });
       queryCache.invalidateQueries({ key: ['private-documents'] });
       options?.onSuccess?.();
     },
-    onError: (error: Error) => {
+    onError: (error) => {
+      toast.add({
+        title: UI_TEXT.common.error,
+        description: getErrorMessage(error),
+        color: 'error',
+      });
       options?.onError?.(error);
     },
   });
@@ -40,14 +61,25 @@ export const useUploadPrivateDocumentMutation = (options?: MutationOptions) => {
 
 export const useDeletePrivateDocumentMutation = (options?: MutationOptions) => {
   const queryCache = useQueryCache();
+  const toast = useToast();
 
   const mutation = useMutation({
     mutation: (fileId: number) => filesService.deletePrivateDocument(fileId),
     onSuccess: () => {
+      toast.add({
+        title: UI_TEXT.common.success,
+        description: UI_TEXT.documents.deleted,
+        color: 'success',
+      });
       queryCache.invalidateQueries({ key: ['private-documents'] });
       options?.onSuccess?.();
     },
-    onError: (error: Error) => {
+    onError: (error) => {
+      toast.add({
+        title: UI_TEXT.common.error,
+        description: getErrorMessage(error),
+        color: 'error',
+      });
       options?.onError?.(error);
     },
   });
@@ -60,6 +92,7 @@ export const useUploadGroupDocumentMutation = (
   options?: MutationOptions,
 ) => {
   const queryCache = useQueryCache();
+  const toast = useToast();
 
   const mutation = useMutation({
     mutation: (formData: FormData) => {
@@ -67,10 +100,20 @@ export const useUploadGroupDocumentMutation = (
       return filesService.uploadGroupDocument(groupUuid.value, formData);
     },
     onSuccess: () => {
+      toast.add({
+        title: UI_TEXT.common.success,
+        description: UI_TEXT.documents.uploaded,
+        color: 'success',
+      });
       queryCache.invalidateQueries({ key: ['group-files', groupUuid.value ?? null] });
       options?.onSuccess?.();
     },
-    onError: (error: Error) => {
+    onError: (error) => {
+      toast.add({
+        title: UI_TEXT.common.error,
+        description: getErrorMessage(error),
+        color: 'error',
+      });
       options?.onError?.(error);
     },
   });
@@ -83,6 +126,7 @@ export const useUpdateGroupDocumentMutation = (
   options?: MutationOptions,
 ) => {
   const queryCache = useQueryCache();
+  const toast = useToast();
 
   const mutation = useMutation({
     mutation: ({ fileId, formData }: { fileId: number; formData: FormData }) => {
@@ -90,10 +134,20 @@ export const useUpdateGroupDocumentMutation = (
       return filesService.updateGroupDocument(groupUuid.value, fileId, formData);
     },
     onSuccess: () => {
+      toast.add({
+        title: UI_TEXT.common.success,
+        description: UI_TEXT.documents.updated,
+        color: 'success',
+      });
       queryCache.invalidateQueries({ key: ['group-files', groupUuid.value ?? null] });
       options?.onSuccess?.();
     },
-    onError: (error: Error) => {
+    onError: (error) => {
+      toast.add({
+        title: UI_TEXT.common.error,
+        description: getErrorMessage(error),
+        color: 'error',
+      });
       options?.onError?.(error);
     },
   });
@@ -106,6 +160,7 @@ export const useDeleteGroupFileMutation = (
   options?: MutationOptions,
 ) => {
   const queryCache = useQueryCache();
+  const toast = useToast();
 
   const mutation = useMutation({
     mutation: (fileId: number) => {
@@ -113,10 +168,20 @@ export const useDeleteGroupFileMutation = (
       return filesService.deleteGroupFile(groupUuid.value, fileId);
     },
     onSuccess: () => {
+      toast.add({
+        title: UI_TEXT.common.success,
+        description: UI_TEXT.media.deleted,
+        color: 'success',
+      });
       queryCache.invalidateQueries({ key: ['group-files', groupUuid.value ?? null] });
       options?.onSuccess?.();
     },
-    onError: (error: Error) => {
+    onError: (error) => {
+      toast.add({
+        title: UI_TEXT.common.error,
+        description: getErrorMessage(error),
+        color: 'error',
+      });
       options?.onError?.(error);
     },
   });
@@ -126,16 +191,27 @@ export const useDeleteGroupFileMutation = (
 
 export const useShareDocumentMutation = (options?: MutationOptions) => {
   const queryCache = useQueryCache();
+  const toast = useToast();
 
   const mutation = useMutation({
     mutation: (params: { fileId: number; groupUuid: string; accessLevel: string }) =>
       filesService.shareDocument(params.fileId, params.groupUuid, params.accessLevel),
     onSuccess: () => {
+      toast.add({
+        title: UI_TEXT.common.success,
+        description: UI_TEXT.documents.shared,
+        color: 'success',
+      });
       queryCache.invalidateQueries({ key: ['group-files'] });
       queryCache.invalidateQueries({ key: ['document-shares'] });
       options?.onSuccess?.();
     },
-    onError: (error: Error) => {
+    onError: (error) => {
+      toast.add({
+        title: UI_TEXT.common.error,
+        description: getErrorMessage(error),
+        color: 'error',
+      });
       options?.onError?.(error);
     },
   });
@@ -145,15 +221,26 @@ export const useShareDocumentMutation = (options?: MutationOptions) => {
 
 export const useDeleteSharingMutation = (options?: MutationOptions) => {
   const queryCache = useQueryCache();
+  const toast = useToast();
 
   const mutation = useMutation({
     mutation: (params: { fileId: number; groupUuid: string }) =>
       filesService.deleteSharing(params.fileId, params.groupUuid),
     onSuccess: () => {
+      toast.add({
+        title: UI_TEXT.common.success,
+        description: UI_TEXT.documents.sharingDeleted,
+        color: 'success',
+      });
       queryCache.invalidateQueries({ key: ['document-shares'] });
       options?.onSuccess?.();
     },
-    onError: (error: Error) => {
+    onError: (error) => {
+      toast.add({
+        title: UI_TEXT.common.error,
+        description: getErrorMessage(error),
+        color: 'error',
+      });
       options?.onError?.(error);
     },
   });

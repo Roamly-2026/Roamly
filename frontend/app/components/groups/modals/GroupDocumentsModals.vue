@@ -263,7 +263,7 @@
 </template>
 
 <script setup lang="ts">
-import { useAppConfig, useToast } from '#imports';
+import { useAppConfig } from '#imports';
 import { computed, reactive, ref, watch } from 'vue';
 import { z } from 'zod';
 import type { FormSubmitEvent } from '#ui/types';
@@ -277,12 +277,12 @@ import { getErrorMessage } from '~/utils/error.utils';
 import type { ApiError } from '~/types/apiError.type';
 
 defineProps<{
+  // a list of available document types for categorization, formatted as label-value pairs
   documentTypes?: { label: string; value: string }[];
 }>();
 
 const appConfig = useAppConfig();
 const documentsStore = useDocumentsStore();
-const toast = useToast();
 
 const uploadError = ref<ApiError | Error | null>(null);
 const updateError = ref<ApiError | Error | null>(null);
@@ -321,11 +321,10 @@ const uploadGroupUuidRef = computed(() => documentsStore.uploadGroupUuid || unde
 const uploadMutation = useUploadGroupDocumentMutation(uploadGroupUuidRef, {
   onSuccess: () => {
     uploadError.value = null;
-    toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.documents.uploaded });
     closeUploadModal();
   },
-  onError: (err: Error) => {
-    uploadError.value = err;
+  onError: (err) => {
+    uploadError.value = err as Error;
   },
 });
 
@@ -405,11 +404,10 @@ const closeUpdateModal = () => {
 const updateMutation = useUpdateGroupDocumentMutation(updateGroupUuidRef, {
   onSuccess: () => {
     updateError.value = null;
-    toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.documents.updated });
     closeUpdateModal();
   },
-  onError: (err: Error) => {
-    updateError.value = err;
+  onError: (err) => {
+    updateError.value = err as Error;
   },
 });
 
@@ -438,10 +436,9 @@ const deleteMutation = useDeleteGroupFileMutation(deleteGroupUuidRef, {
   onSuccess: () => {
     deleteError.value = null;
     documentsStore.closeDeleteModal();
-    toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.documents.deleted });
   },
-  onError: (err: Error) => {
-    deleteError.value = err;
+  onError: (err) => {
+    deleteError.value = err as Error;
   },
 });
 
