@@ -79,24 +79,19 @@
         </div>
 
         <div :class="appConfig.layout.formActions">
-          <UButton
+          <BaseButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             :disabled="isLoading"
             @click="clearForm"
           />
-          <UButton
-            type="submit"
-            :label="UI_TEXT.auth.registerTitle"
-            variant="actionOkButton"
-            :loading="isLoading"
-          />
+          <BaseButton type="submit" :label="UI_TEXT.auth.registerTitle" :loading="isLoading" />
         </div>
       </UForm>
     </UCard>
 
     <div :class="appConfig.layout.singleButtonWrapper">
-      <UButton
+      <BaseButton
         to="/login"
         :label="UI_TEXT.auth.loginInstead"
         variant="actionAccentHeroButton"

@@ -47,31 +47,25 @@
 
         <!-- FORM BUTTONS -->
         <div :class="appConfig.layout.formActions">
-          <UButton
+          <BaseButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             :disabled="isLoading"
             @click="clearForm"
           />
-          <UButton
-            type="submit"
-            :label="UI_TEXT.auth.loginTitle"
-            variant="actionOkButton"
-            :loading="isLoading"
-          />
+          <BaseButton type="submit" :label="UI_TEXT.auth.loginTitle" :loading="isLoading" />
         </div>
       </UForm>
     </UCard>
 
     <div :class="appConfig.layout.singleButtonWrapper">
-      <UTooltip :text="UI_TEXT.tooltips.registerPrompt">
-        <UButton
-          to="/register"
-          :label="UI_TEXT.auth.registerPrompt"
-          variant="actionAccentHeroButton"
-          class="w-full"
-        />
-      </UTooltip>
+      <BaseButton
+        to="/register"
+        :label="UI_TEXT.auth.registerPrompt"
+        variant="actionAccentHeroButton"
+        :tooltip="UI_TEXT.tooltips.registerPrompt"
+        class="w-full"
+      />
     </div>
   </div>
 </template>
