@@ -16,29 +16,23 @@
         :class="appConfig.layout.formWrapper"
         @submit="onSubmit"
       >
-        <UFormField name="email" :label="UI_TEXT.auth.emailLabel">
-          <template #default="{ error: fieldError }">
-            <UInput
-              v-model="form.email"
-              type="email"
-              :placeholder="UI_TEXT.auth.emailPlaceholder"
-              :variant="fieldError ? 'glassError' : 'glass'"
-              :ui="{ base: `!${SPACING_TOKENS.px.md}` }"
-            />
-          </template>
-        </UFormField>
+        <BaseInput
+          v-model="form.email"
+          name="email"
+          :label="UI_TEXT.auth.emailLabel"
+          type="email"
+          :placeholder="UI_TEXT.auth.emailPlaceholder"
+          :ui="{ base: `!${SPACING_TOKENS.px.md}` }"
+        />
 
-        <UFormField name="password" :label="UI_TEXT.auth.passwordLabel">
-          <template #default="{ error: fieldError }">
-            <UInput
-              v-model="form.password"
-              type="password"
-              :placeholder="UI_TEXT.auth.passwordPlaceholder"
-              :variant="fieldError ? 'glassError' : 'glass'"
-              :ui="{ base: `!${SPACING_TOKENS.px.md}` }"
-            />
-          </template>
-        </UFormField>
+        <BaseInput
+          v-model="form.password"
+          name="password"
+          :label="UI_TEXT.auth.passwordLabel"
+          type="password"
+          :placeholder="UI_TEXT.auth.passwordPlaceholder"
+          :ui="{ base: `!${SPACING_TOKENS.px.md}` }"
+        />
 
         <div v-if="error" :class="appConfig.typography.formStatusError">
           {{ getErrorMessage(error) }}
