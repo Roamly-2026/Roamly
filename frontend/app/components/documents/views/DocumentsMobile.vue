@@ -113,13 +113,10 @@
           </UPopover>
         </UTooltip>
 
-        <UInput
+        <BaseSearchInput
           v-model="searchQuery"
           :placeholder="UI_TEXT.documents.search"
-          icon="i-heroicons-magnifying-glass"
           class="flex-1"
-          :ui="{ leading: 'pl-3' }"
-          variant="search"
         />
 
         <BaseButton
@@ -289,13 +286,10 @@
           </UPopover>
         </UTooltip>
 
-        <UInput
+        <BaseSearchInput
           v-model="memberSearchQuery"
           :placeholder="UI_TEXT.documents.searchPrivate"
-          icon="i-heroicons-magnifying-glass"
           class="flex-1"
-          :ui="{ leading: 'pl-3' }"
-          variant="search"
         />
       </div>
 

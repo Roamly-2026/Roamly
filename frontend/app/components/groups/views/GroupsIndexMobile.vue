@@ -6,14 +6,12 @@
 
     <!-- ACTION BUTTONS -->
     <div :class="[appConfig.layout.actionGroup, 'justify-center flex-wrap']">
-      <UInput
+      <BaseSearchInput
         v-model="searchQuery"
-        icon="i-heroicons-magnifying-glass"
         :placeholder="UI_TEXT.groups.searchGroups"
-        variant="search"
         class="flex-1 min-w-50"
-        :ui="{ leading: 'pl-3' }"
       />
+
       <BaseButton
         icon="i-heroicons-plus"
         variant="glassIconButton"

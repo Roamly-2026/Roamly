@@ -134,14 +134,13 @@
             </div>
           </template>
         </UPopover>
-        <UInput
+
+        <BaseSearchInput
           v-model="searchQuery"
-          icon="i-heroicons-magnifying-glass"
           :placeholder="UI_TEXT.events.searchPlaceholder"
-          variant="search"
           class="flex-1"
-          :ui="{ leading: 'pl-3' }"
         />
+
         <BaseButton
           icon="i-heroicons-plus"
           variant="glassIconButton"

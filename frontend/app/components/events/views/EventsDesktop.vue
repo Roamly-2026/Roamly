@@ -99,14 +99,12 @@
       :class="`flex flex-col sm:flex-row items-center justify-between ${SPACING_TOKENS.gap.md} w-full shrink-0`"
     >
       <div :class="`flex items-center ${SPACING_TOKENS.gap.md} w-full sm:w-auto flex-1`">
-        <UInput
+        <BaseSearchInput
           v-model="searchQuery"
-          icon="i-heroicons-magnifying-glass"
           :placeholder="UI_TEXT.events.searchPlaceholder"
-          variant="search"
-          :ui="{ leading: 'pl-3' }"
           class="w-full max-w-xs"
         />
+
         <UPopover v-model:open="isFilterOpen">
           ><BaseButton
             icon="i-heroicons-funnel"

@@ -103,13 +103,10 @@
     <div :class="[appConfig.layout.sectionWrapper, 'mt-8!']">
       <div :class="`flex items-center justify-between w-full ${SPACING_TOKENS.mb.lg} relative`">
         <div :class="`flex items-center ${SPACING_TOKENS.gap.sm} flex-1 justify-start`">
-          <UInput
+          <BaseSearchInput
             v-model="searchQuery"
-            icon="i-heroicons-magnifying-glass"
             :placeholder="UI_TEXT.media.search"
-            variant="search"
             class="w-1/3! max-w-none!"
-            :ui="{ leading: 'pl-3' }"
           />
         </div>
 
