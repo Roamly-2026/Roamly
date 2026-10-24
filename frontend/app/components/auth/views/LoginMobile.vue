@@ -48,20 +48,20 @@
         </div>
 
         <!-- ACTIONS (Mobilos elrendezés: egymás alatt, teljes szélességgel) -->
+
         <div
           :class="`flex flex-col-reverse ${SPACING_TOKENS.gap.md} ${SPACING_TOKENS.pt.lg} w-full`"
         >
-          <UButton
+          <BaseButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             :disabled="isLoading"
             class="w-full"
             @click="clearForm"
           />
-          <UButton
+          <BaseButton
             type="submit"
             :label="UI_TEXT.auth.loginTitle"
-            variant="actionOkButton"
             class="w-full"
             :loading="isLoading"
           />
@@ -71,14 +71,13 @@
 
     <!-- REGISTRATION PROMPT BUTTON -->
     <div :class="appConfig.layout.singleButtonWrapper">
-      <UTooltip :text="UI_TEXT.tooltips.registerPrompt">
-        <UButton
-          to="/register"
-          :label="UI_TEXT.auth.registerPrompt"
-          variant="actionAccentHeroButton"
-          class="w-full"
-        />
-      </UTooltip>
+      <BaseButton
+        to="/register"
+        :label="UI_TEXT.auth.registerPrompt"
+        variant="actionAccentHeroButton"
+        :tooltip="UI_TEXT.tooltips.registerPrompt"
+        class="w-full"
+      />
     </div>
   </div>
 </template>

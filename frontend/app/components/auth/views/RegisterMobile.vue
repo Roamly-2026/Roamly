@@ -79,20 +79,20 @@
         </div>
 
         <!-- ACTIONS (Mobilos elrendezés: egymás alatt, teljes szélességgel) -->
+
         <div
           :class="`flex flex-col-reverse ${SPACING_TOKENS.gap.md} ${SPACING_TOKENS.pt.lg} w-full`"
         >
-          <UButton
+          <BaseButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             :disabled="isLoading"
             class="w-full"
             @click="clearForm"
           />
-          <UButton
+          <BaseButton
             type="submit"
             :label="UI_TEXT.auth.registerTitle"
-            variant="actionOkButton"
             class="w-full"
             :loading="isLoading"
           />
@@ -101,7 +101,7 @@
     </UCard>
 
     <div :class="appConfig.layout.singleButtonWrapper">
-      <UButton
+      <BaseButton
         to="/login"
         :label="UI_TEXT.auth.loginInstead"
         variant="actionAccentHeroButton"
@@ -119,6 +119,7 @@ import type { FormSubmitEvent } from '#ui/types';
 import { registerSchema, type RegisterFormState } from '~/utils/schemas/register.schema';
 import { getErrorMessage } from '~/utils/error.utils';
 import type { ApiError } from '~/types/apiError.type';
+import BaseButton from '~/components/base/BaseButton.vue';
 
 /* --- COMPOSABLES --- */
 const appConfig = useAppConfig();
