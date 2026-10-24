@@ -117,7 +117,6 @@ import { useIntersectionObserver } from '@vueuse/core';
 import { useGroupsStore } from '~/stores/groups.modals.store';
 import type { GroupOutDto } from '~/types/groups.type';
 import type { ApiError } from '~/types/apiError.type';
-import { SPACING_TOKENS } from '~/utils/spacings.tokens';
 
 /* --- COMPOSABLES & STORES --- */
 const appConfig = useAppConfig();

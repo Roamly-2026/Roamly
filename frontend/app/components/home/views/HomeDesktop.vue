@@ -123,7 +123,6 @@
 <script setup lang="ts">
 /* --- IMPORTS --- */
 import { useAppConfig } from '#imports';
-import { SPACING_TOKENS } from '~/utils/spacings.tokens';
 
 /* --- INTERFACES --- */
 interface FeatureCard {

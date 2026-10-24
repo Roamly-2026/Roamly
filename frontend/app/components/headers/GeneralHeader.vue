@@ -86,7 +86,6 @@ import { useAppConfig } from '#imports';
 import { useCurrentUserQuery } from '~/queries/user.query';
 import { useScreenSize } from '~/composables/useScreenSize';
 import type { DropdownMenuItem } from '@nuxt/ui';
-import { SPACING_TOKENS } from '~/utils/spacings.tokens';
 
 /* --- COMPOSABLES & STATE --- */
 const appConfig = useAppConfig();

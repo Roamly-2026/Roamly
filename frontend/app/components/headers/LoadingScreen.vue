@@ -12,7 +12,3 @@
     </h2>
   </div>
 </template>
-
-<script setup lang="ts">
-import { SPACING_TOKENS } from '~/utils/spacings.tokens';
-</script>

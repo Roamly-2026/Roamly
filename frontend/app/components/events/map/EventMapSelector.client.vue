@@ -41,7 +41,6 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet-control-geocoder/dist/Control.Geocoder.css';
 import L from 'leaflet';
 import 'leaflet-control-geocoder';
-import { SPACING_TOKENS } from '~/utils/spacings.tokens';
 
 import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
 import iconUrl from 'leaflet/dist/images/marker-icon.png';

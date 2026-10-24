@@ -1,5 +1,3 @@
-import { SPACING_TOKENS } from './utils/spacings.tokens';
-
 // frontend/app/app.config.ts
 export default defineAppConfig({
   /* ==========================================================================

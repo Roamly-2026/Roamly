@@ -121,7 +121,6 @@ import { reactive, ref, computed, watch } from 'vue';
 import { useAppConfig } from '#imports';
 import { getErrorMessage } from '~/utils/error.utils';
 import type { ApiError } from '~/types/apiError.type';
-import { SPACING_TOKENS } from '~/utils/spacings.tokens';
 
 /* --- COMPOSABLES --- */
 const appConfig = useAppConfig();

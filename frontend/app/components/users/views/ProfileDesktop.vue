@@ -355,7 +355,6 @@ import type { useDocumentsStore } from '~/stores/documents.modals.store';
 import type { UserOutDto } from '~/types/user.type';
 import type { ApiError } from '~/types/apiError.type';
 import type { PrivateDocumentMetadata } from '~/types/files.type';
-import { SPACING_TOKENS } from '~/utils/spacings.tokens';
 
 /* --- COMPOSABLES --- */
 const appConfig = useAppConfig();

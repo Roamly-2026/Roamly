@@ -163,7 +163,6 @@ import { useQueryCache } from '@pinia/colada';
 import { filesService } from '~/services/files.service';
 import type { GroupFile } from '~/types/files.type';
 import type { GroupOutDto } from '~/types/groups.type';
-import { SPACING_TOKENS } from '~/utils/spacings.tokens';
 
 definePageMeta({ layout: 'general', middleware: ['auth'] });
 

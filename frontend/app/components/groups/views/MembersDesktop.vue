@@ -318,7 +318,6 @@ import { processAndSortEvents } from '~/utils/sort.utils';
 import type { GroupInfosOutDto, GroupProfileDto } from '~/types/groups.type';
 import type { UiEvent } from '~/types/events.type';
 import type { ApiError } from '~/types/apiError.type';
-import { SPACING_TOKENS } from '~/utils/spacings.tokens';
 
 /* --- COMPOSABLES & STORES --- */
 const appConfig = useAppConfig();

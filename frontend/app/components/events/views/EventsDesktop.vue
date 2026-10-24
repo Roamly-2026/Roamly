@@ -480,7 +480,6 @@ import { computed } from 'vue';
 import { useAppConfig } from '#imports';
 import type { GroupOutDto } from '~/types/groups.type';
 import type { EventCreatorDto, UiDay, UiEvent } from '~/types/events.type';
-import { SPACING_TOKENS } from '~/utils/spacings.tokens';
 
 const props = defineProps<{
   userGroupsList: GroupOutDto[];

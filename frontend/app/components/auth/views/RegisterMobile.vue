@@ -119,7 +119,6 @@ import type { FormSubmitEvent } from '#ui/types';
 import { registerSchema, type RegisterFormState } from '~/utils/schemas/register.schema';
 import { getErrorMessage } from '~/utils/error.utils';
 import type { ApiError } from '~/types/apiError.type';
-import { SPACING_TOKENS } from '~/utils/spacings.tokens';
 
 /* --- COMPOSABLES --- */
 const appConfig = useAppConfig();

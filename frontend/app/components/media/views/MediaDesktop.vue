@@ -252,7 +252,6 @@ import { computed, ref } from 'vue';
 import { useAppConfig } from '#imports';
 import type { GroupFile } from '~/types/files.type';
 import type { GroupOutDto } from '~/types/groups.type';
-import { SPACING_TOKENS } from '~/utils/spacings.tokens';
 
 const appConfig = useAppConfig();
 
