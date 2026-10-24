@@ -30,7 +30,7 @@
             <span class="font-bold text-dark-text tracking-wide text-sm hidden sm:block">
               {{ userProfile?.username || UI_TEXT.common.loading }}
             </span>
-            <UButton
+            <BaseButton
               icon="i-heroicons-arrow-left-on-rectangle"
               :label="UI_TEXT.auth.logoutTitle"
               variant="smallHollowActionButton"
@@ -41,7 +41,7 @@
               :items="profileDropdownItems"
               :content="{ align: 'end', side: 'bottom', sideOffset: 8 }"
             >
-              <UButton
+              <BaseButton
                 variant="ghost"
                 class="p-0 m-0 rounded-full hover:bg-transparent focus-visible:ring-2 focus-visible:ring-brand-500 transition-transform hover:scale-105 cursor-pointer"
               >
@@ -50,17 +50,17 @@
                   :alt="userProfile?.username || UI_TEXT.common.user"
                   icon="i-heroicons-user"
                 />
-              </UButton>
+              </BaseButton>
             </UDropdownMenu>
             <!-- mobile menu button -->
-            <UButton
+            <BaseButton
               icon="i-heroicons-bars-3"
               variant="ghost"
               :class="['md:hidden text-dark-text', SPACING_TOKENS.p.xs]"
             />
           </template>
           <template v-else>
-            <UButton
+            <BaseButton
               :label="UI_TEXT.auth.loginTitle"
               to="/login"
               variant="smallHollowActionButton"

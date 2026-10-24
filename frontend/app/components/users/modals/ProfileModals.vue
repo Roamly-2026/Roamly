@@ -25,13 +25,13 @@
       </template>
       <template #footer>
         <div :class="appConfig.layout.modalActions">
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnCancel"
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="profileStore.closeEditUsernameModal()"
           />
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnOk"
             :label="UI_TEXT.common.save"
             variant="actionOkButton"
@@ -67,13 +67,13 @@
       </template>
       <template #footer>
         <div :class="appConfig.layout.modalActions">
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnCancel"
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="profileStore.closeEditEmailModal()"
           />
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnOk"
             :label="UI_TEXT.common.save"
             variant="actionOkButton"
@@ -117,13 +117,13 @@
       </template>
       <template #footer>
         <div :class="appConfig.layout.modalActions">
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnCancel"
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="profileStore.closeChangePasswordModal()"
           />
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnOk"
             :label="UI_TEXT.common.save"
             variant="actionOkButton"
@@ -152,13 +152,13 @@
       </template>
       <template #footer>
         <div :class="appConfig.layout.modalActions">
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnCancel"
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="profileStore.closeDeleteModal()"
           />
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnOk"
             :label="UI_TEXT.common.delete"
             variant="actionOkButton"
@@ -202,13 +202,13 @@
       </template>
       <template #footer>
         <div :class="appConfig.layout.modalActions">
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnCancel"
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="profileStore.closeUploadPictureModal()"
           />
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnOk"
             :label="UI_TEXT.common.upload"
             variant="actionOkButton"
@@ -244,7 +244,7 @@
       </template>
       <template #footer>
         <div class="flex items-center justify-end w-full">
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnOk"
             :label="UI_TEXT.profile.ok"
             variant="actionOkButton"
@@ -306,13 +306,13 @@
       </template>
       <template #footer>
         <div :class="appConfig.layout.modalActions">
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnCancel"
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="profileStore.closeUploadDocumentModal()"
           />
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnOk"
             :label="UI_TEXT.common.upload"
             variant="actionOkButton"

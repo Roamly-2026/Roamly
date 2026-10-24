@@ -36,7 +36,7 @@
 
     <template #footer>
       <div class="flex justify-end">
-        <UButton
+        <BaseButton
           :label="UI_TEXT.common.close"
           variant="actionOkButton"
           @click="groupsStore.closeUserProfileModal()"

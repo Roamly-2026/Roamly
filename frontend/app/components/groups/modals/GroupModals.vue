@@ -30,14 +30,14 @@
       </template>
       <template #footer>
         <div :class="appConfig.layout.modalActions">
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnCancel"
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             type="button"
             @click="groupsStore.closeCreateModal"
           />
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnOk"
             :label="UI_TEXT.common.create"
             variant="actionOkButton"
@@ -74,13 +74,13 @@
       </template>
       <template #footer>
         <div :class="appConfig.layout.modalActions">
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnCancel"
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="groupsStore.closeDeleteModal"
           />
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnOk"
             :label="UI_TEXT.common.delete"
             variant="actionOkButton"
@@ -127,13 +127,13 @@
       </template>
       <template #footer>
         <div :class="appConfig.layout.modalActions">
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnCancel"
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="groupsStore.closeLeaveModal"
           />
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnOk"
             :label="UI_TEXT.common.leave"
             variant="actionOkButton"

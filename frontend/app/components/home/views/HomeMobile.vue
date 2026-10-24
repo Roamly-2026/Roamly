@@ -5,7 +5,7 @@
   >
     <!-- HERO SECTION -->
     <section id="home" :class="[appConfig.layout.homeHeroSection, SPACING_TOKENS.mt.md]">
-      <UButton
+      <BaseButton
         :label="UI_TEXT.home.getStarted"
         to="/groups"
         variant="actionHeroButton"
@@ -51,7 +51,7 @@
           </div>
 
           <!-- Bottom Action Button -->
-          <UButton
+          <BaseButton
             variant="ghost"
             :class="[
               `font-bold tracking-wide hover:underline underline-offset-4 transition-colors duration-500 cursor-pointer ${SPACING_TOKENS.mt.sm}`,
@@ -60,7 +60,7 @@
             @click="emit('toggleCard', card.id)"
           >
             {{ activeCard === card.id ? UI_TEXT.home.showLess : UI_TEXT.home.learnMore }}
-          </UButton>
+          </BaseButton>
 
           <!-- Extended Description (Active State) -->
           <div
@@ -95,7 +95,7 @@
       <div
         :class="`flex ${SPACING_TOKENS.gap.md} ${SPACING_TOKENS.mt.md} items-center justify-center flex-wrap`"
       >
-        <UButton
+        <BaseButton
           v-for="link in contactLinks"
           :key="link.name"
           :icon="link.icon"

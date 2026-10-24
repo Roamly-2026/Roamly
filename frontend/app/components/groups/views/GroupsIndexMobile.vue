@@ -14,16 +14,18 @@
         class="flex-1 min-w-50"
         :ui="{ leading: 'pl-3' }"
       />
-      <UTooltip :text="UI_TEXT.tooltips.createGroup">
-        <UButton
-          icon="i-heroicons-plus"
-          variant="glassIconButton"
-          @click="groupsStore.openCreateModal()"
-        />
-      </UTooltip>
-      <UTooltip :text="UI_TEXT.tooltips.viewInvites">
-        <UButton icon="i-heroicons-envelope" variant="glassIconButton" to="/groups/invites" />
-      </UTooltip>
+      <BaseButton
+        icon="i-heroicons-plus"
+        variant="glassIconButton"
+        :tooltip="UI_TEXT.tooltips.createGroup"
+        @click="groupsStore.openCreateModal()"
+      />
+      <BaseButton
+        icon="i-heroicons-envelope"
+        variant="glassIconButton"
+        to="/groups/invites"
+        :tooltip="UI_TEXT.tooltips.viewInvites"
+      />
     </div>
 
     <!-- CONTENT SECTION -->
@@ -51,24 +53,22 @@
           >
             <!-- LEAVE BUTTON -->
             <div class="absolute top-4 left-4 z-10">
-              <UTooltip :text="UI_TEXT.tooltips.leaveGroup">
-                <UButton
-                  icon="i-heroicons-arrow-right-on-rectangle"
-                  variant="ghostDangerIconButton"
-                  @click.stop="groupsStore.openLeaveModal(group)"
-                />
-              </UTooltip>
+              <BaseButton
+                icon="i-heroicons-arrow-right-on-rectangle"
+                variant="ghostDangerIconButton"
+                :tooltip="UI_TEXT.tooltips.leaveGroup"
+                @click.stop="groupsStore.openLeaveModal(group)"
+              />
             </div>
 
             <!-- DELETE BUTTON -->
             <div v-if="group.role.toLowerCase() === 'leader'" class="absolute top-4 right-4 z-10">
-              <UTooltip :text="UI_TEXT.tooltips.deleteGroup">
-                <UButton
-                  icon="i-heroicons-trash"
-                  variant="ghostDangerIconButton"
-                  @click.stop="groupsStore.openDeleteModal(group)"
-                />
-              </UTooltip>
+              <BaseButton
+                icon="i-heroicons-trash"
+                variant="ghostDangerIconButton"
+                :tooltip="UI_TEXT.tooltips.deleteGroup"
+                @click.stop="groupsStore.openDeleteModal(group)"
+              />
             </div>
 
             <!-- CARD CONTENT -->

@@ -30,13 +30,13 @@
       </template>
       <template #footer>
         <div :class="appConfig.layout.modalActions">
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnCancel"
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="groupsStore.closeUpdateModal()"
           />
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnOk"
             :label="UI_TEXT.common.save"
             variant="actionOkButton"
@@ -93,14 +93,14 @@
       </template>
       <template #footer>
         <div :class="appConfig.layout.modalActions">
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnCancel"
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             :disabled="!!inviteSuccess"
             @click="groupsStore.closeInviteModal()"
           />
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnOk"
             :label="UI_TEXT.groups.sendInvite"
             variant="actionOkButton"
@@ -133,13 +133,13 @@
       </template>
       <template #footer>
         <div :class="appConfig.layout.modalActions">
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnCancel"
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="groupsStore.closeRemoveUserModal()"
           />
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnOk"
             :label="UI_TEXT.common.remove"
             variant="actionOkButton"
@@ -172,13 +172,13 @@
       </template>
       <template #footer>
         <div :class="appConfig.layout.modalActions">
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnCancel"
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="groupsStore.closePromoteUserModal()"
           />
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnOk"
             :label="UI_TEXT.groups.promote"
             variant="actionOkButton"
@@ -209,13 +209,13 @@
       </template>
       <template #footer>
         <div :class="appConfig.layout.modalActions">
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnCancel"
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="groupsStore.closeDemoteUserModal()"
           />
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnOk"
             :label="UI_TEXT.groups.demote"
             variant="actionCancelButton"

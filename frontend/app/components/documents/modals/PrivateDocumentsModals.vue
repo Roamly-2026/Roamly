@@ -80,13 +80,13 @@
 
           <!-- Buttons -->
           <div :class="[appConfig.layout.flexBetween, 'mt-4']">
-            <UButton
+            <BaseButton
               :label="UI_TEXT.common.cancel"
               variant="actionCancelButton"
               :class="appConfig.typography.modalActionBtnCancel"
               @click="closeUploadModal"
             />
-            <UButton
+            <BaseButton
               type="submit"
               :label="UI_TEXT.common.upload"
               variant="actionOkButton"
@@ -187,13 +187,13 @@
 
           <!-- Buttons -->
           <div :class="[appConfig.layout.flexBetween, 'mt-4']">
-            <UButton
+            <BaseButton
               :label="UI_TEXT.common.cancel"
               variant="actionCancelButton"
               :class="appConfig.typography.modalActionBtnCancel"
               @click="closeUpdateModal"
             />
-            <UButton
+            <BaseButton
               type="submit"
               :label="UI_TEXT.common.save"
               variant="actionOkButton"
@@ -235,13 +235,13 @@
       </template>
       <template #footer>
         <div :class="appConfig.layout.flexBetween">
-          <UButton
+          <BaseButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             :class="appConfig.typography.modalActionBtnCancel"
             @click="documentsStore.closePrivateDeleteModal()"
           />
-          <UButton
+          <BaseButton
             :label="UI_TEXT.common.delete"
             variant="actionOkButton"
             class="bg-error-500 hover:bg-error-600 text-white"
@@ -298,7 +298,7 @@
                 :ui="{ content: 'z-[9999]' }"
                 :popper="{ placement: 'top', strategy: 'fixed' }"
               >
-                <UButton
+                <BaseButton
                   icon="i-heroicons-share"
                   variant="ghostBrandIconButton"
                   class="text-dark-text/70"
@@ -315,7 +315,7 @@
       </template>
       <template #footer>
         <div class="flex justify-end w-full">
-          <UButton
+          <BaseButton
             :label="UI_TEXT.common.close"
             variant="actionOkButton"
             :class="appConfig.typography.modalActionBtnCancel"
@@ -370,7 +370,7 @@
                 :ui="{ content: 'z-[9999]' }"
                 :popper="{ placement: 'top', strategy: 'fixed' }"
               >
-                <UButton
+                <BaseButton
                   icon="i-heroicons-x-mark"
                   variant="ghostDangerIconButton"
                   :loading="revokeMutation.isLoading.value"
@@ -386,7 +386,7 @@
       </template>
       <template #footer>
         <div class="flex justify-end w-full">
-          <UButton
+          <BaseButton
             :label="UI_TEXT.common.close"
             variant="actionOkButton"
             :class="appConfig.typography.modalActionBtnCancel"

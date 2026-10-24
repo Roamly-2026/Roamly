@@ -23,13 +23,13 @@
       </template>
       <template #footer>
         <div :class="appConfig.layout.modalActions">
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnCancel"
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="groupsStore.closeJoinModal"
           />
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnOk"
             :label="UI_TEXT.common.join"
             variant="actionOkButton"
@@ -65,13 +65,13 @@
       </template>
       <template #footer>
         <div :class="appConfig.layout.modalActions">
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnCancel"
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="groupsStore.closeDeclineModal"
           />
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnOk"
             :label="UI_TEXT.common.decline"
             variant="actionOkButton"

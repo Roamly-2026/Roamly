@@ -82,12 +82,12 @@
       </template>
       <template #footer>
         <div class="flex items-center justify-between w-full">
-          <UButton
+          <BaseButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="closeUploadModal"
           />
-          <UButton
+          <BaseButton
             :label="UI_TEXT.common.upload"
             variant="actionOkButton"
             :loading="isUploading"
@@ -127,7 +127,7 @@
       </template>
       <template #footer>
         <div class="flex items-center justify-between w-full">
-          <UButton
+          <BaseButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="
@@ -135,7 +135,7 @@
               fileToDelete = null;
             "
           />
-          <UButton
+          <BaseButton
             :label="UI_TEXT.common.delete"
             variant="actionOkButton"
             class="bg-error-500 hover:bg-error-600 text-white"
