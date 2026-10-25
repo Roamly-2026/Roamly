@@ -116,45 +116,29 @@
 </template>
 
 <script setup lang="ts">
-/* --- IMPORTS --- */
 import { reactive, ref, computed, watch } from 'vue';
 import { useAppConfig } from '#imports';
 import { getErrorMessage } from '~/utils/error.utils';
 import type { ApiError } from '~/types/apiError.type';
 
-/* --- COMPOSABLES --- */
 const appConfig = useAppConfig();
 
-/* --- PROPS --- */
 const props = defineProps<{
-  // the email address that is currently being verified
   email: string;
-  // indicates whether the verification request is currently in progress
   isVerifying: boolean;
-  // indicates whether the request to resend the verification code is in progress
   isResending: boolean;
-  // indicates whether the email has been successfully verified
   isVerified: boolean;
-  // the remaining time (in seconds) before the user can request another code
   resendCooldown: number;
-  // indicates whether the new verification code was successfully sent
   resendSuccess: boolean;
-  // the error object returned from a failed verification attempt, if any
   error: ApiError | Error | null | undefined;
-  // the error object returned from a failed resend attempt, if any
   resendError: ApiError | Error | null | undefined;
 }>();
 
-/* --- EMITS --- */
 const emit = defineEmits<{
-  // triggers when the user submits the verification code (OTP)
-  // [emit value]: otp: string
   submit: [otp: string];
-  // triggers when the user requests to resend the verification code
   resend: [];
 }>();
 
-/* --- OTP STATE --- */
 const OTP_LENGTH = 6;
 const otpCells = reactive<string[]>(Array(OTP_LENGTH).fill(''));
 const inputRefs = ref<(HTMLInputElement | null)[]>(Array(OTP_LENGTH).fill(null));
@@ -172,6 +156,7 @@ const focusCell = (index: number) => {
   inputRefs.value[index]?.focus();
 };
 
+// Sanitizes input to a single digit, auto-advances focus, and auto-submits when all cells are filled
 const onInput = (index: number, event: Event) => {
   const target = event.target as HTMLInputElement;
   const val = target.value.replace(/\D/g, '').slice(-1);
@@ -186,6 +171,7 @@ const onInput = (index: number, event: Event) => {
   }
 };
 
+// Handles keyboard navigation (Arrow keys) and sequential deletion (Backspace) across OTP inputs
 const onKeydown = (index: number, event: KeyboardEvent) => {
   if (event.key === 'Backspace') {
     if (otpCells[index]) {
@@ -204,6 +190,7 @@ const onKeydown = (index: number, event: KeyboardEvent) => {
   }
 };
 
+// Extracts numeric characters from clipboard data, distributes them across cells, and triggers auto-submit if complete
 const onPaste = (event: ClipboardEvent) => {
   event.preventDefault();
   const pasted = event.clipboardData?.getData('text').replace(/\D/g, '').slice(0, OTP_LENGTH) ?? '';
@@ -217,7 +204,7 @@ const onPaste = (event: ClipboardEvent) => {
   }
 };
 
-/* --- Clear cells and refocus when a verification error is received --- */
+// Reset OTP inputs and return focus to the first cell upon verification failure
 watch(
   () => props.error,
   (newErr) => {

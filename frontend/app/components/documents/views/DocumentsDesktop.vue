@@ -452,36 +452,21 @@ const memberSearchQuery = defineModel<string>('memberSearchQuery', { default: ''
 const memberFilterType = defineModel<string>('memberFilterType', { default: 'ALL' });
 
 const props = defineProps<{
-  // the list of group documents to be displayed
   documents: GroupFile[];
-  // the list of private documents belonging to the members
   memberDocuments: PrivateDocumentMetadata[];
-  // indicates whether the member documents are currently being loaded
   isLoadingMemberDocuments: boolean;
-  // the list of groups the user is part of or has access to
   groups: GroupOutDto[];
-  // indicates whether the main group documents are currently being loaded
   isLoading: boolean;
-  // indicates whether the current user has leader privileges in this context
   isCurrentUserLeader: boolean;
-  // a list of available document types for group files, formatted as label-value pairs
   documentTypes: { label: string; value: string }[];
-  // a list of available document types for private member files, formatted as label-value pairs
   privateDocumentTypes: { label: string; value: string }[];
 }>();
 
 const emit = defineEmits<{
-  // triggers when the user attempts to delete a group document
-  // [emit value]: file: GroupFile
   delete: [file: GroupFile];
-  // triggers when the user initiates a file upload process
   upload: [];
-  // triggers when a leader attempts to delete the entire group
   'delete-group': [];
-  // triggers when the user attempts to leave the current group
   'leave-group': [];
-  // triggers when the user initiates a document download
-  // [emit value]: url: string | undefined, filename: string
   download: [url: string | undefined, filename: string];
 }>();
 
@@ -496,7 +481,7 @@ const selectGroup = (uuid: string) => {
   isGroupDropdownOpen.value = false;
 };
 
-// Contextual nav — route to the currently selected group
+// Contextual navigation routes scoped to the currently active group
 const membersRoute = computed(() =>
   selectedGroup.value ? `/groups/${selectedGroup.value}/members` : '/groups',
 );
@@ -510,9 +495,7 @@ const documentsRoute = computed(() =>
   selectedGroup.value ? `/files/documents?groupId=${selectedGroup.value}` : '/files/documents',
 );
 
-/**
- * Returns member documents filtered by type and optional search query.
- */
+// Filters private member documents by specific category and case-insensitive filename search
 const filteredMemberDocuments = (typeValue: string): PrivateDocumentMetadata[] => {
   const query = memberSearchQuery.value.toLowerCase().trim();
   return props.memberDocuments.filter((doc) => {

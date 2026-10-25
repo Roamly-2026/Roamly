@@ -111,10 +111,8 @@
 </template>
 
 <script setup lang="ts">
-/* --- IMPORTS --- */
 import { useAppConfig } from '#imports';
 
-/* --- INTERFACES --- */
 interface FeatureCard {
   id: string;
   title: string;
@@ -130,22 +128,15 @@ interface ContactLink {
   target: string;
 }
 
-/* --- COMPOSABLES --- */
 const appConfig = useAppConfig();
 
-/* --- PROPS & EMITS --- */
 defineProps<{
-  // the list of feature cards to be displayed on the home page
   featureCards: FeatureCard[];
-  // the list of contact links or social media profiles to be displayed
   contactLinks: ContactLink[];
-  // the unique identifier of the currently active or expanded feature card, if any
   activeCard: string | null;
 }>();
 
 const emit = defineEmits<{
-  // triggers when the user clicks on a feature card to expand or collapse its details
-  // [emit value]: id: string
   (e: 'toggleCard', id: string): void;
 }>();
 </script>

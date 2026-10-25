@@ -78,7 +78,6 @@
 </template>
 
 <script setup lang="ts">
-/* --- IMPORTS --- */
 import { useAppConfig } from '#imports';
 import { ref } from 'vue';
 import { useIntersectionObserver } from '@vueuse/core';
@@ -86,28 +85,21 @@ import { useGroupsStore } from '~/stores/groups.modals.store';
 import type { GroupInvitesOutDto } from '~/types/groups.type';
 import type { ApiError } from '~/types/apiError.type';
 
-/* --- COMPOSABLES & STORES --- */
 const appConfig = useAppConfig();
 const groupsStore = useGroupsStore();
 
-/* --- PROPS & EMITS --- */
 defineProps<{
-  // the list of group invitations to be displayed
   invitesList: GroupInvitesOutDto[];
-  // indicates whether the initial list of invitations is currently being loaded
   isLoading: boolean;
-  // the error object returned from a failed fetch attempt, if any
   error: ApiError | Error | null | undefined;
-  // indicates whether the next page of invitations is currently being fetched
   isFetchingNextPage: boolean;
 }>();
 
 const emit = defineEmits<{
-  // triggers when the user scrolls to the bottom of the list, requesting the next set of invitations
   (e: 'loadMore'): void;
 }>();
 
-/* --- DOM OBSERVERS (INFINITE SCROLL) --- */
+// DOM observer - Infinite scroll
 const loadMoreTrigger = ref<HTMLElement | null>(null);
 useIntersectionObserver(
   loadMoreTrigger,

@@ -406,7 +406,6 @@
 </template>
 
 <script setup lang="ts">
-/* --- IMPORTS --- */
 import { computed, ref } from 'vue';
 import { useAppConfig } from '#imports';
 import type { useProfileStore } from '~/stores/profile.modals.store';
@@ -415,58 +414,31 @@ import type { UserOutDto } from '~/types/user.type';
 import type { ApiError } from '~/types/apiError.type';
 import type { PrivateDocumentMetadata } from '~/types/files.type';
 
-/* --- COMPOSABLES --- */
 const appConfig = useAppConfig();
 
-/* --- PROPS --- */
 const props = defineProps<{
-  // the detailed profile information of the currently authenticated user
   currentUser: UserOutDto | null | undefined;
-  // indicates whether the user profile data is currently being loaded
   isLoading: boolean;
-  // the error object returned from a failed profile fetch attempt, if any
   error: ApiError | Error | null | undefined;
-  // the list of private documents uploaded by or belonging to the user
   privateDocuments: PrivateDocumentMetadata[];
-  // indicates whether the private documents are currently being loaded
   isLoadingDocuments: boolean;
-  // a list of available document types for filtering or categorization,
-  // formatted as label-value pairs
   privateDocumentTypes: { label: string; value: string }[];
-  // reference to the profile store for managing profile-related modal states and actions
   profileStore: ReturnType<typeof useProfileStore>;
-  // reference to the documents store for managing document-related modal states and actions
   documentsStore: ReturnType<typeof useDocumentsStore>;
 }>();
 
-/* --- EMITS --- */
 const emit = defineEmits<{
-  // triggers when the user initiates a new document upload process
   upload: [];
-  // triggers when the user attempts to edit a specific document's metadata
-  // [emit value]: doc: PrivateDocumentMetadata
   edit: [doc: PrivateDocumentMetadata];
-  // triggers when the user attempts to delete a specific document
-  // [emit value]: doc: PrivateDocumentMetadata
   delete: [doc: PrivateDocumentMetadata];
-  // triggers when the user wants to preview or view a specific document
-  // [emit value]: doc: PrivateDocumentMetadata
   view: [doc: PrivateDocumentMetadata];
-  // triggers when the user initiates a download for a specific document
-  // [emit value]: doc: PrivateDocumentMetadata
   download: [doc: PrivateDocumentMetadata];
-  // triggers when the user attempts to share a specific document
-  // [emit value]: doc: PrivateDocumentMetadata
   share: [doc: PrivateDocumentMetadata];
-  // triggers when the user manages access rights and permissions for a specific document
-  // [emit value]: doc: PrivateDocumentMetadata
   access: [doc: PrivateDocumentMetadata];
 }>();
 
-/* --- LOCAL STATE --- */
 const filterType = ref('ALL');
 
-/* --- COMPUTED --- */
 const filteredDocuments = computed<PrivateDocumentMetadata[]>(() => {
   if (filterType.value === 'ALL') return props.privateDocuments;
   return props.privateDocuments.filter((doc) => doc.documents?.document_type === filterType.value);

@@ -307,7 +307,6 @@
 </template>
 
 <script setup lang="ts">
-/* --- IMPORTS --- */
 import { useAppConfig } from '#imports';
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -319,39 +318,25 @@ import type { GroupInfosOutDto, GroupProfileDto } from '~/types/groups.type';
 import type { UiEvent } from '~/types/events.type';
 import type { ApiError } from '~/types/apiError.type';
 
-/* --- COMPOSABLES & STORES --- */
 const appConfig = useAppConfig();
 const groupsStore = useGroupsStore();
 const route = useRoute();
 const router = useRouter();
 const eventsStore = useEventsStore();
 
-/* --- PROPS & EMITS --- */
 const props = defineProps<{
-  // the detailed information and metadata of the current group
   groupInfos: GroupInfosOutDto | undefined | null;
-  // the list of group members, filtered based on the current search query
   filteredMembers: GroupProfileDto[];
-  // indicates whether the group information and members are currently being loaded
   isLoading: boolean;
-  // the error object returned from a failed fetch attempt, if any
   error: ApiError | Error | null | undefined;
-  // the current text used to search or filter through the group members
   searchQuery: string;
-  // indicates whether the current user has leader privileges in this group
   isCurrentUserLeader: boolean;
-  // the email address of the logged-in user, used to identify their own profile or check permissions
   currentUserEmail: string | undefined;
 }>();
 
 const emit = defineEmits<{
-  // triggers when the search input changes, updating the bound query in the parent component
-  // [emit value]: val: string
   (e: 'update:searchQuery', val: string): void;
-  // triggers when the user attempts to delete the entire group or leave it
   (e: 'deleteGroup' | 'leaveGroup'): void;
-  // triggers when the user clicks on a specific member to view their detailed profile
-  // [emit value]: profile: GroupProfileDto
   (e: 'openProfile', profile: GroupProfileDto): void;
 }>();
 
@@ -359,7 +344,6 @@ const navigateToEvent = (eventUuid: string) => {
   router.push({ path: '/events', query: { eventId: eventUuid } });
 };
 
-/* --- FETCHING UPCOMING EVENTS --- */
 const groupUuid = computed(() => route.params.uuid as string);
 const selectedDateId = ref<string | undefined>('ALL');
 const { data: eventsData, isLoading: isLoadingEvents } = useEventsQuery(groupUuid, selectedDateId);
@@ -406,7 +390,6 @@ const documentsRoute = computed(() =>
   groupUuid.value ? `/files/documents?groupId=${groupUuid.value}` : '/files/documents',
 );
 
-/* --- HELPERS --- */
 const isCurrentUser = (email: string) => {
   return props.currentUserEmail === email;
 };

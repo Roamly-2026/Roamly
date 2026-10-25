@@ -75,32 +75,27 @@
 </template>
 
 <script setup lang="ts">
-/* --- IMPORTS --- */
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAppConfig } from '#imports';
 import { useCurrentUserQuery } from '~/queries/user.query';
 import type { DropdownMenuItem } from '@nuxt/ui';
 
-/* --- COMPOSABLES & STATE --- */
 const appConfig = useAppConfig();
 const router = useRouter();
 const { isAuthenticated, logout } = useAuth();
 const { data: userProfile, error } = useCurrentUserQuery();
 
-/* --- MENU ITEMS --- */
 const profileDropdownItems = ref<DropdownMenuItem[]>([
   { label: UI_TEXT.common.profile, icon: 'i-heroicons-user-circle', to: '/users/profile' },
   { label: UI_TEXT.common.groups, icon: 'i-heroicons-user-group', to: '/groups' },
   { label: UI_TEXT.common.events, icon: 'i-heroicons-calendar-days', to: '/events' },
 ]);
 
-/* --- WATCHERS --- */
 watch(error, (newError) => {
   if (newError) handleLogout();
 });
 
-/* --- HANDLERS --- */
 const handleLogout = () => {
   logout();
   router.push('/login');

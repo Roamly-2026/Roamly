@@ -231,28 +231,17 @@ const selectedGroup = defineModel<string | undefined>('selectedGroup');
 const searchQuery = defineModel<string>('searchQuery', { default: '' });
 
 const props = defineProps<{
-  // the list of group media files to be displayed
   media: GroupFile[];
-  // the list of groups the user is part of or has access to
   groups: GroupOutDto[];
-  // indicates whether the media files are currently being loaded
   isLoading: boolean;
-  // indicates whether the current user has leader privileges in this context
   isCurrentUserLeader: boolean;
 }>();
 
 const emit = defineEmits<{
-  // triggers when the user attempts to delete a media file
-  // [emit value]: file: GroupFile
   delete: [file: GroupFile];
-  // triggers when the user initiates a media file upload process
   upload: [];
-  // triggers when a leader attempts to delete the entire group
   'delete-group': [];
-  // triggers when the user attempts to leave the current group
   'leave-group': [];
-  // triggers when the user initiates a media file download
-  // [emit value]: url: string | undefined, filename: string
   download: [url: string | undefined, filename: string];
 }>();
 

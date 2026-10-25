@@ -84,7 +84,6 @@
 </template>
 
 <script setup lang="ts">
-/* --- IMPORTS --- */
 import { reactive } from 'vue';
 import { useAppConfig } from '#imports';
 import type { FormSubmitEvent } from '#ui/types';
@@ -92,32 +91,23 @@ import { loginSchema, type LoginFormState } from '~/utils/schemas/login.schema';
 import { getErrorMessage } from '~/utils/error.utils';
 import type { ApiError } from '~/types/apiError.type';
 
-/* --- COMPOSABLES --- */
 const appConfig = useAppConfig();
 
-/* --- PROPS & EMITS --- */
 defineProps<{
-  // indicates whether the login request is currently in progress
   isLoading: boolean;
-  // the error object returned from a failed login attempt, if any
   error: ApiError | Error | null | undefined;
-  // the current state of the login request lifecycle
   status: 'idle' | 'pending' | 'success' | 'error';
 }>();
 
 const emit = defineEmits<{
-  // triggers when the user submits the login form
-  // [emit value]: data: LoginFormState
   (e: 'submit', data: LoginFormState): void;
 }>();
 
-/* --- COMPONENT STATE --- */
 const form = reactive<LoginFormState>({
   email: '',
   password: '',
 });
 
-/* --- EVENT HANDLERS --- */
 const clearForm = () => {
   Object.assign(form, { email: '', password: '' });
 };

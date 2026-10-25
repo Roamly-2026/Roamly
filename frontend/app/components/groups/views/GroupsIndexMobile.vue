@@ -109,7 +109,6 @@
 </template>
 
 <script setup lang="ts">
-/* --- IMPORTS --- */
 import { useAppConfig } from '#imports';
 import { useRouter } from 'vue-router';
 import { ref, computed } from 'vue';
@@ -118,27 +117,20 @@ import { useGroupsStore } from '~/stores/groups.modals.store';
 import type { GroupOutDto } from '~/types/groups.type';
 import type { ApiError } from '~/types/apiError.type';
 
-/* --- COMPOSABLES & STORES --- */
 const appConfig = useAppConfig();
 const router = useRouter();
 const groupsStore = useGroupsStore();
 
 const searchQuery = defineModel<string>('searchQuery', { default: '' });
 
-/* --- PROPS & EMITS --- */
 const props = defineProps<{
-  // the list of groups to be displayed
   groupsList: GroupOutDto[];
-  // indicates whether the initial list of groups is currently being loaded
   isLoading: boolean;
-  // the error object returned from a failed fetch attempt, if any
   error: ApiError | Error | null | undefined;
-  // indicates whether the next page of groups is currently being fetched
   isFetchingNextPage: boolean;
 }>();
 
 const emit = defineEmits<{
-  // triggers when the user requests to load the next set of groups (e.g., scrolling to the bottom)
   (e: 'loadMore'): void;
 }>();
 
@@ -149,7 +141,7 @@ const filteredGroups = computed(() => {
   return props.groupsList.filter((group) => group.name.toLowerCase().includes(query));
 });
 
-/* --- DOM OBSERVERS (INFINITE SCROLL) --- */
+// DOM observer - Infinite scroll
 const loadMoreTrigger = ref<HTMLElement | null>(null);
 useIntersectionObserver(
   loadMoreTrigger,

@@ -3,15 +3,15 @@ import { watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuth } from '~/composables/useAuth';
 
-// a composable for protecting routes by redirecting unauthenticated users to the login page
+/**
+ * Client-side route guard composable.
+ * Evaluates authentication state immediately on mount and redirects to /login if unauthenticated,
+ * or reactive-ly if the session is terminated while on the page.
+ */
 export const useProtectedPage = () => {
   const router = useRouter();
-  // a computed property that determines if a user is logged in
-  // [return value]: boolean
   const { isAuthenticated } = useAuth();
 
-  // watches the authentication state and immediately redirects to the login page
-  // if the user is not authenticated
   watch(
     isAuthenticated,
     (isAuth) => {
