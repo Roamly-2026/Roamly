@@ -259,6 +259,10 @@ const profileStore = useProfileStore();
 const router = useRouter();
 const { logout } = useAuth();
 
+const isUpdatingProfile = computed(() => updateProfileMutation.isLoading.value);
+const isChangingPwd = computed(() => changePwdMutation.isLoading.value);
+const isDeleting = computed(() => deleteProfileMutation.isLoading.value);
+
 /* ==========================================
    SHARED HELPERS
 ========================================== */

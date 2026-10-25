@@ -109,6 +109,10 @@ const router = useRouter();
 const newGroupName = ref('');
 const formValidationError = ref('');
 
+const isCreating = computed(() => createMutation.isLoading.value);
+const isDeleting = computed(() => deleteMutation.isLoading.value);
+const isLeaving = computed(() => leaveMutation.isLoading.value);
+
 /* --- API MUTATIONS --- */
 const createMutation = useCreateGroupMutation({
   onSuccess: () => {

@@ -149,12 +149,20 @@ import {
   useDemoteUserMutation,
 } from '~/queries/groups.mutation';
 import { useAppConfig } from '#imports';
+import { getErrorMessage } from '~/utils/error.utils';
+import { updateGroupSchema, inviteUserSchema } from '~/utils/schemas/groups.schema';
 
 /* --- COMPOSABLES --- */
 const appConfig = useAppConfig();
 const groupsStore = useGroupsStore();
 const route = useRoute();
 const membersGroupUuid = computed(() => route.params.uuid as string);
+
+const isUpdating = computed(() => updateMutation.isLoading.value);
+const isInviting = computed(() => inviteMutation.isLoading.value);
+const isRemoving = computed(() => removeMutation.isLoading.value);
+const isPromoting = computed(() => promoteMutation.isLoading.value);
+const isDemoting = computed(() => demoteMutation.isLoading.value);
 
 /* --- UPDATE LOGIC --- */
 const updateGroupName = ref('');

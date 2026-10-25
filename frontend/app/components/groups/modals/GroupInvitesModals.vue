@@ -62,6 +62,9 @@ import { getErrorMessage } from '~/utils/error.utils';
 const appConfig = useAppConfig();
 const groupsStore = useGroupsStore();
 
+const isJoining = computed(() => joinMutation.isLoading.value);
+const isLeaving = computed(() => leaveMutation.isLoading.value);
+
 /* --- API MUTATIONS --- */
 const joinMutation = useJoinGroupMutation({
   onSuccess: () => {
