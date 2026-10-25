@@ -67,17 +67,16 @@
       </template>
       <template #footer>
         <div :class="appConfig.layout.flexBetween">
-          <UButton
+          <BaseButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             :class="appConfig.typography.modalActionBtnCancel"
             @click="closeUploadModal"
           />
-          <UButton
+          <BaseButton
             type="submit"
             form="upload-group-doc-form"
             :label="UI_TEXT.common.upload"
-            variant="actionOkButton"
             :class="appConfig.typography.modalActionBtnOk"
             :loading="uploadMutation.isLoading.value"
             :disabled="!uploadForm.file"
@@ -161,17 +160,16 @@
       </template>
       <template #footer>
         <div :class="appConfig.layout.flexBetween">
-          <UButton
+          <BaseButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             :class="appConfig.typography.modalActionBtnCancel"
             @click="closeUpdateModal"
           />
-          <UButton
+          <BaseButton
             type="submit"
             form="update-group-doc-form"
             :label="UI_TEXT.common.save"
-            variant="actionOkButton"
             :class="appConfig.typography.modalActionBtnOk"
             :loading="updateMutation.isLoading.value"
           />

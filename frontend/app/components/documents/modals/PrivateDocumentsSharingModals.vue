@@ -38,7 +38,7 @@
                 :ui="{ content: 'z-[9999]' }"
                 :popper="{ placement: 'top', strategy: 'fixed' }"
               >
-                <UButton
+                <BaseButton
                   icon="i-heroicons-share"
                   variant="ghostBrandIconButton"
                   class="text-dark-text/70"
@@ -55,9 +55,8 @@
       </template>
       <template #footer>
         <div class="flex justify-end w-full">
-          <UButton
+          <BaseButton
             :label="UI_TEXT.common.close"
-            variant="actionOkButton"
             :class="appConfig.typography.modalActionBtnCancel"
             @click="documentsStore.closePrivateShareModal()"
           />
@@ -102,7 +101,7 @@
                 :ui="{ content: 'z-[9999]' }"
                 :popper="{ placement: 'top', strategy: 'fixed' }"
               >
-                <UButton
+                <BaseButton
                   icon="i-heroicons-x-mark"
                   variant="ghostDangerIconButton"
                   :loading="revokeMutation.isLoading.value"
@@ -118,7 +117,7 @@
       </template>
       <template #footer>
         <div class="flex justify-end w-full">
-          <UButton
+          <BaseButton
             :label="UI_TEXT.common.close"
             variant="actionOkButton"
             :class="appConfig.typography.modalActionBtnCancel"

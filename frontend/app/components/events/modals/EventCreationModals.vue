@@ -21,15 +21,12 @@
             :class="appConfig.layout.modalForm"
             @submit="onSubmit"
           >
-            <UFormField name="title" :label="UI_TEXT.events.title">
-              <template #default="{ error }">
-                <UInput
-                  v-model="formState.title"
-                  :placeholder="UI_TEXT.events.titlePlaceholder"
-                  :variant="error ? 'glassError' : 'glass'"
-                />
-              </template>
-            </UFormField>
+            <BaseInput
+              v-model="formState.title"
+              name="title"
+              :label="UI_TEXT.events.title"
+              :placeholder="UI_TEXT.events.titlePlaceholder"
+            />
 
             <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
               <UFormField name="start_time" :label="UI_TEXT.events.startDateTime">
@@ -88,7 +85,7 @@
               <span class="text-sm font-medium text-dark-text">{{
                 UI_TEXT.events.optionalLocation
               }}</span>
-              <UButton
+              <BaseButton
                 icon="i-heroicons-map"
                 :label="UI_TEXT.events.chooseLocation"
                 variant="glassOutlineButton"
@@ -103,7 +100,7 @@
                 >
                   {{ formState.address }}
                 </span>
-                <UButton
+                <BaseButton
                   icon="i-heroicons-x-mark"
                   variant="ghostDangerIconButton"
                   size="xs"
@@ -126,12 +123,12 @@
       </template>
       <template #footer>
         <div :class="[appConfig.layout.flexBetween, 'mt-4']">
-          <UButton
+          <BaseButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="closeAndResetForm"
           />
-          <UButton
+          <BaseButton
             type="submit"
             form="add-event-form"
             :label="UI_TEXT.common.add"
@@ -147,7 +144,7 @@
       <template #header>
         <div class="flex justify-between items-center w-full">
           <h3 class="text-xl font-bold text-dark-text">{{ UI_TEXT.events.selectLocation }}</h3>
-          <UButton
+          <BaseButton
             icon="i-heroicons-x-mark"
             variant="ghost"
             class="hover:bg-error-50 hover:text-error-500 rounded-full transition-all duration-200"

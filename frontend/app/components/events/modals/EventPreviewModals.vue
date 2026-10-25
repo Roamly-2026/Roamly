@@ -29,34 +29,31 @@
             }}</span>
           </div>
           <div class="flex items-center gap-1">
-            <UTooltip
+            <BaseButton
               v-if="
                 eventsStore.previewEvent.creator?.email === currentUserEmail &&
                 eventsStore.previewEvent.is_private
               "
-              :text="UI_TEXT.events.inviteMembers"
-            >
-              <UButton
-                icon="i-heroicons-user-plus"
-                variant="ghostBrandIconButton"
-                class="text-dark-text/70"
-                @click="eventsStore.openAddMembersModal(eventsStore.previewEvent!)"
-              />
-            </UTooltip>
-            <UTooltip v-if="hasPermissionToDelete" :text="UI_TEXT.events.deleteEvent">
-              <UButton
-                icon="i-heroicons-trash"
-                variant="ghostDangerIconButton"
-                @click="eventsStore.openDeleteEventModal(eventsStore.previewEvent!)"
-              />
-            </UTooltip>
-            <UTooltip v-else-if="canLeaveEvent" :text="UI_TEXT.events.leaveEvent">
-              <UButton
-                icon="i-heroicons-arrow-right-on-rectangle"
-                variant="ghostDangerIconButton"
-                @click="eventsStore.openLeaveEventModal(eventsStore.previewEvent!)"
-              />
-            </UTooltip>
+              icon="i-heroicons-user-plus"
+              variant="ghostBrandIconButton"
+              class="text-dark-text/70"
+              :tooltip="UI_TEXT.events.inviteMembers"
+              @click="eventsStore.openAddMembersModal(eventsStore.previewEvent!)"
+            />
+            <BaseButton
+              v-if="hasPermissionToDelete"
+              icon="i-heroicons-trash"
+              variant="ghostDangerIconButton"
+              :tooltip="UI_TEXT.events.deleteEvent"
+              @click="eventsStore.openDeleteEventModal(eventsStore.previewEvent!)"
+            />
+            <BaseButton
+              v-else-if="canLeaveEvent"
+              icon="i-heroicons-arrow-right-on-rectangle"
+              variant="ghostDangerIconButton"
+              :tooltip="UI_TEXT.events.leaveEvent"
+              @click="eventsStore.openLeaveEventModal(eventsStore.previewEvent!)"
+            />
           </div>
         </div>
         <h2 :class="appConfig.calendar.previewMainTitle">
@@ -146,11 +143,11 @@
                     </div>
                   </UTooltip>
                 </div>
-                <UButton
+                <BaseButton
                   variant="link"
                   class="p-0 text-sm h-auto font-medium"
                   @click="openAllParticipantsModal"
-                  >{{ UI_TEXT.events.showParticipants }}</UButton
+                  >{{ UI_TEXT.events.showParticipants }}</BaseButton
                 >
               </template>
               <template v-else>
@@ -201,7 +198,7 @@
     </template>
     <template #footer>
       <div class="flex justify-end w-full">
-        <UButton
+        <BaseButton
           :label="UI_TEXT.common.close"
           variant="actionCancelButton"
           @click="eventsStore.closePreviewModal()"

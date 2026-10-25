@@ -1,4 +1,4 @@
-<!-- components/common/modals/FormModal.vue -->
+<!-- frontend/app/components/base/modals/FormModal.vue -->
 <template>
   <BaseModal
     :open="open"
@@ -20,18 +20,17 @@
 
     <template #footer>
       <div :class="appConfig.layout.modalActions || appConfig.layout.flexBetween">
-        <UButton
+        <BaseButton
           :label="cancelText"
           variant="actionCancelButton"
           :class="appConfig.typography.modalActionBtnCancel"
           :disabled="disableCancel"
           @click="$emit('cancel')"
         />
-        <UButton
+        <BaseButton
           type="submit"
           :form="formId"
           :label="submitText"
-          variant="actionOkButton"
           :class="appConfig.typography.modalActionBtnOk"
           :loading="loading"
           :disabled="disableSubmit"

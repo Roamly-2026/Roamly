@@ -44,7 +44,7 @@
                 :ui="{ content: 'z-[9999]' }"
                 :popper="{ placement: 'top', strategy: 'fixed' }"
               >
-                <UButton
+                <BaseButton
                   icon="i-heroicons-user-minus"
                   variant="ghostDangerIconButton"
                   :loading="removeParticipantMutation.isLoading.value"
@@ -63,7 +63,7 @@
       </template>
       <template #footer>
         <div class="flex justify-end w-full">
-          <UButton
+          <BaseButton
             :label="UI_TEXT.common.close"
             variant="actionCancelButton"
             @click="eventsStore.closeParticipantsModal()"
@@ -152,15 +152,14 @@
       </template>
       <template #footer>
         <div class="flex justify-between w-full gap-3">
-          <UButton
+          <BaseButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             :disabled="addParticipantsMutation.isLoading.value"
             @click="closeAddMembersModal"
           />
-          <UButton
+          <BaseButton
             :label="UI_TEXT.events.addSelected"
-            variant="actionOkButton"
             :loading="addParticipantsMutation.isLoading.value"
             :disabled="selectedEmailsToAdd.length === 0"
             @click="submitNewMembers"
