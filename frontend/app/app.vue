@@ -1,5 +1,5 @@
 <template>
-  <UApp>
+  <UApp :toaster="{ duration: 5000 }">
     <Transition name="fade">
       <LoadingScreen v-if="isAppLoading" />
     </Transition>
