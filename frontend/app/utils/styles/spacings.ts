@@ -1,4 +1,4 @@
-// frontend/app/utils/spacing.tokens.ts
+// frontend/app/utils/styles/spacings.ts
 
 export const SPACING_TOKENS = {
   // Base spacings
@@ -8,8 +8,10 @@ export const SPACING_TOKENS = {
     md: 'gap-4', // 16px
     lg: 'gap-6', // 24px
     xl: 'gap-8', // 32px
+    '2xl': 'gap-10', // 40px
   },
   p: {
+    none: 'p-0',
     xs: 'p-1', // 4px
     sm: 'p-2', // 8px
     md: 'p-4', // 16px
@@ -17,11 +19,21 @@ export const SPACING_TOKENS = {
     xl: 'p-8', // 32px
   },
   pt: {
-    xs: 'pt-1', // 4px
-    sm: 'pt-2', // 8px
-    md: 'pt-4', // 16px
-    lg: 'pt-6', // 24px
-    xl: 'pt-8', // 32px
+    xs: 'pt-1',
+    sm: 'pt-2',
+    md: 'pt-4',
+    lg: 'pt-6',
+    xl: 'pt-8',
+  },
+  pr: {
+    xs: 'pr-1',
+    sm: 'pr-2',
+    md: 'pr-4',
+  },
+  pl: {
+    md: 'pl-4',
+    lg: 'pl-6',
+    xl: 'pl-8',
   },
   px: {
     xs: 'px-1',
@@ -29,13 +41,33 @@ export const SPACING_TOKENS = {
     md: 'px-4',
     lg: 'px-6',
     xl: 'px-8',
+    '2xl': 'px-10', // 40px (lg buttons)
+    '3xl': 'px-12', // 48px (xl hero buttons)
   },
   py: {
+    '2xs': 'py-0.5', // 2px (badges)
     xs: 'py-1',
     sm: 'py-2',
     md: 'py-4',
     lg: 'py-6',
     xl: 'py-8',
+    '3xl': 'py-12',
+  },
+  pxImportant: {
+    md: '!px-4',
+    lg: '!px-6',
+    xl: '!px-8',
+    '2xl': '!px-10',
+    '3xl': '!px-12',
+  },
+  pyImportant: {
+    xs: '!py-1',
+    sm: '!py-2',
+    md: '!py-4',
+  },
+  plImportant: {
+    xl: '!pl-8',
+    '2xl': '!pl-10',
   },
   m: {
     xs: 'm-1',
@@ -43,6 +75,11 @@ export const SPACING_TOKENS = {
     md: 'm-4',
     lg: 'm-6',
     xl: 'm-8',
+  },
+  mx: {
+    xs: 'mx-1',
+    sm: 'mx-2',
+    auto: 'mx-auto',
   },
   my: {
     xs: 'my-1',
@@ -52,6 +89,7 @@ export const SPACING_TOKENS = {
     xl: 'my-8',
   },
   mt: {
+    none: 'mt-0',
     xs: 'mt-1',
     sm: 'mt-2',
     md: 'mt-4',
@@ -59,11 +97,21 @@ export const SPACING_TOKENS = {
     xl: 'mt-8',
   },
   mb: {
-    xs: 'mb-1', // 4px
-    sm: 'mb-2', // 8px
-    md: 'mb-4', // 16px
-    lg: 'mb-6', // 24px
-    xl: 'mb-8', // 32px
+    xs: 'mb-1',
+    sm: 'mb-2',
+    md: 'mb-4',
+    lg: 'mb-6',
+    xl: 'mb-8',
+  },
+  ml: {
+    xs: 'ml-1',
+    sm: 'ml-2',
+    md: 'ml-4',
+    xl: 'ml-8',
+  },
+  mr: {
+    sm: 'mr-2',
+    md: 'mr-4',
   },
 
   // Mobile and desktop spacings

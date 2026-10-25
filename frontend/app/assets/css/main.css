@@ -87,6 +87,6 @@ body {
 input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='button']):not(
     [type='submit']
   ) {
-  padding-left: 1rem !important; /* 16px - SPACING_TOKENS.px.md */
-  padding-right: 1rem !important; /* 16px - SPACING_TOKENS.px.md */
+  padding-left: 1rem; /* 16px - SPACING_TOKENS.px.md */
+  padding-right: 1rem; /* 16px - SPACING_TOKENS.px.md */
 }
