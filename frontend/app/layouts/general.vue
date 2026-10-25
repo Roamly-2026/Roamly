@@ -19,6 +19,7 @@
     <EventsModals />
     <PrivateDocumentsModals />
     <GroupDocumentsModals />
+    <PrivateDocumentsSharingModals />
   </div>
 </template>
 

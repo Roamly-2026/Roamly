@@ -213,145 +213,10 @@
     >
       <template #body>
         <p :class="appConfig.typography.modalText">
-          {{ ' ' + UI_TEXT.documents.deleteBeforeName + ' '
-          }}<span :class="appConfig.typography.modalInlineHighlight">{{
-            privateFileToDelete?.fileName
-          }}</span
-          >{{ UI_TEXT.documents.deleteAfterName + ' ' }}
+          {{ ' ' + UI_TEXT.documents.deleteBeforeName + ' ' }}<span :class="appConfig.typography.modalInlineHighlight">{{ privateFileToDelete?.fileName }}</span>{{ UI_TEXT.documents.deleteAfterName + ' ' }}
         </p>
       </template>
     </ConfirmModal>
-
-    <!-- ==================== -->
-    <!-- SHARE DOCUMENT MODAL -->
-    <!-- ==================== -->
-    <BaseModal
-      v-model:open="documentsStore.isPrivateShareModalOpen"
-      :title="UI_TEXT.documents.share"
-      :ui-size="appConfig.layout.modalSizeMd"
-    >
-      <template #body>
-        <div :class="appConfig.calendar.participantModalScroll">
-          <div
-            v-for="group in unsharedGroups"
-            :key="group.uuid"
-            :class="appConfig.calendar.participantCard"
-          >
-            <div class="flex items-center justify-between w-full">
-              <div class="flex items-center gap-5">
-                <UAvatar
-                  :alt="group.name"
-                  icon="i-heroicons-user-group"
-                  size="xl"
-                  :class="appConfig.calendar.participantCardAvatar"
-                />
-
-                <div :class="appConfig.calendar.participantCardInfo">
-                  <div class="flex items-center gap-1.5 mb-1.5">
-                    <h4 :class="appConfig.calendar.participantCardName">{{ group.name }}</h4>
-                  </div>
-                  <div class="flex gap-1.5">
-                    <UIcon name="i-heroicons-user-solid" class="w-5 h-5 text-brand-500 shrink-0" />
-                    <h4 :class="appConfig.calendar.metaValue">{{ group.current_size }}</h4>
-                  </div>
-                </div>
-              </div>
-              <UTooltip
-                :text="UI_TEXT.documents.shareWithGroup"
-                :ui="{ content: 'z-[9999]' }"
-                :popper="{ placement: 'top', strategy: 'fixed' }"
-              >
-                <UButton
-                  icon="i-heroicons-share"
-                  variant="ghostBrandIconButton"
-                  class="text-dark-text/70"
-                  :loading="shareMutation.isLoading.value"
-                  @click="handleShareDocument(group.uuid)"
-                />
-              </UTooltip>
-            </div>
-          </div>
-          <div v-if="!unsharedGroups?.length" class="text-sm font-medium text-dark-text/50 p-4">
-            {{ ' ' + UI_TEXT.documents.noAvailableGroups + ' ' }}
-          </div>
-        </div>
-      </template>
-      <template #footer>
-        <div class="flex justify-end w-full">
-          <UButton
-            :label="UI_TEXT.common.close"
-            variant="actionOkButton"
-            :class="appConfig.typography.modalActionBtnCancel"
-            @click="documentsStore.closePrivateShareModal()"
-          />
-        </div>
-      </template>
-    </BaseModal>
-
-    <!-- ==================== -->
-    <!-- VIEW ACCESS MODAL -->
-    <!-- ==================== -->
-    <BaseModal
-      v-model:open="documentsStore.isPrivateAccessModalOpen"
-      :title="UI_TEXT.documents.access"
-      :ui-size="appConfig.layout.modalSizeMd"
-    >
-      <template #body>
-        <div :class="appConfig.calendar.participantModalScroll">
-          <div
-            v-for="share in sharedGroups"
-            :key="share.groups.name"
-            :class="appConfig.calendar.participantCard"
-          >
-            <div class="flex items-center justify-between w-full">
-              <div class="flex items-center gap-5">
-                <UAvatar
-                  :alt="share.groups.name"
-                  icon="i-heroicons-user-group"
-                  size="xl"
-                  :class="appConfig.calendar.participantCardAvatar"
-                />
-
-                <div :class="appConfig.calendar.participantCardInfo">
-                  <div class="flex items-center gap-1.5">
-                    <h4 :class="appConfig.calendar.participantCardName">{{ share.groups.name }}</h4>
-                  </div>
-                  <p :class="appConfig.calendar.participantCardEmail">
-                    {{ ' ' + UI_TEXT.documents.sharedAt + ' '
-                    }}{{ new Date(share.shared_at).toLocaleDateString() }}
-                  </p>
-                </div>
-              </div>
-              <UTooltip
-                :text="UI_TEXT.documents.revokeAccess"
-                :ui="{ content: 'z-[9999]' }"
-                :popper="{ placement: 'top', strategy: 'fixed' }"
-              >
-                <UButton
-                  icon="i-heroicons-x-mark"
-                  variant="ghostDangerIconButton"
-                  :loading="revokeMutation.isLoading.value"
-                  @click="handleRevokeAccess(share.groups.name)"
-                />
-              </UTooltip>
-            </div>
-          </div>
-          <div v-if="!sharedGroups?.length" class="text-sm font-medium text-dark-text/50 p-4">
-            {{ ' ' + UI_TEXT.documents.notShared + ' ' }}
-          </div>
-        </div>
-      </template>
-      <template #footer>
-        <div class="flex justify-end w-full">
-          <UButton
-            :label="UI_TEXT.common.close"
-            variant="actionOkButton"
-            :class="appConfig.typography.modalActionBtnCancel"
-            @click="documentsStore.closePrivateAccessModal()"
-          />
-        </div>
-      </template>
-    </BaseModal>
   </div>
 </template>
 
@@ -365,24 +230,13 @@ import { useDocumentsStore } from '~/stores/documents.modals.store';
 import {
   useUploadPrivateDocumentMutation,
   useDeletePrivateDocumentMutation,
-  useShareDocumentMutation,
-  useDeleteSharingMutation,
 } from '~/queries/files.mutation';
 import { filesService } from '~/services/files.service';
 import { getErrorMessage } from '~/utils/error.utils';
 import type { ApiError } from '~/types/apiError.type';
-import type { FileShareDto } from '~/types/files.type';
-import type { GroupOutDto } from '~/types/groups.type';
 
-const props = defineProps<{
-  // a list of available document types for categorization, formatted as label-value pairs
+defineProps<{
   privateDocumentTypes?: { label: string; value: string }[];
-  // a list of groups that currently have access to the selected private document
-  sharedGroups?: FileShareDto[];
-  // a list of groups that currently do not have access to the document, available for new sharing
-  unsharedGroups?: GroupOutDto[];
-  // the complete list of groups the user belongs to
-  allGroups?: GroupOutDto[];
 }>();
 
 const appConfig = useAppConfig();
@@ -394,9 +248,6 @@ const uploadError = ref<ApiError | Error | null>(null);
 const updateError = ref<ApiError | Error | null>(null);
 const deleteError = ref<ApiError | Error | null>(null);
 const isUpdating = ref(false);
-
-const privateFileToShare = computed(() => documentsStore.privateFileToShare);
-const privateFileToViewAccess = computed(() => documentsStore.privateFileToViewAccess);
 
 // -------------------------
 // UPLOAD LOGIC
@@ -447,7 +298,6 @@ const closeUploadModal = () => {
 
 const handleUpload = (event: FormSubmitEvent<UploadFormState>) => {
   uploadError.value = null;
-
   const formData = new FormData();
   formData.append('file', event.data.file);
   if (event.data.documentType) formData.append('document_type', event.data.documentType);
@@ -561,39 +411,5 @@ const confirmDelete = () => {
   if (!privateFileToDelete.value) return;
   deleteError.value = null;
   deleteMutation.mutate(privateFileToDelete.value.fileId);
-};
-
-// -------------------------
-// SHARING & ACCESS LOGIC
-// -------------------------
-const shareMutation = useShareDocumentMutation();
-
-const handleShareDocument = (groupUuid: string) => {
-  if (!privateFileToShare.value) return;
-
-  shareMutation.mutate({
-    fileId: privateFileToShare.value.fileId,
-    groupUuid,
-    accessLevel: 'leader', // Default érték
-  });
-};
-
-const revokeMutation = useDeleteSharingMutation();
-
-const handleRevokeAccess = (groupName: string) => {
-  if (!privateFileToViewAccess.value) return;
-
-  // UUID kinyerése a név alapján a teljes csoportlistából
-  const groupUuid = props.allGroups?.find((g) => g.name === groupName)?.uuid;
-
-  if (!groupUuid) {
-    toast.add({ title: UI_TEXT.common.error, description: UI_TEXT.errors.groupUuidNotFound });
-    return;
-  }
-
-  revokeMutation.mutate({
-    fileId: privateFileToViewAccess.value.fileId,
-    groupUuid,
-  });
 };
 </script>

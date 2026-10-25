@@ -59,7 +59,7 @@ withDefaults(
     loading: false,
     uiSize: undefined,
     confirmBtnClass: 'bg-error-500 hover:bg-error-600 text-white',
-    dismissible: true,
+    dismissible: false,
   },
 );
 

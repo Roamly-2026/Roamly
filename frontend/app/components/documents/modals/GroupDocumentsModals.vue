@@ -1,4 +1,4 @@
-<!-- frontend/app/components/groups/modals/GroupDocumentsModals.vue -->
+<!-- frontend/app/components/documents/modals/GroupDocumentsModals.vue -->
 <template>
   <div>
     <!-- ==================== -->

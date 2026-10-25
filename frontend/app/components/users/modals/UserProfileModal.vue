@@ -5,11 +5,7 @@
     :dismissible="true"
     ui-size="sm:max-w-lg w-full max-h-[85vh] flex flex-col"
   >
-    <!-- Override default header to keep the original headerless design -->
-    <template #header>
-      <div class="hidden"></div>
-    </template>
-
+  
     <template #body>
       <div class="flex flex-col gap-5 overflow-y-auto custom-scrollbar pr-1">
         <!-- BASIC INFO -->

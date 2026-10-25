@@ -7,15 +7,16 @@
     :ui="{ content: uiSize }"
     @update:open="$emit('update:open', $event)"
   >
+    <!-- Hiding default Nuxt UI slots -->
     <template #default><div class="hidden"></div></template>
     <template #close><div class="hidden"></div></template>
-
-    <template #header>
+    
+    <template v-if="$slots.header || title" #header>
       <slot name="header">
         <h3 class="text-xl font-bold text-dark-text">{{ title }}</h3>
       </slot>
     </template>
-
+    
     <template #body>
       <slot name="body"></slot>
     </template>
@@ -36,7 +37,7 @@ withDefaults(
     closeIcon?: boolean;
   }>(),
   {
-    title: '',
+    title: undefined,
     uiSize: undefined,
     dismissible: false,
     closeIcon: false,
