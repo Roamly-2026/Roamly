@@ -209,8 +209,7 @@ const removeParticipantMutation = useRemoveParticipantMutation(
       }
       eventsStore.closeRemoveParticipantModal();
     },
-    onError: (err) =>
-      toast.add({ title: UI_TEXT.common.error, description: getErrorMessage(err) }),
+    onError: (err) => toast.add({ title: UI_TEXT.common.error, description: getErrorMessage(err) }),
   },
 );
 
@@ -221,8 +220,7 @@ const addParticipantsMutation = useAddParticipantsMutation(
       toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.events.membersAdded });
       closeAddMembersModal();
     },
-    onError: (err) =>
-      toast.add({ title: UI_TEXT.common.error, description: getErrorMessage(err) }),
+    onError: (err) => toast.add({ title: UI_TEXT.common.error, description: getErrorMessage(err) }),
   },
 );
 

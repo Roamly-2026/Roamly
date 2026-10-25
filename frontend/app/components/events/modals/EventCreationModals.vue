@@ -205,8 +205,7 @@ const createEventMutation = useCreateEventMutation(
       closeAndResetForm();
       toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.events.created });
     },
-    onError: (err) =>
-      toast.add({ title: UI_TEXT.common.error, description: getErrorMessage(err) }),
+    onError: (err) => toast.add({ title: UI_TEXT.common.error, description: getErrorMessage(err) }),
   },
 );
 

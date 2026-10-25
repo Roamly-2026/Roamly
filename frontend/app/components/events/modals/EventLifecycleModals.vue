@@ -63,8 +63,7 @@ const deleteEventMutation = useDeleteEventMutation(
       eventsStore.closePreviewModal();
       toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.events.deleted });
     },
-    onError: (err) =>
-      toast.add({ title: UI_TEXT.common.error, description: getErrorMessage(err) }),
+    onError: (err) => toast.add({ title: UI_TEXT.common.error, description: getErrorMessage(err) }),
   },
 );
 
@@ -76,8 +75,7 @@ const leaveEventMutation = useLeaveEventMutation(
       eventsStore.closePreviewModal();
       toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.events.left });
     },
-    onError: (err) =>
-      toast.add({ title: UI_TEXT.common.error, description: getErrorMessage(err) }),
+    onError: (err) => toast.add({ title: UI_TEXT.common.error, description: getErrorMessage(err) }),
   },
 );
 
