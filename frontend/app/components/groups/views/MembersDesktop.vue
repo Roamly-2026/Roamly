@@ -307,7 +307,6 @@
 </template>
 
 <script setup lang="ts">
-/* --- IMPORTS --- */
 import { useAppConfig } from '#imports';
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -319,14 +318,12 @@ import type { GroupInfosOutDto, GroupProfileDto } from '~/types/groups.type';
 import type { UiEvent } from '~/types/events.type';
 import type { ApiError } from '~/types/apiError.type';
 
-/* --- COMPOSABLES & STORES --- */
 const appConfig = useAppConfig();
 const groupsStore = useGroupsStore();
 const route = useRoute();
 const router = useRouter();
 const eventsStore = useEventsStore();
 
-/* --- PROPS & EMITS --- */
 const props = defineProps<{
   groupInfos: GroupInfosOutDto | undefined | null;
   filteredMembers: GroupProfileDto[];
@@ -347,7 +344,6 @@ const navigateToEvent = (eventUuid: string) => {
   router.push({ path: '/events', query: { eventId: eventUuid } });
 };
 
-/* --- FETCHING UPCOMING EVENTS --- */
 const groupUuid = computed(() => route.params.uuid as string);
 const selectedDateId = ref<string | undefined>('ALL');
 const { data: eventsData, isLoading: isLoadingEvents } = useEventsQuery(groupUuid, selectedDateId);
@@ -394,7 +390,6 @@ const documentsRoute = computed(() =>
   groupUuid.value ? `/files/documents?groupId=${groupUuid.value}` : '/files/documents',
 );
 
-/* --- HELPERS --- */
 const isCurrentUser = (email: string) => {
   return props.currentUserEmail === email;
 };

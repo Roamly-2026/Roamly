@@ -1,4 +1,3 @@
-import { UI_TEXT } from '~/locales/en';
 // frontend/app/services/groupsService.ts
 import type {
   GroupOutDto,

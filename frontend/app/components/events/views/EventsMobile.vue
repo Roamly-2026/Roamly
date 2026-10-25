@@ -331,7 +331,7 @@ const clearFilters = () => {
   filterEndDate.value = '';
 };
 
-// Contextual nav
+// Contextual navigation routes scoped to the currently active group
 const membersRoute = computed(() =>
   props.selectedGroupUuid ? `/groups/${props.selectedGroupUuid}/members` : '/groups',
 );

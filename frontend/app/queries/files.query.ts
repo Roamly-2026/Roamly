@@ -1,4 +1,3 @@
-import { UI_TEXT } from '~/locales/en';
 // frontend/queries/files.query.ts
 import { useQuery } from '@pinia/colada';
 import { filesService } from '~/services/files.service';

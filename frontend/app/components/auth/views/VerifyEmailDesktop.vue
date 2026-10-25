@@ -116,16 +116,13 @@
 </template>
 
 <script setup lang="ts">
-/* --- IMPORTS --- */
 import { reactive, ref, computed, watch } from 'vue';
 import { useAppConfig } from '#imports';
 import { getErrorMessage } from '~/utils/error.utils';
 import type { ApiError } from '~/types/apiError.type';
 
-/* --- COMPOSABLES --- */
 const appConfig = useAppConfig();
 
-/* --- PROPS --- */
 const props = defineProps<{
   email: string;
   isVerifying: boolean;
@@ -137,13 +134,11 @@ const props = defineProps<{
   resendError: ApiError | Error | null | undefined;
 }>();
 
-/* --- EMITS --- */
 const emit = defineEmits<{
   submit: [otp: string];
   resend: [];
 }>();
 
-/* --- OTP STATE --- */
 const OTP_LENGTH = 6;
 const otpCells = reactive<string[]>(Array(OTP_LENGTH).fill(''));
 const inputRefs = ref<(HTMLInputElement | null)[]>(Array(OTP_LENGTH).fill(null));
@@ -161,6 +156,7 @@ const focusCell = (index: number) => {
   inputRefs.value[index]?.focus();
 };
 
+// Sanitizes input to a single digit, auto-advances focus, and auto-submits when all cells are filled
 const onInput = (index: number, event: Event) => {
   const target = event.target as HTMLInputElement;
   const val = target.value.replace(/\D/g, '').slice(-1);
@@ -175,6 +171,7 @@ const onInput = (index: number, event: Event) => {
   }
 };
 
+// Handles keyboard navigation (Arrow keys) and sequential deletion (Backspace) across OTP inputs
 const onKeydown = (index: number, event: KeyboardEvent) => {
   if (event.key === 'Backspace') {
     if (otpCells[index]) {
@@ -193,6 +190,7 @@ const onKeydown = (index: number, event: KeyboardEvent) => {
   }
 };
 
+// Extracts numeric characters from clipboard data, distributes them across cells, and triggers auto-submit if complete
 const onPaste = (event: ClipboardEvent) => {
   event.preventDefault();
   const pasted = event.clipboardData?.getData('text').replace(/\D/g, '').slice(0, OTP_LENGTH) ?? '';
@@ -206,7 +204,7 @@ const onPaste = (event: ClipboardEvent) => {
   }
 };
 
-/* --- Clear cells and refocus when a verification error is received --- */
+// Reset OTP inputs and return focus to the first cell upon verification failure
 watch(
   () => props.error,
   (newErr) => {

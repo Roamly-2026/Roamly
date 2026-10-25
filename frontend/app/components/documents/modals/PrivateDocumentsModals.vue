@@ -418,9 +418,13 @@ import type { FileShareDto } from '~/types/files.type';
 import type { GroupOutDto } from '~/types/groups.type';
 
 const props = defineProps<{
+  // a list of available document types for categorization, formatted as label-value pairs
   privateDocumentTypes?: { label: string; value: string }[];
+  // a list of groups that currently have access to the selected private document
   sharedGroups?: FileShareDto[];
+  // a list of groups that currently do not have access to the document, available for new sharing
   unsharedGroups?: GroupOutDto[];
+  // the complete list of groups the user belongs to
   allGroups?: GroupOutDto[];
 }>();
 
@@ -468,11 +472,10 @@ const onFileChange = (e: Event) => {
 const uploadMutation = useUploadPrivateDocumentMutation({
   onSuccess: () => {
     uploadError.value = null;
-    toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.documents.uploaded });
     closeUploadModal();
   },
-  onError: (err: Error) => {
-    uploadError.value = err;
+  onError: (err) => {
+    uploadError.value = err as Error;
   },
 });
 
@@ -560,10 +563,22 @@ const handleUpdate = async (event: FormSubmitEvent<UpdateFormState>) => {
 
     await filesService.replacePrivateDocument(fileToUpdate.value.fileId, formData);
     queryCache.invalidateQueries({ key: ['private-documents'] });
-    toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.documents.updated });
+
+    toast.add({
+      title: UI_TEXT.common.success,
+      description: UI_TEXT.documents.updated,
+      color: 'success',
+    });
+
     closeUpdateModal();
   } catch (err) {
     updateError.value = err as Error;
+
+    toast.add({
+      title: UI_TEXT.common.error,
+      description: getErrorMessage(err),
+      color: 'error',
+    });
   } finally {
     isUpdating.value = false;
   }
@@ -579,10 +594,9 @@ const deleteMutation = useDeletePrivateDocumentMutation({
   onSuccess: () => {
     deleteError.value = null;
     documentsStore.closePrivateDeleteModal();
-    toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.documents.deleted });
   },
-  onError: (err: Error) => {
-    deleteError.value = err;
+  onError: (err) => {
+    deleteError.value = err as Error;
   },
 });
 
@@ -595,14 +609,7 @@ const confirmDelete = () => {
 // -------------------------
 // SHARING & ACCESS LOGIC
 // -------------------------
-const shareMutation = useShareDocumentMutation({
-  onSuccess: () => {
-    toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.documents.shared });
-  },
-  onError: (err: Error) => {
-    toast.add({ title: UI_TEXT.common.error, description: err.message });
-  },
-});
+const shareMutation = useShareDocumentMutation();
 
 const handleShareDocument = (groupUuid: string) => {
   if (!privateFileToShare.value) return;
@@ -614,14 +621,7 @@ const handleShareDocument = (groupUuid: string) => {
   });
 };
 
-const revokeMutation = useDeleteSharingMutation({
-  onSuccess: () => {
-    toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.documents.accessRevoked });
-  },
-  onError: (err: Error) => {
-    toast.add({ title: UI_TEXT.common.error, description: err.message });
-  },
-});
+const revokeMutation = useDeleteSharingMutation();
 
 const handleRevokeAccess = (groupName: string) => {
   if (!privateFileToViewAccess.value) return;

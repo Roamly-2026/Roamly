@@ -3,6 +3,9 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import type { UiEvent, EventCreatorDto } from '~/types/events.type';
 
+/**
+ * Manages modal visibility and active event context for itinerary and event operations.
+ */
 export const useEventsStore = defineStore('events', () => {
   const selectedGroupUuid = ref<string | undefined>(undefined);
 
@@ -26,6 +29,7 @@ export const useEventsStore = defineStore('events', () => {
   const openAddEventModal = () => (isAddEventModalOpen.value = true);
   const closeAddEventModal = () => (isAddEventModalOpen.value = false);
 
+  // Transitions from the event preview modal directly to the delete confirmation modal
   const openDeleteEventModal = (event: UiEvent) => {
     selectedEventToDelete.value = event;
     isDeleteEventModalOpen.value = true;
@@ -37,6 +41,7 @@ export const useEventsStore = defineStore('events', () => {
     selectedEventToDelete.value = null;
   };
 
+  // Replaces the preview modal with the participants view and hydrates the member list
   const openParticipantsModal = (event: UiEvent) => {
     previewEvent.value = event;
     currentEventParticipants.value = event.members || [];
@@ -61,6 +66,7 @@ export const useEventsStore = defineStore('events', () => {
     previewDate.value = undefined;
   };
 
+  // Transitions from either the preview or participants modal to the member assignment modal
   const openAddMembersModal = (event: UiEvent) => {
     previewEvent.value = event;
     isAddMembersModalOpen.value = true;
@@ -72,6 +78,7 @@ export const useEventsStore = defineStore('events', () => {
     isAddMembersModalOpen.value = false;
   };
 
+  // Transitions from the event preview modal to the leave confirmation modal
   const openLeaveEventModal = (event: UiEvent) => {
     selectedEventToLeave.value = event;
     isLeaveEventModalOpen.value = true;

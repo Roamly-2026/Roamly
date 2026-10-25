@@ -77,7 +77,6 @@
 </template>
 
 <script setup lang="ts">
-/* --- IMPORTS --- */
 import { reactive } from 'vue';
 import { useAppConfig } from '#imports';
 import type { FormSubmitEvent } from '#ui/types';
@@ -85,10 +84,8 @@ import { loginSchema, type LoginFormState } from '~/utils/schemas/login.schema';
 import { getErrorMessage } from '~/utils/error.utils';
 import type { ApiError } from '~/types/apiError.type';
 
-/* --- COMPOSABLES --- */
 const appConfig = useAppConfig();
 
-/* --- PROPS & EMITS --- */
 defineProps<{
   isLoading: boolean;
   error: ApiError | Error | null | undefined;
@@ -99,13 +96,11 @@ const emit = defineEmits<{
   (e: 'submit', data: LoginFormState): void;
 }>();
 
-/* --- COMPONENT STATE --- */
 const form = reactive<LoginFormState>({
   email: '',
   password: '',
 });
 
-/* --- EVENT HANDLERS --- */
 const clearForm = () => {
   Object.assign(form, { email: '', password: '' });
 };

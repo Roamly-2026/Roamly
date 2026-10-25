@@ -109,7 +109,6 @@
 </template>
 
 <script setup lang="ts">
-/* --- IMPORTS --- */
 import { useAppConfig } from '#imports';
 import { useRouter } from 'vue-router';
 import { ref, computed } from 'vue';
@@ -118,14 +117,12 @@ import { useGroupsStore } from '~/stores/groups.modals.store';
 import type { GroupOutDto } from '~/types/groups.type';
 import type { ApiError } from '~/types/apiError.type';
 
-/* --- COMPOSABLES & STORES --- */
 const appConfig = useAppConfig();
 const router = useRouter();
 const groupsStore = useGroupsStore();
 
 const searchQuery = defineModel<string>('searchQuery', { default: '' });
 
-/* --- PROPS & EMITS --- */
 const props = defineProps<{
   groupsList: GroupOutDto[];
   isLoading: boolean;
@@ -144,7 +141,7 @@ const filteredGroups = computed(() => {
   return props.groupsList.filter((group) => group.name.toLowerCase().includes(query));
 });
 
-/* --- DOM OBSERVERS (INFINITE SCROLL) --- */
+// DOM observer - Infinite scroll
 const loadMoreTrigger = ref<HTMLElement | null>(null);
 useIntersectionObserver(
   loadMoreTrigger,

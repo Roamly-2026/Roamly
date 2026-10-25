@@ -1,4 +1,3 @@
-import { UI_TEXT } from '~/locales/en';
 // frontend/app/utils/constants/files.constants.ts
 export const GROUP_DOCUMENT_TYPES = [
   { label: UI_TEXT.documentTypes.ticket, value: 'TICKET' },

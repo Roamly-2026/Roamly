@@ -112,7 +112,6 @@
 </template>
 
 <script setup lang="ts">
-/* --- IMPORTS --- */
 import { reactive } from 'vue';
 import { useAppConfig } from '#imports';
 import type { FormSubmitEvent } from '#ui/types';
@@ -120,10 +119,8 @@ import { registerSchema, type RegisterFormState } from '~/utils/schemas/register
 import { getErrorMessage } from '~/utils/error.utils';
 import type { ApiError } from '~/types/apiError.type';
 
-/* --- COMPOSABLES --- */
 const appConfig = useAppConfig();
 
-/* --- PROPS & EMITS --- */
 defineProps<{
   isLoading: boolean;
   error: ApiError | Error | null | undefined;
@@ -134,7 +131,6 @@ const emit = defineEmits<{
   (e: 'submit', data: RegisterFormState): void;
 }>();
 
-/* --- COMPONENT STATE --- */
 const form = reactive<RegisterFormState>({
   email: '',
   username: '',
@@ -143,7 +139,6 @@ const form = reactive<RegisterFormState>({
   repeatPassword: '',
 });
 
-/* --- EVENT HANDLERS --- */
 const clearForm = () => {
   Object.assign(form, {
     email: '',

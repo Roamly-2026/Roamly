@@ -121,10 +121,8 @@
 </template>
 
 <script setup lang="ts">
-/* --- IMPORTS --- */
 import { useAppConfig } from '#imports';
 
-/* --- INTERFACES --- */
 interface FeatureCard {
   id: string;
   title: string;
@@ -140,10 +138,8 @@ interface ContactLink {
   target: string;
 }
 
-/* --- COMPOSABLES --- */
 const appConfig = useAppConfig();
 
-/* --- PROPS & EMITS --- */
 defineProps<{
   featureCards: FeatureCard[];
   contactLinks: ContactLink[];

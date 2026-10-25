@@ -1,5 +1,4 @@
 // frontend/app/utils/schemas/common.schema.ts
-import { UI_TEXT } from '~/locales/en';
 import { z } from 'zod';
 
 export const emailSchema = z

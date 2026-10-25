@@ -19,10 +19,8 @@
 </template>
 
 <script setup lang="ts">
-/* --- IMPORTS --- */
 import { useAppConfig } from '#imports';
 
-/* --- COMPOSABLES --- */
 const appConfig = useAppConfig();
 const { isAuthenticated } = useAuth();
 </script>

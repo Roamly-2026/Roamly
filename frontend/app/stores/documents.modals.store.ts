@@ -2,6 +2,9 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
+/**
+ * Manages UI state and target file payloads for group and private document modals.
+ */
 export const useDocumentsStore = defineStore('documentsModals', () => {
   // ==========================================
   // GROUP DOCUMENT MODALS
@@ -22,7 +25,6 @@ export const useDocumentsStore = defineStore('documentsModals', () => {
     expiryDate?: string;
   } | null>(null);
 
-  // Group — Delete modal
   const openDeleteModal = (file: { fileId: number; groupUuid: string; fileName: string }) => {
     fileToDelete.value = file;
     isDeleteModalOpen.value = true;
@@ -33,7 +35,6 @@ export const useDocumentsStore = defineStore('documentsModals', () => {
     fileToDelete.value = null;
   };
 
-  // Group — Upload modal
   const openUploadModal = (groupUuid: string) => {
     uploadGroupUuid.value = groupUuid;
     isUploadModalOpen.value = true;
@@ -44,7 +45,6 @@ export const useDocumentsStore = defineStore('documentsModals', () => {
     uploadGroupUuid.value = null;
   };
 
-  // Group — Update modal
   const openGroupUpdateModal = (file: {
     fileId: number;
     groupUuid: string;
@@ -83,6 +83,7 @@ export const useDocumentsStore = defineStore('documentsModals', () => {
   const privateFileToShare = ref<{ fileId: number; fileName: string } | null>(null);
   const privateFileToViewAccess = ref<{ fileId: number; fileName: string } | null>(null);
 
+  // Ensures mutual exclusivity among private document modals to prevent overlapping UI states
   const closeAllPrivateModals = () => {
     isPrivateUploadModalOpen.value = false;
     isPrivateUpdateModalOpen.value = false;
@@ -91,7 +92,6 @@ export const useDocumentsStore = defineStore('documentsModals', () => {
     isPrivateAccessModalOpen.value = false;
   };
 
-  // Private — Upload modal
   const openPrivateUploadModal = () => {
     closeAllPrivateModals();
     isPrivateUploadModalOpen.value = true;
@@ -101,7 +101,6 @@ export const useDocumentsStore = defineStore('documentsModals', () => {
     isPrivateUploadModalOpen.value = false;
   };
 
-  // Private — Update modal
   const openPrivateUpdateModal = (file: {
     fileId: number;
     fileName: string;
@@ -119,7 +118,6 @@ export const useDocumentsStore = defineStore('documentsModals', () => {
     privateFileToUpdate.value = null;
   };
 
-  // Private — Delete modal
   const openPrivateDeleteModal = (file: { fileId: number; fileName: string }) => {
     closeAllPrivateModals();
     privateFileToDelete.value = file;
@@ -131,7 +129,6 @@ export const useDocumentsStore = defineStore('documentsModals', () => {
     privateFileToDelete.value = null;
   };
 
-  // Private — Share modal
   const openPrivateShareModal = (file: { fileId: number; fileName: string }) => {
     closeAllPrivateModals();
     privateFileToShare.value = file;
@@ -143,7 +140,6 @@ export const useDocumentsStore = defineStore('documentsModals', () => {
     privateFileToShare.value = null;
   };
 
-  // Private — Access modal
   const openPrivateAccessModal = (file: { fileId: number; fileName: string }) => {
     closeAllPrivateModals();
     privateFileToViewAccess.value = file;

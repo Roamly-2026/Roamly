@@ -33,7 +33,7 @@
             :class="appConfig.typography.modalActionBtnOk"
             :label="UI_TEXT.common.join"
             variant="actionOkButton"
-            :loading="isJoining"
+            :loading="joinMutation.isLoading.value"
             @click="confirmJoin"
           />
         </div>
@@ -75,7 +75,7 @@
             :class="appConfig.typography.modalActionBtnOk"
             :label="UI_TEXT.common.decline"
             variant="actionOkButton"
-            :loading="isLeaving"
+            :loading="leaveMutation.isLoading.value"
             @click="confirmDecline"
           />
         </div>
@@ -90,48 +90,43 @@ import { computed } from 'vue';
 import { useGroupsStore } from '~/stores/groups.modals.store';
 import { useJoinGroupMutation, useLeaveGroupMutation } from '~/queries/groups.mutation';
 import { useAppConfig } from '#imports';
+import { getErrorMessage } from '~/utils/error.utils';
 
 /* --- COMPOSABLES --- */
 const appConfig = useAppConfig();
 const groupsStore = useGroupsStore();
 
 /* --- API MUTATIONS --- */
-const {
-  mutate: joinGroup,
-  isLoading: isJoining,
-  error: joinApiError,
-  reset: resetJoin,
-} = useJoinGroupMutation({
-  onSuccess: () => groupsStore.closeJoinModal(),
+const joinMutation = useJoinGroupMutation({
+  onSuccess: () => {
+    groupsStore.closeJoinModal();
+  },
 });
 
-const {
-  mutate: leaveGroup,
-  isLoading: isLeaving,
-  error: declineApiError,
-  reset: resetDecline,
-} = useLeaveGroupMutation({
-  onSuccess: () => groupsStore.closeDeclineModal(),
+const leaveMutation = useLeaveGroupMutation({
+  onSuccess: () => {
+    groupsStore.closeDeclineModal();
+  },
 });
 
 /* --- COMPUTED --- */
 const joinErrorText = computed(() =>
-  joinApiError.value ? getErrorMessage(joinApiError.value) : '',
+  joinMutation.error.value ? getErrorMessage(joinMutation.error.value) : '',
 );
 const declineErrorText = computed(() =>
-  declineApiError.value ? getErrorMessage(declineApiError.value) : '',
+  leaveMutation.error.value ? getErrorMessage(leaveMutation.error.value) : '',
 );
 
 /* --- HANDLERS --- */
 const confirmJoin = () => {
   if (!groupsStore.selectedGroupToJoin) return;
-  resetJoin();
-  joinGroup(groupsStore.selectedGroupToJoin.uuid);
+  joinMutation.reset();
+  joinMutation.mutate(groupsStore.selectedGroupToJoin.uuid);
 };
 
 const confirmDecline = () => {
   if (!groupsStore.selectedGroupToDecline) return;
-  resetDecline();
-  leaveGroup(groupsStore.selectedGroupToDecline.uuid);
+  leaveMutation.reset();
+  leaveMutation.mutate(groupsStore.selectedGroupToDecline.uuid);
 };
 </script>

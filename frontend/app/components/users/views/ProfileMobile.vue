@@ -406,7 +406,6 @@
 </template>
 
 <script setup lang="ts">
-/* --- IMPORTS --- */
 import { computed, ref } from 'vue';
 import { useAppConfig } from '#imports';
 import type { useProfileStore } from '~/stores/profile.modals.store';
@@ -415,10 +414,8 @@ import type { UserOutDto } from '~/types/user.type';
 import type { ApiError } from '~/types/apiError.type';
 import type { PrivateDocumentMetadata } from '~/types/files.type';
 
-/* --- COMPOSABLES --- */
 const appConfig = useAppConfig();
 
-/* --- PROPS --- */
 const props = defineProps<{
   currentUser: UserOutDto | null | undefined;
   isLoading: boolean;
@@ -430,7 +427,6 @@ const props = defineProps<{
   documentsStore: ReturnType<typeof useDocumentsStore>;
 }>();
 
-/* --- EMITS --- */
 const emit = defineEmits<{
   upload: [];
   edit: [doc: PrivateDocumentMetadata];
@@ -441,10 +437,8 @@ const emit = defineEmits<{
   access: [doc: PrivateDocumentMetadata];
 }>();
 
-/* --- LOCAL STATE --- */
 const filterType = ref('ALL');
 
-/* --- COMPUTED --- */
 const filteredDocuments = computed<PrivateDocumentMetadata[]>(() => {
   if (filterType.value === 'ALL') return props.privateDocuments;
   return props.privateDocuments.filter((doc) => doc.documents?.document_type === filterType.value);

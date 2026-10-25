@@ -61,6 +61,8 @@ import { useProfileStore } from '~/stores/profile.modals.store';
 import { useDocumentsStore } from '~/stores/documents.modals.store';
 import type { PrivateDocumentMetadata } from '~/types/files.type';
 import { useGetPrivateDocumentUrlMutation } from '~/queries/files.mutation';
+import { getErrorMessage } from '~/utils/error.utils';
+import { useToast } from '#imports';
 
 /* --- PAGE CONFIGURATION --- */
 definePageMeta({ layout: 'general', middleware: ['auth'] });
@@ -70,6 +72,7 @@ useProtectedPage();
 const { isMobile } = useScreenSize();
 const profileStore = useProfileStore();
 const documentsStore = useDocumentsStore();
+const toast = useToast();
 
 /* --- MUTATIONS --- */
 const getUrlMutation = useGetPrivateDocumentUrlMutation();
@@ -162,7 +165,11 @@ const handleView = async (doc: PrivateDocumentMetadata) => {
       window.open(realUrl, '_blank');
     }
   } catch (err) {
-    console.error('Failed to fetch document view URL:', err);
+    toast.add({
+      title: UI_TEXT.common.error,
+      description: getErrorMessage(err),
+      color: 'error',
+    });
   }
 };
 
@@ -185,7 +192,11 @@ const handleDownload = async (doc: PrivateDocumentMetadata) => {
     document.body.removeChild(link);
     window.URL.revokeObjectURL(blobUrl);
   } catch (err) {
-    console.error('Download failed:', err);
+    toast.add({
+      title: UI_TEXT.common.error,
+      description: getErrorMessage(err),
+      color: 'error',
+    });
   }
 };
 </script>

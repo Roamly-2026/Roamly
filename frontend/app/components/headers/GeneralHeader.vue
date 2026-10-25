@@ -79,7 +79,6 @@
 </template>
 
 <script setup lang="ts">
-/* --- IMPORTS --- */
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAppConfig } from '#imports';
@@ -87,14 +86,12 @@ import { useCurrentUserQuery } from '~/queries/user.query';
 import { useScreenSize } from '~/composables/useScreenSize';
 import type { DropdownMenuItem } from '@nuxt/ui';
 
-/* --- COMPOSABLES & STATE --- */
 const appConfig = useAppConfig();
 const router = useRouter();
 const { isAuthenticated, logout } = useAuth();
 const { data: userProfile } = useCurrentUserQuery();
 const { isMobile } = useScreenSize();
 
-/* --- MENU ITEMS --- */
 const profileDropdownItems = ref<DropdownMenuItem[]>([
   { label: UI_TEXT.common.profile, icon: 'i-heroicons-user-circle', to: '/users/profile' },
   { label: UI_TEXT.common.groups, icon: 'i-heroicons-user-group', to: '/groups' },
@@ -107,7 +104,6 @@ const profileDropdownItems = ref<DropdownMenuItem[]>([
   },
 ]);
 
-/* --- HANDLERS --- */
 const handleLogout = () => {
   logout();
   router.push('/login');

@@ -1,7 +1,10 @@
-import { UI_TEXT } from '~/locales/en';
 // frontend/app/utils/sort.utils.ts
 import type { EventOutDto, UiDay, UiEvent } from '~/types/events.type';
 
+// processes a list of date strings into formatted UI day objects,
+// marking expired dates and prepending an 'ALL' option
+// [input value]: dates: string[]
+// [return value]: UiDay[]
 export const processAvailableDates = (dates: string[]): UiDay[] => {
   const now = new Date();
   const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -31,6 +34,10 @@ export const processAvailableDates = (dates: string[]): UiDay[] => {
   ];
 };
 
+// processes, formats, and sorts a list of event DTOs,
+// separating expired events and sorting them chronologically
+// [input value]: events: EventOutDto[]
+// [return value]: UiEvent[]
 export const processAndSortEvents = (events: EventOutDto[]): UiEvent[] => {
   const now = new Date();
 

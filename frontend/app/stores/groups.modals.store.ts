@@ -1,9 +1,12 @@
-// frontend/app/stores/groups.store.ts
+// frontend/app/stores/groups.modals.store.ts
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import type { GroupOutDto, GroupInvitesOutDto } from '~/types/groups.type';
 import type { UserProfileModalDto } from '~/types/user.type';
 
+/**
+ * Manages modal states and target entities for group administration, invitations, and member role changes.
+ */
 export const useGroupsStore = defineStore('groups', () => {
   const isCreateModalOpen = ref(false);
   const isDeleteModalOpen = ref(false);
@@ -13,11 +16,11 @@ export const useGroupsStore = defineStore('groups', () => {
   const isRemoveUserModalOpen = ref(false);
   const isUpdateModalOpen = ref(false);
   const isInviteModalOpen = ref(false);
-  const groupNameToUpdate = ref('');
   const isPromoteUserModalOpen = ref(false);
   const isDemoteUserModalOpen = ref(false);
   const isUserProfileModalOpen = ref(false);
 
+  const groupNameToUpdate = ref('');
   const selectedUserEmailToPromote = ref<string | null>(null);
   const selectedUserNameToPromote = ref<string | null>(null);
   const selectedUserEmailToDemote = ref<string | null>(null);
@@ -29,7 +32,6 @@ export const useGroupsStore = defineStore('groups', () => {
   const selectedUserEmailToRemove = ref<string | null>(null);
   const selectedUserProfile = ref<UserProfileModalDto | null>(null);
 
-  // Create modal
   const openCreateModal = () => {
     isCreateModalOpen.value = true;
   };
@@ -38,7 +40,6 @@ export const useGroupsStore = defineStore('groups', () => {
     isCreateModalOpen.value = false;
   };
 
-  // Delete modal
   const openDeleteModal = (group: GroupOutDto) => {
     selectedGroupToDelete.value = group;
     isDeleteModalOpen.value = true;
@@ -49,7 +50,6 @@ export const useGroupsStore = defineStore('groups', () => {
     selectedGroupToDelete.value = null;
   };
 
-  // Leave modal
   const openLeaveModal = (group: GroupOutDto) => {
     selectedGroupToLeave.value = group;
     isLeaveModalOpen.value = true;
@@ -60,7 +60,6 @@ export const useGroupsStore = defineStore('groups', () => {
     selectedGroupToLeave.value = null;
   };
 
-  // Join modal
   const openJoinModal = (group: GroupInvitesOutDto) => {
     selectedGroupToJoin.value = group;
     isJoinModalOpen.value = true;
@@ -71,7 +70,6 @@ export const useGroupsStore = defineStore('groups', () => {
     selectedGroupToJoin.value = null;
   };
 
-  // Decline modal
   const openDeclineModal = (group: GroupInvitesOutDto) => {
     selectedGroupToDecline.value = group;
     isDeclineModalOpen.value = true;
@@ -82,7 +80,6 @@ export const useGroupsStore = defineStore('groups', () => {
     selectedGroupToDecline.value = null;
   };
 
-  // Update modal
   const openUpdateModal = (currentName: string) => {
     groupNameToUpdate.value = currentName;
     isUpdateModalOpen.value = true;
@@ -92,25 +89,24 @@ export const useGroupsStore = defineStore('groups', () => {
     isUpdateModalOpen.value = false;
   };
 
-  // Invite Modal
   const openInviteModal = () => {
     isInviteModalOpen.value = true;
   };
+
   const closeInviteModal = () => {
     isInviteModalOpen.value = false;
   };
 
-  // Remove User Modal
   const openRemoveUserModal = (email: string) => {
     selectedUserEmailToRemove.value = email;
     isRemoveUserModalOpen.value = true;
   };
+
   const closeRemoveUserModal = () => {
     isRemoveUserModalOpen.value = false;
     selectedUserEmailToRemove.value = null;
   };
 
-  // Promote User Modal
   const openPromoteUserModal = (email: string, name: string) => {
     selectedUserEmailToPromote.value = email;
     selectedUserNameToPromote.value = name;
@@ -123,7 +119,6 @@ export const useGroupsStore = defineStore('groups', () => {
     selectedUserNameToPromote.value = null;
   };
 
-  //Demote User Modal
   const openDemoteUserModal = (email: string, name: string) => {
     selectedUserEmailToDemote.value = email;
     selectedUserNameToDemote.value = name;
@@ -136,7 +131,6 @@ export const useGroupsStore = defineStore('groups', () => {
     selectedUserNameToDemote.value = null;
   };
 
-  // Open User Profile Modal
   const openUserProfileModal = (profile: UserProfileModalDto) => {
     selectedUserProfile.value = profile;
     isUserProfileModalOpen.value = true;

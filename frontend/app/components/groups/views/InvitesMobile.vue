@@ -80,7 +80,6 @@
 </template>
 
 <script setup lang="ts">
-/* --- IMPORTS --- */
 import { useAppConfig } from '#imports';
 import { ref } from 'vue';
 import { useIntersectionObserver } from '@vueuse/core';
@@ -88,11 +87,9 @@ import { useGroupsStore } from '~/stores/groups.modals.store';
 import type { GroupInvitesOutDto } from '~/types/groups.type';
 import type { ApiError } from '~/types/apiError.type';
 
-/* --- COMPOSABLES & STORES --- */
 const appConfig = useAppConfig();
 const groupsStore = useGroupsStore();
 
-/* --- PROPS & EMITS --- */
 defineProps<{
   invitesList: GroupInvitesOutDto[];
   isLoading: boolean;
@@ -104,7 +101,7 @@ const emit = defineEmits<{
   (e: 'loadMore'): void;
 }>();
 
-/* --- DOM OBSERVERS (INFINITE SCROLL) --- */
+// DOM observer - Infinite scroll
 const loadMoreTrigger = ref<HTMLElement | null>(null);
 useIntersectionObserver(
   loadMoreTrigger,

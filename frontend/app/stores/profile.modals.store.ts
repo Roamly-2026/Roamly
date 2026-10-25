@@ -3,6 +3,9 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import type { UserOutDto } from '~/types/user.type';
 
+/**
+ * Manages modal visibility and user payload state for account settings and profile updates.
+ */
 export const useProfileStore = defineStore('profile', () => {
   const isEditUsernameModalOpen = ref(false);
   const isEditEmailModalOpen = ref(false);
@@ -14,66 +17,66 @@ export const useProfileStore = defineStore('profile', () => {
 
   const selectedUser = ref<UserOutDto | null>(null);
 
-  // Edit Username Modal
   const openEditUsernameModal = (user: UserOutDto) => {
     selectedUser.value = user;
     isEditUsernameModalOpen.value = true;
   };
+
   const closeEditUsernameModal = () => {
     isEditUsernameModalOpen.value = false;
     selectedUser.value = null;
   };
 
-  // Edit Email Modal
   const openEditEmailModal = (user: UserOutDto) => {
     selectedUser.value = user;
     isEditEmailModalOpen.value = true;
   };
+
   const closeEditEmailModal = () => {
     isEditEmailModalOpen.value = false;
     selectedUser.value = null;
   };
 
-  // Change Password Modal
   const openChangePasswordModal = () => {
     isChangePasswordModalOpen.value = true;
   };
+
   const closeChangePasswordModal = () => {
     isChangePasswordModalOpen.value = false;
   };
 
-  // Delete User Modal
   const openDeleteModal = (user: UserOutDto) => {
     selectedUser.value = user;
     isDeleteModalOpen.value = true;
   };
+
   const closeDeleteModal = () => {
     isDeleteModalOpen.value = false;
     selectedUser.value = null;
   };
 
-  // Open Upload Picture Modal
   const openUploadPictureModal = () => {
     isUploadPictureModalOpen.value = true;
   };
+
   const closeUploadPictureModal = () => {
     isUploadPictureModalOpen.value = false;
   };
 
-  // Open View Picture Modal
   const openViewPictureModal = (user: UserOutDto) => {
     selectedUser.value = user;
     isViewPictureModalOpen.value = true;
   };
+
   const closeViewPictureModal = () => {
     isViewPictureModalOpen.value = false;
     selectedUser.value = null;
   };
 
-  // Open Upload Document Modal
   const openUploadDocumentModal = () => {
     isUploadDocumentModalOpen.value = true;
   };
+
   const closeUploadDocumentModal = () => {
     isUploadDocumentModalOpen.value = false;
   };

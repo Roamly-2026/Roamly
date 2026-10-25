@@ -459,7 +459,7 @@ const selectGroup = (uuid: string) => {
   isGroupDropdownOpen.value = false;
 };
 
-// Contextual nav — route to the currently selected group
+// Contextual navigation routes scoped to the currently active group
 const membersRoute = computed(() =>
   selectedGroup.value ? `/groups/${selectedGroup.value}/members` : '/groups',
 );
@@ -473,9 +473,7 @@ const documentsRoute = computed(() =>
   selectedGroup.value ? `/files/documents?groupId=${selectedGroup.value}` : '/files/documents',
 );
 
-/**
- * Returns member documents filtered by type and optional search query.
- */
+// Filters private member documents by specific category and case-insensitive filename search
 const filteredMemberDocuments = (typeValue: string): PrivateDocumentMetadata[] => {
   const query = memberSearchQuery.value.toLowerCase().trim();
   return props.memberDocuments.filter((doc) => {

@@ -510,11 +510,13 @@ defineEmits<{
   (e: 'open-user-profile', user: EventCreatorDto): void;
 }>();
 
+// Group leaders and the event creator have permission to delete the event
 const canManageEvent = (event: UiEvent | null | undefined) => {
   if (!event) return false;
   return props.isCurrentUserLeader || event.creator?.email === props.currentUserEmail;
 };
 
+// Non-creator participants can leave an event they are currently assigned to
 const canLeaveEvent = (event: UiEvent | null | undefined) => {
   if (!event) return false;
   if (event.creator?.email === props.currentUserEmail) return false;
@@ -533,7 +535,7 @@ const clearFilters = () => {
   filterEndDate.value = '';
 };
 
-// Contextual nav
+// Contextual navigation routes scoped to the currently active group
 const membersRoute = computed(() =>
   props.selectedGroupUuid ? `/groups/${props.selectedGroupUuid}/members` : '/groups',
 );
