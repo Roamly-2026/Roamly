@@ -9,7 +9,7 @@
 
     <!-- FEATURE CARDS SECTION -->
     <section :class="appConfig.layout.homeCardsSection">
-      <UCard
+      <BaseCard
         v-for="card in featureCards"
         :key="card.id"
         :variant="activeCard === card.id ? 'outlineGlass' : 'interactiveGlass'"
@@ -83,7 +83,7 @@
             </ul>
           </div>
         </div>
-      </UCard>
+      </BaseCard>
     </section>
 
     <!-- ABOUT SECTION -->

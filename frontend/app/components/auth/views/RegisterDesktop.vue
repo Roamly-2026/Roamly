@@ -1,7 +1,7 @@
 <!-- frontend/app/components/auth/views/RegisterDesktop.vue -->
 <template>
   <div :class="appConfig.layout.authWrapper">
-    <UCard variant="glass">
+    <BaseCard>
       <!-- TITLE -->
       <div :class="appConfig.typography.authTitleWrapper">
         <h1 :class="appConfig.typography.authTitle">
@@ -73,7 +73,7 @@
           <BaseButton type="submit" :label="UI_TEXT.auth.registerTitle" :loading="isLoading" />
         </div>
       </UForm>
-    </UCard>
+    </BaseCard>
 
     <div :class="appConfig.layout.singleButtonWrapper">
       <BaseButton

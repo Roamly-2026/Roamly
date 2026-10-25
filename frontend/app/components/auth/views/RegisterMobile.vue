@@ -1,7 +1,7 @@
 <!-- frontend/app/components/auth/views/RegisterMobile.vue -->
 <template>
   <div :class="appConfig.layout.mobileAuthWrapper">
-    <UCard variant="glass">
+    <BaseCard>
       <!-- TITLE -->
       <div :class="appConfig.typography.authTitleWrapper">
         <h1 :class="appConfig.typography.authTitle">
@@ -83,7 +83,7 @@
           />
         </div>
       </UForm>
-    </UCard>
+    </BaseCard>
 
     <div :class="appConfig.layout.singleButtonWrapper">
       <BaseButton

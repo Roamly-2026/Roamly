@@ -195,7 +195,7 @@
 
           <!-- Document Grid -->
           <div v-else-if="filteredDocuments.length > 0" :class="appConfig.layout.documentGrid">
-            <UCard
+            <BaseCard
               v-for="doc in filteredDocuments"
               :key="doc.file_id"
               variant="documentGlass"
@@ -315,7 +315,7 @@
                   </span>
                 </p>
               </div>
-            </UCard>
+            </BaseCard>
           </div>
 
           <!-- Empty state -->

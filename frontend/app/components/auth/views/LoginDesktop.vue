@@ -2,7 +2,7 @@
 <template>
   <div :class="appConfig.layout.authWrapper">
     <!-- LOGIN FORM CARD -->
-    <UCard variant="glass">
+    <BaseCard>
       <div :class="appConfig.typography.authTitleWrapper">
         <h1 :class="appConfig.typography.authTitle">
           {{ UI_TEXT.auth.loginHeading }}
@@ -50,7 +50,7 @@
           <BaseButton type="submit" :label="UI_TEXT.auth.loginTitle" :loading="isLoading" />
         </div>
       </UForm>
-    </UCard>
+    </BaseCard>
 
     <div :class="appConfig.layout.singleButtonWrapper">
       <BaseButton

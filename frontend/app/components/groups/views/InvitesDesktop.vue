@@ -20,7 +20,7 @@
         :class="`flex flex-col ${SPACING_TOKENS.gap.lg} w-full`"
       >
         <div :class="appConfig.layout.cardGrid">
-          <UCard
+          <BaseCard
             v-for="group in invitesList"
             :key="group.uuid"
             variant="interactiveGlass"
@@ -57,7 +57,7 @@
                 </div>
               </div>
             </div>
-          </UCard>
+          </BaseCard>
         </div>
 
         <!-- INFINITE SCROLL TRIGGER -->

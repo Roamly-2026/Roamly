@@ -140,7 +140,7 @@
           v-else-if="documents.length > 0"
           :class="`flex flex-col ${SPACING_TOKENS.gap.md} w-full`"
         >
-          <UCard
+          <BaseCard
             v-for="doc in documents"
             :key="doc.file_id"
             variant="documentGlass"
@@ -234,7 +234,7 @@
                 }}</span>
               </p>
             </div>
-          </UCard>
+          </BaseCard>
         </div>
 
         <div
@@ -322,7 +322,7 @@
             v-if="filteredMemberDocuments(type.value).length > 0"
             :class="`flex flex-col ${SPACING_TOKENS.gap.md} w-full`"
           >
-            <UCard
+            <BaseCard
               v-for="doc in filteredMemberDocuments(type.value)"
               :key="doc.file_id"
               variant="documentGlass"
@@ -393,11 +393,11 @@
                   }}</span>
                 </p>
               </div>
-            </UCard>
+            </BaseCard>
           </div>
 
           <!-- Empty per-type state -->
-          <UCard v-else variant="documentGlass" class="relative w-full">
+          <BaseCard v-else variant="documentGlass" class="relative w-full">
             <div :class="`${SPACING_TOKENS.py.lg} text-center`">
               <UIcon
                 name="i-heroicons-document-text"
@@ -411,7 +411,7 @@
                 >.
               </p>
             </div>
-          </UCard>
+          </BaseCard>
         </div>
       </div>
     </template>

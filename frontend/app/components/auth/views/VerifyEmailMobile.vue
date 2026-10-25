@@ -1,7 +1,7 @@
 <!-- frontend/app/components/auth/views/VerifyEmailMobile.vue -->
 <template>
   <div :class="appConfig.layout.mobileAuthWrapper">
-    <UCard variant="glass">
+    <BaseCard>
       <!-- TITLE -->
       <div :class="appConfig.typography.authTitleWrapper">
         <h1 :class="appConfig.typography.authTitle">{{ UI_TEXT.auth.verifyHeading }}</h1>
@@ -97,7 +97,7 @@
           </div>
         </div>
       </div>
-    </UCard>
+    </BaseCard>
 
     <!-- Back to register -->
     <div :class="appConfig.layout.singleButtonWrapper">

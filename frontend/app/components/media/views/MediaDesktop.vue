@@ -131,7 +131,7 @@
 
       <!-- Media Grid -->
       <div v-else-if="filteredMedia.length > 0" :class="appConfig.layout.documentGrid">
-        <UCard
+        <BaseCard
           v-for="mediaItem in filteredMedia"
           :key="mediaItem.file_id"
           variant="documentGlass"
@@ -233,7 +233,7 @@
               </p>
             </div>
           </div>
-        </UCard>
+        </BaseCard>
       </div>
 
       <!-- Empty state -->

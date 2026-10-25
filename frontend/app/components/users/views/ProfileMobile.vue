@@ -251,7 +251,7 @@
             v-else-if="filteredDocuments.length > 0"
             :class="`flex flex-col ${SPACING_TOKENS.gap.md} w-full`"
           >
-            <UCard
+            <BaseCard
               v-for="doc in filteredDocuments"
               :key="doc.file_id"
               variant="documentGlass"
@@ -371,7 +371,7 @@
                   </span>
                 </p>
               </div>
-            </UCard>
+            </BaseCard>
           </div>
 
           <!-- Empty state -->

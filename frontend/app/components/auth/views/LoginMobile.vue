@@ -2,7 +2,7 @@
 <template>
   <div :class="appConfig.layout.mobileAuthWrapper">
     <!-- LOGIN FORM CARD -->
-    <UCard variant="glass">
+    <BaseCard>
       <div :class="appConfig.typography.authTitleWrapper">
         <h1 :class="appConfig.typography.authTitle">
           {{ UI_TEXT.auth.loginHeading }}
@@ -61,7 +61,7 @@
           />
         </div>
       </UForm>
-    </UCard>
+    </BaseCard>
 
     <!-- REGISTRATION PROMPT BUTTON -->
     <div :class="appConfig.layout.singleButtonWrapper">

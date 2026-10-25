@@ -164,7 +164,12 @@
       </div>
 
       <div v-else-if="documents.length > 0" :class="appConfig.layout.documentGrid">
-        <UCard v-for="doc in documents" :key="doc.file_id" variant="documentGlass" class="relative">
+        <BaseCard
+          v-for="doc in documents"
+          :key="doc.file_id"
+          variant="documentGlass"
+          class="relative"
+        >
           <div :class="appConfig.layout.documentCardHeader">
             <p class="font-bold truncate pr-2 shadow-sm text-sm">{{ doc.file_name }}</p>
 
@@ -255,7 +260,7 @@
               }}</span>
             </p>
           </div>
-        </UCard>
+        </BaseCard>
       </div>
       <div v-else :class="appConfig.typography.statusLoading">
         {{
@@ -344,7 +349,7 @@
           v-if="filteredMemberDocuments(type.value).length > 0"
           :class="appConfig.layout.documentGrid"
         >
-          <UCard
+          <BaseCard
             v-for="doc in filteredMemberDocuments(type.value)"
             :key="doc.file_id"
             variant="documentGlass"
@@ -415,7 +420,7 @@
                 }}</span>
               </p>
             </div>
-          </UCard>
+          </BaseCard>
         </div>
 
         <!-- Empty per-type state -->

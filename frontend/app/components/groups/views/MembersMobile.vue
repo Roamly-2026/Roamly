@@ -100,7 +100,7 @@
           v-else-if="filteredMembers?.length"
           :class="`flex flex-col ${SPACING_TOKENS.gap.md} w-full`"
         >
-          <UCard
+          <BaseCard
             v-for="profile in filteredMembers"
             :key="profile.users.email"
             variant="interactiveGlass"
@@ -160,7 +160,7 @@
                 </div>
               </div>
             </div>
-          </UCard>
+          </BaseCard>
         </div>
       </ClientOnly>
     </div>
@@ -191,7 +191,7 @@
         </div>
 
         <div v-else :class="`flex flex-col ${SPACING_TOKENS.gap.sm} w-full`">
-          <UCard
+          <BaseCard
             v-for="event in todayUpcomingEvents"
             :key="event.uuid"
             variant="interactiveGlass"
@@ -298,7 +298,7 @@
                 </div>
               </div>
             </div>
-          </UCard>
+          </BaseCard>
         </div>
       </ClientOnly>
     </div>

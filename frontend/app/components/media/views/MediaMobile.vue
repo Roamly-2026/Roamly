@@ -105,7 +105,7 @@
           v-else-if="filteredMedia.length > 0"
           :class="`flex flex-col ${SPACING_TOKENS.gap.md} w-full`"
         >
-          <UCard
+          <BaseCard
             v-for="mediaItem in filteredMedia"
             :key="mediaItem.file_id"
             variant="documentGlass"
@@ -207,7 +207,7 @@
                 </p>
               </div>
             </div>
-          </UCard>
+          </BaseCard>
         </div>
 
         <div
