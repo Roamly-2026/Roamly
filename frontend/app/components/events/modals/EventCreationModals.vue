@@ -270,7 +270,11 @@ const onSubmit = (event: FormSubmitEvent<FormSchemaType>) => {
   createEventMutation.mutate(payload);
 };
 
-const handleLocationSelected = (location: { latitude: number; longitude: number; address: string }) => {
+const handleLocationSelected = (location: {
+  latitude: number;
+  longitude: number;
+  address: string;
+}) => {
   formState.latitude = location.latitude;
   formState.longitude = location.longitude;
   formState.address = location.address;

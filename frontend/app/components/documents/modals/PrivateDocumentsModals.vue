@@ -213,7 +213,11 @@
     >
       <template #body>
         <p :class="appConfig.typography.modalText">
-          {{ ' ' + UI_TEXT.documents.deleteBeforeName + ' ' }}<span :class="appConfig.typography.modalInlineHighlight">{{ privateFileToDelete?.fileName }}</span>{{ UI_TEXT.documents.deleteAfterName + ' ' }}
+          {{ ' ' + UI_TEXT.documents.deleteBeforeName + ' '
+          }}<span :class="appConfig.typography.modalInlineHighlight">{{
+            privateFileToDelete?.fileName
+          }}</span
+          >{{ UI_TEXT.documents.deleteAfterName + ' ' }}
         </p>
       </template>
     </ConfirmModal>

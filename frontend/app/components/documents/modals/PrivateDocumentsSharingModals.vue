@@ -92,7 +92,8 @@
                     <h4 :class="appConfig.calendar.participantCardName">{{ share.groups.name }}</h4>
                   </div>
                   <p :class="appConfig.calendar.participantCardEmail">
-                    {{ ' ' + UI_TEXT.documents.sharedAt + ' ' }}{{ new Date(share.shared_at).toLocaleDateString() }}
+                    {{ ' ' + UI_TEXT.documents.sharedAt + ' '
+                    }}{{ new Date(share.shared_at).toLocaleDateString() }}
                   </p>
                 </div>
               </div>
@@ -133,10 +134,7 @@
 import { useAppConfig, useToast } from '#imports';
 import { computed } from 'vue';
 import { useDocumentsStore } from '~/stores/documents.modals.store';
-import {
-  useShareDocumentMutation,
-  useDeleteSharingMutation,
-} from '~/queries/files.mutation';
+import { useShareDocumentMutation, useDeleteSharingMutation } from '~/queries/files.mutation';
 import type { FileShareDto } from '~/types/files.type';
 import type { GroupOutDto } from '~/types/groups.type';
 

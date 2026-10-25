@@ -5,7 +5,6 @@
     :dismissible="true"
     ui-size="sm:max-w-lg w-full max-h-[85vh] flex flex-col"
   >
-  
     <template #body>
       <div class="flex flex-col gap-5 overflow-y-auto custom-scrollbar pr-1">
         <!-- BASIC INFO -->

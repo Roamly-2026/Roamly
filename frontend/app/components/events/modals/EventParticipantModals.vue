@@ -193,7 +193,7 @@ const groupsStore = useGroupsStore();
 const { data: currentUser } = useCurrentUserQuery();
 const { data: groupsData } = useGroupsQuery();
 const { data: groupInfosData } = useGroupInfosQuery(
-  computed(() => eventsStore.selectedGroupUuid || '')
+  computed(() => eventsStore.selectedGroupUuid || ''),
 );
 const currentUserEmail = computed(() => currentUser.value?.email);
 
@@ -249,10 +249,10 @@ const handleOpenUserProfile = (user: EventCreatorDto) => {
 };
 
 const selectedGroupDetails = computed(() =>
-  groupsData.value?.items?.find((g) => g.uuid === eventsStore.selectedGroupUuid)
+  groupsData.value?.items?.find((g) => g.uuid === eventsStore.selectedGroupUuid),
 );
 const isCurrentUserLeader = computed(
-  () => selectedGroupDetails.value?.role?.toLowerCase() === 'leader'
+  () => selectedGroupDetails.value?.role?.toLowerCase() === 'leader',
 );
 const hasPermissionToDelete = computed<boolean>(() => {
   const creatorEmail = eventsStore.previewEvent?.creator?.email;
@@ -265,15 +265,15 @@ const hasPermissionToDelete = computed<boolean>(() => {
 const availableGroupMembers = computed<EventCreatorDto[]>(() => {
   const rawProfiles = groupInfosData.value?.group_profiles || [];
   const allGroupMembers: EventCreatorDto[] = rawProfiles.map(
-  (profile: {
-    users: { uuid?: string; username: string; email: string; profile_image_url?: string | null };
-  }) => ({
-    uuid: profile.users.uuid || '',
-    username: profile.users.username,
-    email: profile.users.email,
-    profile_image_url: profile.users.profile_image_url || null,
-  }),
-);
+    (profile: {
+      users: { uuid?: string; username: string; email: string; profile_image_url?: string | null };
+    }) => ({
+      uuid: profile.users.uuid || '',
+      username: profile.users.username,
+      email: profile.users.email,
+      profile_image_url: profile.users.profile_image_url || null,
+    }),
+  );
   const currentEventEmails =
     eventsStore.previewEvent?.members?.map((m: EventCreatorDto) => m.email) || [];
 
@@ -285,12 +285,9 @@ const availableGroupMembers = computed<EventCreatorDto[]>(() => {
 
 const getGroupRole = (user?: EventCreatorDto | null): string => {
   if (!user || !groupInfosData.value?.group_profiles) return UI_TEXT.common.member;
-  
+
   const profile = groupInfosData.value.group_profiles.find(
-    (p: {
-      users?: { email?: string; username?: string };
-      roles?: { type?: string };
-    }) => {
+    (p: { users?: { email?: string; username?: string }; roles?: { type?: string } }) => {
       const matchEmail =
         user.email &&
         p.users?.email &&
@@ -302,17 +299,26 @@ const getGroupRole = (user?: EventCreatorDto | null): string => {
       return matchEmail || matchUsername;
     },
   );
-  
+
   const roleType = profile?.roles?.type?.toLowerCase();
   return roleType === 'leader' ? UI_TEXT.common.leader : UI_TEXT.common.member;
 };
 
-const isGroupLeader = (user: EventCreatorDto): boolean => getGroupRole(user) === UI_TEXT.common.leader;
+const isGroupLeader = (user: EventCreatorDto): boolean =>
+  getGroupRole(user) === UI_TEXT.common.leader;
 const isEventCreator = (user: EventCreatorDto): boolean => {
   const creator = eventsStore.previewEvent?.creator;
   if (!creator) return false;
-  const matchEmail = !!(user.email && creator.email && user.email.trim().toLowerCase() === creator.email.trim().toLowerCase());
-  const matchUsername = !!(user.username && creator.username && user.username.trim().toLowerCase() === creator.username.trim().toLowerCase());
+  const matchEmail = !!(
+    user.email &&
+    creator.email &&
+    user.email.trim().toLowerCase() === creator.email.trim().toLowerCase()
+  );
+  const matchUsername = !!(
+    user.username &&
+    creator.username &&
+    user.username.trim().toLowerCase() === creator.username.trim().toLowerCase()
+  );
   return matchEmail || matchUsername;
 };
 

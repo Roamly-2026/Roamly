@@ -18,9 +18,7 @@
           <div :class="appConfig.calendar.previewTypeWrapper">
             <UIcon
               :name="
-                eventsStore.previewEvent.is_private
-                  ? 'i-heroicons-user'
-                  : 'i-heroicons-user-group'
+                eventsStore.previewEvent.is_private ? 'i-heroicons-user' : 'i-heroicons-user-group'
               "
               :class="appConfig.calendar.previewTypeIcon"
             />
@@ -165,9 +163,7 @@
             </div>
           </div>
           <div :class="[appConfig.calendar.metaRowItem, 'mt-2 flex-col gap-1!']">
-            <span :class="appConfig.calendar.metaLabel">{{
-              UI_TEXT.events.descriptionLabel
-            }}</span>
+            <span :class="appConfig.calendar.metaLabel">{{ UI_TEXT.events.descriptionLabel }}</span>
             <span :class="appConfig.calendar.metaValue">{{
               eventsStore.previewEvent.description
             }}</span>
@@ -233,14 +229,14 @@ const currentUserEmail = computed(() => currentUser.value?.email);
 
 const { data: groupsData } = useGroupsQuery();
 const { data: groupInfosData } = useGroupInfosQuery(
-  computed(() => eventsStore.selectedGroupUuid || '')
+  computed(() => eventsStore.selectedGroupUuid || ''),
 );
 
 const selectedGroupDetails = computed(() =>
-  groupsData.value?.items?.find((g) => g.uuid === eventsStore.selectedGroupUuid)
+  groupsData.value?.items?.find((g) => g.uuid === eventsStore.selectedGroupUuid),
 );
 const isCurrentUserLeader = computed(
-  () => selectedGroupDetails.value?.role?.toLowerCase() === 'leader'
+  () => selectedGroupDetails.value?.role?.toLowerCase() === 'leader',
 );
 
 const hasPermissionToDelete = computed<boolean>(() => {
@@ -258,10 +254,10 @@ const canLeaveEvent = computed<boolean>(() => {
 });
 
 const displayParticipants = computed<EventCreatorDto[]>(
-  () => eventsStore.previewEvent?.members?.slice(0, 5) || []
+  () => eventsStore.previewEvent?.members?.slice(0, 5) || [],
 );
 const extraParticipantsCount = computed<number>(() =>
-  Math.max(0, (eventsStore.previewEvent?.members?.length || 0) - 5)
+  Math.max(0, (eventsStore.previewEvent?.members?.length || 0) - 5),
 );
 
 const openAllParticipantsModal = () => {
@@ -273,21 +269,18 @@ const openAllParticipantsModal = () => {
 const getGroupRole = (user?: EventCreatorDto | null): string => {
   if (!user || !groupInfosData.value?.group_profiles) return UI_TEXT.common.member;
   const profile = groupInfosData.value.group_profiles.find(
-  (p: {
-    users?: { email?: string; username?: string };
-    roles?: { type?: string };
-  }) => {
-    const matchEmail =
-      user.email &&
-      p.users?.email &&
-      user.email.trim().toLowerCase() === p.users.email.trim().toLowerCase();
-    const matchUsername =
-      user.username &&
-      p.users?.username &&
-      user.username.trim().toLowerCase() === p.users.username.trim().toLowerCase();
-    return matchEmail || matchUsername;
-  },
-);
+    (p: { users?: { email?: string; username?: string }; roles?: { type?: string } }) => {
+      const matchEmail =
+        user.email &&
+        p.users?.email &&
+        user.email.trim().toLowerCase() === p.users.email.trim().toLowerCase();
+      const matchUsername =
+        user.username &&
+        p.users?.username &&
+        user.username.trim().toLowerCase() === p.users.username.trim().toLowerCase();
+      return matchEmail || matchUsername;
+    },
+  );
   const roleType = profile?.roles?.type?.toLowerCase();
   return roleType === 'leader' ? UI_TEXT.common.leader : UI_TEXT.common.member;
 };
