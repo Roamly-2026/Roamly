@@ -2,126 +2,83 @@
 <template>
   <div>
     <!-- UPDATE MODAL -->
-    <UModal
+    <FormModal
       v-model:open="groupsStore.isUpdateModalOpen"
       :title="UI_TEXT.groups.editTitle"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeSm }"
+      form-id="update-group-form"
+      :cancel-text="UI_TEXT.common.cancel"
+      :submit-text="UI_TEXT.common.save"
+      :loading="isUpdating"
+      :ui-size="appConfig.layout.modalSizeSm"
+      @cancel="groupsStore.closeUpdateModal()"
+      @submit="handleUpdateGroup"
     >
-      <template #default><div class="hidden"></div></template>
-      <template #body>
-        <form
-          id="update-group-form"
-          :class="appConfig.layout.modalForm"
-          @submit.prevent="handleUpdateGroup"
-        >
-          <div>
-            <label :class="appConfig.typography.inputLabel">{{ UI_TEXT.groups.nameLabel }}</label>
-            <UInput
-              v-model="updateGroupName"
-              :placeholder="UI_TEXT.groups.namePlaceholder"
-              variant="glass"
-              class="w-full"
-            />
-            <p v-if="updateError" :class="appConfig.typography.inputError">{{ updateError }}</p>
-          </div>
-        </form>
-      </template>
-      <template #footer>
-        <div :class="appConfig.layout.modalActions">
-          <UButton
-            :class="appConfig.typography.modalActionBtnCancel"
-            :label="UI_TEXT.common.cancel"
-            variant="actionCancelButton"
-            @click="groupsStore.closeUpdateModal()"
-          />
-          <UButton
-            :class="appConfig.typography.modalActionBtnOk"
-            :label="UI_TEXT.common.save"
-            variant="actionOkButton"
-            type="submit"
-            form="update-group-form"
-            :loading="updateMutation.isLoading.value"
-          />
-        </div>
-      </template>
-    </UModal>
+      <div>
+        <label :class="appConfig.typography.inputLabel">{{ UI_TEXT.groups.nameLabel }}</label>
+        <UInput
+          v-model="updateGroupName"
+          :placeholder="UI_TEXT.groups.namePlaceholder"
+          variant="glass"
+          class="w-full"
+        />
+        <p v-if="updateError" :class="appConfig.typography.inputError">{{ updateError }}</p>
+      </div>
+    </FormModal>
 
     <!-- INVITE MODAL -->
-    <UModal
+    <FormModal
       v-model:open="groupsStore.isInviteModalOpen"
       :title="UI_TEXT.groups.inviteUserTitle"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeSm }"
+      form-id="invite-user-form"
+      :cancel-text="UI_TEXT.common.cancel"
+      :submit-text="UI_TEXT.groups.sendInvite"
+      :loading="isInviting"
+      :disable-cancel="!!inviteSuccess"
+      :disable-submit="!!inviteSuccess"
+      :ui-size="appConfig.layout.modalSizeSm"
+      @cancel="groupsStore.closeInviteModal()"
+      @submit="handleInviteUser"
     >
-      <template #default><div class="hidden"></div></template>
-      <template #body>
-        <form
-          id="invite-user-form"
-          :class="appConfig.layout.modalForm"
-          @submit.prevent="handleInviteUser"
-        >
-          <div>
-            <label :class="appConfig.typography.inputLabel">{{ UI_TEXT.groups.emailLabel }}</label>
-            <UInput
-              v-model="inviteEmail"
-              :placeholder="UI_TEXT.groups.emailPlaceholder"
-              variant="glass"
-              class="w-full"
-            />
-          </div>
-          <div>
-            <label :class="appConfig.typography.inputLabel">{{
-              UI_TEXT.groups.roleSelectionLabel
-            }}</label>
-            <USelect
-              v-model="inviteRole"
-              :items="roleOptions"
-              label-key="label"
-              value-key="value"
-              :popper="{ strategy: 'fixed', placement: 'bottom-start' }"
-              :ui="{ content: 'z-[9999]' }"
-            />
-          </div>
-          <p v-if="inviteError" :class="appConfig.typography.modalErrorBox">{{ inviteError }}</p>
-          <p v-if="inviteSuccess" :class="appConfig.typography.modalSuccessBox">
-            {{ inviteSuccess }}
-          </p>
-        </form>
-      </template>
-      <template #footer>
-        <div :class="appConfig.layout.modalActions">
-          <UButton
-            :class="appConfig.typography.modalActionBtnCancel"
-            :label="UI_TEXT.common.cancel"
-            variant="actionCancelButton"
-            :disabled="!!inviteSuccess"
-            @click="groupsStore.closeInviteModal()"
-          />
-          <UButton
-            :class="appConfig.typography.modalActionBtnOk"
-            :label="UI_TEXT.groups.sendInvite"
-            variant="actionOkButton"
-            type="submit"
-            form="invite-user-form"
-            :loading="inviteMutation.isLoading.value"
-            :disabled="!!inviteSuccess"
-          />
-        </div>
-      </template>
-    </UModal>
+      <div>
+        <label :class="appConfig.typography.inputLabel">{{ UI_TEXT.groups.emailLabel }}</label>
+        <UInput
+          v-model="inviteEmail"
+          :placeholder="UI_TEXT.groups.emailPlaceholder"
+          variant="glass"
+          class="w-full"
+        />
+      </div>
+      <div>
+        <label :class="appConfig.typography.inputLabel">{{
+          UI_TEXT.groups.roleSelectionLabel
+        }}</label>
+        <USelect
+          v-model="inviteRole"
+          :items="roleOptions"
+          label-key="label"
+          value-key="value"
+          :popper="{ strategy: 'fixed', placement: 'bottom-start' }"
+          :ui="{ content: 'z-[9999]' }"
+        />
+      </div>
+      <p v-if="inviteError" :class="appConfig.typography.modalErrorBox">{{ inviteError }}</p>
+      <p v-if="inviteSuccess" :class="appConfig.typography.modalSuccessBox">
+        {{ inviteSuccess }}
+      </p>
+    </FormModal>
 
     <!-- REMOVE USER MODAL -->
-    <UModal
+    <ConfirmModal
       v-model:open="groupsStore.isRemoveUserModalOpen"
       :title="UI_TEXT.groups.removeUserTitle"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeSm }"
+      :error-text="removeErrorText"
+      :cancel-text="UI_TEXT.common.cancel"
+      :confirm-text="UI_TEXT.common.remove"
+      :loading="isRemoving"
+      :ui-size="appConfig.layout.modalSizeSm"
+      @cancel="groupsStore.closeRemoveUserModal()"
+      @confirm="handleRemoveUser"
     >
-      <template #default><div class="hidden"></div></template>
       <template #body>
         <p :class="appConfig.typography.modalText">
           {{ UI_TEXT.groups.removeUserConfirmation }}
@@ -129,36 +86,21 @@
             >„{{ groupsStore.selectedUserEmailToRemove }}”</span
           >
         </p>
-        <p v-if="removeErrorText" :class="appConfig.typography.inputError">{{ removeErrorText }}</p>
       </template>
-      <template #footer>
-        <div :class="appConfig.layout.modalActions">
-          <UButton
-            :class="appConfig.typography.modalActionBtnCancel"
-            :label="UI_TEXT.common.cancel"
-            variant="actionCancelButton"
-            @click="groupsStore.closeRemoveUserModal()"
-          />
-          <UButton
-            :class="appConfig.typography.modalActionBtnOk"
-            :label="UI_TEXT.common.remove"
-            variant="actionOkButton"
-            :loading="removeMutation.isLoading.value"
-            @click="handleRemoveUser"
-          />
-        </div>
-      </template>
-    </UModal>
+    </ConfirmModal>
 
     <!-- PROMOTE USER MODAL -->
-    <UModal
+    <ConfirmModal
       v-model:open="groupsStore.isPromoteUserModalOpen"
       :title="UI_TEXT.groups.promoteUser"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeSm }"
+      :error-text="promoteErrorText"
+      :cancel-text="UI_TEXT.common.cancel"
+      :confirm-text="UI_TEXT.groups.promote"
+      :loading="isPromoting"
+      :ui-size="appConfig.layout.modalSizeSm"
+      @cancel="groupsStore.closePromoteUserModal()"
+      @confirm="handlePromoteUser"
     >
-      <template #default><div class="hidden"></div></template>
       <template #body>
         <p :class="appConfig.typography.modalText">
           {{ ' ' + UI_TEXT.groups.promoteBeforeName + ' '
@@ -166,38 +108,22 @@
             >„{{ groupsStore.selectedUserNameToPromote }}”</span
           >{{ ' ' + UI_TEXT.groups.promoteAfterName + ' ' }}
         </p>
-        <p v-if="promoteErrorText" :class="appConfig.typography.inputError">
-          {{ promoteErrorText }}
-        </p>
       </template>
-      <template #footer>
-        <div :class="appConfig.layout.modalActions">
-          <UButton
-            :class="appConfig.typography.modalActionBtnCancel"
-            :label="UI_TEXT.common.cancel"
-            variant="actionCancelButton"
-            @click="groupsStore.closePromoteUserModal()"
-          />
-          <UButton
-            :class="appConfig.typography.modalActionBtnOk"
-            :label="UI_TEXT.groups.promote"
-            variant="actionOkButton"
-            :loading="promoteMutation.isLoading.value"
-            @click="handlePromoteUser"
-          />
-        </div>
-      </template>
-    </UModal>
+    </ConfirmModal>
 
     <!-- DEMOTE USER MODAL -->
-    <UModal
+    <ConfirmModal
       v-model:open="groupsStore.isDemoteUserModalOpen"
       :title="UI_TEXT.groups.demoteUser"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeSm }"
+      :error-text="demoteErrorText"
+      :cancel-text="UI_TEXT.common.cancel"
+      :confirm-text="UI_TEXT.groups.demote"
+      :loading="isDemoting"
+      :ui-size="appConfig.layout.modalSizeSm"
+      confirm-btn-class="text-orange-500 hover:text-white hover:bg-orange-600 ring-orange-500"
+      @cancel="groupsStore.closeDemoteUserModal()"
+      @confirm="handleDemoteUser"
     >
-      <template #default><div class="hidden"></div></template>
       <template #body>
         <p :class="appConfig.typography.modalText">
           {{ ' ' + UI_TEXT.groups.demoteBeforeName + ' '
@@ -205,27 +131,8 @@
             >„{{ groupsStore.selectedUserNameToDemote }}”</span
           >{{ ' ' + UI_TEXT.groups.demoteAfterName + ' ' }}
         </p>
-        <p v-if="demoteErrorText" :class="appConfig.typography.inputError">{{ demoteErrorText }}</p>
       </template>
-      <template #footer>
-        <div :class="appConfig.layout.modalActions">
-          <UButton
-            :class="appConfig.typography.modalActionBtnCancel"
-            :label="UI_TEXT.common.cancel"
-            variant="actionCancelButton"
-            @click="groupsStore.closeDemoteUserModal()"
-          />
-          <UButton
-            :class="appConfig.typography.modalActionBtnOk"
-            :label="UI_TEXT.groups.demote"
-            variant="actionCancelButton"
-            class="text-orange-500 hover:text-white hover:bg-orange-600 ring-orange-500"
-            :loading="demoteMutation.isLoading.value"
-            @click="handleDemoteUser"
-          />
-        </div>
-      </template>
-    </UModal>
+    </ConfirmModal>
   </div>
 </template>
 
@@ -242,12 +149,20 @@ import {
   useDemoteUserMutation,
 } from '~/queries/groups.mutation';
 import { useAppConfig } from '#imports';
+import { getErrorMessage } from '~/utils/error.utils';
+import { updateGroupSchema, inviteUserSchema } from '~/utils/schemas/groups.schema';
 
 /* --- COMPOSABLES --- */
 const appConfig = useAppConfig();
 const groupsStore = useGroupsStore();
 const route = useRoute();
 const membersGroupUuid = computed(() => route.params.uuid as string);
+
+const isUpdating = computed(() => updateMutation.isLoading.value);
+const isInviting = computed(() => inviteMutation.isLoading.value);
+const isRemoving = computed(() => removeMutation.isLoading.value);
+const isPromoting = computed(() => promoteMutation.isLoading.value);
+const isDemoting = computed(() => demoteMutation.isLoading.value);
 
 /* --- UPDATE LOGIC --- */
 const updateGroupName = ref('');

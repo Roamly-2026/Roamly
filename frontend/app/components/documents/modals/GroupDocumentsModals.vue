@@ -1,24 +1,17 @@
-<!-- frontend/app/components/groups/modals/GroupDocumentsModals.vue -->
+<!-- frontend/app/components/documents/modals/GroupDocumentsModals.vue -->
 <template>
   <div>
     <!-- ==================== -->
     <!-- UPLOAD DOCUMENT MODAL -->
     <!-- ==================== -->
-    <UModal
+    <BaseModal
       v-model:open="documentsStore.isUploadModalOpen"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeMd }"
+      :title="UI_TEXT.documents.uploadTitle"
+      :ui-size="appConfig.layout.modalSizeMd"
     >
-      <template #default><div class="hidden"></div></template>
-      <template #close><div class="hidden"></div></template>
-      <template #header>
-        <h3 class="text-xl font-bold text-dark-text">
-          {{ UI_TEXT.documents.uploadTitle }}
-        </h3>
-      </template>
       <template #body>
         <UForm
+          id="upload-group-doc-form"
           :schema="uploadDocumentSchema"
           :state="uploadForm"
           :class="appConfig.layout.modalForm"
@@ -82,44 +75,40 @@
           <div v-if="uploadError" :class="appConfig.typography.formStatusError">
             {{ getErrorMessage(uploadError) }}
           </div>
-
-          <!-- Buttons -->
-          <div :class="[appConfig.layout.flexBetween, 'mt-4']">
-            <UButton
-              :label="UI_TEXT.common.cancel"
-              variant="actionCancelButton"
-              :class="appConfig.typography.modalActionBtnCancel"
-              @click="closeUploadModal"
-            />
-            <UButton
-              type="submit"
-              :label="UI_TEXT.common.upload"
-              variant="actionOkButton"
-              :class="appConfig.typography.modalActionBtnOk"
-              :loading="uploadMutation.isLoading.value"
-              :disabled="!uploadForm.file"
-            />
-          </div>
         </UForm>
       </template>
-    </UModal>
+      <template #footer>
+        <div :class="appConfig.layout.flexBetween">
+          <UButton
+            :label="UI_TEXT.common.cancel"
+            variant="actionCancelButton"
+            :class="appConfig.typography.modalActionBtnCancel"
+            @click="closeUploadModal"
+          />
+          <UButton
+            type="submit"
+            form="upload-group-doc-form"
+            :label="UI_TEXT.common.upload"
+            variant="actionOkButton"
+            :class="appConfig.typography.modalActionBtnOk"
+            :loading="uploadMutation.isLoading.value"
+            :disabled="!uploadForm.file"
+          />
+        </div>
+      </template>
+    </BaseModal>
 
     <!-- ==================== -->
     <!-- UPDATE DOCUMENT MODAL -->
     <!-- ==================== -->
-    <UModal
+    <BaseModal
       v-model:open="documentsStore.isGroupUpdateModalOpen"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeMd }"
+      :title="UI_TEXT.documents.updateGroup"
+      :ui-size="appConfig.layout.modalSizeMd"
     >
-      <template #default><div class="hidden"></div></template>
-      <template #close><div class="hidden"></div></template>
-      <template #header>
-        <h3 class="text-xl font-bold text-dark-text">{{ UI_TEXT.documents.updateGroup }}</h3>
-      </template>
       <template #body>
         <UForm
+          id="update-group-doc-form"
           :schema="updateDocumentSchema"
           :state="updateForm"
           :class="appConfig.layout.modalForm"
@@ -189,43 +178,42 @@
           <div v-if="updateError" :class="appConfig.typography.formStatusError">
             {{ getErrorMessage(updateError) }}
           </div>
-
-          <!-- Buttons -->
-          <div :class="[appConfig.layout.flexBetween, 'mt-4']">
-            <UButton
-              :label="UI_TEXT.common.cancel"
-              variant="actionCancelButton"
-              :class="appConfig.typography.modalActionBtnCancel"
-              @click="closeUpdateModal"
-            />
-            <UButton
-              type="submit"
-              :label="UI_TEXT.common.save"
-              variant="actionOkButton"
-              :class="appConfig.typography.modalActionBtnOk"
-              :loading="updateMutation.isLoading.value"
-            />
-          </div>
         </UForm>
       </template>
-    </UModal>
+      <template #footer>
+        <div :class="appConfig.layout.flexBetween">
+          <UButton
+            :label="UI_TEXT.common.cancel"
+            variant="actionCancelButton"
+            :class="appConfig.typography.modalActionBtnCancel"
+            @click="closeUpdateModal"
+          />
+          <UButton
+            type="submit"
+            form="update-group-doc-form"
+            :label="UI_TEXT.common.save"
+            variant="actionOkButton"
+            :class="appConfig.typography.modalActionBtnOk"
+            :loading="updateMutation.isLoading.value"
+          />
+        </div>
+      </template>
+    </BaseModal>
 
     <!-- ==================== -->
     <!-- DELETE DOCUMENT MODAL -->
     <!-- ==================== -->
-    <UModal
+    <ConfirmModal
       v-model:open="documentsStore.isDeleteModalOpen"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeMd }"
+      :title="UI_TEXT.documents.deleteTitle"
+      :error-text="deleteError ? getErrorMessage(deleteError) : ''"
+      :cancel-text="UI_TEXT.common.cancel"
+      :confirm-text="UI_TEXT.common.delete"
+      :loading="deleteMutation.isLoading.value"
+      :ui-size="appConfig.layout.modalSizeMd"
+      @cancel="documentsStore.closeDeleteModal()"
+      @confirm="confirmDelete"
     >
-      <template #default><div class="hidden"></div></template>
-      <template #close><div class="hidden"></div></template>
-      <template #header>
-        <h3 class="text-xl font-bold text-dark-text">
-          {{ UI_TEXT.documents.deleteTitle }}
-        </h3>
-      </template>
       <template #body>
         <p :class="appConfig.typography.modalText">
           {{ UI_TEXT.documents.deleteDocumentBeforeName }}
@@ -234,31 +222,8 @@
           }}</span
           >{{ UI_TEXT.documents.cannotUndoSuffix }}
         </p>
-
-        <!-- Delete Error Display -->
-        <div v-if="deleteError" :class="[appConfig.typography.formStatusError, 'mt-2']">
-          {{ getErrorMessage(deleteError) }}
-        </div>
       </template>
-      <template #footer>
-        <div :class="appConfig.layout.flexBetween">
-          <UButton
-            :label="UI_TEXT.common.cancel"
-            variant="actionCancelButton"
-            :class="appConfig.typography.modalActionBtnCancel"
-            @click="documentsStore.closeDeleteModal()"
-          />
-          <UButton
-            :label="UI_TEXT.common.delete"
-            variant="actionOkButton"
-            class="bg-error-500 hover:bg-error-600 text-white"
-            :class="appConfig.typography.modalActionBtnOk"
-            :loading="deleteMutation.isLoading.value"
-            @click="confirmDelete"
-          />
-        </div>
-      </template>
-    </UModal>
+    </ConfirmModal>
   </div>
 </template>
 

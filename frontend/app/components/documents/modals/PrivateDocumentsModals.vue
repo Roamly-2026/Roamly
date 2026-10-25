@@ -4,19 +4,14 @@
     <!-- ==================== -->
     <!-- UPLOAD DOCUMENT MODAL -->
     <!-- ==================== -->
-    <UModal
+    <BaseModal
       v-model:open="documentsStore.isPrivateUploadModalOpen"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeMd }"
+      :title="UI_TEXT.documents.uploadPrivate"
+      :ui-size="appConfig.layout.modalSizeMd"
     >
-      <template #default><div class="hidden"></div></template>
-      <template #close><div class="hidden"></div></template>
-      <template #header>
-        <h3 class="text-xl font-bold text-dark-text">{{ UI_TEXT.documents.uploadPrivate }}</h3>
-      </template>
       <template #body>
         <UForm
+          id="upload-private-doc-form"
           :schema="uploadDocumentSchema"
           :state="uploadForm"
           :class="appConfig.layout.modalForm"
@@ -77,44 +72,40 @@
           <div v-if="uploadError" :class="appConfig.typography.formStatusError">
             {{ getErrorMessage(uploadError) }}
           </div>
-
-          <!-- Buttons -->
-          <div :class="[appConfig.layout.flexBetween, 'mt-4']">
-            <UButton
-              :label="UI_TEXT.common.cancel"
-              variant="actionCancelButton"
-              :class="appConfig.typography.modalActionBtnCancel"
-              @click="closeUploadModal"
-            />
-            <UButton
-              type="submit"
-              :label="UI_TEXT.common.upload"
-              variant="actionOkButton"
-              :class="appConfig.typography.modalActionBtnOk"
-              :loading="uploadMutation.isLoading.value"
-              :disabled="!uploadForm.file"
-            />
-          </div>
         </UForm>
       </template>
-    </UModal>
+      <template #footer>
+        <div :class="appConfig.layout.flexBetween">
+          <UButton
+            :label="UI_TEXT.common.cancel"
+            variant="actionCancelButton"
+            :class="appConfig.typography.modalActionBtnCancel"
+            @click="closeUploadModal"
+          />
+          <UButton
+            type="submit"
+            form="upload-private-doc-form"
+            :label="UI_TEXT.common.upload"
+            variant="actionOkButton"
+            :class="appConfig.typography.modalActionBtnOk"
+            :loading="uploadMutation.isLoading.value"
+            :disabled="!uploadForm.file"
+          />
+        </div>
+      </template>
+    </BaseModal>
 
     <!-- ==================== -->
     <!-- UPDATE DOCUMENT MODAL -->
     <!-- ==================== -->
-    <UModal
+    <BaseModal
       v-model:open="documentsStore.isPrivateUpdateModalOpen"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeMd }"
+      :title="UI_TEXT.documents.updatePrivate"
+      :ui-size="appConfig.layout.modalSizeMd"
     >
-      <template #default><div class="hidden"></div></template>
-      <template #close><div class="hidden"></div></template>
-      <template #header>
-        <h3 class="text-xl font-bold text-dark-text">{{ UI_TEXT.documents.updatePrivate }}</h3>
-      </template>
       <template #body>
         <UForm
+          id="update-private-doc-form"
           :schema="updateDocumentSchema"
           :state="updateForm"
           :class="appConfig.layout.modalForm"
@@ -184,41 +175,42 @@
           <div v-if="updateError" :class="appConfig.typography.formStatusError">
             {{ getErrorMessage(updateError) }}
           </div>
-
-          <!-- Buttons -->
-          <div :class="[appConfig.layout.flexBetween, 'mt-4']">
-            <UButton
-              :label="UI_TEXT.common.cancel"
-              variant="actionCancelButton"
-              :class="appConfig.typography.modalActionBtnCancel"
-              @click="closeUpdateModal"
-            />
-            <UButton
-              type="submit"
-              :label="UI_TEXT.common.save"
-              variant="actionOkButton"
-              :class="appConfig.typography.modalActionBtnOk"
-              :loading="isUpdating"
-            />
-          </div>
         </UForm>
       </template>
-    </UModal>
+      <template #footer>
+        <div :class="appConfig.layout.flexBetween">
+          <UButton
+            :label="UI_TEXT.common.cancel"
+            variant="actionCancelButton"
+            :class="appConfig.typography.modalActionBtnCancel"
+            @click="closeUpdateModal"
+          />
+          <UButton
+            type="submit"
+            form="update-private-doc-form"
+            :label="UI_TEXT.common.save"
+            variant="actionOkButton"
+            :class="appConfig.typography.modalActionBtnOk"
+            :loading="isUpdating"
+          />
+        </div>
+      </template>
+    </BaseModal>
 
     <!-- ==================== -->
     <!-- DELETE DOCUMENT MODAL -->
     <!-- ==================== -->
-    <UModal
+    <ConfirmModal
       v-model:open="documentsStore.isPrivateDeleteModalOpen"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeMd }"
+      :title="UI_TEXT.documents.deleteTitle"
+      :error-text="deleteError ? getErrorMessage(deleteError) : ''"
+      :cancel-text="UI_TEXT.common.cancel"
+      :confirm-text="UI_TEXT.common.delete"
+      :loading="deleteMutation.isLoading.value"
+      :ui-size="appConfig.layout.modalSizeMd"
+      @cancel="documentsStore.closePrivateDeleteModal()"
+      @confirm="confirmDelete"
     >
-      <template #default><div class="hidden"></div></template>
-      <template #close><div class="hidden"></div></template>
-      <template #header>
-        <h3 class="text-xl font-bold text-dark-text">{{ UI_TEXT.documents.deleteTitle }}</h3>
-      </template>
       <template #body>
         <p :class="appConfig.typography.modalText">
           {{ ' ' + UI_TEXT.documents.deleteBeforeName + ' '
@@ -227,174 +219,8 @@
           }}</span
           >{{ UI_TEXT.documents.deleteAfterName + ' ' }}
         </p>
-
-        <!-- Delete Error Display -->
-        <div v-if="deleteError" :class="[appConfig.typography.formStatusError, 'mt-2']">
-          {{ getErrorMessage(deleteError) }}
-        </div>
       </template>
-      <template #footer>
-        <div :class="appConfig.layout.flexBetween">
-          <UButton
-            :label="UI_TEXT.common.cancel"
-            variant="actionCancelButton"
-            :class="appConfig.typography.modalActionBtnCancel"
-            @click="documentsStore.closePrivateDeleteModal()"
-          />
-          <UButton
-            :label="UI_TEXT.common.delete"
-            variant="actionOkButton"
-            class="bg-error-500 hover:bg-error-600 text-white"
-            :class="appConfig.typography.modalActionBtnOk"
-            :loading="deleteMutation.isLoading.value"
-            @click="confirmDelete"
-          />
-        </div>
-      </template>
-    </UModal>
-
-    <!-- ==================== -->
-    <!-- SHARE DOCUMENT MODAL -->
-    <!-- ==================== -->
-    <UModal
-      v-model:open="documentsStore.isPrivateShareModalOpen"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeMd }"
-    >
-      <template #default><div class="hidden"></div></template>
-      <template #close><div class="hidden"></div></template>
-      <template #header>
-        <h3 class="text-xl font-bold text-dark-text">{{ UI_TEXT.documents.share }}</h3>
-      </template>
-      <template #body>
-        <div :class="appConfig.calendar.participantModalScroll">
-          <div
-            v-for="group in unsharedGroups"
-            :key="group.uuid"
-            :class="appConfig.calendar.participantCard"
-          >
-            <div class="flex items-center justify-between w-full">
-              <div class="flex items-center gap-5">
-                <UAvatar
-                  :alt="group.name"
-                  icon="i-heroicons-user-group"
-                  size="xl"
-                  :class="appConfig.calendar.participantCardAvatar"
-                />
-
-                <div :class="appConfig.calendar.participantCardInfo">
-                  <div class="flex items-center gap-1.5 mb-1.5">
-                    <h4 :class="appConfig.calendar.participantCardName">{{ group.name }}</h4>
-                  </div>
-                  <div class="flex gap-1.5">
-                    <UIcon name="i-heroicons-user-solid" class="w-5 h-5 text-brand-500 shrink-0" />
-                    <h4 :class="appConfig.calendar.metaValue">{{ group.current_size }}</h4>
-                  </div>
-                </div>
-              </div>
-              <UTooltip
-                :text="UI_TEXT.documents.shareWithGroup"
-                :ui="{ content: 'z-[9999]' }"
-                :popper="{ placement: 'top', strategy: 'fixed' }"
-              >
-                <UButton
-                  icon="i-heroicons-share"
-                  variant="ghostBrandIconButton"
-                  class="text-dark-text/70"
-                  :loading="shareMutation.isLoading.value"
-                  @click="handleShareDocument(group.uuid)"
-                />
-              </UTooltip>
-            </div>
-          </div>
-          <div v-if="!unsharedGroups?.length" class="text-sm font-medium text-dark-text/50 p-4">
-            {{ ' ' + UI_TEXT.documents.noAvailableGroups + ' ' }}
-          </div>
-        </div>
-      </template>
-      <template #footer>
-        <div class="flex justify-end w-full">
-          <UButton
-            :label="UI_TEXT.common.close"
-            variant="actionOkButton"
-            :class="appConfig.typography.modalActionBtnCancel"
-            @click="documentsStore.closePrivateShareModal()"
-          />
-        </div>
-      </template>
-    </UModal>
-
-    <!-- ==================== -->
-    <!-- VIEW ACCESS MODAL -->
-    <!-- ==================== -->
-    <UModal
-      v-model:open="documentsStore.isPrivateAccessModalOpen"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeMd }"
-    >
-      <template #default><div class="hidden"></div></template>
-      <template #close><div class="hidden"></div></template>
-      <template #header>
-        <h3 class="text-xl font-bold text-dark-text">{{ UI_TEXT.documents.access }}</h3>
-      </template>
-      <template #body>
-        <div :class="appConfig.calendar.participantModalScroll">
-          <div
-            v-for="share in sharedGroups"
-            :key="share.groups.name"
-            :class="appConfig.calendar.participantCard"
-          >
-            <div class="flex items-center justify-between w-full">
-              <div class="flex items-center gap-5">
-                <UAvatar
-                  :alt="share.groups.name"
-                  icon="i-heroicons-user-group"
-                  size="xl"
-                  :class="appConfig.calendar.participantCardAvatar"
-                />
-
-                <div :class="appConfig.calendar.participantCardInfo">
-                  <div class="flex items-center gap-1.5">
-                    <h4 :class="appConfig.calendar.participantCardName">{{ share.groups.name }}</h4>
-                  </div>
-                  <p :class="appConfig.calendar.participantCardEmail">
-                    {{ ' ' + UI_TEXT.documents.sharedAt + ' '
-                    }}{{ new Date(share.shared_at).toLocaleDateString() }}
-                  </p>
-                </div>
-              </div>
-              <UTooltip
-                :text="UI_TEXT.documents.revokeAccess"
-                :ui="{ content: 'z-[9999]' }"
-                :popper="{ placement: 'top', strategy: 'fixed' }"
-              >
-                <UButton
-                  icon="i-heroicons-x-mark"
-                  variant="ghostDangerIconButton"
-                  :loading="revokeMutation.isLoading.value"
-                  @click="handleRevokeAccess(share.groups.name)"
-                />
-              </UTooltip>
-            </div>
-          </div>
-          <div v-if="!sharedGroups?.length" class="text-sm font-medium text-dark-text/50 p-4">
-            {{ ' ' + UI_TEXT.documents.notShared + ' ' }}
-          </div>
-        </div>
-      </template>
-      <template #footer>
-        <div class="flex justify-end w-full">
-          <UButton
-            :label="UI_TEXT.common.close"
-            variant="actionOkButton"
-            :class="appConfig.typography.modalActionBtnCancel"
-            @click="documentsStore.closePrivateAccessModal()"
-          />
-        </div>
-      </template>
-    </UModal>
+    </ConfirmModal>
   </div>
 </template>
 
@@ -408,24 +234,13 @@ import { useDocumentsStore } from '~/stores/documents.modals.store';
 import {
   useUploadPrivateDocumentMutation,
   useDeletePrivateDocumentMutation,
-  useShareDocumentMutation,
-  useDeleteSharingMutation,
 } from '~/queries/files.mutation';
 import { filesService } from '~/services/files.service';
 import { getErrorMessage } from '~/utils/error.utils';
 import type { ApiError } from '~/types/apiError.type';
-import type { FileShareDto } from '~/types/files.type';
-import type { GroupOutDto } from '~/types/groups.type';
 
-const props = defineProps<{
-  // a list of available document types for categorization, formatted as label-value pairs
+defineProps<{
   privateDocumentTypes?: { label: string; value: string }[];
-  // a list of groups that currently have access to the selected private document
-  sharedGroups?: FileShareDto[];
-  // a list of groups that currently do not have access to the document, available for new sharing
-  unsharedGroups?: GroupOutDto[];
-  // the complete list of groups the user belongs to
-  allGroups?: GroupOutDto[];
 }>();
 
 const appConfig = useAppConfig();
@@ -437,9 +252,6 @@ const uploadError = ref<ApiError | Error | null>(null);
 const updateError = ref<ApiError | Error | null>(null);
 const deleteError = ref<ApiError | Error | null>(null);
 const isUpdating = ref(false);
-
-const privateFileToShare = computed(() => documentsStore.privateFileToShare);
-const privateFileToViewAccess = computed(() => documentsStore.privateFileToViewAccess);
 
 // -------------------------
 // UPLOAD LOGIC
@@ -490,7 +302,6 @@ const closeUploadModal = () => {
 
 const handleUpload = (event: FormSubmitEvent<UploadFormState>) => {
   uploadError.value = null;
-
   const formData = new FormData();
   formData.append('file', event.data.file);
   if (event.data.documentType) formData.append('document_type', event.data.documentType);
@@ -604,39 +415,5 @@ const confirmDelete = () => {
   if (!privateFileToDelete.value) return;
   deleteError.value = null;
   deleteMutation.mutate(privateFileToDelete.value.fileId);
-};
-
-// -------------------------
-// SHARING & ACCESS LOGIC
-// -------------------------
-const shareMutation = useShareDocumentMutation();
-
-const handleShareDocument = (groupUuid: string) => {
-  if (!privateFileToShare.value) return;
-
-  shareMutation.mutate({
-    fileId: privateFileToShare.value.fileId,
-    groupUuid,
-    accessLevel: 'leader', // Default érték
-  });
-};
-
-const revokeMutation = useDeleteSharingMutation();
-
-const handleRevokeAccess = (groupName: string) => {
-  if (!privateFileToViewAccess.value) return;
-
-  // UUID kinyerése a név alapján a teljes csoportlistából
-  const groupUuid = props.allGroups?.find((g) => g.name === groupName)?.uuid;
-
-  if (!groupUuid) {
-    toast.add({ title: UI_TEXT.common.error, description: UI_TEXT.errors.groupUuidNotFound });
-    return;
-  }
-
-  revokeMutation.mutate({
-    fileId: privateFileToViewAccess.value.fileId,
-    groupUuid,
-  });
 };
 </script>

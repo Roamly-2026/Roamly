@@ -2,62 +2,41 @@
 <template>
   <div>
     <!-- CREATE MODAL -->
-    <UModal
+    <FormModal
       v-model:open="groupsStore.isCreateModalOpen"
       :title="UI_TEXT.groups.createTitle"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeSm }"
+      form-id="create-group-form"
+      :cancel-text="UI_TEXT.common.cancel"
+      :submit-text="UI_TEXT.common.create"
+      :loading="isCreating"
+      :ui-size="appConfig.layout.modalSizeSm"
+      @cancel="groupsStore.closeCreateModal"
+      @submit="handleCreateGroup"
     >
-      <template #default><div class="hidden"></div></template>
-      <template #body>
-        <form
-          id="create-group-form"
-          :class="appConfig.layout.modalForm"
-          @submit.prevent="handleCreateGroup"
-        >
-          <div>
-            <label :class="appConfig.typography.inputLabel">{{ UI_TEXT.groups.nameLabel }}</label>
-            <UInput
-              v-model="newGroupName"
-              :placeholder="UI_TEXT.groups.namePlaceholder"
-              variant="glass"
-              class="w-full"
-            />
-            <p v-if="createError" :class="appConfig.typography.inputError">{{ createError }}</p>
-          </div>
-        </form>
-      </template>
-      <template #footer>
-        <div :class="appConfig.layout.modalActions">
-          <UButton
-            :class="appConfig.typography.modalActionBtnCancel"
-            :label="UI_TEXT.common.cancel"
-            variant="actionCancelButton"
-            type="button"
-            @click="groupsStore.closeCreateModal"
-          />
-          <UButton
-            :class="appConfig.typography.modalActionBtnOk"
-            :label="UI_TEXT.common.create"
-            variant="actionOkButton"
-            type="submit"
-            form="create-group-form"
-            :loading="createMutation.isLoading.value"
-          />
-        </div>
-      </template>
-    </UModal>
+      <div>
+        <label :class="appConfig.typography.inputLabel">{{ UI_TEXT.groups.nameLabel }}</label>
+        <UInput
+          v-model="newGroupName"
+          :placeholder="UI_TEXT.groups.namePlaceholder"
+          variant="glass"
+          class="w-full"
+        />
+        <p v-if="createError" :class="appConfig.typography.inputError">{{ createError }}</p>
+      </div>
+    </FormModal>
 
     <!-- DELETE GROUP MODAL -->
-    <UModal
+    <ConfirmModal
       v-model:open="groupsStore.isDeleteModalOpen"
       :title="UI_TEXT.groups.deleteTitle"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeSm }"
+      :error-text="deleteErrorText"
+      :cancel-text="UI_TEXT.common.cancel"
+      :confirm-text="UI_TEXT.common.delete"
+      :loading="isDeleting"
+      :ui-size="appConfig.layout.modalSizeSm"
+      @cancel="groupsStore.closeDeleteModal"
+      @confirm="confirmDelete"
     >
-      <template #default><div class="hidden"></div></template>
       <template #body>
         <p :class="appConfig.typography.modalText">
           {{ UI_TEXT.groups.deleteConfirmation }}
@@ -68,38 +47,21 @@
             „{{ groupsStore.selectedGroupToDelete.name }}”
           </span>
         </p>
-        <p v-if="deleteErrorText" :class="appConfig.typography.modalErrorBox">
-          {{ deleteErrorText }}
-        </p>
       </template>
-      <template #footer>
-        <div :class="appConfig.layout.modalActions">
-          <UButton
-            :class="appConfig.typography.modalActionBtnCancel"
-            :label="UI_TEXT.common.cancel"
-            variant="actionCancelButton"
-            @click="groupsStore.closeDeleteModal"
-          />
-          <UButton
-            :class="appConfig.typography.modalActionBtnOk"
-            :label="UI_TEXT.common.delete"
-            variant="actionOkButton"
-            :loading="deleteMutation.isLoading.value"
-            @click="confirmDelete"
-          />
-        </div>
-      </template>
-    </UModal>
+    </ConfirmModal>
 
     <!-- LEAVE GROUP MODAL -->
-    <UModal
+    <ConfirmModal
       v-model:open="groupsStore.isLeaveModalOpen"
       :title="UI_TEXT.groups.leaveTitle"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: appConfig.layout.modalSizeSm }"
+      :error-text="leaveErrorText"
+      :cancel-text="UI_TEXT.common.cancel"
+      :confirm-text="UI_TEXT.common.leave"
+      :loading="isLeaving"
+      :ui-size="appConfig.layout.modalSizeSm"
+      @cancel="groupsStore.closeLeaveModal"
+      @confirm="confirmLeave"
     >
-      <template #default><div class="hidden"></div></template>
       <template #body>
         <div :class="appConfig.layout.modalForm">
           <p :class="appConfig.typography.modalText">
@@ -120,29 +82,9 @@
           >
             {{ UI_TEXT.groups.leaveWarning }}
           </p>
-          <p v-if="leaveErrorText" :class="appConfig.typography.modalErrorBox">
-            {{ leaveErrorText }}
-          </p>
         </div>
       </template>
-      <template #footer>
-        <div :class="appConfig.layout.modalActions">
-          <UButton
-            :class="appConfig.typography.modalActionBtnCancel"
-            :label="UI_TEXT.common.cancel"
-            variant="actionCancelButton"
-            @click="groupsStore.closeLeaveModal"
-          />
-          <UButton
-            :class="appConfig.typography.modalActionBtnOk"
-            :label="UI_TEXT.common.leave"
-            variant="actionOkButton"
-            :loading="leaveMutation.isLoading.value"
-            @click="confirmLeave"
-          />
-        </div>
-      </template>
-    </UModal>
+    </ConfirmModal>
   </div>
 </template>
 
@@ -166,6 +108,10 @@ const router = useRouter();
 /* --- STATE --- */
 const newGroupName = ref('');
 const formValidationError = ref('');
+
+const isCreating = computed(() => createMutation.isLoading.value);
+const isDeleting = computed(() => deleteMutation.isLoading.value);
+const isLeaving = computed(() => leaveMutation.isLoading.value);
 
 /* --- API MUTATIONS --- */
 const createMutation = useCreateGroupMutation({
