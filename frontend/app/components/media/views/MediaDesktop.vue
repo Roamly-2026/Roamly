@@ -48,20 +48,23 @@
                 'max-h-[50vh] overflow-y-auto custom-scrollbar',
               ]"
             >
-              <button
+              <BaseButton
                 v-for="group in groups"
                 :key="group.uuid"
                 :class="appConfig.ui.wideDropdownMenu.slots.item"
+                variant="ghost"
                 @click="selectGroup(group.uuid)"
               >
-                <UIcon
-                  :name="
-                    group.uuid === selectedGroup ? 'i-heroicons-check' : 'i-heroicons-user-group'
-                  "
-                  :class="appConfig.ui.wideDropdownMenu.slots.itemLeadingIcon"
-                />
-                <span>{{ group.name }}</span>
-              </button>
+                <template #leading>
+                  <UIcon
+                    :name="
+                      group.uuid === selectedGroup ? 'i-heroicons-check' : 'i-heroicons-user-group'
+                    "
+                    :class="appConfig.ui.wideDropdownMenu.slots.itemLeadingIcon"
+                  />
+                </template>
+                {{ group.name }}
+              </BaseButton>
             </div>
           </template>
         </UPopover>

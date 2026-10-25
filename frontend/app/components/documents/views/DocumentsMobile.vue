@@ -397,13 +397,16 @@
           </div>
 
           <!-- Empty per-type state -->
-          <BaseCard v-else variant="documentGlass" class="relative w-full">
+          <BaseCard
+            v-else
+            class="relative !bg-transparent !backdrop-blur-none !ring-0 !shadow-none"
+          >
             <div :class="`${SPACING_TOKENS.py.lg} text-center`">
               <UIcon
                 name="i-heroicons-document-text"
-                :class="`w-12 h-12 text-surface-500/40 mx-auto ${SPACING_TOKENS.mb.sm}`"
+                :class="`w-12 h-12 text-surface-500 mx-auto ${SPACING_TOKENS.mb.sm}`"
               />
-              <p class="text-surface-400 italic text-sm">
+              <p class="text-surface-500 italic text-sm">
                 {{ ' ' + UI_TEXT.documents.no + ' ' }}{{ type.label.toLowerCase()
                 }}{{ ' ' + UI_TEXT.documents.found + ' '
                 }}<template v-if="memberSearchQuery"

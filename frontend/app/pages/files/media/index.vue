@@ -55,24 +55,20 @@
       <template #body>
         <div :class="`flex flex-col ${SPACING_TOKENS.gap.md}`">
           <!-- File input -->
-          <UFormField :label="UI_TEXT.documents.selectFile">
-            <UInput
-              type="file"
-              accept="image/*,video/*"
-              variant="glass"
-              icon="i-heroicons-photo"
-              @change="onFileChange"
-            />
-          </UFormField>
+          <BaseInput
+            :label="UI_TEXT.documents.selectFile"
+            type="file"
+            accept="image/*,video/*"
+            icon="i-heroicons-photo"
+            @change="onFileChange"
+          />
 
           <!-- Description -->
-          <UFormField :label="UI_TEXT.media.optionalDescription">
-            <UInput
-              v-model="uploadDescription"
-              variant="glass"
-              :placeholder="UI_TEXT.media.captionPlaceholder"
-            />
-          </UFormField>
+          <BaseInput
+            v-model="uploadDescription"
+            :label="UI_TEXT.media.optionalDescription"
+            :placeholder="UI_TEXT.media.captionPlaceholder"
+          />
 
           <!-- Error -->
           <div v-if="uploadError" class="text-sm text-error-500 font-medium">

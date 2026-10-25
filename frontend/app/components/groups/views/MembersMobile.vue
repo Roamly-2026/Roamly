@@ -279,12 +279,13 @@
                           UI_TEXT.events.moreParticipants
                         "
                       >
-                        <button
-                          class="flex items-center justify-center w-5 h-5 rounded-full bg-surface-200 hover:bg-surface-300 ring-2 ring-white text-xs font-bold text-dark-text transition-colors z-10 cursor-pointer"
+                        <BaseButton
+                          variant="ghost"
+                          class="flex items-center justify-center w-5 h-5 !p-0 rounded-full bg-surface-200 hover:bg-surface-300 ring-2 ring-white text-xs font-bold text-dark-text transition-colors z-10 cursor-pointer"
                           @click.stop="eventsStore.openParticipantsModal(event)"
                         >
                           +{{ (event.members?.length || 0) - 5 }}
-                        </button>
+                        </BaseButton>
                       </UTooltip>
                     </div>
                   </template>

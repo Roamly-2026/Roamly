@@ -58,22 +58,25 @@
                 'max-h-[50vh] overflow-y-auto custom-scrollbar',
               ]"
             >
-              <button
+              <BaseButton
                 v-for="group in userGroupsList"
                 :key="group.uuid"
                 :class="appConfig.ui.wideDropdownMenu.slots.item"
+                variant="ghost"
                 @click="$emit('select-group', group.uuid)"
               >
-                <UIcon
-                  :name="
-                    group.uuid === selectedGroupUuid
-                      ? 'i-heroicons-check'
-                      : 'i-heroicons-user-group'
-                  "
-                  :class="appConfig.ui.wideDropdownMenu.slots.itemLeadingIcon"
-                />
-                <span>{{ group.name }}</span>
-              </button>
+                <template #leading>
+                  <UIcon
+                    :name="
+                      group.uuid === selectedGroupUuid
+                        ? 'i-heroicons-check'
+                        : 'i-heroicons-user-group'
+                    "
+                    :class="appConfig.ui.wideDropdownMenu.slots.itemLeadingIcon"
+                  />
+                </template>
+                {{ group.name }}
+              </BaseButton>
             </div>
           </template>
         </UPopover>
@@ -84,7 +87,7 @@
           v-model:open="isFilterOpen"
           :popper="{ strategy: 'fixed', placement: 'bottom-end' }"
         >
-          ><BaseButton
+          <BaseButton
             icon="i-heroicons-funnel"
             :label="UI_TEXT.common.filter"
             variant="glassOutlineButton"
@@ -97,26 +100,18 @@
               class="w-[calc(100vw-3rem)] mx-2"
             >
               <div :class="appConfig.calendar.filterFormGroup">
-                <div>
-                  <label :class="appConfig.calendar.filterLabel">{{
-                    UI_TEXT.events.startDateLabel
-                  }}</label
-                  ><input
-                    v-model="filterStartDate"
-                    type="date"
-                    :class="appConfig.calendar.filterDateInput"
-                  />
-                </div>
-                <div>
-                  <label :class="appConfig.calendar.filterLabel">{{
-                    UI_TEXT.events.endDateLabel
-                  }}</label
-                  ><input
-                    v-model="filterEndDate"
-                    type="date"
-                    :class="appConfig.calendar.filterDateInput"
-                  />
-                </div>
+                <BaseInput
+                  v-model="filterStartDate"
+                  :label="UI_TEXT.events.startDateLabel"
+                  name="startDate"
+                  type="date"
+                />
+                <BaseInput
+                  v-model="filterEndDate"
+                  :label="UI_TEXT.events.endDateLabel"
+                  name="endDate"
+                  type="date"
+                />
                 <div :class="appConfig.calendar.filterButtonWrapper">
                   <BaseButton
                     :label="UI_TEXT.common.clearFilter"
@@ -186,7 +181,7 @@
                   {{ UI_TEXT.events.loadingDays }}
                 </div>
                 <template v-else>
-                  <button
+                  <BaseButton
                     v-for="day in sortedDaysList"
                     :key="day.id"
                     :class="[
@@ -194,10 +189,11 @@
                       selectedDayId === day.id ? 'bg-brand-500/20' : '',
                       day.isExpired ? 'opacity-50 grayscale' : '',
                     ]"
+                    variant="ghost"
                     @click="selectDay(day.id)"
                   >
-                    <span>{{ day.date }} ({{ day.dayOfWeek }})</span>
-                  </button>
+                    {{ day.date }} ({{ day.dayOfWeek }})
+                  </BaseButton>
                 </template>
               </div>
             </template>

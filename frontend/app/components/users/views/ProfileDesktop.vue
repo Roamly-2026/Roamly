@@ -139,36 +139,42 @@
                 />
                 <template #content="{ close }">
                   <div :class="[appConfig.ui.dropdownMenu.slots.content, 'w-fit']">
-                    <button
+                    <BaseButton
+                      variant="ghost"
                       :class="appConfig.ui.dropdownMenu.slots.item"
                       @click="
                         filterType = 'ALL';
                         close();
                       "
                     >
-                      <UIcon
-                        :name="filterType === 'ALL' ? 'i-heroicons-check' : 'i-heroicons-funnel'"
-                        :class="appConfig.ui.dropdownMenu.slots.itemLeadingIcon"
-                      />
-                      <span>{{ UI_TEXT.common.allTypes }}</span>
-                    </button>
-                    <button
+                      <template #leading>
+                        <UIcon
+                          :name="filterType === 'ALL' ? 'i-heroicons-check' : 'i-heroicons-funnel'"
+                          :class="appConfig.ui.dropdownMenu.slots.itemLeadingIcon"
+                        />
+                      </template>
+                      {{ UI_TEXT.common.allTypes }}
+                    </BaseButton>
+                    <BaseButton
                       v-for="type in privateDocumentTypes"
                       :key="type.value"
+                      variant="ghost"
                       :class="appConfig.ui.dropdownMenu.slots.item"
                       @click="
                         filterType = type.value;
                         close();
                       "
                     >
-                      <UIcon
-                        :name="
-                          filterType === type.value ? 'i-heroicons-check' : 'i-heroicons-funnel'
-                        "
-                        :class="appConfig.ui.dropdownMenu.slots.itemLeadingIcon"
-                      />
-                      <span>{{ type.label }}</span>
-                    </button>
+                      <template #leading>
+                        <UIcon
+                          :name="
+                            filterType === type.value ? 'i-heroicons-check' : 'i-heroicons-funnel'
+                          "
+                          :class="appConfig.ui.dropdownMenu.slots.itemLeadingIcon"
+                        />
+                      </template>
+                      {{ type.label }}
+                    </BaseButton>
                   </div>
                 </template>
               </UPopover>

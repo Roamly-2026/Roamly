@@ -18,16 +18,13 @@
           @submit="handleUpload"
         >
           <!-- Choose file -->
-          <UFormField :label="UI_TEXT.documents.selectFile" name="file">
-            <template #default="{ error: fieldError }">
-              <UInput
-                type="file"
-                :variant="fieldError ? 'glassError' : 'glass'"
-                icon="i-heroicons-document-arrow-up"
-                @change="onFileChange"
-              />
-            </template>
-          </UFormField>
+          <BaseInput
+            :label="UI_TEXT.documents.selectFile"
+            name="file"
+            type="file"
+            icon="i-heroicons-document-arrow-up"
+            @change="onFileChange"
+          />
 
           <!-- Document type -->
           <UFormField :label="UI_TEXT.documents.typeLabel" name="documentType">
@@ -46,26 +43,20 @@
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <!-- Issue date -->
-            <UFormField :label="UI_TEXT.documents.issueDate" name="issueDate">
-              <template #default="{ error: fieldError }">
-                <UInput
-                  v-model="uploadForm.issueDate"
-                  type="date"
-                  :variant="fieldError ? 'glassError' : 'glass'"
-                />
-              </template>
-            </UFormField>
+            <BaseInput
+              v-model="uploadForm.issueDate"
+              :label="UI_TEXT.documents.issueDate"
+              name="issueDate"
+              type="date"
+            />
 
             <!-- Expiry date -->
-            <UFormField :label="UI_TEXT.documents.expiryDate" name="expiryDate">
-              <template #default="{ error: fieldError }">
-                <UInput
-                  v-model="uploadForm.expiryDate"
-                  type="date"
-                  :variant="fieldError ? 'glassError' : 'glass'"
-                />
-              </template>
-            </UFormField>
+            <BaseInput
+              v-model="uploadForm.expiryDate"
+              :label="UI_TEXT.documents.expiryDate"
+              name="expiryDate"
+              type="date"
+            />
           </div>
 
           <!-- Error Display -->
@@ -121,16 +112,13 @@
           </div>
 
           <!-- Replace file (optional) -->
-          <UFormField :label="UI_TEXT.documents.replaceFile" name="file">
-            <template #default="{ error: fieldError }">
-              <UInput
-                type="file"
-                :variant="fieldError ? 'glassError' : 'glass'"
-                icon="i-heroicons-document-arrow-up"
-                @change="onUpdateFileChange"
-              />
-            </template>
-          </UFormField>
+          <BaseInput
+            :label="UI_TEXT.documents.replaceFile"
+            name="file"
+            type="file"
+            icon="i-heroicons-document-arrow-up"
+            @change="onUpdateFileChange"
+          />
 
           <!-- Document type -->
           <UFormField :label="UI_TEXT.documents.typeLabel" name="documentType">
@@ -149,26 +137,20 @@
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <!-- Issue date -->
-            <UFormField :label="UI_TEXT.documents.issueDate" name="issueDate">
-              <template #default="{ error: fieldError }">
-                <UInput
-                  v-model="updateForm.issueDate"
-                  type="date"
-                  :variant="fieldError ? 'glassError' : 'glass'"
-                />
-              </template>
-            </UFormField>
+            <BaseInput
+              v-model="updateForm.issueDate"
+              :label="UI_TEXT.documents.issueDate"
+              name="issueDate"
+              type="date"
+            />
 
             <!-- Expiry date -->
-            <UFormField :label="UI_TEXT.documents.expiryDate" name="expiryDate">
-              <template #default="{ error: fieldError }">
-                <UInput
-                  v-model="updateForm.expiryDate"
-                  type="date"
-                  :variant="fieldError ? 'glassError' : 'glass'"
-                />
-              </template>
-            </UFormField>
+            <BaseInput
+              v-model="updateForm.expiryDate"
+              :label="UI_TEXT.documents.expiryDate"
+              name="expiryDate"
+              type="date"
+            />
           </div>
 
           <!-- Error Display -->

@@ -424,7 +424,7 @@
         </div>
 
         <!-- Empty per-type state -->
-        <UCard v-else class="relative">
+        <BaseCard v-else class="relative !bg-transparent !backdrop-blur-none !ring-0 !shadow-none">
           <div :class="`${SPACING_TOKENS.py.lg} text-center`">
             <UIcon
               name="i-heroicons-document-text"
@@ -438,7 +438,7 @@
               >.
             </p>
           </div>
-        </UCard>
+        </BaseCard>
       </div>
     </template>
   </div>

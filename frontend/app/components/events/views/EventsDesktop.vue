@@ -3,14 +3,14 @@
   <div :class="appConfig.calendar.eventsWrapper">
     <div :class="appConfig.calendar.eventsHeaderRow">
       <div :class="appConfig.calendar.headerActionLeft">
-        ><BaseButton
+        <BaseButton
           v-if="isCurrentUserLeader"
           icon="i-heroicons-trash"
           variant="glassIconButtonDanger"
           :tooltip="UI_TEXT.groups.deleteGroup"
           @click="$emit('delete-group')"
         />
-        ><BaseButton
+        <BaseButton
           icon="i-heroicons-arrow-right-on-rectangle"
           variant="glassIconButtonDanger"
           :tooltip="UI_TEXT.groups.leaveGroup"
@@ -44,22 +44,25 @@
                 'max-h-[50vh] overflow-y-auto custom-scrollbar',
               ]"
             >
-              <button
+              <BaseButton
                 v-for="group in userGroupsList"
                 :key="group.uuid"
                 :class="appConfig.ui.wideDropdownMenu.slots.item"
+                variant="ghost"
                 @click="$emit('select-group', group.uuid)"
               >
-                <UIcon
-                  :name="
-                    group.uuid === selectedGroupUuid
-                      ? 'i-heroicons-check'
-                      : 'i-heroicons-user-group'
-                  "
-                  :class="appConfig.ui.wideDropdownMenu.slots.itemLeadingIcon"
-                />
-                <span>{{ group.name }}</span>
-              </button>
+                <template #leading>
+                  <UIcon
+                    :name="
+                      group.uuid === selectedGroupUuid
+                        ? 'i-heroicons-check'
+                        : 'i-heroicons-user-group'
+                    "
+                    :class="appConfig.ui.wideDropdownMenu.slots.itemLeadingIcon"
+                  />
+                </template>
+                {{ group.name }}
+              </BaseButton>
             </div>
           </template>
         </UPopover>
@@ -106,7 +109,7 @@
         />
 
         <UPopover v-model:open="isFilterOpen">
-          ><BaseButton
+          <BaseButton
             icon="i-heroicons-funnel"
             :label="UI_TEXT.common.filter"
             variant="glassButton"
@@ -115,26 +118,18 @@
           <template #content>
             <div :class="appConfig.calendar.filterDropdownContent">
               <div :class="appConfig.calendar.filterFormGroup">
-                <div>
-                  <label :class="appConfig.calendar.filterLabel">{{
-                    UI_TEXT.events.startDateLabel
-                  }}</label
-                  ><input
-                    v-model="filterStartDate"
-                    type="date"
-                    :class="appConfig.calendar.filterDateInput"
-                  />
-                </div>
-                <div>
-                  <label :class="appConfig.calendar.filterLabel">{{
-                    UI_TEXT.events.endDateLabel
-                  }}</label
-                  ><input
-                    v-model="filterEndDate"
-                    type="date"
-                    :class="appConfig.calendar.filterDateInput"
-                  />
-                </div>
+                <BaseInput
+                  v-model="filterStartDate"
+                  :label="UI_TEXT.events.startDateLabel"
+                  name="startDate"
+                  type="date"
+                />
+                <BaseInput
+                  v-model="filterEndDate"
+                  :label="UI_TEXT.events.endDateLabel"
+                  name="endDate"
+                  type="date"
+                />
                 <div :class="appConfig.calendar.filterButtonWrapper">
                   <div :class="appConfig.calendar.filterButtonWrapper">
                     <BaseButton
