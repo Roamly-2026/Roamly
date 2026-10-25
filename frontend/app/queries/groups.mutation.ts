@@ -3,7 +3,6 @@ import { useMutation, useQueryCache } from '@pinia/colada';
 import { groupsService } from '~/services/groupsService';
 import { useToast } from '#imports';
 import { getErrorMessage } from '../utils/error.utils';
-import { UI_TEXT } from '~/locales/en';
 
 interface MutationOptions {
   onSuccess?: () => void;

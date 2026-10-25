@@ -1,0 +1,91 @@
+/* --- toast container in upper-right corner --- */
+[aria-label='Notifications (F8)'] > ol {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  z-index: 99999;
+  width: 24rem;
+  max-width: calc(100vw - 3rem);
+  outline: none;
+  pointer-events: none;
+}
+
+/* --- toast card --- */
+[data-reka-collection-item] {
+  pointer-events: auto; /* card is clickable */
+  background-color: color-mix(in srgb, var(--color-surface-500) 45%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--color-brand-500);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  position: relative;
+  overflow: hidden;
+
+  /* slide in animation */
+  animation: toastSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* toast closing state */
+[data-reka-collection-item][data-state='closed'] {
+  animation: toastFadeOut 0.2s ease-in forwards;
+}
+
+/* --- toast texts --- */
+[data-slot='wrapper'] {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-right: 2rem;
+}
+
+[data-slot='actions'] {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+}
+
+[data-slot='title'] {
+  color: var(--color-brand-950);
+  font-weight: 600;
+  font-size: 0.95rem;
+  line-height: 1.2;
+}
+
+[data-slot='description'] {
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+/* --- toast animations --- */
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes toastFadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}

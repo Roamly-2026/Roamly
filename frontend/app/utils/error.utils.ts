@@ -1,5 +1,4 @@
 // frontend/app/utils/error.utils.ts
-import { UI_TEXT } from '~/locales/en';
 import type { ApiError } from '../types/apiError.type';
 
 // extracts and formats a user-friendly error message from various error types

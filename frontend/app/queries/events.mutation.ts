@@ -5,7 +5,6 @@ import { eventsService } from '~/services/eventsService';
 import type { EventInDto } from '~/types/events.type';
 import { useToast } from '#imports';
 import { getErrorMessage } from '../utils/error.utils';
-import { UI_TEXT } from '~/locales/en';
 
 interface MutationOptions {
   onSuccess?: () => void;

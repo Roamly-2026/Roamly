@@ -61,7 +61,6 @@ import { useProfileStore } from '~/stores/profile.modals.store';
 import { useDocumentsStore } from '~/stores/documents.modals.store';
 import type { PrivateDocumentMetadata } from '~/types/files.type';
 import { useGetPrivateDocumentUrlMutation } from '~/queries/files.mutation';
-import { UI_TEXT } from '~/locales/en';
 import { getErrorMessage } from '~/utils/error.utils';
 import { useToast } from '#imports';
 

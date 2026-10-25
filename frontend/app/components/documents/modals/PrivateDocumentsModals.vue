@@ -416,7 +416,6 @@ import { getErrorMessage } from '~/utils/error.utils';
 import type { ApiError } from '~/types/apiError.type';
 import type { FileShareDto } from '~/types/files.type';
 import type { GroupOutDto } from '~/types/groups.type';
-import { UI_TEXT } from '~/locales/en';
 
 const props = defineProps<{
   // a list of available document types for categorization, formatted as label-value pairs

@@ -1,5 +1,4 @@
 // frontend/app/utils/sort.utils.ts
-import { UI_TEXT } from '~/locales/en';
 import type { EventOutDto, UiDay, UiEvent } from '~/types/events.type';
 
 // processes a list of date strings into formatted UI day objects,

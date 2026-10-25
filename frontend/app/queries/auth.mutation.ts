@@ -5,7 +5,6 @@ import { authService } from '~/services/authService';
 import type { LoginFormState } from '~/utils/schemas/login.schema';
 import { useToast } from '#imports';
 import { getErrorMessage } from '../utils/error.utils';
-import { UI_TEXT } from '../locales/en';
 
 export const useLoginUserMutation = (onSuccessCallback?: () => void) => {
   const { login } = useAuth();

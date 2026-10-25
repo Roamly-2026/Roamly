@@ -91,7 +91,6 @@ import { useGroupsStore } from '~/stores/groups.modals.store';
 import { useJoinGroupMutation, useLeaveGroupMutation } from '~/queries/groups.mutation';
 import { useAppConfig } from '#imports';
 import { getErrorMessage } from '~/utils/error.utils';
-import { UI_TEXT } from '~/locales/en';
 
 /* --- COMPOSABLES --- */
 const appConfig = useAppConfig();

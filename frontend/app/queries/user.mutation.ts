@@ -4,7 +4,6 @@ import { userService } from '~/services/userService';
 import type { UserInDto } from '~/types/user.type';
 import { useToast } from '#imports';
 import { getErrorMessage } from '../utils/error.utils';
-import { UI_TEXT } from '~/locales/en';
 
 interface MutationOptions {
   onSuccess?: () => void;

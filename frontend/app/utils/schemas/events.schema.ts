@@ -1,4 +1,3 @@
-import { UI_TEXT } from '~/locales/en';
 import { z } from 'zod';
 import { emailSchema } from './common.schema';
 
