@@ -151,14 +151,7 @@ const toast = useToast();
 const privateFileToShare = computed(() => documentsStore.privateFileToShare);
 const privateFileToViewAccess = computed(() => documentsStore.privateFileToViewAccess);
 
-const shareMutation = useShareDocumentMutation({
-  onSuccess: () => {
-    toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.documents.shared });
-  },
-  onError: (err: Error) => {
-    toast.add({ title: UI_TEXT.common.error, description: err.message });
-  },
-});
+const shareMutation = useShareDocumentMutation();
 
 const handleShareDocument = (groupUuid: string) => {
   if (!privateFileToShare.value) return;
@@ -170,22 +163,20 @@ const handleShareDocument = (groupUuid: string) => {
   });
 };
 
-const revokeMutation = useDeleteSharingMutation({
-  onSuccess: () => {
-    toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.documents.accessRevoked });
-  },
-  onError: (err: Error) => {
-    toast.add({ title: UI_TEXT.common.error, description: err.message });
-  },
-});
+const revokeMutation = useDeleteSharingMutation();
 
 const handleRevokeAccess = (groupName: string) => {
   if (!privateFileToViewAccess.value) return;
 
   const groupUuid = props.allGroups?.find((g) => g.name === groupName)?.uuid;
 
+  // Local guard before triggering the mutation: requires a client-side toast
   if (!groupUuid) {
-    toast.add({ title: UI_TEXT.common.error, description: UI_TEXT.errors.groupUuidNotFound });
+    toast.add({
+      title: UI_TEXT.common.error,
+      description: UI_TEXT.errors.groupUuidNotFound,
+      color: 'error',
+    });
     return;
   }
 

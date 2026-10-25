@@ -42,14 +42,12 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useAppConfig, useToast } from '#imports';
+import { useAppConfig } from '#imports';
 import { useEventsStore } from '~/stores/events.modals.store';
 import { useCurrentUserQuery } from '~/queries/user.query';
 import { useDeleteEventMutation, useLeaveEventMutation } from '~/queries/events.mutation';
-import { getErrorMessage } from '~/utils/error.utils';
 
 const appConfig = useAppConfig();
-const toast = useToast();
 const eventsStore = useEventsStore();
 
 const { data: currentUser } = useCurrentUserQuery();
@@ -61,9 +59,7 @@ const deleteEventMutation = useDeleteEventMutation(
     onSuccess: () => {
       eventsStore.closeDeleteEventModal();
       eventsStore.closePreviewModal();
-      toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.events.deleted });
     },
-    onError: (err) => toast.add({ title: UI_TEXT.common.error, description: getErrorMessage(err) }),
   },
 );
 
@@ -73,9 +69,7 @@ const leaveEventMutation = useLeaveEventMutation(
     onSuccess: () => {
       eventsStore.closeLeaveEventModal();
       eventsStore.closePreviewModal();
-      toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.events.left });
     },
-    onError: (err) => toast.add({ title: UI_TEXT.common.error, description: getErrorMessage(err) }),
   },
 );
 

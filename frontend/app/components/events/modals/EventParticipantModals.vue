@@ -173,7 +173,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { useAppConfig, useToast } from '#imports';
+import { useAppConfig } from '#imports';
 import { useEventsStore } from '~/stores/events.modals.store';
 import { useGroupsStore } from '~/stores/groups.modals.store';
 import { useCurrentUserQuery } from '~/queries/user.query';
@@ -183,10 +183,8 @@ import {
   useRemoveParticipantMutation,
 } from '~/queries/events.mutation';
 import type { EventCreatorDto } from '~/types/events.type';
-import { getErrorMessage } from '~/utils/error.utils';
 
 const appConfig = useAppConfig();
-const toast = useToast();
 const eventsStore = useEventsStore();
 const groupsStore = useGroupsStore();
 
@@ -201,7 +199,6 @@ const removeParticipantMutation = useRemoveParticipantMutation(
   computed(() => eventsStore.selectedGroupUuid),
   {
     onSuccess: () => {
-      toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.events.participantRemoved });
       if (eventsStore.participantToRemove) {
         eventsStore.currentEventParticipants = eventsStore.currentEventParticipants.filter(
           (p) => p.uuid !== eventsStore.participantToRemove!.uuid,
@@ -209,7 +206,6 @@ const removeParticipantMutation = useRemoveParticipantMutation(
       }
       eventsStore.closeRemoveParticipantModal();
     },
-    onError: (err) => toast.add({ title: UI_TEXT.common.error, description: getErrorMessage(err) }),
   },
 );
 
@@ -217,10 +213,8 @@ const addParticipantsMutation = useAddParticipantsMutation(
   computed(() => eventsStore.selectedGroupUuid),
   {
     onSuccess: () => {
-      toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.events.membersAdded });
       closeAddMembersModal();
     },
-    onError: (err) => toast.add({ title: UI_TEXT.common.error, description: getErrorMessage(err) }),
   },
 );
 

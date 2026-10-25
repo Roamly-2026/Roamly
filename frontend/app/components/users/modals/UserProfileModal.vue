@@ -47,35 +47,9 @@
 import { computed } from 'vue';
 import { useAppConfig } from '#imports';
 import { useGroupsStore } from '~/stores/groups.modals.store';
-//import { useGroupMemberDocumentsQuery } from '~/queries/files.query';
-//import type { PrivateDocumentMetadata } from '~/types/files.type';
 
 const appConfig = useAppConfig();
 const groupsStore = useGroupsStore();
 
-/*
-const props = defineProps<{
-  groupUuid?: string;
-}>();
-*/
-
 const userProfile = computed(() => groupsStore.selectedUserProfile);
-
-/*
-// targetUserUuid scopes the request to this specific member.
-// The backend's getAllPrivateDocumentsMetadataOfAllUsersInAGroup already supports
-// ?targetUserUuid= — so this returns only files owned by the opened member,
-// not all members' files.
-const targetUserUuid = computed(() => userProfile.value?.userUuid);
-
-const { data: memberDocsData, isLoading: isLoadingDocs } = useGroupMemberDocumentsQuery(
-  () => props.groupUuid || '',
-  // enabled: only fire when the modal is open, the viewer is a leader,
-  // and we have both the groupUuid and the target user's UUID
-  () => !!(props.groupUuid && userProfile.value?.canViewDocuments && userProfile.value?.userUuid),
-  // targetUserUuid — filters to just this member's documents
-  () => targetUserUuid.value,
-);
-
-const memberDocuments = computed<PrivateDocumentMetadata[]>(() => memberDocsData.value ?? []); */
 </script>

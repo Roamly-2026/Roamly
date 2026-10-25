@@ -186,14 +186,12 @@
 import { computed, reactive, ref, watch } from 'vue';
 import type { z } from 'zod';
 import type { FormSubmitEvent } from '#ui/types';
-import { useAppConfig, useToast } from '#imports';
+import { useAppConfig } from '#imports';
 import { useEventsStore } from '~/stores/events.modals.store';
 import { useCreateEventMutation } from '~/queries/events.mutation';
 import { createEventSchema } from '~/utils/schemas/events.schema';
-import { getErrorMessage } from '~/utils/error.utils';
 
 const appConfig = useAppConfig();
-const toast = useToast();
 const eventsStore = useEventsStore();
 
 const isMapSelectorOpen = ref(false);
@@ -203,9 +201,7 @@ const createEventMutation = useCreateEventMutation(
   {
     onSuccess: () => {
       closeAndResetForm();
-      toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.events.created });
     },
-    onError: (err) => toast.add({ title: UI_TEXT.common.error, description: getErrorMessage(err) }),
   },
 );
 

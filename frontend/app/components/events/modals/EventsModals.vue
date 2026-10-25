@@ -4,6 +4,6 @@
     <EventCreationModals />
     <EventParticipantModals />
     <EventLifecycleModals />
-    <EventPreviewModal />
+    <EventPreviewModals />
   </div>
 </template>
