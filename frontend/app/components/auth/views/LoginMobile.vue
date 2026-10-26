@@ -2,7 +2,7 @@
 <template>
   <div :class="appConfig.layout.mobileAuthWrapper">
     <!-- LOGIN FORM CARD -->
-    <UCard variant="glass">
+    <BaseCard>
       <div :class="appConfig.typography.authTitleWrapper">
         <h1 :class="appConfig.typography.authTitle">
           {{ UI_TEXT.auth.loginHeading }}
@@ -16,29 +16,23 @@
         :class="appConfig.layout.formWrapper"
         @submit="onSubmit"
       >
-        <UFormField name="email" :label="UI_TEXT.auth.emailLabel">
-          <template #default="{ error: fieldError }">
-            <UInput
-              v-model="form.email"
-              type="email"
-              :placeholder="UI_TEXT.auth.emailPlaceholder"
-              :variant="fieldError ? 'glassError' : 'glass'"
-              :ui="{ base: `!${SPACING_TOKENS.px.md}` }"
-            />
-          </template>
-        </UFormField>
+        <BaseInput
+          v-model="form.email"
+          name="email"
+          :label="UI_TEXT.auth.emailLabel"
+          type="email"
+          :placeholder="UI_TEXT.auth.emailPlaceholder"
+          :ui="{ base: `!${SPACING_TOKENS.px.md}` }"
+        />
 
-        <UFormField name="password" :label="UI_TEXT.auth.passwordLabel">
-          <template #default="{ error: fieldError }">
-            <UInput
-              v-model="form.password"
-              type="password"
-              :placeholder="UI_TEXT.auth.passwordPlaceholder"
-              :variant="fieldError ? 'glassError' : 'glass'"
-              :ui="{ base: `!${SPACING_TOKENS.px.md}` }"
-            />
-          </template>
-        </UFormField>
+        <BaseInput
+          v-model="form.password"
+          name="password"
+          :label="UI_TEXT.auth.passwordLabel"
+          type="password"
+          :placeholder="UI_TEXT.auth.passwordPlaceholder"
+          :ui="{ base: `!${SPACING_TOKENS.px.md}` }"
+        />
 
         <div v-if="error" :class="appConfig.typography.formStatusError">
           {{ getErrorMessage(error) }}
@@ -48,37 +42,36 @@
         </div>
 
         <!-- ACTIONS (Mobilos elrendezés: egymás alatt, teljes szélességgel) -->
+
         <div
           :class="`flex flex-col-reverse ${SPACING_TOKENS.gap.md} ${SPACING_TOKENS.pt.lg} w-full`"
         >
-          <UButton
+          <BaseButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             :disabled="isLoading"
             class="w-full"
             @click="clearForm"
           />
-          <UButton
+          <BaseButton
             type="submit"
             :label="UI_TEXT.auth.loginTitle"
-            variant="actionOkButton"
             class="w-full"
             :loading="isLoading"
           />
         </div>
       </UForm>
-    </UCard>
+    </BaseCard>
 
     <!-- REGISTRATION PROMPT BUTTON -->
     <div :class="appConfig.layout.singleButtonWrapper">
-      <UTooltip :text="UI_TEXT.tooltips.registerPrompt">
-        <UButton
-          to="/register"
-          :label="UI_TEXT.auth.registerPrompt"
-          variant="actionAccentHeroButton"
-          class="w-full"
-        />
-      </UTooltip>
+      <BaseButton
+        to="/register"
+        :label="UI_TEXT.auth.registerPrompt"
+        variant="actionAccentHeroButton"
+        :tooltip="UI_TEXT.tooltips.registerPrompt"
+        class="w-full"
+      />
     </div>
   </div>
 </template>

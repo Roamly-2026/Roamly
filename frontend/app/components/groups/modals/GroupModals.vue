@@ -14,9 +14,9 @@
       @submit="handleCreateGroup"
     >
       <div>
-        <label :class="appConfig.typography.inputLabel">{{ UI_TEXT.groups.nameLabel }}</label>
-        <UInput
+        <BaseInput
           v-model="newGroupName"
+          :label="UI_TEXT.groups.nameLabel"
           :placeholder="UI_TEXT.groups.namePlaceholder"
           variant="glass"
           class="w-full"

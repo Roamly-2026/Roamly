@@ -21,16 +21,12 @@
           <span v-else class="opacity-60">{{ UI_TEXT.map.selectLocation }}</span>
         </p>
       </div>
-      <button
-        :class="[
-          `${SPACING_TOKENS.px.md} ${SPACING_TOKENS.py.sm} rounded-md font-medium text-white transition-colors duration-200 shrink-0`,
-          currentSelection ? 'bg-brand-500 hover:bg-brand-600' : 'bg-gray-400 cursor-not-allowed',
-        ]"
+      <BaseButton
+        :label="UI_TEXT.map.confirmLocation"
         :disabled="!currentSelection"
+        variant="actionOkButton"
         @click="confirmSelection"
-      >
-        {{ ' ' + UI_TEXT.map.confirmLocation + ' ' }}
-      </button>
+      />
     </div>
   </div>
 </template>

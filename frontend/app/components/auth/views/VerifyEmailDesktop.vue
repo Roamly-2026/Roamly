@@ -1,7 +1,7 @@
 <!-- frontend/app/components/auth/views/VerifyEmailDesktop.vue -->
 <template>
   <div :class="appConfig.layout.authWrapper">
-    <UCard variant="glass">
+    <BaseCard>
       <!-- TITLE -->
       <div :class="appConfig.typography.authTitleWrapper">
         <h1 :class="appConfig.typography.authTitle">{{ UI_TEXT.auth.verifyHeading }}</h1>
@@ -52,9 +52,8 @@
 
         <!-- Verify button -->
         <div :class="appConfig.layout.formActions">
-          <UButton
+          <BaseButton
             :label="UI_TEXT.auth.verify"
-            variant="actionOkButton"
             class="w-full"
             :loading="isVerifying"
             :disabled="!isOtpComplete || isVerified"
@@ -73,7 +72,7 @@
 
         <div :class="`flex flex-col items-center ${SPACING_TOKENS.gap.xs}`">
           <p class="text-xs text-surface-400">{{ UI_TEXT.auth.noCode }}</p>
-          <UButton
+          <BaseButton
             :label="UI_TEXT.auth.resend"
             variant="link"
             class="text-sm font-semibold text-brand-500 hover:text-brand-400 disabled:opacity-40 disabled:cursor-not-allowed"
@@ -101,11 +100,11 @@
           </div>
         </div>
       </div>
-    </UCard>
+    </BaseCard>
 
     <!-- Back to register link -->
     <div :class="appConfig.layout.singleButtonWrapper">
-      <UButton
+      <BaseButton
         to="/register"
         :label="UI_TEXT.auth.backToRegister"
         variant="actionAccentHeroButton"

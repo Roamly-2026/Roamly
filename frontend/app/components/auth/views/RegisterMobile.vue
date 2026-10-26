@@ -1,7 +1,7 @@
 <!-- frontend/app/components/auth/views/RegisterMobile.vue -->
 <template>
   <div :class="appConfig.layout.mobileAuthWrapper">
-    <UCard variant="glass">
+    <BaseCard>
       <!-- TITLE -->
       <div :class="appConfig.typography.authTitleWrapper">
         <h1 :class="appConfig.typography.authTitle">
@@ -16,60 +16,45 @@
         :class="appConfig.layout.formWrapper"
         @submit="onSubmit"
       >
-        <UFormField name="email" :label="UI_TEXT.auth.emailLabel">
-          <template #default="{ error: fieldError }">
-            <UInput
-              v-model="form.email"
-              type="email"
-              :placeholder="UI_TEXT.auth.emailPlaceholder"
-              :variant="fieldError ? 'glassError' : 'glass'"
-            />
-          </template>
-        </UFormField>
+        <BaseInput
+          v-model="form.email"
+          name="email"
+          :label="UI_TEXT.auth.emailLabel"
+          type="email"
+          :placeholder="UI_TEXT.auth.emailPlaceholder"
+        />
 
-        <UFormField name="username" :label="UI_TEXT.auth.usernameLabel">
-          <template #default="{ error: fieldError }">
-            <UInput
-              v-model="form.username"
-              type="text"
-              :placeholder="UI_TEXT.auth.usernamePlaceholder"
-              :variant="fieldError ? 'glassError' : 'glass'"
-            />
-          </template>
-        </UFormField>
+        <BaseInput
+          v-model="form.username"
+          name="username"
+          :label="UI_TEXT.auth.usernameLabel"
+          type="text"
+          :placeholder="UI_TEXT.auth.usernamePlaceholder"
+        />
 
-        <UFormField name="phone_number" :label="UI_TEXT.auth.phoneLabel">
-          <template #default="{ error: fieldError }">
-            <UInput
-              v-model="form.phone_number"
-              type="tel"
-              :placeholder="UI_TEXT.auth.phonePlaceholder"
-              :variant="fieldError ? 'glassError' : 'glass'"
-            />
-          </template>
-        </UFormField>
+        <BaseInput
+          v-model="form.phone_number"
+          name="phone_number"
+          :label="UI_TEXT.auth.phoneLabel"
+          type="tel"
+          :placeholder="UI_TEXT.auth.phonePlaceholder"
+        />
 
-        <UFormField name="password" :label="UI_TEXT.auth.passwordLabel">
-          <template #default="{ error: fieldError }">
-            <UInput
-              v-model="form.password"
-              type="password"
-              :placeholder="UI_TEXT.auth.passwordPlaceholder"
-              :variant="fieldError ? 'glassError' : 'glass'"
-            />
-          </template>
-        </UFormField>
+        <BaseInput
+          v-model="form.password"
+          name="password"
+          :label="UI_TEXT.auth.passwordLabel"
+          type="password"
+          :placeholder="UI_TEXT.auth.passwordPlaceholder"
+        />
 
-        <UFormField name="repeatPassword" :label="UI_TEXT.auth.repeatPasswordLabel">
-          <template #default="{ error: fieldError }">
-            <UInput
-              v-model="form.repeatPassword"
-              type="password"
-              :placeholder="UI_TEXT.auth.passwordPlaceholder"
-              :variant="fieldError ? 'glassError' : 'glass'"
-            />
-          </template>
-        </UFormField>
+        <BaseInput
+          v-model="form.repeatPassword"
+          name="repeatPassword"
+          :label="UI_TEXT.auth.repeatPasswordLabel"
+          type="password"
+          :placeholder="UI_TEXT.auth.passwordPlaceholder"
+        />
 
         <div v-if="error" :class="appConfig.typography.formStatusError">
           {{ getErrorMessage(error) }}
@@ -79,29 +64,29 @@
         </div>
 
         <!-- ACTIONS (Mobilos elrendezés: egymás alatt, teljes szélességgel) -->
+
         <div
           :class="`flex flex-col-reverse ${SPACING_TOKENS.gap.md} ${SPACING_TOKENS.pt.lg} w-full`"
         >
-          <UButton
+          <BaseButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             :disabled="isLoading"
             class="w-full"
             @click="clearForm"
           />
-          <UButton
+          <BaseButton
             type="submit"
             :label="UI_TEXT.auth.registerTitle"
-            variant="actionOkButton"
             class="w-full"
             :loading="isLoading"
           />
         </div>
       </UForm>
-    </UCard>
+    </BaseCard>
 
     <div :class="appConfig.layout.singleButtonWrapper">
-      <UButton
+      <BaseButton
         to="/login"
         :label="UI_TEXT.auth.loginInstead"
         variant="actionAccentHeroButton"

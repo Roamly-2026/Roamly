@@ -3,30 +3,38 @@
   <div :class="`flex flex-col flex-1 ${SPACING_TOKENS.gap.md} w-full ${SPACING_TOKENS.p.md} pb-20`">
     <!-- TOP NAV BUTTONS -->
     <div :class="appConfig.calendar.mobileTopActions">
-      <UTooltip :text="UI_TEXT.common.members">
-        <UButton icon="i-heroicons-users" variant="glassIconButton" :to="membersRoute" />
-      </UTooltip>
-      <UTooltip :text="UI_TEXT.common.calendar">
-        <UButton icon="i-heroicons-calendar" variant="glassIconButton" :to="eventsRoute" />
-      </UTooltip>
-      <UTooltip :text="UI_TEXT.common.photos">
-        <UButton
-          icon="i-heroicons-photo"
-          variant="glassIconButton"
-          class="text-brand-500"
-          :to="mediaRoute"
-        />
-      </UTooltip>
-      <UTooltip :text="UI_TEXT.common.documents">
-        <UButton icon="i-heroicons-document-text" variant="glassIconButton" :to="documentsRoute" />
-      </UTooltip>
+      <BaseButton
+        icon="i-heroicons-users"
+        variant="glassIconButton"
+        :to="membersRoute"
+        :tooltip="UI_TEXT.common.members"
+      />
+      <BaseButton
+        icon="i-heroicons-calendar"
+        variant="glassIconButton"
+        :to="eventsRoute"
+        :tooltip="UI_TEXT.common.calendar"
+      />
+      <BaseButton
+        icon="i-heroicons-photo"
+        variant="glassIconButton"
+        class="text-brand-500"
+        :to="mediaRoute"
+        :tooltip="UI_TEXT.common.photos"
+      />
+      <BaseButton
+        icon="i-heroicons-document-text"
+        variant="glassIconButton"
+        :to="documentsRoute"
+        :tooltip="UI_TEXT.common.documents"
+      />
     </div>
 
     <div :class="appConfig.calendar.mobileMainWrapper">
       <!-- GROUP DROPDOWN HEADER -->
       <div :class="[appConfig.calendar.mobileHeader, SPACING_TOKENS.mb.md]">
         <UPopover v-model:open="isGroupDropdownOpen" class="w-full" :popper="{ strategy: 'fixed' }">
-          <UButton block variant="ghost" :class="appConfig.calendar.mobileHeaderButton">
+          <BaseButton block variant="ghost" :class="appConfig.calendar.mobileHeaderButton">
             <div :class="appConfig.calendar.mobileHeaderTitleRow">
               <h1 :class="appConfig.typography.pageTitle" class="text-2xl! truncate">
                 <ClientOnly :fallback="UI_TEXT.common.loading">
@@ -46,7 +54,7 @@
             <p :class="appConfig.typography.pageSubtitle" class="mt-0">
               {{ UI_TEXT.media.groupPhotos }}
             </p>
-          </UButton>
+          </BaseButton>
           <template #content>
             <div
               :class="[
@@ -54,20 +62,23 @@
                 'max-h-[50vh] overflow-y-auto custom-scrollbar',
               ]"
             >
-              <button
+              <BaseButton
                 v-for="group in groups"
                 :key="group.uuid"
                 :class="appConfig.ui.wideDropdownMenu.slots.item"
+                variant="ghost"
                 @click="selectGroup(group.uuid)"
               >
-                <UIcon
-                  :name="
-                    group.uuid === selectedGroup ? 'i-heroicons-check' : 'i-heroicons-user-group'
-                  "
-                  :class="appConfig.ui.wideDropdownMenu.slots.itemLeadingIcon"
-                />
-                <span>{{ group.name }}</span>
-              </button>
+                <template #leading>
+                  <UIcon
+                    :name="
+                      group.uuid === selectedGroup ? 'i-heroicons-check' : 'i-heroicons-user-group'
+                    "
+                    :class="appConfig.ui.wideDropdownMenu.slots.itemLeadingIcon"
+                  />
+                </template>
+                {{ group.name }}
+              </BaseButton>
             </div>
           </template>
         </UPopover>
@@ -75,17 +86,13 @@
 
       <!-- TOOLBAR: search + upload -->
       <div :class="appConfig.calendar.mobileToolbar">
-        <UInput
-          v-model="searchQuery"
-          :placeholder="UI_TEXT.media.search"
-          icon="i-heroicons-magnifying-glass"
-          class="flex-1"
-          variant="search"
-          :ui="{ leading: 'pl-3' }"
+        <BaseSearchInput v-model="searchQuery" :placeholder="UI_TEXT.media.search" class="flex-1" />
+        <BaseButton
+          icon="i-heroicons-plus"
+          variant="glassIconButton"
+          :tooltip="UI_TEXT.media.uploadPhoto"
+          @click="emit('upload')"
         />
-        <UTooltip :text="UI_TEXT.media.uploadPhoto">
-          <UButton icon="i-heroicons-plus" variant="glassIconButton" @click="emit('upload')" />
-        </UTooltip>
       </div>
 
       <!-- MEDIA LIST -->
@@ -101,7 +108,7 @@
           v-else-if="filteredMedia.length > 0"
           :class="`flex flex-col ${SPACING_TOKENS.gap.md} w-full`"
         >
-          <UCard
+          <BaseCard
             v-for="mediaItem in filteredMedia"
             :key="mediaItem.file_id"
             variant="documentGlass"
@@ -111,14 +118,14 @@
             <div :class="appConfig.layout.documentCardHeader">
               <p class="font-bold truncate pr-2 shadow-sm text-sm">{{ mediaItem.file_name }}</p>
               <div :class="`flex items-center ${SPACING_TOKENS.gap.xs} shrink-0`">
-                <UTooltip v-if="isCurrentUserLeader" :text="UI_TEXT.common.delete">
-                  <UButton
-                    icon="i-heroicons-trash"
-                    variant="ghostDangerIconButton"
-                    class="text-surface-500 hover:text-error-500 w-6! h-6! p-0"
-                    @click="emit('delete', mediaItem)"
-                  />
-                </UTooltip>
+                <BaseButton
+                  v-if="isCurrentUserLeader"
+                  icon="i-heroicons-trash"
+                  variant="ghostDangerIconButton"
+                  class="text-surface-500 hover:text-error-500 w-6! h-6! p-0"
+                  :tooltip="UI_TEXT.common.delete"
+                  @click="emit('delete', mediaItem)"
+                />
               </div>
             </div>
 
@@ -139,29 +146,27 @@
               </div>
 
               <div :class="`absolute bottom-2 ${SPACING_TOKENS.px.md} w-full flex justify-between`">
-                <UTooltip :text="UI_TEXT.common.view">
-                  <UButton
-                    icon="i-heroicons-eye"
-                    variant="ghostDangerIconButton"
-                    class="text-surface-500"
-                    :href="mediaItem.download_url || mediaItem.file_url"
-                    target="_blank"
-                  />
-                </UTooltip>
-                <UTooltip :text="UI_TEXT.common.download">
-                  <UButton
-                    icon="i-heroicons-arrow-down-tray"
-                    variant="ghostDangerIconButton"
-                    class="text-surface-500"
-                    @click.prevent="
-                      emit(
-                        'download',
-                        mediaItem.download_url || mediaItem.file_url,
-                        mediaItem.file_name,
-                      )
-                    "
-                  />
-                </UTooltip>
+                <BaseButton
+                  icon="i-heroicons-eye"
+                  variant="ghostDangerIconButton"
+                  class="text-surface-500"
+                  :href="mediaItem.download_url || mediaItem.file_url"
+                  target="_blank"
+                  :tooltip="UI_TEXT.common.view"
+                />
+                <BaseButton
+                  icon="i-heroicons-arrow-down-tray"
+                  variant="ghostDangerIconButton"
+                  class="text-surface-500"
+                  :tooltip="UI_TEXT.common.download"
+                  @click.prevent="
+                    emit(
+                      'download',
+                      mediaItem.download_url || mediaItem.file_url,
+                      mediaItem.file_name,
+                    )
+                  "
+                />
               </div>
             </div>
 
@@ -205,7 +210,7 @@
                 </p>
               </div>
             </div>
-          </UCard>
+          </BaseCard>
         </div>
 
         <div

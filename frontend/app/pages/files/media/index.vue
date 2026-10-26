@@ -55,24 +55,20 @@
       <template #body>
         <div :class="`flex flex-col ${SPACING_TOKENS.gap.md}`">
           <!-- File input -->
-          <UFormField :label="UI_TEXT.documents.selectFile">
-            <UInput
-              type="file"
-              accept="image/*,video/*"
-              variant="glass"
-              icon="i-heroicons-photo"
-              @change="onFileChange"
-            />
-          </UFormField>
+          <BaseInput
+            :label="UI_TEXT.documents.selectFile"
+            type="file"
+            accept="image/*,video/*"
+            icon="i-heroicons-photo"
+            @change="onFileChange"
+          />
 
           <!-- Description -->
-          <UFormField :label="UI_TEXT.media.optionalDescription">
-            <UInput
-              v-model="uploadDescription"
-              variant="glass"
-              :placeholder="UI_TEXT.media.captionPlaceholder"
-            />
-          </UFormField>
+          <BaseInput
+            v-model="uploadDescription"
+            :label="UI_TEXT.media.optionalDescription"
+            :placeholder="UI_TEXT.media.captionPlaceholder"
+          />
 
           <!-- Error -->
           <div v-if="uploadError" class="text-sm text-error-500 font-medium">
@@ -82,12 +78,12 @@
       </template>
       <template #footer>
         <div class="flex items-center justify-between w-full">
-          <UButton
+          <BaseButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="closeUploadModal"
           />
-          <UButton
+          <BaseButton
             :label="UI_TEXT.common.upload"
             variant="actionOkButton"
             :loading="isUploading"
@@ -127,7 +123,7 @@
       </template>
       <template #footer>
         <div class="flex items-center justify-between w-full">
-          <UButton
+          <BaseButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="
@@ -135,7 +131,7 @@
               fileToDelete = null;
             "
           />
-          <UButton
+          <BaseButton
             :label="UI_TEXT.common.delete"
             variant="actionOkButton"
             class="bg-error-500 hover:bg-error-600 text-white"

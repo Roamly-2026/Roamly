@@ -14,11 +14,10 @@
       @submit="handleUpdateGroup"
     >
       <div>
-        <label :class="appConfig.typography.inputLabel">{{ UI_TEXT.groups.nameLabel }}</label>
-        <UInput
+        <BaseInput
           v-model="updateGroupName"
+          :label="UI_TEXT.groups.nameLabel"
           :placeholder="UI_TEXT.groups.namePlaceholder"
-          variant="glass"
           class="w-full"
         />
         <p v-if="updateError" :class="appConfig.typography.inputError">{{ updateError }}</p>
@@ -40,9 +39,9 @@
       @submit="handleInviteUser"
     >
       <div>
-        <label :class="appConfig.typography.inputLabel">{{ UI_TEXT.groups.emailLabel }}</label>
-        <UInput
+        <BaseInput
           v-model="inviteEmail"
+          :label="UI_TEXT.groups.emailLabel"
           :placeholder="UI_TEXT.groups.emailPlaceholder"
           variant="glass"
           class="w-full"

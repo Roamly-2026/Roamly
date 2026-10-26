@@ -3,23 +3,24 @@
   <div :class="appConfig.calendar.eventsWrapper">
     <div :class="appConfig.calendar.eventsHeaderRow">
       <div :class="appConfig.calendar.headerActionLeft">
-        <UTooltip v-if="isCurrentUserLeader" :text="UI_TEXT.groups.deleteGroup"
-          ><UButton
-            icon="i-heroicons-trash"
-            variant="glassIconButtonDanger"
-            @click="$emit('delete-group')"
-        /></UTooltip>
-        <UTooltip :text="UI_TEXT.groups.leaveGroup"
-          ><UButton
-            icon="i-heroicons-arrow-right-on-rectangle"
-            variant="glassIconButtonDanger"
-            @click="$emit('leave-group')"
-        /></UTooltip>
+        <BaseButton
+          v-if="isCurrentUserLeader"
+          icon="i-heroicons-trash"
+          variant="glassIconButtonDanger"
+          :tooltip="UI_TEXT.groups.deleteGroup"
+          @click="$emit('delete-group')"
+        />
+        <BaseButton
+          icon="i-heroicons-arrow-right-on-rectangle"
+          variant="glassIconButtonDanger"
+          :tooltip="UI_TEXT.groups.leaveGroup"
+          @click="$emit('leave-group')"
+        />
       </div>
 
       <div :class="appConfig.calendar.headerCenter">
         <UPopover v-model:open="isGroupDropdownOpen">
-          <UButton
+          <BaseButton
             variant="ghost"
             :class="`group flex items-center ${SPACING_TOKENS.gap.sm} p-0 hover:bg-transparent cursor-pointer outline-none`"
           >
@@ -35,7 +36,7 @@
               class="w-5 h-5 text-surface-500 transition-transform duration-200"
               :class="{ 'rotate-180': isGroupDropdownOpen }"
             />
-          </UButton>
+          </BaseButton>
           <template #content>
             <div
               :class="[
@@ -43,22 +44,25 @@
                 'max-h-[50vh] overflow-y-auto custom-scrollbar',
               ]"
             >
-              <button
+              <BaseButton
                 v-for="group in userGroupsList"
                 :key="group.uuid"
                 :class="appConfig.ui.wideDropdownMenu.slots.item"
+                variant="ghost"
                 @click="$emit('select-group', group.uuid)"
               >
-                <UIcon
-                  :name="
-                    group.uuid === selectedGroupUuid
-                      ? 'i-heroicons-check'
-                      : 'i-heroicons-user-group'
-                  "
-                  :class="appConfig.ui.wideDropdownMenu.slots.itemLeadingIcon"
-                />
-                <span>{{ group.name }}</span>
-              </button>
+                <template #leading>
+                  <UIcon
+                    :name="
+                      group.uuid === selectedGroupUuid
+                        ? 'i-heroicons-check'
+                        : 'i-heroicons-user-group'
+                    "
+                    :class="appConfig.ui.wideDropdownMenu.slots.itemLeadingIcon"
+                  />
+                </template>
+                {{ group.name }}
+              </BaseButton>
             </div>
           </template>
         </UPopover>
@@ -66,27 +70,31 @@
       </div>
 
       <div :class="appConfig.calendar.headerActionRight">
-        <UTooltip :text="UI_TEXT.tooltips.members">
-          <UButton icon="i-heroicons-users" variant="glassIconButton" :to="membersRoute" />
-        </UTooltip>
-        <UTooltip :text="UI_TEXT.tooltips.calendar">
-          <UButton
-            icon="i-heroicons-calendar"
-            variant="glassIconButton"
-            class="text-brand-500"
-            :to="eventsRoute"
-          />
-        </UTooltip>
-        <UTooltip :text="UI_TEXT.tooltips.photos">
-          <UButton icon="i-heroicons-photo" variant="glassIconButton" :to="mediaRoute" />
-        </UTooltip>
-        <UTooltip :text="UI_TEXT.tooltips.documents">
-          <UButton
-            icon="i-heroicons-document-text"
-            variant="glassIconButton"
-            :to="documentsRoute"
-          />
-        </UTooltip>
+        <BaseButton
+          icon="i-heroicons-users"
+          variant="glassIconButton"
+          :to="membersRoute"
+          :tooltip="UI_TEXT.tooltips.members"
+        />
+        <BaseButton
+          icon="i-heroicons-calendar"
+          variant="glassIconButton"
+          class="text-brand-500"
+          :to="eventsRoute"
+          :tooltip="UI_TEXT.tooltips.calendar"
+        />
+        <BaseButton
+          icon="i-heroicons-photo"
+          variant="glassIconButton"
+          :to="mediaRoute"
+          :tooltip="UI_TEXT.tooltips.photos"
+        />
+        <BaseButton
+          icon="i-heroicons-document-text"
+          variant="glassIconButton"
+          :to="documentsRoute"
+          :tooltip="UI_TEXT.tooltips.documents"
+        />
       </div>
     </div>
 
@@ -94,47 +102,37 @@
       :class="`flex flex-col sm:flex-row items-center justify-between ${SPACING_TOKENS.gap.md} w-full shrink-0`"
     >
       <div :class="`flex items-center ${SPACING_TOKENS.gap.md} w-full sm:w-auto flex-1`">
-        <UInput
+        <BaseSearchInput
           v-model="searchQuery"
-          icon="i-heroicons-magnifying-glass"
           :placeholder="UI_TEXT.events.searchPlaceholder"
-          variant="search"
-          :ui="{ leading: 'pl-3' }"
           class="w-full max-w-xs"
         />
+
         <UPopover v-model:open="isFilterOpen">
-          <UTooltip :text="UI_TEXT.tooltips.filterEvents"
-            ><UButton
-              icon="i-heroicons-funnel"
-              :label="UI_TEXT.common.filter"
-              variant="glassButton"
-          /></UTooltip>
+          <BaseButton
+            icon="i-heroicons-funnel"
+            :label="UI_TEXT.common.filter"
+            variant="glassButton"
+            :tooltip="UI_TEXT.tooltips.filterEvents"
+          />
           <template #content>
             <div :class="appConfig.calendar.filterDropdownContent">
               <div :class="appConfig.calendar.filterFormGroup">
-                <div>
-                  <label :class="appConfig.calendar.filterLabel">{{
-                    UI_TEXT.events.startDateLabel
-                  }}</label
-                  ><input
-                    v-model="filterStartDate"
-                    type="date"
-                    :class="appConfig.calendar.filterDateInput"
-                  />
-                </div>
-                <div>
-                  <label :class="appConfig.calendar.filterLabel">{{
-                    UI_TEXT.events.endDateLabel
-                  }}</label
-                  ><input
-                    v-model="filterEndDate"
-                    type="date"
-                    :class="appConfig.calendar.filterDateInput"
-                  />
-                </div>
+                <BaseInput
+                  v-model="filterStartDate"
+                  :label="UI_TEXT.events.startDateLabel"
+                  name="startDate"
+                  type="date"
+                />
+                <BaseInput
+                  v-model="filterEndDate"
+                  :label="UI_TEXT.events.endDateLabel"
+                  name="endDate"
+                  type="date"
+                />
                 <div :class="appConfig.calendar.filterButtonWrapper">
                   <div :class="appConfig.calendar.filterButtonWrapper">
-                    <UButton
+                    <BaseButton
                       :label="UI_TEXT.common.clearFilter"
                       variant="smallHollowActionButton"
                       :class="[
@@ -151,23 +149,21 @@
             </div>
           </template>
         </UPopover>
-        <UTooltip
-          :text="showOnlyActiveEvents ? UI_TEXT.events.showAll : UI_TEXT.events.hideExpired"
-        >
-          <UButton
-            icon="i-heroicons-clock"
-            :label="showOnlyActiveEvents ? UI_TEXT.events.active : UI_TEXT.common.all"
-            :variant="showOnlyActiveEvents ? 'glassOutlineButton' : 'glassButton'"
-            :class="[
-              showOnlyActiveEvents ? 'ring-2 ring-success-500 text-success-600' : '',
-              `shrink-0 whitespace-nowrap ${SPACING_TOKENS.px.md} ${SPACING_TOKENS.py.sm} min-w-22!`,
-            ]"
-            @click="showOnlyActiveEvents = !showOnlyActiveEvents"
-          />
-        </UTooltip>
+
+        <BaseButton
+          icon="i-heroicons-clock"
+          :label="showOnlyActiveEvents ? UI_TEXT.events.active : UI_TEXT.common.all"
+          :variant="showOnlyActiveEvents ? 'glassOutlineButton' : 'glassButton'"
+          :class="[
+            showOnlyActiveEvents ? 'ring-2 ring-success-500 text-success-600' : '',
+            `shrink-0 whitespace-nowrap ${SPACING_TOKENS.px.md} ${SPACING_TOKENS.py.sm} min-w-22!`,
+          ]"
+          :tooltip="showOnlyActiveEvents ? UI_TEXT.events.showAll : UI_TEXT.events.hideExpired"
+          @click="showOnlyActiveEvents = !showOnlyActiveEvents"
+        />
       </div>
       <div class="shrink-0 w-full sm:w-auto flex justify-end">
-        <UButton
+        <BaseButton
           icon="i-heroicons-calendar-days"
           :label="UI_TEXT.tooltips.addEvent"
           variant="actionOkButton"
@@ -175,7 +171,7 @@
           @click="$emit('open-add-event')"
         >
           <template #leading><UIcon name="i-heroicons-plus" class="w-5 h-5 mr-1" /></template>
-        </UButton>
+        </BaseButton>
       </div>
     </div>
 
@@ -300,34 +296,32 @@
                   : UI_TEXT.events.groupEventLabel
               }}</span>
             </div>
+
             <div :class="`flex items-center ${SPACING_TOKENS.gap.xs}`">
-              <UTooltip
+              <BaseButton
                 v-if="selectedEvent.creator?.email === currentUserEmail && selectedEvent.is_private"
-                :text="UI_TEXT.events.addMembers"
-              >
-                <UButton
-                  icon="i-heroicons-user-plus"
-                  variant="ghostBrandIconButton"
-                  class="text-dark-text/80 hover:text-brand-500 p-1"
-                  @click="$emit('open-add-members', selectedEvent)"
-                />
-              </UTooltip>
-              <UTooltip v-if="canManageEvent(selectedEvent)" :text="UI_TEXT.events.deleteEvent">
-                <UButton
-                  icon="i-heroicons-trash"
-                  variant="ghostDangerIconButton"
-                  class="text-error-500 hover:text-error-600"
-                  @click="$emit('open-delete-event', selectedEvent)"
-                />
-              </UTooltip>
-              <UTooltip v-if="canLeaveEvent(selectedEvent)" :text="UI_TEXT.events.leaveEvent">
-                <UButton
-                  icon="i-heroicons-arrow-right-on-rectangle"
-                  variant="ghostDangerIconButton"
-                  class="text-error-500 hover:text-error-600"
-                  @click="$emit('open-leave-event', selectedEvent)"
-                />
-              </UTooltip>
+                icon="i-heroicons-user-plus"
+                variant="ghostBrandIconButton"
+                class="text-dark-text/80 hover:text-brand-500 p-1"
+                :tooltip="UI_TEXT.events.addMembers"
+                @click="$emit('open-add-members', selectedEvent)"
+              />
+              <BaseButton
+                v-if="canManageEvent(selectedEvent)"
+                icon="i-heroicons-trash"
+                variant="ghostDangerIconButton"
+                class="text-error-500 hover:text-error-600"
+                :tooltip="UI_TEXT.events.deleteEvent"
+                @click="$emit('open-delete-event', selectedEvent)"
+              />
+              <BaseButton
+                v-if="canLeaveEvent(selectedEvent)"
+                icon="i-heroicons-arrow-right-on-rectangle"
+                variant="ghostDangerIconButton"
+                class="text-error-500 hover:text-error-600"
+                :tooltip="UI_TEXT.events.leaveEvent"
+                @click="$emit('open-leave-event', selectedEvent)"
+              />
             </div>
           </div>
           <h2 :class="appConfig.calendar.previewMainTitle">
@@ -414,12 +408,12 @@
                       </div>
                     </UTooltip>
                   </div>
-                  <UButton
+                  <BaseButton
                     variant="link"
                     :class="appConfig.calendar.metaValueLink"
                     @click="$emit('open-all-participants')"
-                    >{{ UI_TEXT.events.showParticipants }}</UButton
-                  >
+                    >{{ UI_TEXT.events.showParticipants }}
+                  </BaseButton>
                 </template>
                 <template v-else>
                   <div :class="`flex items-center ${SPACING_TOKENS.gap.sm}`">

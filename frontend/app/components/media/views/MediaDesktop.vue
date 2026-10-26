@@ -4,26 +4,25 @@
     <!-- HEADER -->
     <div :class="appConfig.layout.pageHeader">
       <div :class="appConfig.layout.actionGroup" class="flex-1 justify-start">
-        <UTooltip v-if="isCurrentUserLeader" :text="UI_TEXT.groups.deleteGroup">
-          <UButton
-            icon="i-heroicons-trash"
-            variant="glassIconButtonDanger"
-            @click="emit('delete-group')"
-          />
-        </UTooltip>
-        <UTooltip :text="UI_TEXT.groups.leaveGroup">
-          <UButton
-            icon="i-heroicons-arrow-right-on-rectangle"
-            variant="glassIconButtonDanger"
-            @click="emit('leave-group')"
-          />
-        </UTooltip>
+        <BaseButton
+          v-if="isCurrentUserLeader"
+          icon="i-heroicons-trash"
+          variant="glassIconButtonDanger"
+          :tooltip="UI_TEXT.groups.deleteGroup"
+          @click="emit('delete-group')"
+        />
+        <BaseButton
+          icon="i-heroicons-arrow-right-on-rectangle"
+          variant="glassIconButtonDanger"
+          :tooltip="UI_TEXT.groups.leaveGroup"
+          @click="emit('leave-group')"
+        />
       </div>
 
       <!-- DROPDOWN HEADER -->
       <div class="flex flex-col items-center justify-center shrink-0">
         <UPopover v-model:open="isGroupDropdownOpen">
-          <UButton
+          <BaseButton
             variant="ghost"
             :class="`group flex items-center ${SPACING_TOKENS.gap.sm} p-0 hover:bg-transparent cursor-pointer outline-none`"
           >
@@ -41,7 +40,7 @@
               class="w-5 h-5 text-surface-500 transition-transform duration-200"
               :class="{ 'rotate-180': isGroupDropdownOpen }"
             />
-          </UButton>
+          </BaseButton>
           <template #content>
             <div
               :class="[
@@ -49,20 +48,23 @@
                 'max-h-[50vh] overflow-y-auto custom-scrollbar',
               ]"
             >
-              <button
+              <BaseButton
                 v-for="group in groups"
                 :key="group.uuid"
                 :class="appConfig.ui.wideDropdownMenu.slots.item"
+                variant="ghost"
                 @click="selectGroup(group.uuid)"
               >
-                <UIcon
-                  :name="
-                    group.uuid === selectedGroup ? 'i-heroicons-check' : 'i-heroicons-user-group'
-                  "
-                  :class="appConfig.ui.wideDropdownMenu.slots.itemLeadingIcon"
-                />
-                <span>{{ group.name }}</span>
-              </button>
+                <template #leading>
+                  <UIcon
+                    :name="
+                      group.uuid === selectedGroup ? 'i-heroicons-check' : 'i-heroicons-user-group'
+                    "
+                    :class="appConfig.ui.wideDropdownMenu.slots.itemLeadingIcon"
+                  />
+                </template>
+                {{ group.name }}
+              </BaseButton>
             </div>
           </template>
         </UPopover>
@@ -72,27 +74,31 @@
       </div>
 
       <div :class="appConfig.layout.actionGroup" class="flex-1 justify-end">
-        <UTooltip :text="UI_TEXT.common.members">
-          <UButton icon="i-heroicons-users" variant="glassIconButton" :to="membersRoute" />
-        </UTooltip>
-        <UTooltip :text="UI_TEXT.common.calendar">
-          <UButton icon="i-heroicons-calendar" variant="glassIconButton" :to="eventsRoute" />
-        </UTooltip>
-        <UTooltip :text="UI_TEXT.common.photos">
-          <UButton
-            icon="i-heroicons-photo"
-            variant="glassIconButton"
-            class="text-brand-500"
-            :to="mediaRoute"
-          />
-        </UTooltip>
-        <UTooltip :text="UI_TEXT.common.documents">
-          <UButton
-            icon="i-heroicons-document-text"
-            variant="glassIconButton"
-            :to="documentsRoute"
-          />
-        </UTooltip>
+        <BaseButton
+          icon="i-heroicons-users"
+          variant="glassIconButton"
+          :to="membersRoute"
+          :tooltip="UI_TEXT.common.members"
+        />
+        <BaseButton
+          icon="i-heroicons-calendar"
+          variant="glassIconButton"
+          :to="eventsRoute"
+          :tooltip="UI_TEXT.common.calendar"
+        />
+        <BaseButton
+          icon="i-heroicons-photo"
+          variant="glassIconButton"
+          class="text-brand-500"
+          :to="mediaRoute"
+          :tooltip="UI_TEXT.common.photos"
+        />
+        <BaseButton
+          icon="i-heroicons-document-text"
+          variant="glassIconButton"
+          :to="documentsRoute"
+          :tooltip="UI_TEXT.common.documents"
+        />
       </div>
     </div>
 
@@ -100,13 +106,10 @@
     <div :class="[appConfig.layout.sectionWrapper, 'mt-8!']">
       <div :class="`flex items-center justify-between w-full ${SPACING_TOKENS.mb.lg} relative`">
         <div :class="`flex items-center ${SPACING_TOKENS.gap.sm} flex-1 justify-start`">
-          <UInput
+          <BaseSearchInput
             v-model="searchQuery"
-            icon="i-heroicons-magnifying-glass"
             :placeholder="UI_TEXT.media.search"
-            variant="search"
             class="w-1/3! max-w-none!"
-            :ui="{ leading: 'pl-3' }"
           />
         </div>
 
@@ -115,13 +118,12 @@
         </div>
 
         <div :class="`flex items-center ${SPACING_TOKENS.gap.sm} flex-1 justify-end shrink-0`">
-          <UTooltip :text="UI_TEXT.media.uploadPhoto">
-            <UButton
-              icon="i-heroicons-plus"
-              variant="glassIconButtonHighlight"
-              @click="emit('upload')"
-            />
-          </UTooltip>
+          <BaseButton
+            icon="i-heroicons-plus"
+            variant="glassIconButtonHighlight"
+            :tooltip="UI_TEXT.media.uploadPhoto"
+            @click="emit('upload')"
+          />
         </div>
       </div>
 
@@ -132,7 +134,7 @@
 
       <!-- Media Grid -->
       <div v-else-if="filteredMedia.length > 0" :class="appConfig.layout.documentGrid">
-        <UCard
+        <BaseCard
           v-for="mediaItem in filteredMedia"
           :key="mediaItem.file_id"
           variant="documentGlass"
@@ -142,14 +144,14 @@
           <div :class="appConfig.layout.documentCardHeader">
             <p class="font-bold truncate pr-2 shadow-sm text-sm">{{ mediaItem.file_name }}</p>
             <div :class="`flex items-center ${SPACING_TOKENS.gap.xs} shrink-0`">
-              <UTooltip v-if="isCurrentUserLeader" :text="UI_TEXT.common.delete">
-                <UButton
-                  icon="i-heroicons-trash"
-                  variant="ghostDangerIconButton"
-                  class="text-surface-500 hover:text-error-500"
-                  @click="emit('delete', mediaItem)"
-                />
-              </UTooltip>
+              <BaseButton
+                v-if="isCurrentUserLeader"
+                icon="i-heroicons-trash"
+                variant="ghostDangerIconButton"
+                class="text-surface-500 hover:text-error-500"
+                :tooltip="UI_TEXT.common.delete"
+                @click="emit('delete', mediaItem)"
+              />
             </div>
           </div>
 
@@ -170,29 +172,27 @@
             </div>
 
             <div :class="`absolute bottom-2 ${SPACING_TOKENS.px.md} w-full flex justify-between`">
-              <UTooltip :text="UI_TEXT.common.view">
-                <UButton
-                  icon="i-heroicons-eye"
-                  variant="ghostDangerIconButton"
-                  class="text-surface-500"
-                  :href="mediaItem.download_url || mediaItem.file_url"
-                  target="_blank"
-                />
-              </UTooltip>
-              <UTooltip :text="UI_TEXT.common.download">
-                <UButton
-                  icon="i-heroicons-arrow-down-tray"
-                  variant="ghostDangerIconButton"
-                  class="text-surface-500 hover:text-brand-500"
-                  @click.prevent="
-                    emit(
-                      'download',
-                      mediaItem.download_url || mediaItem.file_url,
-                      mediaItem.file_name,
-                    )
-                  "
-                />
-              </UTooltip>
+              <BaseButton
+                icon="i-heroicons-eye"
+                variant="ghostDangerIconButton"
+                class="text-surface-500"
+                :href="mediaItem.download_url || mediaItem.file_url"
+                target="_blank"
+                :tooltip="UI_TEXT.common.view"
+              />
+              <BaseButton
+                icon="i-heroicons-arrow-down-tray"
+                variant="ghostDangerIconButton"
+                class="text-surface-500 hover:text-brand-500"
+                :tooltip="UI_TEXT.common.download"
+                @click.prevent="
+                  emit(
+                    'download',
+                    mediaItem.download_url || mediaItem.file_url,
+                    mediaItem.file_name,
+                  )
+                "
+              />
             </div>
           </div>
 
@@ -236,7 +236,7 @@
               </p>
             </div>
           </div>
-        </UCard>
+        </BaseCard>
       </div>
 
       <!-- Empty state -->

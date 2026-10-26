@@ -2,8 +2,9 @@
 <template>
   <header :class="[appConfig.layout.headerBase, appConfig.layout.headerSticky]">
     <!-- BACK BUTTON SECTION -->
+
     <div :class="['flex-1 flex items-center', SPACING_TOKENS.gap.md]">
-      <UButton icon="i-heroicons-arrow-left" variant="glassIconButton" class="shrink-0" to="/" />
+      <BaseButton icon="i-heroicons-arrow-left" variant="glassIconButton" class="shrink-0" to="/" />
     </div>
 
     <!-- LOGO SECTION -->
@@ -22,7 +23,7 @@
             <span class="font-bold text-dark-text tracking-wide text-sm hidden sm:block">
               {{ userProfile?.username || UI_TEXT.common.loading }}
             </span>
-            <UButton
+            <BaseButton
               icon="i-heroicons-arrow-left-on-rectangle"
               :label="UI_TEXT.auth.logoutTitle"
               variant="smallHollowActionButton"
@@ -36,7 +37,7 @@
               :items="profileDropdownItems"
               :content="{ align: 'end', side: 'bottom', sideOffset: 8 }"
             >
-              <UButton
+              <BaseButton
                 variant="ghost"
                 class="p-0 m-0 rounded-full hover:bg-transparent focus-visible:ring-2 focus-visible:ring-brand-500 transition-transform hover:scale-105 cursor-pointer"
               >
@@ -45,7 +46,7 @@
                   :alt="userProfile?.username || UI_TEXT.common.user"
                   icon="i-heroicons-user"
                 />
-              </UButton>
+              </BaseButton>
             </UDropdownMenu>
 
             <!-- Mobile menu -->
@@ -65,7 +66,7 @@
                 item: `${SPACING_TOKENS.gap.sm} text-md`,
               }"
             >
-              <UButton
+              <BaseButton
                 icon="i-heroicons-bars-3"
                 variant="ghost"
                 :class="['md:hidden text-dark-text', SPACING_TOKENS.p.xs]"

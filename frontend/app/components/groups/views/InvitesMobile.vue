@@ -20,7 +20,7 @@
         :class="`flex flex-col ${SPACING_TOKENS.gap.lg} w-full`"
       >
         <div :class="appConfig.layout.cardGrid">
-          <UCard
+          <BaseCard
             v-for="group in invitesList"
             :key="group.uuid"
             variant="interactiveGlass"
@@ -29,13 +29,12 @@
           >
             <!-- DECLINE BUTTON -->
             <div class="absolute top-4 right-4 z-10">
-              <UTooltip :text="UI_TEXT.tooltips.declineInvite">
-                <UButton
-                  icon="i-heroicons-x-mark"
-                  variant="ghostDangerIconButton"
-                  @click.stop="groupsStore.openDeclineModal(group)"
-                />
-              </UTooltip>
+              <BaseButton
+                icon="i-heroicons-x-mark"
+                variant="ghostDangerIconButton"
+                :tooltip="UI_TEXT.tooltips.declineInvite"
+                @click.stop="groupsStore.openDeclineModal(group)"
+              />
             </div>
 
             <!-- CARD CONTENT -->
@@ -60,7 +59,7 @@
                 </div>
               </div>
             </div>
-          </UCard>
+          </BaseCard>
         </div>
 
         <!-- INFINITE SCROLL TRIGGER -->

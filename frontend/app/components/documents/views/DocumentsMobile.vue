@@ -2,29 +2,37 @@
 <template>
   <div :class="`flex flex-col flex-1 ${SPACING_TOKENS.gap.md} w-full ${SPACING_TOKENS.p.md} pb-20`">
     <div :class="appConfig.calendar.mobileTopActions">
-      <UTooltip :text="UI_TEXT.common.members">
-        <UButton icon="i-heroicons-users" variant="glassIconButton" :to="membersRoute" />
-      </UTooltip>
-      <UTooltip :text="UI_TEXT.common.calendar">
-        <UButton icon="i-heroicons-calendar" variant="glassIconButton" :to="eventsRoute" />
-      </UTooltip>
-      <UTooltip :text="UI_TEXT.common.photos">
-        <UButton icon="i-heroicons-photo" variant="glassIconButton" :to="mediaRoute" />
-      </UTooltip>
-      <UTooltip :text="UI_TEXT.common.documents">
-        <UButton
-          icon="i-heroicons-document-text"
-          variant="glassIconButton"
-          class="text-brand-500"
-          :to="documentsRoute"
-        />
-      </UTooltip>
+      <BaseButton
+        icon="i-heroicons-users"
+        variant="glassIconButton"
+        :tooltip="UI_TEXT.common.members"
+        :to="membersRoute"
+      />
+      <BaseButton
+        icon="i-heroicons-calendar"
+        variant="glassIconButton"
+        :tooltip="UI_TEXT.common.calendar"
+        :to="eventsRoute"
+      />
+      <BaseButton
+        icon="i-heroicons-photo"
+        variant="glassIconButton"
+        :tooltip="UI_TEXT.common.photos"
+        :to="mediaRoute"
+      />
+      <BaseButton
+        icon="i-heroicons-document-text"
+        variant="glassIconButton"
+        class="text-brand-500"
+        :tooltip="UI_TEXT.common.documents"
+        :to="documentsRoute"
+      />
     </div>
 
     <div :class="appConfig.calendar.mobileMainWrapper">
       <div :class="[appConfig.calendar.mobileHeader, SPACING_TOKENS.mb.xl]">
         <UPopover v-model:open="isGroupDropdownOpen" class="w-full" :popper="{ strategy: 'fixed' }">
-          <UButton block variant="ghost" :class="appConfig.calendar.mobileHeaderButton">
+          <BaseButton block variant="ghost" :class="appConfig.calendar.mobileHeaderButton">
             <div :class="appConfig.calendar.mobileHeaderTitleRow">
               <h1 :class="appConfig.typography.pageTitle" class="text-2xl! truncate">
                 <ClientOnly :fallback="UI_TEXT.common.loading">
@@ -44,7 +52,7 @@
             <p :class="appConfig.typography.pageSubtitle" class="mt-0">
               {{ UI_TEXT.documents.groupDocuments }}
             </p>
-          </UButton>
+          </BaseButton>
           <template #content>
             <div
               :class="[
@@ -80,43 +88,46 @@
       </div>
 
       <div :class="appConfig.calendar.mobileToolbar">
-        <UTooltip :text="UI_TEXT.common.filter">
-          <UPopover>
-            <UButton icon="i-heroicons-funnel" variant="glassIconButton" />
-            <template #content="{ close }">
-              <div :class="[appConfig.ui.dropdownMenu.slots.content, 'w-fit']">
-                <button
-                  v-for="type in documentTypes"
-                  :key="type.value"
-                  :class="appConfig.ui.dropdownMenu.slots.item"
-                  @click="
-                    filterType = type.value;
-                    close();
-                  "
-                >
-                  <UIcon
-                    :name="filterType === type.value ? 'i-heroicons-check' : 'i-heroicons-funnel'"
-                    :class="appConfig.ui.dropdownMenu.slots.itemLeadingIcon"
-                  />
-                  <span>{{ type.label }}</span>
-                </button>
-              </div>
-            </template>
-          </UPopover>
-        </UTooltip>
+        <UPopover>
+          <BaseButton
+            icon="i-heroicons-funnel"
+            variant="glassIconButton"
+            :tooltip="UI_TEXT.common.filter"
+          />
+          <template #content="{ close }">
+            <div :class="[appConfig.ui.dropdownMenu.slots.content, 'w-fit']">
+              <button
+                v-for="type in documentTypes"
+                :key="type.value"
+                :class="appConfig.ui.dropdownMenu.slots.item"
+                @click="
+                  filterType = type.value;
+                  close();
+                "
+              >
+                <UIcon
+                  :name="filterType === type.value ? 'i-heroicons-check' : 'i-heroicons-funnel'"
+                  :class="appConfig.ui.dropdownMenu.slots.itemLeadingIcon"
+                />
+                <span>{{ type.label }}</span>
+              </button>
+            </div>
+          </template>
+        </UPopover>
 
-        <UInput
+        <BaseSearchInput
           v-model="searchQuery"
           :placeholder="UI_TEXT.documents.search"
-          icon="i-heroicons-magnifying-glass"
           class="flex-1"
-          :ui="{ leading: 'pl-3' }"
-          variant="search"
         />
 
-        <UTooltip v-if="isCurrentUserLeader" :text="UI_TEXT.documents.uploadTitle">
-          <UButton icon="i-heroicons-plus" variant="glassIconButton" @click="emit('upload')" />
-        </UTooltip>
+        <BaseButton
+          v-if="isCurrentUserLeader"
+          icon="i-heroicons-plus"
+          variant="glassIconButton"
+          :tooltip="UI_TEXT.documents.uploadTitle"
+          @click="emit('upload')"
+        />
       </div>
 
       <div :class="`${SPACING_TOKENS.px.sm} ${SPACING_TOKENS.pt.sm} ${SPACING_TOKENS.mb.xl}`">
@@ -131,7 +142,7 @@
           v-else-if="documents.length > 0"
           :class="`flex flex-col ${SPACING_TOKENS.gap.md} w-full`"
         >
-          <UCard
+          <BaseCard
             v-for="doc in documents"
             :key="doc.file_id"
             variant="documentGlass"
@@ -140,37 +151,35 @@
             <div :class="appConfig.layout.documentCardHeader">
               <p class="font-bold truncate pr-2 shadow-sm text-sm">{{ doc.file_name }}</p>
               <div :class="`flex items-center ${SPACING_TOKENS.gap.xs} shrink-0`">
-                <UTooltip v-if="isCurrentUserLeader" :text="UI_TEXT.common.delete">
-                  <UButton
-                    icon="i-heroicons-trash"
-                    variant="ghostDangerIconButton"
-                    class="text-surface-500 hover:text-error-500 w-6! h-6! p-0"
-                    @click="emit('delete', doc)"
-                  />
-                </UTooltip>
+                <BaseButton
+                  v-if="isCurrentUserLeader"
+                  icon="i-heroicons-trash"
+                  variant="ghostDangerIconButton"
+                  class="text-surface-500 hover:text-error-500 w-6! h-6! p-0"
+                  :tooltip="UI_TEXT.common.delete"
+                  @click="emit('delete', doc)"
+                />
               </div>
             </div>
 
             <div :class="appConfig.layout.documentCardImage" class="h-40!">
               <UIcon name="i-heroicons-document" class="w-12 h-12 text-surface-500/50" />
               <div :class="`absolute bottom-2 ${SPACING_TOKENS.px.md} w-full flex justify-between`">
-                <UTooltip :text="UI_TEXT.common.view">
-                  <UButton
-                    icon="i-heroicons-eye"
-                    variant="ghostDangerIconButton"
-                    class="text-surface-500"
-                    :href="doc.download_url"
-                    target="_blank"
-                  />
-                </UTooltip>
-                <UTooltip :text="UI_TEXT.common.download">
-                  <UButton
-                    icon="i-heroicons-arrow-down-tray"
-                    variant="ghostDangerIconButton"
-                    class="text-surface-500"
-                    @click.prevent="emit('download', doc.download_url, doc.file_name)"
-                  />
-                </UTooltip>
+                <BaseButton
+                  icon="i-heroicons-eye"
+                  variant="ghostDangerIconButton"
+                  class="text-surface-500"
+                  :href="doc.download_url"
+                  :tooltip="UI_TEXT.common.view"
+                  target="_blank"
+                />
+                <BaseButton
+                  icon="i-heroicons-arrow-down-tray"
+                  variant="ghostDangerIconButton"
+                  class="text-surface-500"
+                  :tooltip="UI_TEXT.common.download"
+                  @click.prevent="emit('download', doc.download_url, doc.file_name)"
+                />
               </div>
             </div>
 
@@ -227,7 +236,7 @@
                 }}</span>
               </p>
             </div>
-          </UCard>
+          </BaseCard>
         </div>
 
         <div
@@ -252,40 +261,39 @@
       </div>
 
       <div :class="appConfig.calendar.mobileToolbar">
-        <UTooltip :text="UI_TEXT.common.filter">
-          <UPopover>
-            <UButton icon="i-heroicons-funnel" variant="glassIconButton" />
-            <template #content="{ close }">
-              <div :class="[appConfig.ui.dropdownMenu.slots.content, 'w-fit']">
-                <button
-                  v-for="type in privateDocumentTypes"
-                  :key="type.value"
-                  :class="appConfig.ui.dropdownMenu.slots.item"
-                  @click="
-                    memberFilterType = type.value;
-                    close();
+        <UPopover>
+          <BaseButton
+            icon="i-heroicons-funnel"
+            variant="glassIconButton"
+            :tooltip="UI_TEXT.common.filter"
+          />
+          <template #content="{ close }">
+            <div :class="[appConfig.ui.dropdownMenu.slots.content, 'w-fit']">
+              <button
+                v-for="type in privateDocumentTypes"
+                :key="type.value"
+                :class="appConfig.ui.dropdownMenu.slots.item"
+                @click="
+                  memberFilterType = type.value;
+                  close();
+                "
+              >
+                <UIcon
+                  :name="
+                    memberFilterType === type.value ? 'i-heroicons-check' : 'i-heroicons-funnel'
                   "
-                >
-                  <UIcon
-                    :name="
-                      memberFilterType === type.value ? 'i-heroicons-check' : 'i-heroicons-funnel'
-                    "
-                    :class="appConfig.ui.dropdownMenu.slots.itemLeadingIcon"
-                  />
-                  <span>{{ type.label }}</span>
-                </button>
-              </div>
-            </template>
-          </UPopover>
-        </UTooltip>
+                  :class="appConfig.ui.dropdownMenu.slots.itemLeadingIcon"
+                />
+                <span>{{ type.label }}</span>
+              </button>
+            </div>
+          </template>
+        </UPopover>
 
-        <UInput
+        <BaseSearchInput
           v-model="memberSearchQuery"
           :placeholder="UI_TEXT.documents.searchPrivate"
-          icon="i-heroicons-magnifying-glass"
           class="flex-1"
-          :ui="{ leading: 'pl-3' }"
-          variant="search"
         />
       </div>
 
@@ -318,7 +326,7 @@
             v-if="filteredMemberDocuments(type.value).length > 0"
             :class="`flex flex-col ${SPACING_TOKENS.gap.md} w-full`"
           >
-            <UCard
+            <BaseCard
               v-for="doc in filteredMemberDocuments(type.value)"
               :key="doc.file_id"
               variant="documentGlass"
@@ -331,15 +339,14 @@
               <div :class="appConfig.layout.documentCardImage" class="h-32!">
                 <UIcon name="i-heroicons-document-text" class="w-12 h-12 text-surface-500/50" />
                 <div :class="`absolute bottom-2 ${SPACING_TOKENS.px.md} w-full flex justify-end`">
-                  <UTooltip :text="UI_TEXT.common.view">
-                    <UButton
-                      icon="i-heroicons-eye"
-                      variant="ghostDangerIconButton"
-                      class="text-surface-500"
-                      :href="doc.file_url"
-                      target="_blank"
-                    />
-                  </UTooltip>
+                  <BaseButton
+                    icon="i-heroicons-eye"
+                    variant="ghostDangerIconButton"
+                    class="text-surface-500"
+                    :href="doc.file_url"
+                    :tooltip="UI_TEXT.common.view"
+                    target="_blank"
+                  />
                 </div>
               </div>
 
@@ -390,17 +397,20 @@
                   }}</span>
                 </p>
               </div>
-            </UCard>
+            </BaseCard>
           </div>
 
           <!-- Empty per-type state -->
-          <UCard v-else variant="documentGlass" class="relative w-full">
+          <BaseCard
+            v-else
+            class="relative !bg-transparent !backdrop-blur-none !ring-0 !shadow-none"
+          >
             <div :class="`${SPACING_TOKENS.py.lg} text-center`">
               <UIcon
                 name="i-heroicons-document-text"
-                :class="`w-12 h-12 text-surface-500/40 mx-auto ${SPACING_TOKENS.mb.sm}`"
+                :class="`w-12 h-12 text-surface-500 mx-auto ${SPACING_TOKENS.mb.sm}`"
               />
-              <p class="text-surface-400 italic text-sm">
+              <p class="text-surface-500 italic text-sm">
                 {{ ' ' + UI_TEXT.documents.no + ' ' }}{{ type.label.toLowerCase()
                 }}{{ ' ' + UI_TEXT.documents.found + ' '
                 }}<template v-if="memberSearchQuery"
@@ -408,7 +418,7 @@
                 >.
               </p>
             </div>
-          </UCard>
+          </BaseCard>
         </div>
       </div>
     </template>

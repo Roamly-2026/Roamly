@@ -38,19 +38,16 @@
                   <p :class="appConfig.calendar.participantCardEmail">{{ user.email }}</p>
                 </div>
               </div>
-              <UTooltip
+              <BaseButton
                 v-if="hasPermissionToDelete && user.email !== currentUserEmail"
-                :text="UI_TEXT.tooltips.removeParticipant"
-                :ui="{ content: 'z-[9999]' }"
-                :popper="{ placement: 'top', strategy: 'fixed' }"
-              >
-                <UButton
-                  icon="i-heroicons-user-minus"
-                  variant="ghostDangerIconButton"
-                  :loading="removeParticipantMutation.isLoading.value"
-                  @click.stop="eventsStore.openRemoveParticipantModal(user)"
-                />
-              </UTooltip>
+                icon="i-heroicons-user-minus"
+                variant="ghostDangerIconButton"
+                :loading="removeParticipantMutation.isLoading.value"
+                :tooltip="UI_TEXT.tooltips.removeParticipant"
+                :tooltip-ui="{ content: 'z-[9999]' }"
+                :tooltip-popper="{ placement: 'top', strategy: 'fixed' }"
+                @click.stop="eventsStore.openRemoveParticipantModal(user)"
+              />
             </div>
           </div>
           <div
@@ -63,7 +60,7 @@
       </template>
       <template #footer>
         <div class="flex justify-end w-full">
-          <UButton
+          <BaseButton
             :label="UI_TEXT.common.close"
             variant="actionCancelButton"
             @click="eventsStore.closeParticipantsModal()"
@@ -152,15 +149,14 @@
       </template>
       <template #footer>
         <div class="flex justify-between w-full gap-3">
-          <UButton
+          <BaseButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             :disabled="addParticipantsMutation.isLoading.value"
             @click="closeAddMembersModal"
           />
-          <UButton
+          <BaseButton
             :label="UI_TEXT.events.addSelected"
-            variant="actionOkButton"
             :loading="addParticipantsMutation.isLoading.value"
             :disabled="selectedEmailsToAdd.length === 0"
             @click="submitNewMembers"

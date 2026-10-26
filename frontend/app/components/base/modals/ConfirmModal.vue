@@ -17,15 +17,14 @@
 
     <template #footer>
       <div :class="appConfig.layout.modalActions || appConfig.layout.flexBetween">
-        <UButton
+        <BaseButton
           :label="cancelText"
           variant="actionCancelButton"
           :class="appConfig.typography.modalActionBtnCancel"
           @click="$emit('cancel')"
         />
-        <UButton
+        <BaseButton
           :label="confirmText"
-          variant="actionOkButton"
           :class="[appConfig.typography.modalActionBtnOk, confirmBtnClass]"
           :loading="loading"
           @click="$emit('confirm')"

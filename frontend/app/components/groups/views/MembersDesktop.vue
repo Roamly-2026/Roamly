@@ -5,20 +5,19 @@
     <div :class="`flex flex-col ${SPACING_TOKENS.gap.lg} w-full`">
       <div :class="appConfig.layout.pageHeader">
         <div :class="appConfig.layout.actionGroup" class="flex-1 justify-start">
-          <UTooltip v-if="isCurrentUserLeader" :text="UI_TEXT.tooltips.deleteGroup">
-            <UButton
-              icon="i-heroicons-trash"
-              variant="glassIconButtonDanger"
-              @click="emit('deleteGroup')"
-            />
-          </UTooltip>
-          <UTooltip :text="UI_TEXT.tooltips.leaveGroup">
-            <UButton
-              icon="i-heroicons-arrow-right-on-rectangle"
-              variant="glassIconButtonDanger"
-              @click="emit('leaveGroup')"
-            />
-          </UTooltip>
+          <BaseButton
+            v-if="isCurrentUserLeader"
+            icon="i-heroicons-trash"
+            variant="glassIconButtonDanger"
+            :tooltip="UI_TEXT.tooltips.deleteGroup"
+            @click="emit('deleteGroup')"
+          />
+          <BaseButton
+            icon="i-heroicons-arrow-right-on-rectangle"
+            variant="glassIconButtonDanger"
+            :tooltip="UI_TEXT.tooltips.leaveGroup"
+            @click="emit('leaveGroup')"
+          />
         </div>
 
         <div class="flex flex-col items-center justify-center shrink-0">
@@ -26,14 +25,14 @@
             <h1 :class="appConfig.typography.pageTitle">
               {{ groupInfos?.name || UI_TEXT.common.loading }}
             </h1>
-            <UTooltip v-if="isCurrentUserLeader" :text="UI_TEXT.tooltips.editGroup">
-              <UButton
-                icon="i-heroicons-pencil"
-                variant="ghostBrandIconButton"
-                class="w-4! h-4!"
-                @click="groupsStore.openUpdateModal(groupInfos?.name || '')"
-              />
-            </UTooltip>
+            <BaseButton
+              v-if="isCurrentUserLeader"
+              icon="i-heroicons-pencil"
+              variant="ghostBrandIconButton"
+              class="w-4! h-4!"
+              :tooltip="UI_TEXT.tooltips.editGroup"
+              @click="groupsStore.openUpdateModal(groupInfos?.name || '')"
+            />
           </div>
           <p :class="appConfig.typography.pageSubtitle" class="mt-0!">
             {{ UI_TEXT.common.members }}
@@ -41,50 +40,52 @@
         </div>
 
         <div :class="appConfig.layout.actionGroup" class="flex-1 justify-end">
-          <UTooltip :text="UI_TEXT.tooltips.members">
-            <UButton
-              icon="i-heroicons-users"
-              variant="glassIconButton"
-              class="text-brand-500"
-              :to="membersRoute"
-            />
-          </UTooltip>
-          <UTooltip :text="UI_TEXT.tooltips.calendar">
-            <UButton icon="i-heroicons-calendar" variant="glassIconButton" :to="eventsRoute" />
-          </UTooltip>
-          <UTooltip :text="UI_TEXT.tooltips.photos">
-            <UButton icon="i-heroicons-photo" variant="glassIconButton" :to="mediaRoute" />
-          </UTooltip>
-          <UTooltip :text="UI_TEXT.tooltips.documents">
-            <UButton
-              icon="i-heroicons-document-text"
-              variant="glassIconButton"
-              :to="documentsRoute"
-            />
-          </UTooltip>
+          <BaseButton
+            icon="i-heroicons-users"
+            variant="glassIconButton"
+            class="text-brand-500"
+            :to="membersRoute"
+            :tooltip="UI_TEXT.tooltips.members"
+          />
+          <BaseButton
+            icon="i-heroicons-calendar"
+            variant="glassIconButton"
+            :to="eventsRoute"
+            :tooltip="UI_TEXT.tooltips.calendar"
+          />
+          <BaseButton
+            icon="i-heroicons-photo"
+            variant="glassIconButton"
+            :to="mediaRoute"
+            :tooltip="UI_TEXT.tooltips.photos"
+          />
+          <BaseButton
+            icon="i-heroicons-document-text"
+            variant="glassIconButton"
+            :to="documentsRoute"
+            :tooltip="UI_TEXT.tooltips.documents"
+          />
         </div>
       </div>
 
       <div :class="`flex items-center ${SPACING_TOKENS.gap.md} w-full`">
         <div class="flex-1">
-          <UInput
+          <BaseSearchInput
             :model-value="searchQuery"
-            icon="i-heroicons-magnifying-glass"
             :placeholder="UI_TEXT.groups.searchMembers"
-            variant="search"
-            :ui="{ leading: 'pl-3' }"
             class="w-1/5! max-w-none!"
             @update:model-value="emit('update:searchQuery', $event)"
           />
         </div>
+
         <div :class="`flex items-center ${SPACING_TOKENS.gap.sm} shrink-0`">
-          <UTooltip v-if="isCurrentUserLeader" :text="UI_TEXT.tooltips.inviteUser">
-            <UButton
-              icon="i-heroicons-user-plus"
-              variant="glassIconButtonHighlight"
-              @click="groupsStore.openInviteModal()"
-            />
-          </UTooltip>
+          <BaseButton
+            v-if="isCurrentUserLeader"
+            icon="i-heroicons-user-plus"
+            variant="glassIconButtonHighlight"
+            :tooltip="UI_TEXT.tooltips.inviteUser"
+            @click="groupsStore.openInviteModal()"
+          />
         </div>
       </div>
     </div>
@@ -100,7 +101,7 @@
         </div>
 
         <div v-else-if="filteredMembers?.length" :class="[appConfig.layout.cardGrid]">
-          <UCard
+          <BaseCard
             v-for="profile in filteredMembers"
             :key="profile.users.email"
             variant="interactiveGlass"
@@ -131,23 +132,17 @@
                       {{ ' ' + UI_TEXT.common.you + ' ' }}
                     </p>
                   </div>
-                  <UTooltip
+
+                  <BaseButton
                     v-if="isCurrentUserLeader && profile.roles.type.toLowerCase() === 'member'"
-                    :text="UI_TEXT.tooltips.promoteUser"
-                    class="shrink-0"
-                  >
-                    <UButton
-                      icon="i-heroicons-arrow-up-circle"
-                      variant="ghostBrandIconButton"
-                      class="text-dark-text/70"
-                      @click.stop="
-                        groupsStore.openPromoteUserModal(
-                          profile.users.email,
-                          profile.users.username,
-                        )
-                      "
-                    />
-                  </UTooltip>
+                    icon="i-heroicons-arrow-up-circle"
+                    variant="ghostBrandIconButton"
+                    class="text-dark-text/70 shrink-0"
+                    :tooltip="UI_TEXT.tooltips.promoteUser"
+                    @click.stop="
+                      groupsStore.openPromoteUserModal(profile.users.email, profile.users.username)
+                    "
+                  />
                 </div>
 
                 <div :class="[appConfig.layout.flexBetween, `items-end ${SPACING_TOKENS.mt.md}`]">
@@ -155,20 +150,18 @@
                     {{ ' ' + UI_TEXT.groups.roleLabel + ' '
                     }}<span class="font-bold capitalize">{{ profile.roles.type }}</span>
                   </p>
-                  <UTooltip
+
+                  <BaseButton
                     v-if="isCurrentUserLeader && !isCurrentUser(profile.users.email)"
-                    :text="UI_TEXT.tooltips.removeUser"
-                  >
-                    <UButton
-                      icon="i-heroicons-user-minus"
-                      variant="ghostDangerIconButton"
-                      @click.stop="groupsStore.openRemoveUserModal(profile.users.email)"
-                    />
-                  </UTooltip>
+                    icon="i-heroicons-user-minus"
+                    variant="ghostDangerIconButton"
+                    :tooltip="UI_TEXT.tooltips.removeUser"
+                    @click.stop="groupsStore.openRemoveUserModal(profile.users.email)"
+                  />
                 </div>
               </div>
             </div>
-          </UCard>
+          </BaseCard>
         </div>
       </ClientOnly>
     </div>
@@ -191,7 +184,7 @@
         </div>
 
         <div v-else :class="appConfig.layout.cardGrid">
-          <UCard
+          <BaseCard
             v-for="event in todayUpcomingEvents"
             :key="event.uuid"
             variant="interactiveGlass"
@@ -299,7 +292,7 @@
                 </div>
               </div>
             </div>
-          </UCard>
+          </BaseCard>
         </div>
       </ClientOnly>
     </div>

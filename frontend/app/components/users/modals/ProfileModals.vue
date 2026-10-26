@@ -14,8 +14,11 @@
       @submit="handleUpdateUsername"
     >
       <div>
-        <label :class="appConfig.typography.inputLabel">{{ UI_TEXT.auth.usernameLabel }}</label>
-        <UInput v-model="editFormData.username" variant="glass" class="w-full" />
+        <BaseInput
+          v-model="editFormData.username"
+          :label="UI_TEXT.auth.usernameLabel"
+          class="w-full"
+        />
         <p v-if="usernameError" :class="appConfig.typography.inputError">{{ usernameError }}</p>
       </div>
     </FormModal>
@@ -33,8 +36,12 @@
       @submit="handleUpdateEmail"
     >
       <div>
-        <label :class="appConfig.typography.inputLabel">{{ UI_TEXT.auth.emailLabel }}</label>
-        <UInput v-model="editFormData.email" type="email" variant="glass" class="w-full" />
+        <BaseInput
+          v-model="editFormData.email"
+          :label="UI_TEXT.auth.emailLabel"
+          type="email"
+          class="w-full"
+        />
         <p v-if="emailError" :class="appConfig.typography.inputError">{{ emailError }}</p>
       </div>
     </FormModal>
@@ -52,16 +59,20 @@
       @submit="handleChangePassword"
     >
       <div>
-        <label :class="appConfig.typography.inputLabel">{{
-          UI_TEXT.profile.oldPasswordLabel
-        }}</label>
-        <UInput v-model="pwdData.oldPassword" type="password" variant="glass" class="w-full" />
+        <BaseInput
+          v-model="pwdData.oldPassword"
+          :label="UI_TEXT.profile.oldPasswordLabel"
+          type="password"
+          class="w-full"
+        />
       </div>
       <div>
-        <label :class="appConfig.typography.inputLabel">{{
-          UI_TEXT.profile.newPasswordLabel
-        }}</label>
-        <UInput v-model="pwdData.newPassword" type="password" variant="glass" class="w-full" />
+        <BaseInput
+          v-model="pwdData.newPassword"
+          :label="UI_TEXT.profile.newPasswordLabel"
+          type="password"
+          class="w-full"
+        />
       </div>
       <p v-if="passwordError" :class="appConfig.typography.inputError">{{ passwordError }}</p>
     </FormModal>
@@ -98,13 +109,11 @@
           @submit.prevent="handleUploadPicture"
         >
           <div>
-            <label :class="appConfig.typography.inputLabel">{{
-              UI_TEXT.profile.selectFileLabel
-            }}</label>
-            <input
+            <BaseInput
+              :label="UI_TEXT.profile.selectFileLabel"
               type="file"
-              :class="appConfig.layout.fileInput"
               accept="image/*"
+              :class="appConfig.layout.fileInput"
               @change="onPictureSelected"
             />
             <p v-if="uploadPicError" :class="appConfig.typography.inputError">
@@ -115,13 +124,13 @@
       </template>
       <template #footer>
         <div :class="appConfig.layout.modalActions">
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnCancel"
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="profileStore.closeUploadPictureModal()"
           />
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnOk"
             :label="UI_TEXT.common.upload"
             variant="actionOkButton"
@@ -154,10 +163,9 @@
       </template>
       <template #footer>
         <div class="flex items-center justify-end w-full">
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnOk"
             :label="UI_TEXT.profile.ok"
-            variant="actionOkButton"
             @click="profileStore.closeViewPictureModal()"
           />
         </div>
@@ -176,12 +184,7 @@
           :class="appConfig.layout.modalForm"
           @submit.prevent="profileStore.closeUploadDocumentModal()"
         >
-          <div>
-            <label :class="appConfig.typography.inputLabel">{{
-              UI_TEXT.profile.selectFileLabel
-            }}</label>
-            <input type="file" :class="appConfig.layout.fileInput" />
-          </div>
+          <BaseInput :label="UI_TEXT.profile.selectFileLabel" type="file" />
           <div>
             <label :class="appConfig.typography.inputLabel">{{
               UI_TEXT.documents.typeLabel
@@ -197,32 +200,25 @@
           </div>
           <div class="flex gap-4">
             <div class="flex-1">
-              <label :class="appConfig.typography.inputLabel">{{
-                UI_TEXT.documents.issuedAtLabel
-              }}</label>
-              <UInput type="date" variant="glass" class="w-full" />
+              <BaseInput :label="UI_TEXT.documents.issuedAtLabel" type="date" class="w-full" />
             </div>
             <div class="flex-1">
-              <label :class="appConfig.typography.inputLabel">{{
-                UI_TEXT.documents.endsAtLabel
-              }}</label>
-              <UInput type="date" variant="glass" class="w-full" />
+              <BaseInput :label="UI_TEXT.documents.endsAtLabel" type="date" class="w-full" />
             </div>
           </div>
         </form>
       </template>
       <template #footer>
         <div :class="appConfig.layout.modalActions">
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnCancel"
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="profileStore.closeUploadDocumentModal()"
           />
-          <UButton
+          <BaseButton
             :class="appConfig.typography.modalActionBtnOk"
             :label="UI_TEXT.common.upload"
-            variant="actionOkButton"
             type="submit"
             form="upload-doc-form"
           />
