@@ -113,6 +113,7 @@
               :label="UI_TEXT.profile.selectFileLabel"
               type="file"
               accept="image/*"
+              :class="appConfig.layout.fileInput"
               @change="onPictureSelected"
             />
             <p v-if="uploadPicError" :class="appConfig.typography.inputError">

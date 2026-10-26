@@ -35,12 +35,12 @@
       </div>
 
       <div
-        v-else-if="groupsList.length > 0"
+        v-else-if="filteredGroups.length > 0"
         :class="`flex flex-col ${SPACING_TOKENS.gap.lg} w-full`"
       >
         <div :class="appConfig.layout.cardGrid">
           <BaseCard
-            v-for="group in groupsList"
+            v-for="group in filteredGroups"
             :key="group.uuid"
             variant="pointedGlass"
             class="relative flex flex-col justify-between cursor-pointer"
@@ -48,7 +48,6 @@
           >
             <div class="absolute top-4 left-4 z-10">
               <BaseButton
-                v-if="filteredGroups.length > 0"
                 icon="i-heroicons-arrow-right-on-rectangle"
                 variant="ghostDangerIconButton"
                 :tooltip="UI_TEXT.tooltips.leaveGroup"
@@ -93,6 +92,13 @@
         </div>
       </div>
 
+      <!-- if user is part of groups, but the search gave back 0 results -->
+      <div
+        v-else-if="groupsList.length > 0 && filteredGroups.length === 0"
+        :class="appConfig.typography.statusLoading"
+      >
+        {{ UI_TEXT.groups.searchGroupsNoResult }}
+      </div>
       <div v-else :class="appConfig.typography.statusLoading">
         {{ UI_TEXT.groups.noGroups }}
       </div>

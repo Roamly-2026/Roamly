@@ -198,6 +198,7 @@ export const UI_TEXT = {
     deleteGroup: 'Delete Group',
     leaveGroup: 'Leave Group',
     searchGroups: 'Search groups...',
+    searchGroupsNoResult: 'No search results.',
     searchMembers: 'Search members...',
     participants: 'Participants',
     noDescription: 'No description provided.',

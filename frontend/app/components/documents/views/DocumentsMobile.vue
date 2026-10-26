@@ -88,30 +88,32 @@
       </div>
 
       <div :class="appConfig.calendar.mobileToolbar">
-        <UTooltip :text="UI_TEXT.common.filter">
-          <UPopover>
-            <BaseButton icon="i-heroicons-funnel" variant="glassIconButton" />
-            <template #content="{ close }">
-              <div :class="[appConfig.ui.dropdownMenu.slots.content, 'w-fit']">
-                <button
-                  v-for="type in documentTypes"
-                  :key="type.value"
-                  :class="appConfig.ui.dropdownMenu.slots.item"
-                  @click="
-                    filterType = type.value;
-                    close();
-                  "
-                >
-                  <UIcon
-                    :name="filterType === type.value ? 'i-heroicons-check' : 'i-heroicons-funnel'"
-                    :class="appConfig.ui.dropdownMenu.slots.itemLeadingIcon"
-                  />
-                  <span>{{ type.label }}</span>
-                </button>
-              </div>
-            </template>
-          </UPopover>
-        </UTooltip>
+        <UPopover>
+          <BaseButton
+            icon="i-heroicons-funnel"
+            variant="glassIconButton"
+            :tooltip="UI_TEXT.common.filter"
+          />
+          <template #content="{ close }">
+            <div :class="[appConfig.ui.dropdownMenu.slots.content, 'w-fit']">
+              <button
+                v-for="type in documentTypes"
+                :key="type.value"
+                :class="appConfig.ui.dropdownMenu.slots.item"
+                @click="
+                  filterType = type.value;
+                  close();
+                "
+              >
+                <UIcon
+                  :name="filterType === type.value ? 'i-heroicons-check' : 'i-heroicons-funnel'"
+                  :class="appConfig.ui.dropdownMenu.slots.itemLeadingIcon"
+                />
+                <span>{{ type.label }}</span>
+              </button>
+            </div>
+          </template>
+        </UPopover>
 
         <BaseSearchInput
           v-model="searchQuery"
@@ -259,32 +261,34 @@
       </div>
 
       <div :class="appConfig.calendar.mobileToolbar">
-        <UTooltip :text="UI_TEXT.common.filter">
-          <UPopover>
-            <BaseButton icon="i-heroicons-funnel" variant="glassIconButton" />
-            <template #content="{ close }">
-              <div :class="[appConfig.ui.dropdownMenu.slots.content, 'w-fit']">
-                <button
-                  v-for="type in privateDocumentTypes"
-                  :key="type.value"
-                  :class="appConfig.ui.dropdownMenu.slots.item"
-                  @click="
-                    memberFilterType = type.value;
-                    close();
+        <UPopover>
+          <BaseButton
+            icon="i-heroicons-funnel"
+            variant="glassIconButton"
+            :tooltip="UI_TEXT.common.filter"
+          />
+          <template #content="{ close }">
+            <div :class="[appConfig.ui.dropdownMenu.slots.content, 'w-fit']">
+              <button
+                v-for="type in privateDocumentTypes"
+                :key="type.value"
+                :class="appConfig.ui.dropdownMenu.slots.item"
+                @click="
+                  memberFilterType = type.value;
+                  close();
+                "
+              >
+                <UIcon
+                  :name="
+                    memberFilterType === type.value ? 'i-heroicons-check' : 'i-heroicons-funnel'
                   "
-                >
-                  <UIcon
-                    :name="
-                      memberFilterType === type.value ? 'i-heroicons-check' : 'i-heroicons-funnel'
-                    "
-                    :class="appConfig.ui.dropdownMenu.slots.itemLeadingIcon"
-                  />
-                  <span>{{ type.label }}</span>
-                </button>
-              </div>
-            </template>
-          </UPopover>
-        </UTooltip>
+                  :class="appConfig.ui.dropdownMenu.slots.itemLeadingIcon"
+                />
+                <span>{{ type.label }}</span>
+              </button>
+            </div>
+          </template>
+        </UPopover>
 
         <BaseSearchInput
           v-model="memberSearchQuery"

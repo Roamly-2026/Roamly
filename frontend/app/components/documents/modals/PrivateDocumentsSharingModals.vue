@@ -33,19 +33,16 @@
                   </div>
                 </div>
               </div>
-              <UTooltip
-                :text="UI_TEXT.documents.shareWithGroup"
-                :ui="{ content: 'z-[9999]' }"
-                :popper="{ placement: 'top', strategy: 'fixed' }"
-              >
-                <BaseButton
-                  icon="i-heroicons-share"
-                  variant="ghostBrandIconButton"
-                  class="text-dark-text/70"
-                  :loading="shareMutation.isLoading.value"
-                  @click="handleShareDocument(group.uuid)"
-                />
-              </UTooltip>
+              <BaseButton
+                icon="i-heroicons-share"
+                variant="ghostBrandIconButton"
+                class="text-dark-text/70"
+                :loading="shareMutation.isLoading.value"
+                :tooltip="UI_TEXT.documents.shareWithGroup"
+                :tooltip-ui="{ content: 'z-[9999]' }"
+                :tooltip-popper="{ placement: 'top', strategy: 'fixed' }"
+                @click="handleShareDocument(group.uuid)"
+              />
             </div>
           </div>
           <div v-if="!unsharedGroups?.length" class="text-sm font-medium text-dark-text/50 p-4">
@@ -96,18 +93,15 @@
                   </p>
                 </div>
               </div>
-              <UTooltip
-                :text="UI_TEXT.documents.revokeAccess"
-                :ui="{ content: 'z-[9999]' }"
-                :popper="{ placement: 'top', strategy: 'fixed' }"
-              >
-                <BaseButton
-                  icon="i-heroicons-x-mark"
-                  variant="ghostDangerIconButton"
-                  :loading="revokeMutation.isLoading.value"
-                  @click="handleRevokeAccess(share.groups.name)"
-                />
-              </UTooltip>
+              <BaseButton
+                icon="i-heroicons-x-mark"
+                variant="ghostDangerIconButton"
+                :loading="revokeMutation.isLoading.value"
+                :tooltip="UI_TEXT.documents.revokeAccess"
+                :tooltip-ui="{ content: 'z-[9999]' }"
+                :tooltip-popper="{ placement: 'top', strategy: 'fixed' }"
+                @click="handleRevokeAccess(share.groups.name)"
+              />
             </div>
           </div>
           <div v-if="!sharedGroups?.length" class="text-sm font-medium text-dark-text/50 p-4">

@@ -147,8 +147,8 @@
                   variant="link"
                   class="p-0 text-sm h-auto font-medium"
                   @click="openAllParticipantsModal"
-                  >{{ UI_TEXT.events.showParticipants }}</BaseButton
-                >
+                  >{{ UI_TEXT.events.showParticipants }}
+                </BaseButton>
               </template>
               <template v-else>
                 <div class="flex items-center gap-3">

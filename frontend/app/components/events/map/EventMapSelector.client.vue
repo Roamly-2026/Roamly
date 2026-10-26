@@ -24,6 +24,7 @@
       <BaseButton
         :label="UI_TEXT.map.confirmLocation"
         :disabled="!currentSelection"
+        variant="actionOkButton"
         @click="confirmSelection"
       />
     </div>

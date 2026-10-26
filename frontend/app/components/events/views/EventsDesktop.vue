@@ -412,8 +412,8 @@
                     variant="link"
                     :class="appConfig.calendar.metaValueLink"
                     @click="$emit('open-all-participants')"
-                    >{{ UI_TEXT.events.showParticipants }}</BaseButton
-                  >
+                    >{{ UI_TEXT.events.showParticipants }}
+                  </BaseButton>
                 </template>
                 <template v-else>
                   <div :class="`flex items-center ${SPACING_TOKENS.gap.sm}`">

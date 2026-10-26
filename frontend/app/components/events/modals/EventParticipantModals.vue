@@ -38,19 +38,16 @@
                   <p :class="appConfig.calendar.participantCardEmail">{{ user.email }}</p>
                 </div>
               </div>
-              <UTooltip
+              <BaseButton
                 v-if="hasPermissionToDelete && user.email !== currentUserEmail"
-                :text="UI_TEXT.tooltips.removeParticipant"
-                :ui="{ content: 'z-[9999]' }"
-                :popper="{ placement: 'top', strategy: 'fixed' }"
-              >
-                <BaseButton
-                  icon="i-heroicons-user-minus"
-                  variant="ghostDangerIconButton"
-                  :loading="removeParticipantMutation.isLoading.value"
-                  @click.stop="eventsStore.openRemoveParticipantModal(user)"
-                />
-              </UTooltip>
+                icon="i-heroicons-user-minus"
+                variant="ghostDangerIconButton"
+                :loading="removeParticipantMutation.isLoading.value"
+                :tooltip="UI_TEXT.tooltips.removeParticipant"
+                :tooltip-ui="{ content: 'z-[9999]' }"
+                :tooltip-popper="{ placement: 'top', strategy: 'fixed' }"
+                @click.stop="eventsStore.openRemoveParticipantModal(user)"
+              />
             </div>
           </div>
           <div
