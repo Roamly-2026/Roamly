@@ -5,20 +5,16 @@
       <!-- TITLE -->
       <div :class="appConfig.typography.authTitleWrapper">
         <h1 :class="appConfig.typography.authTitle">{{ UI_TEXT.auth.verifyHeading }}</h1>
-        <p
-          :class="`text-sm text-surface-400 text-center ${SPACING_TOKENS.mt.xs} max-w-xs mx-auto leading-relaxed`"
-        >
+        <p :class="[appConfig.typography.modalText, TEXT_LEADING.relaxed]">
           {{ ' ' + UI_TEXT.auth.verifyBeforeEmail + ' '
-          }}<span class="font-semibold text-dark-text">{{ email }}</span
+          }}<span :class="appConfig.typography.modalInlineHighlight">{{ email }}</span
           >{{ UI_TEXT.auth.verifyAfterEmail + ' ' }}
         </p>
       </div>
 
       <!-- OTP INPUTS -->
       <div :class="appConfig.layout.formWrapper">
-        <div
-          :class="`flex items-center justify-center ${SPACING_TOKENS.gap.sm} ${SPACING_TOKENS.py.sm}`"
-        >
+        <div :class="[appConfig.layout.actionGroup, SPACING_TOKENS.mx.auto, SPACING_TOKENS.py.sm]">
           <input
             v-for="(_, i) in otpCells"
             :key="i"
@@ -27,11 +23,11 @@
             type="text"
             inputmode="numeric"
             maxlength="1"
-            class="w-12 h-14 text-center text-2xl font-bold rounded-xl border-2 outline-none transition-all duration-150 bg-white/5 text-dark-text caret-brand-500 border-surface-500/30 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/30 disabled:opacity-40"
-            :class="{
-              'border-error-500 focus:border-error-500 focus:ring-error-500/30': !!error,
-              'border-success-500 focus:border-success-500 focus:ring-success-500/30': isVerified,
-            }"
+            :class="[
+              OTP_INPUT_CONFIG.desktop,
+              error ? OTP_INPUT_CONFIG.error : '',
+              isVerified ? OTP_INPUT_CONFIG.success : '',
+            ]"
             :disabled="isVerifying || isVerified"
             @input="onInput(i, $event)"
             @keydown="onKeydown(i, $event)"
@@ -41,12 +37,12 @@
         </div>
 
         <!-- Error -->
-        <div v-if="error" :class="appConfig.typography.formStatusError" class="text-center">
+        <div v-if="error" :class="appConfig.typography.formStatusError">
           {{ getErrorMessage(error) }}
         </div>
 
         <!-- Success -->
-        <div v-if="isVerified" :class="appConfig.typography.formStatusSuccess" class="text-center">
+        <div v-if="isVerified" :class="appConfig.typography.formStatusSuccess">
           {{ ' ' + UI_TEXT.auth.verified + ' ' }}
         </div>
 
@@ -54,7 +50,8 @@
         <div :class="appConfig.layout.formActions">
           <BaseButton
             :label="UI_TEXT.auth.verify"
-            class="w-full"
+            variant="actionOkButton"
+            :class="CARD_CONFIG.slots.root"
             :loading="isVerifying"
             :disabled="!isOtpComplete || isVerified"
             @click="emit('submit', otpValue)"
@@ -62,40 +59,27 @@
         </div>
 
         <!-- Divider -->
-        <div :class="`flex items-center ${SPACING_TOKENS.gap.sm} ${SPACING_TOKENS.py.xs}`">
-          <div class="flex-1 h-px bg-surface-500/20" />
-          <span class="text-xs text-surface-400">{{ UI_TEXT.auth.or }}</span>
-          <div class="flex-1 h-px bg-surface-500/20" />
-        </div>
+        <div :class="appConfig.layout.divider" />
 
         <!-- Resend -->
-
-        <div :class="`flex flex-col items-center ${SPACING_TOKENS.gap.xs}`">
-          <p class="text-xs text-surface-400">{{ UI_TEXT.auth.noCode }}</p>
+        <div :class="appConfig.layout.homeHeroSection">
+          <p :class="[TEXT_SIZES.xs, COLOR_TOKENS.text.muted]">{{ UI_TEXT.auth.noCode }}</p>
           <BaseButton
             :label="UI_TEXT.auth.resend"
             variant="link"
-            class="text-sm font-semibold text-brand-500 hover:text-brand-400 disabled:opacity-40 disabled:cursor-not-allowed"
+            :class="[TEXT_SIZES.sm, FONT_WEIGHTS.semibold, COLOR_TOKENS.text.brandAccent]"
             :disabled="isResending || resendCooldown > 0 || isVerified"
             :loading="isResending"
             @click="emit('resend')"
           />
-          <p v-if="resendCooldown > 0" class="text-xs text-surface-400">
+          <p v-if="resendCooldown > 0" :class="[TEXT_SIZES.xs, COLOR_TOKENS.text.muted]">
             {{ ' ' + UI_TEXT.auth.resendAvailable + ' ' }}{{ resendCooldown
             }}{{ UI_TEXT.auth.seconds + ' ' }}
           </p>
-          <div
-            v-if="resendSuccess"
-            :class="appConfig.typography.formStatusSuccess"
-            class="text-xs text-center"
-          >
+          <div v-if="resendSuccess" :class="appConfig.typography.formStatusSuccess">
             {{ ' ' + UI_TEXT.auth.resent + ' ' }}
           </div>
-          <div
-            v-if="resendError"
-            :class="appConfig.typography.formStatusError"
-            class="text-xs text-center"
-          >
+          <div v-if="resendError" :class="appConfig.typography.formStatusError">
             {{ getErrorMessage(resendError) }}
           </div>
         </div>
@@ -108,7 +92,7 @@
         to="/register"
         :label="UI_TEXT.auth.backToRegister"
         variant="actionAccentHeroButton"
-        class="w-full"
+        :class="CARD_CONFIG.slots.root"
       />
     </div>
   </div>

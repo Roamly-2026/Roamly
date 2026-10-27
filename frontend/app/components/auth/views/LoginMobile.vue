@@ -22,7 +22,7 @@
           :label="UI_TEXT.auth.emailLabel"
           type="email"
           :placeholder="UI_TEXT.auth.emailPlaceholder"
-          :ui="{ base: `!${SPACING_TOKENS.px.md}` }"
+          :ui="{ base: SPACING_TOKENS.pxImportant.md }"
         />
 
         <BaseInput
@@ -31,7 +31,7 @@
           :label="UI_TEXT.auth.passwordLabel"
           type="password"
           :placeholder="UI_TEXT.auth.passwordPlaceholder"
-          :ui="{ base: `!${SPACING_TOKENS.px.md}` }"
+          :ui="{ base: SPACING_TOKENS.pxImportant.md }"
         />
 
         <div v-if="error" :class="appConfig.typography.formStatusError">
@@ -41,22 +41,20 @@
           {{ UI_TEXT.auth.loginSuccess }}
         </div>
 
-        <!-- ACTIONS (Mobilos elrendezés: egymás alatt, teljes szélességgel) -->
-
-        <div
-          :class="`flex flex-col-reverse ${SPACING_TOKENS.gap.md} ${SPACING_TOKENS.pt.lg} w-full`"
-        >
+        <!-- ACTIONS -->
+        <div :class="[appConfig.layout.modalActions, SPACING_TOKENS.pt.lg]">
           <BaseButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             :disabled="isLoading"
-            class="w-full"
+            :class="CARD_CONFIG.slots.root"
             @click="clearForm"
           />
           <BaseButton
             type="submit"
             :label="UI_TEXT.auth.loginTitle"
-            class="w-full"
+            variant="actionOkButton"
+            :class="CARD_CONFIG.slots.root"
             :loading="isLoading"
           />
         </div>
@@ -70,7 +68,7 @@
         :label="UI_TEXT.auth.registerPrompt"
         variant="actionAccentHeroButton"
         :tooltip="UI_TEXT.tooltips.registerPrompt"
-        class="w-full"
+        :class="CARD_CONFIG.slots.root"
       />
     </div>
   </div>

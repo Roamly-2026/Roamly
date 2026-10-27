@@ -84,6 +84,8 @@ export const SIZE_TOKENS = {
     lg: 'min-h-11 h-11',
     xl: 'min-h-12 h-12',
     '2xl': 'min-h-14 h-14',
+    otpDesktop: 'w-12 h-14',
+    otpMobile: 'w-11 h-13',
   },
   // Square icons
   icon: {
@@ -92,6 +94,7 @@ export const SIZE_TOKENS = {
     lg: 'w-6 h-6',
     tall: '!w-6 !h-8',
     button: 'w-10 h-10',
+    hero: 'w-14 h-14'
   },
   // Avatars & Profile Pictures
   avatar: {

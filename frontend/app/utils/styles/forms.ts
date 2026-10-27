@@ -46,6 +46,13 @@ export const INPUT_CONFIG = {
   },
 } as const;
 
+export const OTP_INPUT_CONFIG = {
+  desktop: `${SIZE_TOKENS.controlHeight.otpDesktop} text-center ${TEXT_SIZES['2xl']} ${FONT_WEIGHTS.bold} ${RADIUS_TOKENS.md} ${INPUT_APPEARANCES.glass} outline-none ${INTERACTION_TOKENS.all} caret-btn-primary disabled:${OPACITY_TOKENS.muted}`,
+  mobile: `${SIZE_TOKENS.controlHeight.otpMobile} text-center ${TEXT_SIZES.xl} ${FONT_WEIGHTS.bold} ${RADIUS_TOKENS.md} ${INPUT_APPEARANCES.glass} outline-none ${INTERACTION_TOKENS.all} caret-btn-primary disabled:${OPACITY_TOKENS.muted}`,
+  error: BORDER_TOKENS.ringError,
+  success: BORDER_TOKENS.ringSuccess,
+} as const;
+
 // 4. TEXTAREA CONFIG
 export const TEXTAREA_CONFIG = {
   slots: {

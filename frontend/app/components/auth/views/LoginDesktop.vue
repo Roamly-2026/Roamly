@@ -47,7 +47,12 @@
             :disabled="isLoading"
             @click="clearForm"
           />
-          <BaseButton type="submit" :label="UI_TEXT.auth.loginTitle" :loading="isLoading" />
+          <BaseButton
+            type="submit"
+            :label="UI_TEXT.auth.loginTitle"
+            variant="actionOkButton"
+            :loading="isLoading"
+          />
         </div>
       </UForm>
     </BaseCard>
@@ -58,7 +63,7 @@
         :label="UI_TEXT.auth.registerPrompt"
         variant="actionAccentHeroButton"
         :tooltip="UI_TEXT.tooltips.registerPrompt"
-        class="w-full"
+        :class="CARD_CONFIG.slots.root"
       />
     </div>
   </div>

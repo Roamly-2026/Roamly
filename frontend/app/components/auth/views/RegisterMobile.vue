@@ -63,22 +63,20 @@
           {{ UI_TEXT.auth.registerSuccess }}
         </div>
 
-        <!-- ACTIONS (Mobilos elrendezés: egymás alatt, teljes szélességgel) -->
-
-        <div
-          :class="`flex flex-col-reverse ${SPACING_TOKENS.gap.md} ${SPACING_TOKENS.pt.lg} w-full`"
-        >
+        <!-- ACTIONS -->
+        <div :class="[appConfig.layout.modalActions, SPACING_TOKENS.pt.lg]">
           <BaseButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             :disabled="isLoading"
-            class="w-full"
+            :class="CARD_CONFIG.slots.root"
             @click="clearForm"
           />
           <BaseButton
             type="submit"
             :label="UI_TEXT.auth.registerTitle"
-            class="w-full"
+            variant="actionOkButton"
+            :class="CARD_CONFIG.slots.root"
             :loading="isLoading"
           />
         </div>
@@ -90,7 +88,7 @@
         to="/login"
         :label="UI_TEXT.auth.loginInstead"
         variant="actionAccentHeroButton"
-        class="w-full"
+        :class="CARD_CONFIG.slots.root"
       />
     </div>
   </div>

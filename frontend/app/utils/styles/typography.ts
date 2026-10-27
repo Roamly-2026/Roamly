@@ -40,7 +40,7 @@ export const TYPOGRAPHY_CONFIG = {
   sectionTitleTransparent: `${TEXT_SIZES['2xl']} ${FONT_WEIGHTS.bold} ${COLOR_TOKENS.text.inverse} ${TEXT_TRACKING.wide} text-center flex-1`,
 
   cardTitle: `${TEXT_SIZES.xl} ${FONT_WEIGHTS.bold} ${TEXT_TRACKING.wide} ${COLOR_TOKENS.text.primary} truncate block w-full`,
-  cardTitleCenter: `${TEXT_SIZES.xl} ${FONT_WEIGHTS.bold} text-center ${TEXT_TRACKING.wide} ${COLOR_TOKENS.text.primary} truncate ${SPACING_TOKENS.pr.sm}`,
+  cardTitleCenter: `${TEXT_SIZES.xl} ${FONT_WEIGHTS.bold} text-center ${TEXT_TRACKING.wide} ${COLOR_TOKENS.text.primary} truncate w-full`,
 
   // ------------------- STATUS & ERRORS -------------------
   statusLoading: `text-center ${SPACING_TOKENS.py.xl} ${COLOR_TOKENS.text.inverse}`,

@@ -29,6 +29,7 @@ export const LAYOUT_CONFIG = {
   homeHeroSection: `flex flex-col items-center text-center ${SPACING_TOKENS.mt.lg} ${SIZE_TOKENS.container.contentLg} scroll-mt-24`,
   homeCardsSection: `flex flex-col md:flex-row flex-wrap ${SPACING_TOKENS.responsive.gridGap} w-full ${SIZE_TOKENS.container.contentXl} ${SPACING_TOKENS.mb.xl}`,
   homeContentSection: `flex flex-col items-center text-center ${SIZE_TOKENS.container.contentLg} ${SPACING_TOKENS.pt.xl} ${BORDER_TOKENS.dividerTop} scroll-mt-24`,
+  cardContentCenter: `flex flex-col items-center justify-center text-center ${SPACING_TOKENS.gap.sm} w-full h-full`,
 
   // ------------------- AUTH PAGES (Login / Register) -------------------
   mainAuth: `flex-1 flex items-center justify-center w-full ${SPACING_TOKENS.responsive.cardPadding}`,

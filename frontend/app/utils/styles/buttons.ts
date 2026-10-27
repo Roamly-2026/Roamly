@@ -16,7 +16,7 @@ export const BUTTON_SIZES = {
 
 // 2. BUTTON APPEARANCES
 export const BUTTON_APPEARANCES = {
-  primary: `${COLOR_TOKENS.button.primary} ${SHADOW_TOKENS.sm}`,
+  primary: `${COLOR_TOKENS.button.primary} ${SHADOW_TOKENS.sm} ${INTERACTION_TOKENS.base}`,
   primaryElevated: `${COLOR_TOKENS.button.primary} ${SHADOW_TOKENS.button} ${INTERACTION_TOKENS.lift}`,
 
   secondary: `${COLOR_TOKENS.button.secondary} ${SHADOW_TOKENS.sm}`,
@@ -24,7 +24,7 @@ export const BUTTON_APPEARANCES = {
 
   // Outline / Hollow styles
   outlinePrimary: `${COLOR_TOKENS.text.brandAccent} ${BORDER_TOKENS.ringBrandMedium} hover:${COLOR_TOKENS.surface.brandTint}`,
-  outlineSecondary: `bg-surface-card/50 ${BORDER_TOKENS.ringSecondary} text-btn-secondary hover:bg-btn-secondary hover:text-btn-secondary-text`,
+  outlineSecondary: `bg-surface-card/50 ${BORDER_TOKENS.ringSecondary} text-btn-secondary hover:bg-btn-secondary hover:text-btn-secondary-text ${SHADOW_TOKENS.button} ${INTERACTION_TOKENS.lift}`,
 
   // Glass styles
   glass: `${GLASS_TOKENS.default} ${COLOR_TOKENS.text.primary} ${BORDER_TOKENS.ringSubtle} hover:bg-surface-card/90`,

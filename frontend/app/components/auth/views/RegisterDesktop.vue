@@ -70,7 +70,12 @@
             :disabled="isLoading"
             @click="clearForm"
           />
-          <BaseButton type="submit" :label="UI_TEXT.auth.registerTitle" :loading="isLoading" />
+          <BaseButton
+            type="submit"
+            :label="UI_TEXT.auth.registerTitle"
+            variant="actionOkButton"
+            :loading="isLoading"
+          />
         </div>
       </UForm>
     </BaseCard>
@@ -80,7 +85,7 @@
         to="/login"
         :label="UI_TEXT.auth.loginInstead"
         variant="actionAccentHeroButton"
-        class="w-full"
+        :class="CARD_CONFIG.slots.root"
       />
     </div>
   </div>
