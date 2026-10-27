@@ -68,3 +68,12 @@ export const BUTTON_VARIANTS = {
   smallDangerActionButton: `${BASE_BUTTON} ${BUTTON_SIZES.sm} ${BUTTON_APPEARANCES.danger}`,
   actionDangerButton: `${BASE_BUTTON} ${BUTTON_SIZES.lg} ${BUTTON_APPEARANCES.dangerElevated}`,
 } as const;
+
+export const BUTTON_CONFIG = {
+  variants: {
+    variant: BUTTON_VARIANTS,
+  },
+  defaultVariants: {
+    variant: 'actionOkButton',
+  },
+} as const;

@@ -2,15 +2,17 @@
 <template>
   <header :class="[appConfig.layout.headerBase, appConfig.layout.headerSticky]">
     <!-- BACK BUTTON SECTION -->
-
-    <div :class="['flex-1 flex items-center', SPACING_TOKENS.gap.md]">
-      <BaseButton icon="i-heroicons-arrow-left" variant="glassIconButton" class="shrink-0" to="/" />
+    <div :class="appConfig.layout.headerLeft">
+      <BaseButton icon="i-heroicons-arrow-left" variant="glassIconButton" to="/" />
     </div>
 
     <!-- LOGO SECTION -->
-    <div class="flex-1 flex justify-center">
+    <div :class="appConfig.layout.headerCenter">
       <NuxtLink to="/" :class="appConfig.layout.logoWrapper">
-        <UIcon name="i-heroicons-map-pin" class="w-7 h-7 text-brand-500 hidden sm:block" />
+        <UIcon
+          name="i-heroicons-map-pin"
+          :class="[SIZE_TOKENS.icon.lg, COLOR_TOKENS.text.brandAccent]"
+        />
         <span :class="appConfig.typography.logoText">{{ UI_TEXT.common.brandName }}</span>
       </NuxtLink>
     </div>
@@ -18,16 +20,15 @@
     <!-- USER ACTIONS SECTION -->
     <div :class="appConfig.layout.headerRight">
       <ClientOnly>
-        <div :class="['flex items-center', SPACING_TOKENS.responsive.listGap]">
+        <div :class="appConfig.layout.actionGroup">
           <template v-if="isAuthenticated">
-            <span class="font-bold text-dark-text tracking-wide text-sm hidden sm:block">
+            <span :class="appConfig.typography.headerUsername">
               {{ userProfile?.username || UI_TEXT.common.loading }}
             </span>
             <BaseButton
               icon="i-heroicons-arrow-left-on-rectangle"
               :label="UI_TEXT.auth.logoutTitle"
               variant="smallHollowActionButton"
-              class="hidden sm:flex"
               @click="handleLogout"
             />
 
@@ -37,16 +38,12 @@
               :items="profileDropdownItems"
               :content="{ align: 'end', side: 'bottom', sideOffset: 8 }"
             >
-              <BaseButton
-                variant="ghost"
-                class="p-0 m-0 rounded-full hover:bg-transparent focus-visible:ring-2 focus-visible:ring-brand-500 transition-transform hover:scale-105 cursor-pointer"
-              >
-                <UAvatar
-                  :src="userProfile?.profile_image_url || undefined"
-                  :alt="userProfile?.username || UI_TEXT.common.user"
-                  icon="i-heroicons-user"
-                />
-              </BaseButton>
+              <UAvatar
+                :src="userProfile?.profile_image_url || undefined"
+                :alt="userProfile?.username || UI_TEXT.common.user"
+                icon="i-heroicons-user"
+                :class="INTERACTION_TOKENS.lift"
+              />
             </UDropdownMenu>
 
             <!-- Mobile menu -->
@@ -60,16 +57,12 @@
             <UDropdownMenu
               :items="profileDropdownItems"
               :content="{ align: 'end', side: 'bottom', sideOffset: 8 }"
-              :ui="{
-                content: 'w-36',
-                itemLeadingIcon: 'w-10 h-10 text-brand-500 shrink-0',
-                item: `${SPACING_TOKENS.gap.sm} text-md`,
-              }"
+              :ui="DROPDOWN_MENU_CONFIG.slots"
             >
               <BaseButton
                 icon="i-heroicons-bars-3"
                 variant="ghost"
-                :class="['md:hidden text-dark-text', SPACING_TOKENS.p.xs]"
+                :class="appConfig.layout.mobileMenuButton"
               />
             </UDropdownMenu>
           </template>

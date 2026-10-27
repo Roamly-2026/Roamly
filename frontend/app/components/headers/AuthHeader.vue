@@ -2,9 +2,12 @@
 <template>
   <header :class="[appConfig.layout.headerBase, appConfig.layout.headerRelative]">
     <!-- LOGO SECTION -->
-    <div class="flex-1">
+    <div :class="appConfig.layout.headerLeft">
       <NuxtLink to="/" :class="appConfig.layout.logoWrapper">
-        <UIcon name="i-heroicons-map-pin" class="w-7 h-7 text-brand-500" />
+        <UIcon
+          name="i-heroicons-map-pin"
+          :class="[SIZE_TOKENS.icon.lg, COLOR_TOKENS.text.brandAccent]"
+        />
         <span :class="appConfig.typography.logoText">{{ UI_TEXT.common.brandName }}</span>
       </NuxtLink>
     </div>

@@ -40,7 +40,7 @@ export const TYPOGRAPHY_CONFIG = {
   sectionTitleTransparent: `${TEXT_SIZES['2xl']} ${FONT_WEIGHTS.bold} ${COLOR_TOKENS.text.inverse} ${TEXT_TRACKING.wide} text-center flex-1`,
 
   cardTitle: `${TEXT_SIZES.xl} ${FONT_WEIGHTS.bold} ${TEXT_TRACKING.wide} ${COLOR_TOKENS.text.primary} truncate block w-full`,
-  cardTitleCenter: `${TEXT_SIZES.xl} ${FONT_WEIGHTS.bold} text-center ${TEXT_TRACKING.wide} ${COLOR_TOKENS.text.primary} truncate w-full`,
+  cardTitleCenter: `${TEXT_SIZES.xl} ${FONT_WEIGHTS.bold} text-center ${TEXT_TRACKING.wide} ${COLOR_TOKENS.text.primary} truncate `,
 
   // ------------------- STATUS & ERRORS -------------------
   statusLoading: `text-center ${SPACING_TOKENS.py.xl} ${COLOR_TOKENS.text.inverse}`,
@@ -56,6 +56,8 @@ export const TYPOGRAPHY_CONFIG = {
   // ------------------- HEADER NAV TEXTS -------------------
   logoText: `${TEXT_SIZES.lg} md:${TEXT_SIZES.xl} ${FONT_WEIGHTS.semibold} ${TEXT_TRACKING.wider}`,
   navLink: `hover:${COLOR_TOKENS.text.brandAccent} hover:underline underline-offset-4 transition-colors`,
+  headerUsername: `${FONT_WEIGHTS.bold} ${COLOR_TOKENS.text.primary} ${TEXT_TRACKING.wide} ${TEXT_SIZES.sm} hidden sm:block`,
+  loadingTitle: `${TEXT_SIZES['2xl']} ${FONT_WEIGHTS.bold} ${COLOR_TOKENS.text.primary} ${TEXT_TRACKING.wider} animate-pulse`,
 
   // ------------------- AUTH TEXTS -------------------
   authTitle: `${TEXT_SIZES['2xl']} ${FONT_WEIGHTS.medium} ${TEXT_TRACKING.wide} ${COLOR_TOKENS.text.brand}`,

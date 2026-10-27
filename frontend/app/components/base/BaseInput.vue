@@ -12,14 +12,10 @@
 </template>
 
 <script setup lang="ts">
-/* --- IMPORTS --- */
 import type { InputProps } from '@nuxt/ui';
 
-/* --- OPTIONS --- */
-// Attributes (type, placeholder, icon...) belong to the input, not to the form field wrapper
 defineOptions({ inheritAttrs: false });
 
-/* --- PROPS & MODEL --- */
 withDefaults(
   defineProps<{
     name?: string;

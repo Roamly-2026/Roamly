@@ -10,7 +10,7 @@
       <slot name="body">
         <p :class="appConfig.typography.modalText">{{ message }}</p>
       </slot>
-      <p v-if="errorText" :class="[appConfig.typography.modalErrorBox, 'mt-2']">
+      <p v-if="errorText" :class="[appConfig.typography.modalErrorBox, SPACING_TOKENS.mt.sm]">
         {{ errorText }}
       </p>
     </template>
@@ -25,7 +25,7 @@
         />
         <BaseButton
           :label="confirmText"
-          :class="[appConfig.typography.modalActionBtnOk, confirmBtnClass]"
+          :class="[appConfig.typography.modalActionBtnOk, confirmBtnClass || 'bg-status-error text-btn-danger-text']"
           :loading="loading"
           @click="$emit('confirm')"
         />

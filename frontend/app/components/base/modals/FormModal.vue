@@ -12,7 +12,7 @@
         <slot name="body">
           <slot></slot>
         </slot>
-        <p v-if="errorText" :class="[appConfig.typography.inputError, 'mt-2']">
+        <p v-if="errorText" :class="[appConfig.typography.inputError, SPACING_TOKENS.mt.sm]">
           {{ errorText }}
         </p>
       </form>

@@ -20,9 +20,16 @@ export const LAYOUT_CONFIG = {
   headerBase: `flex items-center justify-between ${SPACING_TOKENS.px.md} md:${SPACING_TOKENS.px.lg} ${SPACING_TOKENS.py.md} ${GLASS_TOKENS.default} ${SHADOW_TOKENS.sm} ${Z_INDEX_TOKENS.header} ${BORDER_TOKENS.dividerBottom}`,
   headerSticky: 'sticky top-0',
   headerRelative: 'relative',
+  headerLeft: `flex-1 flex items-center ${SPACING_TOKENS.gap.md}`,
+  headerCenter: 'flex-1 flex justify-center items-center',
   logoWrapper: `flex items-center ${SPACING_TOKENS.gap.sm} ${COLOR_TOKENS.text.primary} ${OPACITY_TOKENS.hoverSoft} transition-opacity w-max`,
-  navWrapper: `hidden md:flex ${SPACING_TOKENS.gap.xl} ${FONT_WEIGHTS.bold} ${TEXT_TRACKING.wide}`,
+  navWrapper: `hidden md:flex flex-1 justify-center items-center ${SPACING_TOKENS.gap.xl} ${FONT_WEIGHTS.bold} ${TEXT_TRACKING.wide}`,
   headerRight: `flex-1 flex justify-end items-center ${SPACING_TOKENS.responsive.listGap}`,
+  mobileMenuButton: `md:hidden ${COLOR_TOKENS.text.primary} ${SPACING_TOKENS.p.xs}`,
+
+  // ------------------- LOADING SCREEN -------------------
+  loadingScreenWrapper: `fixed inset-0 ${Z_INDEX_TOKENS.modal} ${GLASS_TOKENS.page} flex flex-col items-center justify-center ${SPACING_TOKENS.gap.lg}`,
+  loadingSpinner: `${SIZE_TOKENS.avatar.lg} ${COLOR_TOKENS.text.brandAccent} animate-spin`,
 
   // ------------------- HOME PAGE -------------------
   homeWrapper: `flex-1 flex flex-col items-center ${SPACING_TOKENS.px.md} md:${SPACING_TOKENS.px.lg} ${SPACING_TOKENS.py.xl} md:${SPACING_TOKENS.py['3xl']} ${SPACING_TOKENS.responsive.containerGap} relative ${Z_INDEX_TOKENS.base} w-full`,
