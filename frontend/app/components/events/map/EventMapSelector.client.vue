@@ -1,24 +1,19 @@
 <!-- frontend/app/components/events/map/EventMapSelector -->
 <template>
-  <div class="relative w-full h-full min-h-100 flex flex-col">
-    <div
-      ref="mapContainer"
-      class="w-full h-full z-0 rounded-md border-x border-t border-gray-200"
-    ></div>
+  <div :class="LAYOUT_CONFIG.mapSelectorWrapper">
+    <div ref="mapContainer" :class="LAYOUT_CONFIG.mapCanvas"></div>
 
-    <div
-      :class="`w-full bg-surface-50 border border-gray-200 rounded-b-md ${SPACING_TOKENS.p.md} flex flex-col sm:flex-row justify-between items-center ${SPACING_TOKENS.gap.md} z-10 shrink-0`"
-    >
-      <div class="flex-1 min-w-0">
-        <p class="text-sm font-bold text-dark-text">{{ UI_TEXT.map.selectedLocation }}</p>
-        <p
-          :class="`text-sm text-dark-text/80 break-words whitespace-normal w-full ${SPACING_TOKENS.mt.xs}`"
-        >
-          <span v-if="isLoadingAddress" class="opacity-60 animate-pulse">{{
+    <div :class="LAYOUT_CONFIG.mapSelectorFooter">
+      <div :class="CALENDAR_CONFIG.participantCardInfo">
+        <p :class="[TEXT_SIZES.sm, FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]">
+          {{ UI_TEXT.map.selectedLocation }}
+        </p>
+        <p :class="[TEXT_SIZES.sm, COLOR_TOKENS.text.primarySoft, SPACING_TOKENS.mt.xs]">
+          <span v-if="isLoadingAddress" :class="[OPACITY_TOKENS.subtle, 'animate-pulse']">{{
             UI_TEXT.map.loadingAddress
           }}</span>
           <span v-else-if="currentSelection">{{ currentSelection.address }}</span>
-          <span v-else class="opacity-60">{{ UI_TEXT.map.selectLocation }}</span>
+          <span v-else :class="OPACITY_TOKENS.subtle">{{ UI_TEXT.map.selectLocation }}</span>
         </p>
       </div>
       <BaseButton

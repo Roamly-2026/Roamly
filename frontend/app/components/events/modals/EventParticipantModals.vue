@@ -15,8 +15,8 @@
             :class="appConfig.calendar.participantCard"
             @click="handleOpenUserProfile(user)"
           >
-            <div class="flex items-center justify-between w-full">
-              <div class="flex items-center gap-5 cursor-pointer">
+            <div :class="appConfig.calendar.previewTitleRow">
+              <div :class="appConfig.layout.actionGroup">
                 <UAvatar
                   :alt="user.username"
                   :src="user.profile_image_url || undefined"
@@ -26,10 +26,13 @@
                 />
 
                 <div :class="appConfig.calendar.participantCardInfo">
-                  <div class="flex items-center gap-1.5">
+                  <div :class="appConfig.calendar.headerTitleRow">
                     <h4 :class="appConfig.calendar.participantCardName">{{ user.username }}</h4>
                     <UTooltip v-if="isGroupLeader(user)" :text="UI_TEXT.events.groupLeader">
-                      <UIcon name="i-heroicons-star" class="w-4 h-4 text-amber-500" />
+                      <UIcon
+                        name="i-heroicons-star"
+                        :class="[SIZE_TOKENS.icon.sm, COLOR_TOKENS.text.brandAccent]"
+                      />
                     </UTooltip>
                   </div>
                   <span :class="appConfig.calendar.participantCardRole">
@@ -44,22 +47,20 @@
                 variant="ghostDangerIconButton"
                 :loading="removeParticipantMutation.isLoading.value"
                 :tooltip="UI_TEXT.tooltips.removeParticipant"
-                :tooltip-ui="{ content: 'z-[9999]' }"
-                :tooltip-popper="{ placement: 'top', strategy: 'fixed' }"
                 @click.stop="eventsStore.openRemoveParticipantModal(user)"
               />
             </div>
           </div>
           <div
             v-if="eventsStore.currentEventParticipants.length === 0"
-            class="text-sm font-medium text-dark-text/50 p-4"
+            :class="appConfig.calendar.emptyPreview"
           >
             {{ UI_TEXT.events.noParticipants }}
           </div>
         </div>
       </template>
       <template #footer>
-        <div class="flex justify-end w-full">
+        <div :class="appConfig.calendar.filterButtonWrapper">
           <BaseButton
             :label="UI_TEXT.common.close"
             variant="actionCancelButton"
@@ -82,8 +83,11 @@
     >
       <template #body>
         <p :class="appConfig.typography.modalText">
-          {{ ' ' + UI_TEXT.events.removeBeforeName }}{{ eventsStore.participantToRemove?.username
-          }}{{ UI_TEXT.events.removeAfterName + ' ' }}
+          {{ ' ' + UI_TEXT.events.removeBeforeName }}
+          <span :class="appConfig.typography.modalInlineHighlight">{{
+            eventsStore.participantToRemove?.username
+          }}</span>
+          {{ UI_TEXT.events.removeAfterName + ' ' }}
         </p>
       </template>
     </ConfirmModal>
@@ -95,26 +99,22 @@
       :ui-size="appConfig.layout.modalSizeMd"
     >
       <template #body>
-        <div class="flex flex-col gap-4">
-          <p class="text-sm text-dark-text/70">{{ UI_TEXT.events.selectMembers }}</p>
-          <div
-            :class="appConfig.calendar.participantModalScroll"
-            class="flex flex-wrap gap-4 max-h-60 overflow-y-auto p-1"
-          >
+        <div :class="appConfig.layout.modalForm">
+          <p :class="appConfig.typography.modalText">{{ UI_TEXT.events.selectMembers }}</p>
+          <div :class="appConfig.calendar.participantModalScroll">
             <div
               v-for="user in availableGroupMembers"
               :key="user.email"
               :class="[
                 appConfig.calendar.participantCard,
-                'cursor-pointer transition-colors',
                 selectedEmailsToAdd.includes(user.email)
-                  ? 'ring-2 ring-brand-500 bg-brand-50'
-                  : 'hover:bg-surface-100',
+                  ? [BORDER_TOKENS.ringBrand, COLOR_TOKENS.surface.brandTint]
+                  : '',
               ]"
               @click="toggleMemberSelection(user.email)"
             >
-              <div class="flex items-center justify-between w-full">
-                <div class="flex items-center gap-5">
+              <div :class="appConfig.calendar.previewTitleRow">
+                <div :class="appConfig.layout.actionGroup">
                   <UAvatar
                     :alt="user.username"
                     :src="user.profile_image_url || undefined"
@@ -128,19 +128,23 @@
                   </div>
                 </div>
                 <UIcon
-                  v-if="selectedEmailsToAdd.includes(user.email)"
-                  name="i-heroicons-check-circle"
-                  class="w-7 h-7 text-brand-500 shrink-0"
+                  :name="
+                    selectedEmailsToAdd.includes(user.email)
+                      ? 'i-heroicons-check-circle-solid'
+                      : 'i-heroicons-plus-circle'
+                  "
+                  :class="[
+                    SIZE_TOKENS.icon.lg,
+                    selectedEmailsToAdd.includes(user.email)
+                      ? COLOR_TOKENS.text.brandAccent
+                      : COLOR_TOKENS.text.primaryFaint,
+                  ]"
                 />
-                <div
-                  v-else
-                  class="w-6 h-6 rounded-full border-2 border-dark-text/20 shrink-0"
-                ></div>
               </div>
             </div>
             <div
               v-if="availableGroupMembers.length === 0"
-              class="text-sm font-medium text-dark-text/50 p-4"
+              :class="appConfig.calendar.emptyPreview"
             >
               {{ ' ' + UI_TEXT.events.noAvailableMembers + ' ' }}
             </div>
@@ -148,15 +152,18 @@
         </div>
       </template>
       <template #footer>
-        <div class="flex justify-between w-full gap-3">
+        <div :class="appConfig.layout.modalActions">
           <BaseButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
+            :class="appConfig.typography.modalActionBtnCancel"
             :disabled="addParticipantsMutation.isLoading.value"
             @click="closeAddMembersModal"
           />
           <BaseButton
             :label="UI_TEXT.events.addSelected"
+            variant="actionOkButton"
+            :class="appConfig.typography.modalActionBtnOk"
             :loading="addParticipantsMutation.isLoading.value"
             :disabled="selectedEmailsToAdd.length === 0"
             @click="submitNewMembers"

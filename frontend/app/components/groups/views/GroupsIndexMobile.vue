@@ -5,11 +5,10 @@
     <h1 :class="appConfig.typography.pageTitle">{{ UI_TEXT.groups.heading }}</h1>
 
     <!-- ACTION BUTTONS -->
-    <div :class="[appConfig.layout.actionGroup, 'justify-center flex-wrap']">
+    <div :class="appConfig.calendar.mobileToolbar">
       <BaseSearchInput
         v-model="searchQuery"
         :placeholder="UI_TEXT.groups.searchGroups"
-        class="flex-1 min-w-50"
       />
 
       <BaseButton
@@ -37,20 +36,17 @@
       </div>
 
       <!-- GROUPS GRID -->
-      <div
-        v-else-if="groupsList.length > 0"
-        :class="`flex flex-col ${SPACING_TOKENS.gap.lg} w-full`"
-      >
+      <div v-else-if="groupsList.length > 0" :class="appConfig.layout.cardContent">
         <div v-if="filteredGroups.length > 0" :class="appConfig.layout.cardGrid">
           <BaseCard
-            v-for="group in groupsList"
+            v-for="group in filteredGroups"
             :key="group.uuid"
             variant="pointedGlass"
-            class="relative flex flex-col justify-between cursor-pointer w-full"
+            :class="[appConfig.layout.headerRelative, INTERACTION_TOKENS.base]"
             @click="router.push(`/groups/${group.uuid}/members`)"
           >
             <!-- LEAVE BUTTON -->
-            <div class="absolute top-4 left-4 z-10">
+            <div :class="appConfig.layout.cardCornerLeft">
               <BaseButton
                 icon="i-heroicons-arrow-right-on-rectangle"
                 variant="ghostDangerIconButton"
@@ -60,7 +56,10 @@
             </div>
 
             <!-- DELETE BUTTON -->
-            <div v-if="group.role.toLowerCase() === 'leader'" class="absolute top-4 right-4 z-10">
+            <div
+              v-if="group.role.toLowerCase() === 'leader'"
+              :class="appConfig.layout.cardCornerRight"
+            >
               <BaseButton
                 icon="i-heroicons-trash"
                 variant="ghostDangerIconButton"
@@ -72,18 +71,21 @@
             <!-- CARD CONTENT -->
             <div :class="appConfig.layout.cardContent">
               <h3 :class="appConfig.typography.cardTitleCenter">{{ group.name }}</h3>
-              <p class="text-sm text-center text-dark-text/80 font-medium">
+              <p :class="[TEXT_SIZES.sm, COLOR_TOKENS.text.primarySoft, FONT_WEIGHTS.medium]">
                 {{ UI_TEXT.groups.yourRoleLabel }}
-                <span class="font-bold capitalize">{{ group.role }}</span>
+                <span :class="[FONT_WEIGHTS.bold, 'capitalize']">{{ group.role }}</span>
               </p>
               <div :class="appConfig.layout.cardFooter">
                 <div>
-                  <p class="opacity-70">{{ UI_TEXT.groups.createdAtLabel }}</p>
-                  <p class="font-semibold">{{ group.created_at }}</p>
+                  <p :class="OPACITY_TOKENS.subtle">{{ UI_TEXT.groups.createdAtLabel }}</p>
+                  <p :class="FONT_WEIGHTS.semibold">{{ group.created_at }}</p>
                 </div>
-                <div :class="`flex items-center ${SPACING_TOKENS.gap.xs} font-semibold`">
+                <div :class="[appConfig.calendar.headerTitleRow, FONT_WEIGHTS.semibold]">
                   <span>{{ group.current_size }}</span>
-                  <UIcon name="i-heroicons-user" class="w-5 h-5 text-brand-500" />
+                  <UIcon
+                    name="i-heroicons-user"
+                    :class="[SIZE_TOKENS.icon.md, COLOR_TOKENS.text.brandAccent]"
+                  />
                 </div>
               </div>
             </div>
@@ -91,8 +93,8 @@
         </div>
 
         <!-- INFINITE SCROLL TRIGGER -->
-        <div ref="loadMoreTrigger" class="h-10 w-full flex items-center justify-center">
-          <span v-if="isFetchingNextPage" class="text-dark-text/70 text-sm">
+        <div ref="loadMoreTrigger" :class="appConfig.layout.infiniteScrollTrigger">
+          <span v-if="isFetchingNextPage" :class="[COLOR_TOKENS.text.primaryMuted, TEXT_SIZES.sm]">
             {{ UI_TEXT.groups.loadingGroups }}
           </span>
         </div>

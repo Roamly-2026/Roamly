@@ -20,34 +20,31 @@
 
       <div :class="appConfig.calendar.headerCenter">
         <UPopover v-model:open="isGroupDropdownOpen">
-          <BaseButton
-            variant="ghost"
-            :class="`group flex items-center ${SPACING_TOKENS.gap.sm} p-0 hover:bg-transparent cursor-pointer outline-none`"
-          >
-            <h1 :class="appConfig.typography.pageTitle">
-              {{
-                isLoadingGroups
-                  ? UI_TEXT.common.loading
-                  : selectedGroupDetails?.name || UI_TEXT.events.selectGroup
-              }}
-            </h1>
-            <UIcon
-              name="i-heroicons-chevron-down"
-              class="w-5 h-5 text-surface-500 transition-transform duration-200"
-              :class="{ 'rotate-180': isGroupDropdownOpen }"
-            />
+          <BaseButton variant="ghost" :class="appConfig.calendar.mobileHeaderButton">
+            <div :class="appConfig.calendar.mobileHeaderTitleRow">
+              <h1 :class="appConfig.typography.pageTitle">
+                {{
+                  isLoadingGroups
+                    ? UI_TEXT.common.loading
+                    : selectedGroupDetails?.name || UI_TEXT.events.selectGroup
+                }}
+              </h1>
+              <UIcon
+                name="i-heroicons-chevron-down"
+                :class="[
+                  SELECT_CONFIG.slots.trailingIcon,
+                  'static pointer-events-auto',
+                  isGroupDropdownOpen ? 'rotate-180' : '',
+                ]"
+              />
+            </div>
           </BaseButton>
           <template #content>
-            <div
-              :class="[
-                appConfig.ui.wideDropdownMenu.slots.content,
-                'max-h-[50vh] overflow-y-auto custom-scrollbar',
-              ]"
-            >
+            <div :class="WIDE_DROPDOWN_MENU_CONFIG.slots.content">
               <BaseButton
                 v-for="group in userGroupsList"
                 :key="group.uuid"
-                :class="appConfig.ui.wideDropdownMenu.slots.item"
+                :class="WIDE_DROPDOWN_MENU_CONFIG.slots.item"
                 variant="ghost"
                 @click="$emit('select-group', group.uuid)"
               >
@@ -58,7 +55,7 @@
                         ? 'i-heroicons-check'
                         : 'i-heroicons-user-group'
                     "
-                    :class="appConfig.ui.wideDropdownMenu.slots.itemLeadingIcon"
+                    :class="WIDE_DROPDOWN_MENU_CONFIG.slots.itemLeadingIcon"
                   />
                 </template>
                 {{ group.name }}
@@ -66,7 +63,7 @@
             </div>
           </template>
         </UPopover>
-        <p :class="appConfig.typography.pageSubtitle" class="mt-0">{{ UI_TEXT.common.calendar }}</p>
+        <p :class="appConfig.typography.pageSubtitle">{{ UI_TEXT.common.calendar }}</p>
       </div>
 
       <div :class="appConfig.calendar.headerActionRight">
@@ -78,8 +75,7 @@
         />
         <BaseButton
           icon="i-heroicons-calendar"
-          variant="glassIconButton"
-          class="text-brand-500"
+          variant="glassIconButtonBrand"
           :to="eventsRoute"
           :tooltip="UI_TEXT.tooltips.calendar"
         />
@@ -98,15 +94,14 @@
       </div>
     </div>
 
-    <div
-      :class="`flex flex-col sm:flex-row items-center justify-between ${SPACING_TOKENS.gap.md} w-full shrink-0`"
-    >
-      <div :class="`flex items-center ${SPACING_TOKENS.gap.md} w-full sm:w-auto flex-1`">
-        <BaseSearchInput
-          v-model="searchQuery"
-          :placeholder="UI_TEXT.events.searchPlaceholder"
-          class="w-full max-w-xs"
-        />
+    <div :class="appConfig.calendar.eventsHeaderRow">
+      <div :class="appConfig.calendar.headerActionLeft">
+        <div :class="appConfig.calendar.headerSearchWrapper">
+          <BaseSearchInput
+            v-model="searchQuery"
+            :placeholder="UI_TEXT.events.searchPlaceholder"
+          />
+        </div>
 
         <UPopover v-model:open="isFilterOpen">
           <BaseButton
@@ -131,19 +126,17 @@
                   type="date"
                 />
                 <div :class="appConfig.calendar.filterButtonWrapper">
-                  <div :class="appConfig.calendar.filterButtonWrapper">
-                    <BaseButton
-                      :label="UI_TEXT.common.clearFilter"
-                      variant="smallHollowActionButton"
-                      :class="[
-                        filterStartDate || filterEndDate
-                          ? 'text-error-500 ring-error-500/40 hover:bg-error-500/20 cursor-pointer'
-                          : 'text-dark-text/40 ring-dark-text/20 bg-transparent hover:bg-transparent opacity-60 cursor-not-allowed',
-                      ]"
-                      :disabled="!filterStartDate && !filterEndDate"
-                      @click="clearFilters"
-                    />
-                  </div>
+                  <BaseButton
+                    :label="UI_TEXT.common.clearFilter"
+                    variant="smallHollowActionButton"
+                    :class="
+                      filterStartDate || filterEndDate
+                        ? appConfig.calendar.clearFilterActive
+                        : appConfig.calendar.clearFilterDisabled
+                    "
+                    :disabled="!filterStartDate && !filterEndDate"
+                    @click="clearFilters"
+                  />
                 </div>
               </div>
             </div>
@@ -154,37 +147,32 @@
           icon="i-heroicons-clock"
           :label="showOnlyActiveEvents ? UI_TEXT.events.active : UI_TEXT.common.all"
           :variant="showOnlyActiveEvents ? 'glassOutlineButton' : 'glassButton'"
-          :class="[
-            showOnlyActiveEvents ? 'ring-2 ring-success-500 text-success-600' : '',
-            `shrink-0 whitespace-nowrap ${SPACING_TOKENS.px.md} ${SPACING_TOKENS.py.sm} min-w-22!`,
-          ]"
+          :class="
+            showOnlyActiveEvents
+              ? appConfig.calendar.activeToggleFilterBtn
+              : appConfig.calendar.inactiveToggleFilterBtn
+          "
           :tooltip="showOnlyActiveEvents ? UI_TEXT.events.showAll : UI_TEXT.events.hideExpired"
           @click="showOnlyActiveEvents = !showOnlyActiveEvents"
         />
       </div>
-      <div class="shrink-0 w-full sm:w-auto flex justify-end">
+      <div :class="appConfig.calendar.headerActionRight">
         <BaseButton
-          icon="i-heroicons-calendar-days"
+          icon="i-heroicons-plus"
           :label="UI_TEXT.tooltips.addEvent"
-          variant="actionOkButton"
-          :class="`h-10 text-md ${SPACING_TOKENS.px.lg}`"
+          variant="smallPrimaryActionButton"
           @click="$emit('open-add-event')"
-        >
-          <template #leading><UIcon name="i-heroicons-plus" class="w-5 h-5 mr-1" /></template>
-        </BaseButton>
+        />
       </div>
     </div>
 
     <div :class="appConfig.calendar.eventsGrid">
       <div :class="[appConfig.calendar.columnBase, appConfig.calendar.columnDays]">
-        <div :class="[appConfig.calendar.columnHeader, 'rounded-tl-xl']">
+        <div :class="appConfig.calendar.columnHeader">
           {{ UI_TEXT.events.daysHeading }}
         </div>
         <div :class="appConfig.calendar.columnBody">
-          <div
-            v-if="isLoadingDays"
-            :class="`${SPACING_TOKENS.p.md} text-center text-sm opacity-60`"
-          >
+          <div v-if="isLoadingDays" :class="appConfig.calendar.mobileEmptyState">
             {{ UI_TEXT.events.loadingDays }}
           </div>
           <template v-else>
@@ -200,12 +188,11 @@
               ]"
               @click="$emit('update:selected-day-id', day.id)"
             >
-              <span class="font-medium text-dark-text">{{ day.date }} ({{ day.dayOfWeek }})</span>
+              <span :class="[FONT_WEIGHTS.medium, COLOR_TOKENS.text.primary]"
+                >{{ day.date }} ({{ day.dayOfWeek }})</span
+              >
             </div>
-            <div
-              v-if="!sortedDaysList.length"
-              :class="`${SPACING_TOKENS.p.md} text-center text-sm opacity-60`"
-            >
+            <div v-if="!sortedDaysList.length" :class="appConfig.calendar.mobileEmptyState">
               {{ ' ' + UI_TEXT.events.noDays + ' ' }}
             </div>
           </template>
@@ -214,14 +201,11 @@
 
       <div :class="[appConfig.calendar.columnBase, appConfig.calendar.columnEvents]">
         <div :class="appConfig.calendar.columnHeader">
-          <span class="uppercase">{{ UI_TEXT.common.events }}</span>
+          <span>{{ UI_TEXT.common.events }}</span>
           <span v-if="selectedDayDetails">{{ selectedDayDetails.date }}</span>
         </div>
         <div :class="appConfig.calendar.columnBody">
-          <div
-            v-if="isLoadingEvents"
-            :class="`${SPACING_TOKENS.p.md} text-center text-sm opacity-60`"
-          >
+          <div v-if="isLoadingEvents" :class="appConfig.calendar.mobileEmptyState">
             {{ UI_TEXT.events.loadingEvents }}
           </div>
           <template v-else>
@@ -233,11 +217,10 @@
                 appConfig.calendar.listItemHover,
                 selectedEvent?.uuid === event.uuid ? appConfig.calendar.eventListItemSelected : '',
                 event.isExpired ? appConfig.calendar.expiredItemWrapper : '',
-                'group relative flex items-center justify-between',
               ]"
               @click="$emit('update:selected-event', event)"
             >
-              <div :class="appConfig.calendar.eventItemWrapper" class="flex-1 min-w-0 pr-2 gap-3!">
+              <div :class="[appConfig.calendar.eventItemWrapper, appConfig.calendar.participantCardInfo]">
                 <UTooltip
                   :text="
                     event.is_private ? UI_TEXT.events.privateEvent : UI_TEXT.events.publicEvent
@@ -245,19 +228,19 @@
                 >
                   <UIcon
                     :name="event.is_private ? 'i-heroicons-user' : 'i-heroicons-user-group'"
-                    class="w-5 h-5 text-dark-text/70 shrink-0"
+                    :class="appConfig.calendar.eventItemIcon"
                   />
                 </UTooltip>
                 <span
                   :class="[
                     appConfig.calendar.eventItemTitle,
                     event.isExpired ? appConfig.calendar.expiredItemText : '',
+                    'truncate',
                   ]"
-                  class="truncate"
                   >{{ event.title }}</span
                 >
               </div>
-              <div :class="`flex items-center ${SPACING_TOKENS.gap.sm} shrink-0`">
+              <div :class="appConfig.calendar.eventItemWrapper">
                 <span :class="appConfig.calendar.eventItemTime"
                   >{{ event.timeStartFormatted }} - {{ event.timeEndFormatted }}</span
                 >
@@ -265,9 +248,8 @@
             </div>
             <div
               v-if="!filteredAndSortedEventsList?.length"
-              :class="`${SPACING_TOKENS.p.xl} text-center text-sm text-dark-text/60 font-medium flex flex-col items-center justify-center h-48 ${SPACING_TOKENS.gap.sm}`"
+              :class="[appConfig.calendar.emptyPreview, SPACING_TOKENS.py.xl]"
             >
-              <UIcon name="i-heroicons-calendar" class="w-8 h-8 opacity-40" />
               <span>{{
                 searchQuery ? UI_TEXT.events.noMatchingEvents : UI_TEXT.events.noEvents
               }}</span>
@@ -277,14 +259,17 @@
       </div>
 
       <div :class="[appConfig.calendar.columnBase, appConfig.calendar.columnPreview]">
-        <div :class="[appConfig.calendar.columnHeader, 'rounded-tr-xl']">
+        <div :class="appConfig.calendar.columnHeader">
           {{ UI_TEXT.events.previewHeading }}
         </div>
         <div
           v-if="selectedEvent"
-          :class="[appConfig.calendar.previewWrapper, selectedEvent.isExpired ? 'opacity-70' : '']"
+          :class="[
+            appConfig.calendar.previewWrapper,
+            selectedEvent.isExpired ? OPACITY_TOKENS.subtle : '',
+          ]"
         >
-          <div :class="appConfig.calendar.previewTitleRow" class="justify-between">
+          <div :class="appConfig.calendar.previewTitleRow">
             <div :class="appConfig.calendar.previewTypeWrapper">
               <UIcon
                 :name="selectedEvent.is_private ? 'i-heroicons-user' : 'i-heroicons-user-group'"
@@ -297,12 +282,12 @@
               }}</span>
             </div>
 
-            <div :class="`flex items-center ${SPACING_TOKENS.gap.xs}`">
+            <div :class="appConfig.calendar.headerTitleRow">
               <BaseButton
                 v-if="selectedEvent.creator?.email === currentUserEmail && selectedEvent.is_private"
                 icon="i-heroicons-user-plus"
                 variant="ghostBrandIconButton"
-                class="text-dark-text/80 hover:text-brand-500 p-1"
+                :class="COLOR_TOKENS.text.primarySoft"
                 :tooltip="UI_TEXT.events.addMembers"
                 @click="$emit('open-add-members', selectedEvent)"
               />
@@ -310,7 +295,6 @@
                 v-if="canManageEvent(selectedEvent)"
                 icon="i-heroicons-trash"
                 variant="ghostDangerIconButton"
-                class="text-error-500 hover:text-error-600"
                 :tooltip="UI_TEXT.events.deleteEvent"
                 @click="$emit('open-delete-event', selectedEvent)"
               />
@@ -318,7 +302,6 @@
                 v-if="canLeaveEvent(selectedEvent)"
                 icon="i-heroicons-arrow-right-on-rectangle"
                 variant="ghostDangerIconButton"
-                class="text-error-500 hover:text-error-600"
                 :tooltip="UI_TEXT.events.leaveEvent"
                 @click="$emit('open-leave-event', selectedEvent)"
               />
@@ -416,8 +399,8 @@
                   </BaseButton>
                 </template>
                 <template v-else>
-                  <div :class="`flex items-center ${SPACING_TOKENS.gap.sm}`">
-                    <span class="text-sm font-bold text-dark-text">{{
+                  <div :class="appConfig.calendar.eventItemWrapper">
+                    <span :class="[TEXT_SIZES.sm, FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]">{{
                       UI_TEXT.common.everyone
                     }}</span>
                   </div>
@@ -432,13 +415,7 @@
             </div>
             <div
               v-if="selectedEvent.address || selectedEvent.latitude !== null"
-              :class="[
-                appConfig.calendar.metaRowItem,
-                SPACING_TOKENS.mt.md,
-                'flex-col',
-                'items-start',
-                SPACING_TOKENS.gap.sm,
-              ]"
+              :class="[appConfig.calendar.filterFormGroup, SPACING_TOKENS.mt.md]"
             >
               <span :class="appConfig.calendar.metaLabel">{{ UI_TEXT.events.locationLabel }}</span>
               <span v-if="selectedEvent.address" :class="appConfig.calendar.metaValue">
@@ -451,7 +428,7 @@
                   selectedEvent.longitude !== null &&
                   selectedEvent.longitude !== undefined
                 "
-                :class="`w-full h-48 rounded-lg overflow-hidden border border-gray-200 ${SPACING_TOKENS.mt.xs} relative z-0`"
+                :class="appConfig.calendar.previewMapPlaceholder"
               >
                 <ClientOnly>
                   <EventMapPreview

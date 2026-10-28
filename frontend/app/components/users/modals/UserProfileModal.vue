@@ -3,12 +3,12 @@
   <BaseModal
     v-model:open="groupsStore.isUserProfileModalOpen"
     :dismissible="true"
-    ui-size="sm:max-w-lg w-full max-h-[85vh] flex flex-col"
+    :ui-size="appConfig.layout.modalSizeMd"
   >
     <template #body>
-      <div class="flex flex-col gap-5 overflow-y-auto custom-scrollbar pr-1">
+      <div :class="appConfig.layout.modalScrollBody">
         <!-- BASIC INFO -->
-        <div class="flex flex-col gap-2">
+        <div :class="appConfig.calendar.filterFormGroup">
           <div :class="appConfig.layout.profileDetailRow">
             <p :class="appConfig.typography.profileLabel">{{ UI_TEXT.auth.emailLabel }}</p>
             <p :class="appConfig.typography.profileValue">{{ userProfile?.email ?? '—' }}</p>
@@ -32,7 +32,7 @@
     </template>
 
     <template #footer>
-      <div class="flex justify-end">
+      <div :class="appConfig.calendar.filterButtonWrapper">
         <BaseButton
           :label="UI_TEXT.common.close"
           variant="actionOkButton"

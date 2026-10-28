@@ -2,9 +2,9 @@
 <template>
   <div :class="appConfig.layout.pageWrapper">
     <!-- HEADER & SEARCH SECTION -->
-    <div :class="`flex flex-col ${SPACING_TOKENS.gap.lg} w-full`">
+    <div :class="appConfig.layout.cardContent">
       <div :class="appConfig.layout.pageHeader">
-        <div :class="appConfig.layout.actionGroup" class="flex-1 justify-start">
+        <div :class="appConfig.calendar.headerActionLeft">
           <BaseButton
             v-if="isCurrentUserLeader"
             icon="i-heroicons-trash"
@@ -20,8 +20,8 @@
           />
         </div>
 
-        <div class="flex flex-col items-center justify-center shrink-0">
-          <div :class="`flex items-center ${SPACING_TOKENS.gap.xs}`">
+        <div :class="appConfig.calendar.headerCenter">
+          <div :class="appConfig.calendar.headerTitleRow">
             <h1 :class="appConfig.typography.pageTitle">
               {{ groupInfos?.name || UI_TEXT.common.loading }}
             </h1>
@@ -29,21 +29,19 @@
               v-if="isCurrentUserLeader"
               icon="i-heroicons-pencil"
               variant="ghostBrandIconButton"
-              class="w-4! h-4!"
               :tooltip="UI_TEXT.tooltips.editGroup"
               @click="groupsStore.openUpdateModal(groupInfos?.name || '')"
             />
           </div>
-          <p :class="appConfig.typography.pageSubtitle" class="mt-0!">
+          <p :class="appConfig.typography.pageSubtitle">
             {{ UI_TEXT.common.members }}
           </p>
         </div>
 
-        <div :class="appConfig.layout.actionGroup" class="flex-1 justify-end">
+        <div :class="appConfig.calendar.headerActionRight">
           <BaseButton
             icon="i-heroicons-users"
-            variant="glassIconButton"
-            class="text-brand-500"
+            variant="glassIconButtonBrand"
             :to="membersRoute"
             :tooltip="UI_TEXT.tooltips.members"
           />
@@ -68,17 +66,16 @@
         </div>
       </div>
 
-      <div :class="`flex items-center ${SPACING_TOKENS.gap.md} w-full`">
-        <div class="flex-1">
+      <div :class="appConfig.layout.flexBetween">
+        <div :class="appConfig.calendar.headerSearchWrapper">
           <BaseSearchInput
             :model-value="searchQuery"
             :placeholder="UI_TEXT.groups.searchMembers"
-            class="w-1/5! max-w-none!"
             @update:model-value="emit('update:searchQuery', $event)"
           />
         </div>
 
-        <div :class="`flex items-center ${SPACING_TOKENS.gap.sm} shrink-0`">
+        <div :class="appConfig.calendar.headerTitleRow">
           <BaseButton
             v-if="isCurrentUserLeader"
             icon="i-heroicons-user-plus"
@@ -91,7 +88,7 @@
     </div>
 
     <!-- MEMBERS LIST SECTION -->
-    <div class="w-full">
+    <div :class="CARD_CONFIG.slots.root">
       <ClientOnly>
         <div v-if="isLoading" :class="appConfig.typography.statusLoading">
           {{ UI_TEXT.common.loading }}
@@ -100,34 +97,33 @@
           {{ UI_TEXT.errors.fetch }}
         </div>
 
-        <div v-else-if="filteredMembers?.length" :class="[appConfig.layout.cardGrid]">
+        <div v-else-if="filteredMembers?.length" :class="appConfig.layout.cardGrid">
           <BaseCard
             v-for="profile in filteredMembers"
             :key="profile.users.email"
             variant="interactiveGlass"
-            class="relative cursor-pointer"
+            :class="[appConfig.layout.headerRelative, INTERACTION_TOKENS.base]"
             @click="emit('openProfile', profile)"
           >
             <div :class="appConfig.layout.memberCardInner">
-              <div :class="`shrink-0 ${SPACING_TOKENS.pt.xs}`">
+              <div :class="SPACING_TOKENS.pt.xs">
                 <UAvatar
                   :src="profile.users.profile_image_url || undefined"
                   :alt="profile.users.username"
                   size="profileLg"
                   icon="i-heroicons-user"
-                  class="w-16 h-16"
                 />
               </div>
 
               <div :class="appConfig.layout.memberCardContent">
-                <div :class="[appConfig.layout.flexBetween, 'min-w-0']">
-                  <div :class="`min-w-0 flex-1 pr-2`">
+                <div :class="appConfig.layout.flexBetween">
+                  <div :class="appConfig.calendar.participantCardInfo">
                     <h3 :class="appConfig.typography.cardTitle" :title="profile.users.username">
                       {{ profile.users.username }}
                     </h3>
                     <p
                       v-if="isCurrentUser(profile.users.email)"
-                      :class="`text-sm text-left font-bold text-brand-500 ${SPACING_TOKENS.mt.xs}`"
+                      :class="appConfig.typography.modalHighlight"
                     >
                       {{ ' ' + UI_TEXT.common.you + ' ' }}
                     </p>
@@ -137,7 +133,7 @@
                     v-if="isCurrentUserLeader && profile.roles.type.toLowerCase() === 'member'"
                     icon="i-heroicons-arrow-up-circle"
                     variant="ghostBrandIconButton"
-                    class="text-dark-text/70 shrink-0"
+                    :class="COLOR_TOKENS.text.primaryMuted"
                     :tooltip="UI_TEXT.tooltips.promoteUser"
                     @click.stop="
                       groupsStore.openPromoteUserModal(profile.users.email, profile.users.username)
@@ -145,10 +141,12 @@
                   />
                 </div>
 
-                <div :class="[appConfig.layout.flexBetween, `items-end ${SPACING_TOKENS.mt.md}`]">
-                  <p class="text-sm font-medium text-dark-text/80">
+                <div :class="[appConfig.layout.cardFooter, SPACING_TOKENS.mt.md]">
+                  <p :class="[TEXT_SIZES.sm, FONT_WEIGHTS.medium, COLOR_TOKENS.text.primarySoft]">
                     {{ ' ' + UI_TEXT.groups.roleLabel + ' '
-                    }}<span class="font-bold capitalize">{{ profile.roles.type }}</span>
+                    }}<span :class="[FONT_WEIGHTS.bold, 'capitalize']">{{
+                      profile.roles.type
+                    }}</span>
                   </p>
 
                   <BaseButton
@@ -167,7 +165,7 @@
     </div>
 
     <!-- UPCOMING EVENTS SECTION -->
-    <div :class="`flex flex-col ${SPACING_TOKENS.gap.md} w-full ${SPACING_TOKENS.mt.xl}`">
+    <div :class="appConfig.layout.sectionWrapper">
       <h2 :class="[appConfig.typography.pageSubtitle, SPACING_TOKENS.mb.sm]">
         {{ UI_TEXT.events.upcomingHeading }}
       </h2>
@@ -188,12 +186,12 @@
             v-for="event in todayUpcomingEvents"
             :key="event.uuid"
             variant="interactiveGlass"
-            class="w-full cursor-pointer hover:bg-surface-500/90 transition-colors"
+            :class="INTERACTION_TOKENS.base"
             @click="navigateToEvent(event.uuid)"
           >
-            <div :class="`flex flex-col ${SPACING_TOKENS.gap.sm} w-full`">
-              <div :class="[appConfig.layout.flexBetween, `border-b border-dark-text/10 pb-2`]">
-                <div :class="`flex items-center ${SPACING_TOKENS.gap.sm} min-w-0 pr-2`">
+            <div :class="appConfig.calendar.filterFormGroup">
+              <div :class="[appConfig.calendar.previewTitleRow, BORDER_TOKENS.dividerBottom, SPACING_TOKENS.py.xs]">
+                <div :class="[appConfig.calendar.eventItemWrapper, appConfig.calendar.participantCardInfo]">
                   <UTooltip
                     :text="
                       event.is_private ? UI_TEXT.events.privateEvent : UI_TEXT.events.groupEvent
@@ -201,48 +199,40 @@
                   >
                     <UIcon
                       :name="event.is_private ? 'i-heroicons-user' : 'i-heroicons-user-group'"
-                      class="w-4 h-4 text-brand-500 shrink-0"
+                      :class="[SIZE_TOKENS.icon.sm, COLOR_TOKENS.text.brandAccent]"
                     />
                   </UTooltip>
-                  <h3 :class="appConfig.typography.cardTitle" class="truncate">
+                  <h3 :class="appConfig.typography.cardTitle">
                     {{ event.title }}
                   </h3>
                 </div>
-                <div
-                  :class="`flex items-center ${SPACING_TOKENS.gap.xs} text-brand-600 shrink-0 bg-brand-500/10 ${SPACING_TOKENS.px.xs} ${SPACING_TOKENS.py.xs} rounded text-xs font-bold`"
-                >
-                  <UIcon name="i-heroicons-clock" class="w-3.5 h-3.5" />
+                <div :class="[appConfig.calendar.headerTitleRow, appConfig.calendar.participantCardRole]">
+                  <UIcon name="i-heroicons-clock" :class="SIZE_TOKENS.icon.sm" />
                   <span>{{ event.timeStartFormatted }}</span>
                 </div>
               </div>
 
-              <div :class="`flex flex-col ${SPACING_TOKENS.gap.xs} text-xs text-dark-text/80`">
+              <div :class="appConfig.layout.documentCardMeta">
                 <div :class="appConfig.layout.flexBetween">
-                  <span class="font-medium opacity-70"
+                  <span :class="[FONT_WEIGHTS.medium, OPACITY_TOKENS.subtle]"
                     >{{ UI_TEXT.events.creatorLabel + ' '
-                    }}<span class="font-bold text-dark-text opacity-100">{{
+                    }}<span :class="[FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]">{{
                       event.creator?.username
                     }}</span></span
                   >
-                  <span class="font-semibold"
+                  <span :class="FONT_WEIGHTS.semibold"
                     >{{ event.timeStartFormatted }} - {{ event.timeEndFormatted }}</span
                   >
                 </div>
-                <p class="truncate opacity-80" :title="event.description || undefined">
+                <p :class="[OPACITY_TOKENS.soft, 'truncate']" :title="event.description || undefined">
                   {{ event.description || UI_TEXT.groups.noDescription }}
                 </p>
               </div>
 
-              <div
-                :class="[
-                  appConfig.layout.flexBetween,
-                  `${SPACING_TOKENS.mt.xs} ${SPACING_TOKENS.pt.sm} border-t border-dark-text/5 items-start`,
-                ]"
-              >
-                <span
-                  class="text-[11px] font-bold text-dark-text/50 uppercase tracking-wider mt-1"
-                  >{{ UI_TEXT.groups.participants }}</span
-                >
+              <div :class="appConfig.layout.cardFooter">
+                <span :class="[TEXT_SIZES.xs, FONT_WEIGHTS.bold, COLOR_TOKENS.text.primaryFaint, 'uppercase', TEXT_TRACKING.wider]">{{
+                  UI_TEXT.groups.participants
+                }}</span>
 
                 <div :class="appConfig.calendar.participantsGroup">
                   <template v-if="event.is_private">
@@ -283,8 +273,8 @@
                     </div>
                   </template>
                   <template v-else>
-                    <div :class="`flex items-center ${SPACING_TOKENS.gap.sm}`">
-                      <span class="text-xs font-bold text-dark-text">{{
+                    <div :class="appConfig.calendar.eventItemWrapper">
+                      <span :class="[TEXT_SIZES.xs, FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]">{{
                         UI_TEXT.common.everyone
                       }}</span>
                     </div>

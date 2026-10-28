@@ -96,4 +96,9 @@ export const CALENDAR_CONFIG = {
   participantCardRole: `${TEXT_SIZES.xs} ${FONT_WEIGHTS.bold} ${SPACING_TOKENS.px.sm} ${SPACING_TOKENS.py['2xs']} ${RADIUS_TOKENS.full} ${COLOR_TOKENS.surface.brandTint} ${COLOR_TOKENS.text.brandHover} capitalize shrink-0`,
   participantCardEmail: `${TEXT_SIZES.sm} ${COLOR_TOKENS.text.primaryMuted} truncate`,
   participantCardPhone: `${TEXT_SIZES.xs} ${COLOR_TOKENS.text.primaryFaint} ${SPACING_TOKENS.mt.xs} truncate`,
+
+  clearFilterActive: `${COLOR_TOKENS.status.error} ${BORDER_TOKENS.ringError} hover:bg-status-error/20 ${INTERACTION_TOKENS.base}`,
+  clearFilterDisabled: `${COLOR_TOKENS.text.primaryFaint} ${BORDER_TOKENS.ringSubtle} bg-transparent hover:bg-transparent ${OPACITY_TOKENS.muted} cursor-not-allowed`,
+  activeToggleFilterBtn: `${BORDER_TOKENS.ringSuccess} ${COLOR_TOKENS.status.success} shrink-0 whitespace-nowrap ${SPACING_TOKENS.px.md} ${SPACING_TOKENS.py.sm}`,
+  inactiveToggleFilterBtn: `shrink-0 whitespace-nowrap ${SPACING_TOKENS.px.md} ${SPACING_TOKENS.py.sm}`,
 } as const;

@@ -16,11 +16,11 @@
         {{ UI_TEXT.errors.fetch }}
       </div>
 
-      <div v-else-if="currentUser" class="w-full relative">
+      <div v-else-if="currentUser" :class="[CARD_CONFIG.slots.root, appConfig.layout.headerRelative]">
         <!-- PROFILE CARD SECTION -->
-        <div :class="appConfig.layout.sectionWrapper">
+        <div :class="appConfig.layout.profileCard">
           <!-- Delete Button -->
-          <div class="absolute top-4 right-4 z-10">
+          <div :class="appConfig.layout.cardCornerRight">
             <BaseButton
               icon="i-heroicons-trash"
               variant="glassIconButtonDanger"
@@ -36,29 +36,31 @@
                 v-if="currentUser.profile_image_url"
                 :src="currentUser.profile_image_url"
                 :alt="UI_TEXT.common.profile"
-                class="w-full h-full object-cover"
+                :class="appConfig.layout.mediaCoverImage"
               />
-              <UIcon v-else name="i-heroicons-user" class="w-20 h-20 text-surface-500" />
-
-              <div
-                class="absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t from-black/50 to-transparent pointer-events-none"
-              ></div>
-
-              <BaseButton
-                icon="i-heroicons-eye"
-                variant="ghostDangerIconButton"
-                class="text-surface-500 absolute bottom-2 left-2"
-                :tooltip="UI_TEXT.tooltips.viewPicture"
-                @click="profileStore.openViewPictureModal(currentUser)"
+              <UIcon
+                v-else
+                name="i-heroicons-user"
+                :class="[SIZE_TOKENS.avatar.lg, COLOR_TOKENS.text.inverse]"
               />
 
-              <BaseButton
-                icon="i-heroicons-arrow-up-tray"
-                variant="ghostDangerIconButton"
-                class="text-surface-500 absolute bottom-2 right-2"
-                :tooltip="UI_TEXT.tooltips.uploadPicture"
-                @click="profileStore.openUploadPictureModal()"
-              />
+              <div :class="appConfig.layout.profilePictureOverlay"></div>
+
+              <div :class="appConfig.layout.documentCardBottomActions">
+                <BaseButton
+                  icon="i-heroicons-eye"
+                  variant="ghostBrandIconButton"
+                  :tooltip="UI_TEXT.tooltips.viewPicture"
+                  @click="profileStore.openViewPictureModal(currentUser)"
+                />
+
+                <BaseButton
+                  icon="i-heroicons-arrow-up-tray"
+                  variant="ghostBrandIconButton"
+                  :tooltip="UI_TEXT.tooltips.uploadPicture"
+                  @click="profileStore.openUploadPictureModal()"
+                />
+              </div>
             </div>
           </div>
 
@@ -124,7 +126,7 @@
         <!-- DOCUMENT SECTION -->
         <div :class="appConfig.layout.sectionWrapper">
           <div :class="appConfig.layout.pageHeader">
-            <div :class="appConfig.layout.actionGroup">
+            <div :class="appConfig.calendar.headerActionLeft">
               <!-- Filter popover -->
               <UPopover>
                 <BaseButton
@@ -138,10 +140,10 @@
                   variant="glassButton"
                 />
                 <template #content="{ close }">
-                  <div :class="[appConfig.ui.dropdownMenu.slots.content, 'w-fit']">
+                  <div :class="DROPDOWN_MENU_CONFIG.slots.content">
                     <BaseButton
                       variant="ghost"
-                      :class="appConfig.ui.dropdownMenu.slots.item"
+                      :class="DROPDOWN_MENU_CONFIG.slots.item"
                       @click="
                         filterType = 'ALL';
                         close();
@@ -150,7 +152,7 @@
                       <template #leading>
                         <UIcon
                           :name="filterType === 'ALL' ? 'i-heroicons-check' : 'i-heroicons-funnel'"
-                          :class="appConfig.ui.dropdownMenu.slots.itemLeadingIcon"
+                          :class="DROPDOWN_MENU_CONFIG.slots.itemLeadingIcon"
                         />
                       </template>
                       {{ UI_TEXT.common.allTypes }}
@@ -159,7 +161,7 @@
                       v-for="type in privateDocumentTypes"
                       :key="type.value"
                       variant="ghost"
-                      :class="appConfig.ui.dropdownMenu.slots.item"
+                      :class="DROPDOWN_MENU_CONFIG.slots.item"
                       @click="
                         filterType = type.value;
                         close();
@@ -170,7 +172,7 @@
                           :name="
                             filterType === type.value ? 'i-heroicons-check' : 'i-heroicons-funnel'
                           "
-                          :class="appConfig.ui.dropdownMenu.slots.itemLeadingIcon"
+                          :class="DROPDOWN_MENU_CONFIG.slots.itemLeadingIcon"
                         />
                       </template>
                       {{ type.label }}
@@ -191,7 +193,7 @@
             <h2 :class="appConfig.typography.sectionTitleTransparent">
               {{ UI_TEXT.profile.documentsHeading }}
             </h2>
-            <div class="w-30 hidden md:block"></div>
+            <div :class="appConfig.calendar.headerActionRight"></div>
           </div>
 
           <!-- Loading state -->
@@ -205,37 +207,35 @@
               v-for="doc in filteredDocuments"
               :key="doc.file_id"
               variant="documentGlass"
-              class="relative"
+              :class="appConfig.layout.headerRelative"
             >
               <!-- Title and action buttons -->
               <div :class="appConfig.layout.documentCardHeader">
-                <p class="font-bold truncate pr-2 shadow-sm">{{ doc.file_name }}</p>
-                <div :class="`flex items-center ${SPACING_TOKENS.gap.xs}`">
+                <p :class="[FONT_WEIGHTS.bold, TEXT_SIZES.sm, SPACING_TOKENS.pr.sm, 'truncate']">
+                  {{ doc.file_name }}
+                </p>
+                <div :class="appConfig.calendar.headerTitleRow">
                   <BaseButton
                     icon="i-heroicons-key"
                     variant="ghostBrandIconButton"
-                    class="text-surface-500"
                     :tooltip="UI_TEXT.profile.accessDetails"
                     @click="emit('access', doc)"
                   />
                   <BaseButton
                     icon="i-heroicons-share"
                     variant="ghostBrandIconButton"
-                    class="text-surface-500"
                     :tooltip="UI_TEXT.profile.share"
                     @click.prevent="emit('share', doc)"
                   />
                   <BaseButton
                     icon="i-heroicons-pencil"
                     variant="ghostBrandIconButton"
-                    class="text-surface-500"
                     :tooltip="UI_TEXT.tooltips.editDocument"
                     @click="emit('edit', doc)"
                   />
                   <BaseButton
                     icon="i-heroicons-trash"
                     variant="ghostDangerIconButton"
-                    class="text-surface-500"
                     :tooltip="UI_TEXT.tooltips.deleteDocument"
                     @click="emit('delete', doc)"
                   />
@@ -244,21 +244,22 @@
 
               <!-- File Preview -->
               <div :class="appConfig.layout.documentCardImage">
-                <UIcon name="i-heroicons-document-text" class="w-16 h-16 text-surface-500/50" />
-                <div
-                  :class="`absolute bottom-2 ${SPACING_TOKENS.px.md} w-full flex justify-between`"
-                >
+                <UIcon
+                  name="i-heroicons-document-text"
+                  :class="[SIZE_TOKENS.avatar.lg, COLOR_TOKENS.text.primaryFaint]"
+                />
+                <div :class="appConfig.layout.documentCardBottomActions">
                   <BaseButton
                     icon="i-heroicons-eye"
                     variant="ghostBrandIconButton"
-                    class="text-dark-text/70"
+                    :class="COLOR_TOKENS.text.primaryMuted"
                     :tooltip="UI_TEXT.tooltips.viewDocument"
                     @click.prevent="emit('view', doc)"
                   />
                   <BaseButton
                     icon="i-heroicons-arrow-down-tray"
                     variant="ghostBrandIconButton"
-                    class="text-dark-text/70"
+                    :class="COLOR_TOKENS.text.primaryMuted"
                     :tooltip="UI_TEXT.tooltips.downloadDocument"
                     @click.prevent="emit('download', doc)"
                   />
@@ -269,13 +270,13 @@
               <div :class="appConfig.layout.documentCardMeta">
                 <p>
                   {{ ' ' + UI_TEXT.common.uploadedAt + ' '
-                  }}<span class="font-bold text-dark-text">
+                  }}<span :class="[FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]">
                     {{ new Date(doc.created_at).toLocaleDateString() }}
                   </span>
                 </p>
                 <p>
                   {{ ' ' + UI_TEXT.documents.documentType + ' '
-                  }}<span class="font-bold text-dark-text">
+                  }}<span :class="[FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]">
                     {{ doc.documents?.document_type ?? UI_TEXT.common.notAvailable }}
                   </span>
                 </p>
@@ -285,13 +286,13 @@
                 <div :class="appConfig.layout.flexBetween">
                   <p>
                     {{ ' ' + UI_TEXT.documents.fileType + ' '
-                    }}<span class="font-bold text-dark-text">
+                    }}<span :class="[FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]">
                       {{ doc.mime_type?.split('/')[1] ?? UI_TEXT.common.unknown }}
                     </span>
                   </p>
                   <p>
                     {{ ' ' + UI_TEXT.documents.fileSize + ' '
-                    }}<span class="font-bold text-dark-text">
+                    }}<span :class="[FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]">
                       {{ (doc.file_size / (1024 * 1024)).toFixed(2)
                       }}{{ ' ' + UI_TEXT.common.megabytes + ' ' }}</span
                     >
@@ -302,7 +303,7 @@
 
                 <p>
                   {{ ' ' + UI_TEXT.documents.issued + ' '
-                  }}<span class="font-bold text-dark-text">
+                  }}<span :class="[FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]">
                     {{
                       doc.documents?.issue_date
                         ? new Date(doc.documents.issue_date).toLocaleDateString()
@@ -312,7 +313,7 @@
                 </p>
                 <p>
                   {{ ' ' + UI_TEXT.documents.ends + ' '
-                  }}<span class="font-bold text-dark-text">
+                  }}<span :class="[FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]">
                     {{
                       doc.documents?.expiry_date
                         ? new Date(doc.documents.expiry_date).toLocaleDateString()

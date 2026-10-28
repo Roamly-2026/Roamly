@@ -14,8 +14,10 @@
     >
       <template #body>
         <p :class="appConfig.typography.modalText">
-          {{ ' ' + UI_TEXT.events.deleteBeforeTitle
-          }}{{ eventsStore.selectedEventToDelete?.title }}"?
+          {{ ' ' + UI_TEXT.events.deleteBeforeTitle }}
+          <span :class="appConfig.typography.modalInlineHighlight"
+            >„{{ eventsStore.selectedEventToDelete?.title }}”</span
+          >?
         </p>
       </template>
     </ConfirmModal>
@@ -33,7 +35,10 @@
     >
       <template #body>
         <p :class="appConfig.typography.modalText">
-          {{ ' ' + UI_TEXT.events.leaveBeforeTitle }}{{ eventsStore.selectedEventToLeave?.title }}"?
+          {{ ' ' + UI_TEXT.events.leaveBeforeTitle }}
+          <span :class="appConfig.typography.modalInlineHighlight"
+            >„{{ eventsStore.selectedEventToLeave?.title }}”</span
+          >?
         </p>
       </template>
     </ConfirmModal>

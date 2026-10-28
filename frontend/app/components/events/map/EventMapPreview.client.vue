@@ -1,6 +1,6 @@
 <!-- frontend/app/components/events/map/EventMapPreview-->
 <template>
-  <div ref="mapContainer" class="w-full h-full z-0"></div>
+  <div ref="mapContainer" :class="appConfig.layout.mapCanvas"></div>
 </template>
 
 <script setup lang="ts">
@@ -11,6 +11,7 @@ import L from 'leaflet';
 import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
 import iconUrl from 'leaflet/dist/images/marker-icon.png';
 import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
+import appConfig from '~/app.config';
 
 const defaultIconPrototype = L.Icon.Default.prototype as L.Icon & { _getIconUrl?: () => string };
 delete defaultIconPrototype._getIconUrl;

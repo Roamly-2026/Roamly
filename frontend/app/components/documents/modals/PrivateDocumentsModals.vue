@@ -36,12 +36,12 @@
                 value-key="value"
                 :placeholder="UI_TEXT.documents.selectType"
                 :popper="{ strategy: 'fixed', placement: 'bottom-start' }"
-                :ui="{ content: 'z-[10100]' }"
+                :ui="{ content: Z_INDEX_TOKENS.modal }"
               />
             </template>
           </UFormField>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div :class="appConfig.layout.modalFormGrid2Col">
             <!-- Issue date -->
             <BaseInput
               v-model="uploadForm.issueDate"
@@ -102,12 +102,14 @@
           @submit="handleUpdate"
         >
           <!-- Current file name -->
-          <div
-            v-if="fileToUpdate"
-            class="flex items-center gap-2 px-3 py-2 rounded-lg bg-surface-100/10 border border-surface-500/20"
-          >
-            <UIcon name="i-heroicons-document-text" class="w-4 h-4 text-surface-400 shrink-0" />
-            <span class="text-sm text-surface-400 truncate">{{ fileToUpdate.fileName }}</span>
+          <div v-if="fileToUpdate" :class="appConfig.layout.filePreviewChip">
+            <UIcon
+              name="i-heroicons-document-text"
+              :class="[SIZE_TOKENS.icon.sm, COLOR_TOKENS.text.primaryMuted]"
+            />
+            <span :class="[TEXT_SIZES.sm, COLOR_TOKENS.text.primaryMuted, 'truncate']">{{
+              fileToUpdate.fileName
+            }}</span>
           </div>
 
           <!-- Replace file (optional) -->
@@ -129,12 +131,12 @@
                 value-key="value"
                 :placeholder="UI_TEXT.documents.selectType"
                 :popper="{ strategy: 'fixed', placement: 'bottom-start' }"
-                :ui="{ content: 'z-[10100]' }"
+                :ui="{ content: Z_INDEX_TOKENS.modal }"
               />
             </template>
           </UFormField>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div :class="appConfig.layout.modalFormGrid2Col">
             <!-- Issue date -->
             <BaseInput
               v-model="updateForm.issueDate"

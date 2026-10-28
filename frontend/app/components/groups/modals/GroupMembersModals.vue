@@ -18,7 +18,6 @@
           v-model="updateGroupName"
           :label="UI_TEXT.groups.nameLabel"
           :placeholder="UI_TEXT.groups.namePlaceholder"
-          class="w-full"
         />
         <p v-if="updateError" :class="appConfig.typography.inputError">{{ updateError }}</p>
       </div>
@@ -44,7 +43,6 @@
           :label="UI_TEXT.groups.emailLabel"
           :placeholder="UI_TEXT.groups.emailPlaceholder"
           variant="glass"
-          class="w-full"
         />
       </div>
       <div>
@@ -57,7 +55,7 @@
           label-key="label"
           value-key="value"
           :popper="{ strategy: 'fixed', placement: 'bottom-start' }"
-          :ui="{ content: 'z-[9999]' }"
+          :ui="{ content: Z_INDEX_TOKENS.modal }"
         />
       </div>
       <p v-if="inviteError" :class="appConfig.typography.modalErrorBox">{{ inviteError }}</p>
@@ -97,6 +95,7 @@
       :confirm-text="UI_TEXT.groups.promote"
       :loading="isPromoting"
       :ui-size="appConfig.layout.modalSizeSm"
+      :confirm-btn-class="BUTTON_APPEARANCES.primaryElevated"
       @cancel="groupsStore.closePromoteUserModal()"
       @confirm="handlePromoteUser"
     >
@@ -119,7 +118,7 @@
       :confirm-text="UI_TEXT.groups.demote"
       :loading="isDemoting"
       :ui-size="appConfig.layout.modalSizeSm"
-      confirm-btn-class="text-orange-500 hover:text-white hover:bg-orange-600 ring-orange-500"
+      :confirm-btn-class="BUTTON_APPEARANCES.dangerElevated"
       @cancel="groupsStore.closeDemoteUserModal()"
       @confirm="handleDemoteUser"
     >

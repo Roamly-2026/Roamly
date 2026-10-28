@@ -19,7 +19,6 @@
           :label="UI_TEXT.groups.nameLabel"
           :placeholder="UI_TEXT.groups.namePlaceholder"
           variant="glass"
-          class="w-full"
         />
         <p v-if="createError" :class="appConfig.typography.inputError">{{ createError }}</p>
       </div>

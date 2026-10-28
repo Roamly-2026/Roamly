@@ -14,8 +14,8 @@
             :key="group.uuid"
             :class="appConfig.calendar.participantCard"
           >
-            <div class="flex items-center justify-between w-full">
-              <div class="flex items-center gap-5">
+            <div :class="appConfig.layout.flexBetween">
+              <div :class="appConfig.layout.actionGroup">
                 <UAvatar
                   :alt="group.name"
                   icon="i-heroicons-user-group"
@@ -24,11 +24,14 @@
                 />
 
                 <div :class="appConfig.calendar.participantCardInfo">
-                  <div class="flex items-center gap-1.5 mb-1.5">
+                  <div :class="appConfig.calendar.headerTitleRow">
                     <h4 :class="appConfig.calendar.participantCardName">{{ group.name }}</h4>
                   </div>
-                  <div class="flex gap-1.5">
-                    <UIcon name="i-heroicons-user-solid" class="w-5 h-5 text-brand-500 shrink-0" />
+                  <div :class="appConfig.calendar.headerTitleRow">
+                    <UIcon
+                      name="i-heroicons-user-solid"
+                      :class="[SIZE_TOKENS.icon.md, COLOR_TOKENS.text.brandAccent]"
+                    />
                     <h4 :class="appConfig.calendar.metaValue">{{ group.current_size }}</h4>
                   </div>
                 </div>
@@ -36,22 +39,20 @@
               <BaseButton
                 icon="i-heroicons-share"
                 variant="ghostBrandIconButton"
-                class="text-dark-text/70"
+                :class="COLOR_TOKENS.text.primaryMuted"
                 :loading="shareMutation.isLoading.value"
                 :tooltip="UI_TEXT.documents.shareWithGroup"
-                :tooltip-ui="{ content: 'z-[9999]' }"
-                :tooltip-popper="{ placement: 'top', strategy: 'fixed' }"
                 @click="handleShareDocument(group.uuid)"
               />
             </div>
           </div>
-          <div v-if="!unsharedGroups?.length" class="text-sm font-medium text-dark-text/50 p-4">
+          <div v-if="!unsharedGroups?.length" :class="appConfig.calendar.emptyPreview">
             {{ ' ' + UI_TEXT.documents.noAvailableGroups + ' ' }}
           </div>
         </div>
       </template>
       <template #footer>
-        <div class="flex justify-end w-full">
+        <div :class="appConfig.calendar.filterButtonWrapper">
           <BaseButton
             :label="UI_TEXT.common.close"
             :class="appConfig.typography.modalActionBtnCancel"
@@ -74,8 +75,8 @@
             :key="share.groups.name"
             :class="appConfig.calendar.participantCard"
           >
-            <div class="flex items-center justify-between w-full">
-              <div class="flex items-center gap-5">
+            <div :class="appConfig.layout.flexBetween">
+              <div :class="appConfig.layout.actionGroup">
                 <UAvatar
                   :alt="share.groups.name"
                   icon="i-heroicons-user-group"
@@ -84,7 +85,7 @@
                 />
 
                 <div :class="appConfig.calendar.participantCardInfo">
-                  <div class="flex items-center gap-1.5">
+                  <div :class="appConfig.calendar.headerTitleRow">
                     <h4 :class="appConfig.calendar.participantCardName">{{ share.groups.name }}</h4>
                   </div>
                   <p :class="appConfig.calendar.participantCardEmail">
@@ -98,19 +99,17 @@
                 variant="ghostDangerIconButton"
                 :loading="revokeMutation.isLoading.value"
                 :tooltip="UI_TEXT.documents.revokeAccess"
-                :tooltip-ui="{ content: 'z-[9999]' }"
-                :tooltip-popper="{ placement: 'top', strategy: 'fixed' }"
                 @click="handleRevokeAccess(share.groups.name)"
               />
             </div>
           </div>
-          <div v-if="!sharedGroups?.length" class="text-sm font-medium text-dark-text/50 p-4">
+          <div v-if="!sharedGroups?.length" :class="appConfig.calendar.emptyPreview">
             {{ ' ' + UI_TEXT.documents.notShared + ' ' }}
           </div>
         </div>
       </template>
       <template #footer>
-        <div class="flex justify-end w-full">
+        <div :class="appConfig.calendar.filterButtonWrapper">
           <BaseButton
             :label="UI_TEXT.common.close"
             variant="actionOkButton"

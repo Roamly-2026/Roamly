@@ -15,19 +15,16 @@
       </div>
 
       <!-- INVITES GRID -->
-      <div
-        v-else-if="invitesList.length > 0"
-        :class="`flex flex-col ${SPACING_TOKENS.gap.lg} w-full`"
-      >
+      <div v-else-if="invitesList.length > 0" :class="appConfig.layout.cardContent">
         <div :class="appConfig.layout.cardGrid">
           <BaseCard
             v-for="group in invitesList"
             :key="group.uuid"
             variant="interactiveGlass"
-            class="relative flex flex-col justify-between cursor-pointer"
+            :class="[appConfig.layout.headerRelative, INTERACTION_TOKENS.base]"
             @click="groupsStore.openJoinModal(group)"
           >
-            <div class="absolute top-4 right-4 z-10">
+            <div :class="appConfig.layout.cardCornerRight">
               <BaseButton
                 icon="i-heroicons-x-mark"
                 variant="ghostDangerIconButton"
@@ -38,22 +35,25 @@
 
             <div :class="appConfig.layout.cardContent">
               <h3 :class="appConfig.typography.cardTitleCenter">{{ group.name }}</h3>
-              <p class="text-sm text-center text-dark-text/80 font-medium">
+              <p :class="[TEXT_SIZES.sm, COLOR_TOKENS.text.primarySoft, FONT_WEIGHTS.medium]">
                 {{
                   group.leaders.length > 1
                     ? UI_TEXT.groups.leadersLabel
                     : UI_TEXT.groups.leaderLabel
                 }}
-                <span class="font-bold">{{ group.leaders.join(', ') }}</span>
+                <span :class="FONT_WEIGHTS.bold">{{ group.leaders.join(', ') }}</span>
               </p>
               <div :class="appConfig.layout.cardFooter">
                 <div>
-                  <p class="opacity-70">{{ UI_TEXT.groups.createdAtLabel }}</p>
-                  <p class="font-semibold">{{ group.created_at }}</p>
+                  <p :class="OPACITY_TOKENS.subtle">{{ UI_TEXT.groups.createdAtLabel }}</p>
+                  <p :class="FONT_WEIGHTS.semibold">{{ group.created_at }}</p>
                 </div>
-                <div :class="`flex items-center ${SPACING_TOKENS.gap.xs} font-semibold`">
+                <div :class="[appConfig.calendar.headerTitleRow, FONT_WEIGHTS.semibold]">
                   <span>{{ group.current_size }}</span>
-                  <UIcon name="i-heroicons-user" class="w-5 h-5 text-brand-500" />
+                  <UIcon
+                    name="i-heroicons-user"
+                    :class="[SIZE_TOKENS.icon.md, COLOR_TOKENS.text.brandAccent]"
+                  />
                 </div>
               </div>
             </div>
@@ -61,8 +61,8 @@
         </div>
 
         <!-- INFINITE SCROLL TRIGGER -->
-        <div ref="loadMoreTrigger" class="h-10 w-full flex items-center justify-center">
-          <span v-if="isFetchingNextPage" class="text-dark-text/70 text-sm">
+        <div ref="loadMoreTrigger" :class="appConfig.layout.infiniteScrollTrigger">
+          <span v-if="isFetchingNextPage" :class="[COLOR_TOKENS.text.primaryMuted, TEXT_SIZES.sm]">
             {{ UI_TEXT.groups.loadingGroups }}
           </span>
         </div>

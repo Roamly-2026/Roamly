@@ -61,6 +61,13 @@ export const LAYOUT_CONFIG = {
   profileDetailsWrapper: `flex-1 flex flex-col justify-center ${SPACING_TOKENS.gap.sm} ${COLOR_TOKENS.text.primary} ${SPACING_TOKENS.pt.sm}`,
   profileDetailRow: `flex items-center ${SPACING_TOKENS.gap.md}`,
 
+  // Card Corner Actions & Media/Profile Helpers
+  cardCornerLeft: `absolute top-4 left-4 ${Z_INDEX_TOKENS.base}`,
+  cardCornerRight: `absolute top-4 right-4 ${Z_INDEX_TOKENS.base}`,
+  infiniteScrollTrigger: `${SIZE_TOKENS.controlHeight.md} w-full flex items-center justify-center`,
+  mediaCoverImage: 'w-full h-full object-cover',
+  profilePictureOverlay: 'absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t from-black/50 to-transparent pointer-events-none',
+
   // Documents Grid
   documentGrid: `grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 ${SPACING_TOKENS.responsive.gridGap} w-full ${SPACING_TOKENS.mt.md}`,
   documentCardHeader: `absolute top-0 left-0 w-full ${SPACING_TOKENS.p.md} flex justify-between items-start ${Z_INDEX_TOKENS.base} bg-linear-to-b from-black/50 to-transparent ${COLOR_TOKENS.text.inverse}`,
@@ -76,6 +83,18 @@ export const LAYOUT_CONFIG = {
   modalSizeSm: `w-full ${SIZE_TOKENS.container.modalMd} !w-[90%] !mx-auto sm:!w-full`,
   modalSizeMd: `w-full ${SIZE_TOKENS.container.modalLg} !w-[90%] !mx-auto sm:!w-full`,
   modalSizeLg: `w-full ${SIZE_TOKENS.container.modalXl} !w-[90%] !mx-auto sm:!w-full`,
+  modalScrollBody: `flex flex-col ${SPACING_TOKENS.gap.md} ${SPACING_TOKENS.p.sm} ${SPACING_TOKENS.pr.md} overflow-y-auto max-h-[70vh] overscroll-contain custom-scrollbar`,
+  modalMapWrapper: 'h-[45vh] w-full shrink-0',
+  modalFormGrid2Col: `grid grid-cols-1 sm:grid-cols-2 ${SPACING_TOKENS.gap.md}`,
+  filePreviewChip: `flex items-center ${SPACING_TOKENS.gap.sm} ${SPACING_TOKENS.px.md} ${SPACING_TOKENS.py.sm} ${RADIUS_TOKENS.sm} bg-surface-subtle ${BORDER_TOKENS.medium}`,
+  documentCardBottomActions: `absolute bottom-2 ${SPACING_TOKENS.px.md} w-full flex justify-between`,
+  documentCardBottomActionEnd: `absolute bottom-2 ${SPACING_TOKENS.px.md} w-full flex justify-end`,
+  mobilePageWrapper: `flex flex-col flex-1 ${SPACING_TOKENS.gap.md} w-full ${SPACING_TOKENS.p.md} pb-20`,
+
+  // EventMapSelector
+  mapSelectorWrapper: 'relative w-full h-full min-h-100 flex flex-col',
+  mapCanvas: `w-full h-full z-0 ${RADIUS_TOKENS.sm} ${BORDER_TOKENS.medium}`,
+  mapSelectorFooter: `w-full ${GLASS_TOKENS.default} ${BORDER_TOKENS.medium} ${RADIUS_TOKENS.sm} ${SPACING_TOKENS.p.md} flex flex-col sm:flex-row justify-between items-center ${SPACING_TOKENS.gap.md} ${Z_INDEX_TOKENS.base} shrink-0`,
 } as const;
 
 // 2. FOOTER CLASSES

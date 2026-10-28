@@ -9,12 +9,11 @@
       <div
         v-if="eventsStore.previewEvent"
         :class="[
-          appConfig.calendar.previewWrapper,
-          eventsStore.previewEvent.isExpired ? 'opacity-70' : '',
-          'p-2! gap-4! overflow-y-auto max-h-[65vh] overscroll-contain custom-scrollbar',
+          appConfig.layout.modalScrollBody,
+          eventsStore.previewEvent.isExpired ? OPACITY_TOKENS.subtle : '',
         ]"
       >
-        <div :class="appConfig.calendar.previewTitleRow" class="mb-2 justify-between">
+        <div :class="appConfig.calendar.previewTitleRow">
           <div :class="appConfig.calendar.previewTypeWrapper">
             <UIcon
               :name="
@@ -28,7 +27,7 @@
                 : UI_TEXT.events.groupEvent
             }}</span>
           </div>
-          <div class="flex items-center gap-1">
+          <div :class="appConfig.calendar.headerTitleRow">
             <BaseButton
               v-if="
                 eventsStore.previewEvent.creator?.email === currentUserEmail &&
@@ -36,7 +35,7 @@
               "
               icon="i-heroicons-user-plus"
               variant="ghostBrandIconButton"
-              class="text-dark-text/70"
+              :class="COLOR_TOKENS.text.primaryMuted"
               :tooltip="UI_TEXT.events.inviteMembers"
               @click="eventsStore.openAddMembersModal(eventsStore.previewEvent!)"
             />
@@ -145,21 +144,21 @@
                 </div>
                 <BaseButton
                   variant="link"
-                  class="p-0 text-sm h-auto font-medium"
+                  :class="appConfig.calendar.metaValueLink"
                   @click="openAllParticipantsModal"
                   >{{ UI_TEXT.events.showParticipants }}
                 </BaseButton>
               </template>
               <template v-else>
-                <div class="flex items-center gap-3">
-                  <span class="text-sm font-bold text-dark-text">{{
+                <div :class="appConfig.calendar.eventItemWrapper">
+                  <span :class="[TEXT_SIZES.sm, FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]">{{
                     UI_TEXT.common.everyone
                   }}</span>
                 </div>
               </template>
             </div>
           </div>
-          <div :class="[appConfig.calendar.metaRowItem, 'mt-2 flex-col gap-1!']">
+          <div :class="[appConfig.calendar.filterFormGroup, SPACING_TOKENS.mt.sm]">
             <span :class="appConfig.calendar.metaLabel">{{ UI_TEXT.events.descriptionLabel }}</span>
             <span :class="appConfig.calendar.metaValue">{{
               eventsStore.previewEvent.description
@@ -169,7 +168,7 @@
           <!-- map -->
           <div
             v-if="eventsStore.previewEvent.address || eventsStore.previewEvent.latitude !== null"
-            :class="[appConfig.calendar.metaRowItem, 'mt-4 flex-col gap-2! items-start']"
+            :class="[appConfig.calendar.filterFormGroup, SPACING_TOKENS.mt.md]"
           >
             <span :class="appConfig.calendar.metaLabel">{{ UI_TEXT.events.locationLabel }}</span>
             <span v-if="eventsStore.previewEvent.address" :class="appConfig.calendar.metaValue">
@@ -182,7 +181,7 @@
                 eventsStore.previewEvent.longitude !== null &&
                 eventsStore.previewEvent.longitude !== undefined
               "
-              class="w-full h-48 rounded-lg overflow-hidden border border-gray-200 mt-1 relative z-0 shrink-0"
+              :class="appConfig.calendar.previewMapPlaceholder"
             >
               <ClientOnly>
                 <EventMapPreview
@@ -197,7 +196,7 @@
       <div v-else :class="appConfig.calendar.emptyPreview">{{ UI_TEXT.events.selectEvent }}</div>
     </template>
     <template #footer>
-      <div class="flex justify-end w-full">
+      <div :class="appConfig.calendar.filterButtonWrapper">
         <BaseButton
           :label="UI_TEXT.common.close"
           variant="actionCancelButton"

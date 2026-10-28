@@ -17,7 +17,6 @@
         <BaseInput
           v-model="editFormData.username"
           :label="UI_TEXT.auth.usernameLabel"
-          class="w-full"
         />
         <p v-if="usernameError" :class="appConfig.typography.inputError">{{ usernameError }}</p>
       </div>
@@ -40,7 +39,6 @@
           v-model="editFormData.email"
           :label="UI_TEXT.auth.emailLabel"
           type="email"
-          class="w-full"
         />
         <p v-if="emailError" :class="appConfig.typography.inputError">{{ emailError }}</p>
       </div>
@@ -63,7 +61,6 @@
           v-model="pwdData.oldPassword"
           :label="UI_TEXT.profile.oldPasswordLabel"
           type="password"
-          class="w-full"
         />
       </div>
       <div>
@@ -71,7 +68,6 @@
           v-model="pwdData.newPassword"
           :label="UI_TEXT.profile.newPasswordLabel"
           type="password"
-          class="w-full"
         />
       </div>
       <p v-if="passwordError" :class="appConfig.typography.inputError">{{ passwordError }}</p>
@@ -149,20 +145,22 @@
       :ui-size="appConfig.layout.modalSizeLg"
     >
       <template #body>
-        <div
-          class="w-full h-80 flex items-center justify-center bg-surface-600/10 rounded-2xl overflow-hidden mt-2"
-        >
+        <div :class="appConfig.calendar.previewMapPlaceholder">
           <img
             v-if="profileStore.selectedUser?.profile_image_url"
             :src="profileStore.selectedUser.profile_image_url"
             :alt="UI_TEXT.profile.fullPicture"
-            class="max-w-full max-h-full object-contain"
+            :class="appConfig.layout.mediaCoverImage"
           />
-          <UIcon v-else name="i-heroicons-user" class="w-32 h-32 text-surface-500/50" />
+          <UIcon
+            v-else
+            name="i-heroicons-user"
+            :class="[SIZE_TOKENS.avatar.xl, COLOR_TOKENS.text.primaryFaint]"
+          />
         </div>
       </template>
       <template #footer>
-        <div class="flex items-center justify-end w-full">
+        <div :class="appConfig.calendar.filterButtonWrapper">
           <BaseButton
             :class="appConfig.typography.modalActionBtnOk"
             :label="UI_TEXT.profile.ok"
@@ -198,13 +196,9 @@
               value-key="value"
             />
           </div>
-          <div class="flex gap-4">
-            <div class="flex-1">
-              <BaseInput :label="UI_TEXT.documents.issuedAtLabel" type="date" class="w-full" />
-            </div>
-            <div class="flex-1">
-              <BaseInput :label="UI_TEXT.documents.endsAtLabel" type="date" class="w-full" />
-            </div>
+          <div :class="appConfig.layout.modalFormGrid2Col">
+            <BaseInput :label="UI_TEXT.documents.issuedAtLabel" type="date" />
+            <BaseInput :label="UI_TEXT.documents.endsAtLabel" type="date" />
           </div>
         </form>
       </template>
