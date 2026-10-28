@@ -1,9 +1,9 @@
 <!-- frontend/app/components/documents/views/DocumentsDesktop.vue -->
 <template>
-  <div :class="appConfig.layout.pageWrapper">
+  <div :class="LAYOUT_CONFIG.pageWrapper">
     <!-- HEADER -->
-    <div :class="appConfig.layout.pageHeader">
-      <div :class="appConfig.calendar.headerActionLeft">
+    <div :class="LAYOUT_CONFIG.pageHeader">
+      <div :class="LAYOUT_CONFIG.headerActionLeft">
         <BaseButton
           v-if="isCurrentUserLeader"
           icon="i-heroicons-trash"
@@ -20,11 +20,11 @@
       </div>
 
       <!-- DROPDOWN HEADER -->
-      <div :class="appConfig.calendar.headerCenter">
+      <div :class="LAYOUT_CONFIG.headerCenter">
         <UPopover v-model:open="isGroupDropdownOpen">
-          <BaseButton variant="ghost" :class="appConfig.calendar.mobileHeaderButton">
-            <div :class="appConfig.calendar.mobileHeaderTitleRow">
-              <h1 :class="appConfig.typography.pageTitle">
+          <BaseButton variant="ghost" :class="LAYOUT_CONFIG.mobileHeaderButton">
+            <div :class="LAYOUT_CONFIG.mobileHeaderTitleRow">
+              <h1 :class="TYPOGRAPHY_CONFIG.pageTitle">
                 <ClientOnly :fallback="UI_TEXT.common.loading">
                   {{
                     isLoading
@@ -35,11 +35,7 @@
               </h1>
               <UIcon
                 name="i-heroicons-chevron-down"
-                :class="[
-                  SELECT_CONFIG.slots.trailingIcon,
-                  'static pointer-events-auto',
-                  isGroupDropdownOpen ? 'rotate-180' : '',
-                ]"
+                :class="[TYPOGRAPHY_CONFIG.iconBrandMd, isGroupDropdownOpen ? 'rotate-180' : '']"
               />
             </div>
           </BaseButton>
@@ -62,12 +58,12 @@
             </div>
           </template>
         </UPopover>
-        <p :class="appConfig.typography.pageSubtitle">
+        <p :class="TYPOGRAPHY_CONFIG.pageSubtitle">
           {{ UI_TEXT.documents.groupDocuments }}
         </p>
       </div>
 
-      <div :class="appConfig.calendar.headerActionRight">
+      <div :class="LAYOUT_CONFIG.headerActionRight">
         <BaseButton
           icon="i-heroicons-users"
           variant="glassIconButton"
@@ -95,17 +91,12 @@
       </div>
     </div>
 
-    <!-- ==================== -->
     <!-- GROUP DOCUMENT SECTION -->
-    <!-- ==================== -->
-    <div :class="appConfig.layout.sectionWrapper">
-      <div :class="[appConfig.calendar.eventsHeaderRow, SPACING_TOKENS.mb.lg]">
-        <div :class="appConfig.calendar.headerActionLeft">
-          <div :class="appConfig.calendar.headerSearchWrapper">
-            <BaseSearchInput
-              v-model="searchQuery"
-              :placeholder="UI_TEXT.documents.search"
-            />
+    <div :class="LAYOUT_CONFIG.sectionWrapper">
+      <div :class="LAYOUT_CONFIG.headerRow">
+        <div :class="LAYOUT_CONFIG.headerActionLeft">
+          <div :class="LAYOUT_CONFIG.headerSearchWrapper">
+            <BaseSearchInput v-model="searchQuery" :placeholder="UI_TEXT.documents.search" />
           </div>
 
           <UPopover>
@@ -140,11 +131,11 @@
           </UPopover>
         </div>
 
-        <div :class="appConfig.typography.sectionTitleTransparent">
+        <div :class="TYPOGRAPHY_CONFIG.sectionTitleTransparent">
           {{ UI_TEXT.documents.groupDocumentsHeading }}
         </div>
 
-        <div :class="appConfig.calendar.headerActionRight">
+        <div :class="LAYOUT_CONFIG.headerActionRight">
           <BaseButton
             v-if="isCurrentUserLeader"
             icon="i-heroicons-plus"
@@ -156,23 +147,20 @@
       </div>
 
       <!-- DOCUMENT GRID -->
-      <div v-if="isLoading" :class="appConfig.typography.statusLoading">
+      <div v-if="isLoading" :class="TYPOGRAPHY_CONFIG.statusLoading">
         {{ UI_TEXT.documents.loading }}
       </div>
 
-      <div v-else-if="documents.length > 0" :class="appConfig.layout.documentGrid">
+      <div v-else-if="documents.length > 0" :class="LAYOUT_CONFIG.documentGrid">
         <BaseCard
           v-for="doc in documents"
           :key="doc.file_id"
           variant="documentGlass"
-          :class="appConfig.layout.headerRelative"
+          :class="LAYOUT_CONFIG.headerRelative"
         >
-          <div :class="appConfig.layout.documentCardHeader">
-            <p :class="[FONT_WEIGHTS.bold, TEXT_SIZES.sm, SPACING_TOKENS.pr.sm, 'truncate']">
-              {{ doc.file_name }}
-            </p>
-
-            <div :class="appConfig.calendar.headerTitleRow">
+          <div :class="LAYOUT_CONFIG.documentCardHeader">
+            <p :class="TYPOGRAPHY_CONFIG.documentHeaderTitle">{{ doc.file_name }}</p>
+            <div :class="LAYOUT_CONFIG.headerTitleRow">
               <BaseButton
                 v-if="isCurrentUserLeader"
                 icon="i-heroicons-trash"
@@ -183,13 +171,10 @@
             </div>
           </div>
 
-          <div :class="appConfig.layout.documentCardImage">
-            <UIcon
-              name="i-heroicons-document"
-              :class="[SIZE_TOKENS.avatar.lg, COLOR_TOKENS.text.primaryFaint]"
-            />
+          <div :class="LAYOUT_CONFIG.documentCardImage">
+            <UIcon name="i-heroicons-document" :class="TYPOGRAPHY_CONFIG.iconWatermarkLg" />
 
-            <div :class="appConfig.layout.documentCardBottomActions">
+            <div :class="LAYOUT_CONFIG.documentCardBottomActions">
               <BaseButton
                 icon="i-heroicons-eye"
                 variant="ghostDangerIconButton"
@@ -207,45 +192,45 @@
             </div>
           </div>
 
-          <div :class="appConfig.layout.documentCardMeta">
+          <div :class="LAYOUT_CONFIG.documentCardMeta">
             <p>
               {{ ' ' + UI_TEXT.common.uploadedBy + ' '
-              }}<span :class="[FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]">{{
+              }}<span :class="TYPOGRAPHY_CONFIG.metaHighlight">{{
                 doc.creator?.username || UI_TEXT.common.unknown
               }}</span>
             </p>
             <p>
               {{ ' ' + UI_TEXT.common.uploadedAt + ' '
-              }}<span :class="[FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]">{{
+              }}<span :class="TYPOGRAPHY_CONFIG.metaHighlight">{{
                 new Date(doc.created_at).toLocaleDateString()
               }}</span>
             </p>
             <p>
               {{ ' ' + UI_TEXT.documents.documentType + ' '
-              }}<span :class="[FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]">{{
+              }}<span :class="TYPOGRAPHY_CONFIG.metaHighlight">{{
                 doc.documents?.document_type.toLocaleLowerCase() || UI_TEXT.common.notAvailable
               }}</span>
             </p>
-            <div :class="appConfig.layout.divider"></div>
-            <div :class="appConfig.layout.flexBetween">
+            <div :class="LAYOUT_CONFIG.divider"></div>
+            <div :class="LAYOUT_CONFIG.flexBetween">
               <p>
                 {{ ' ' + UI_TEXT.documents.fileType + ' '
-                }}<span :class="[FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]">{{
+                }}<span :class="TYPOGRAPHY_CONFIG.metaHighlight">{{
                   doc.mime_type.split('/')[1] || UI_TEXT.common.unknown
                 }}</span>
               </p>
               <p>
                 {{ ' ' + UI_TEXT.documents.fileSize + ' '
-                }}<span :class="[FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]"
+                }}<span :class="TYPOGRAPHY_CONFIG.metaHighlight"
                   >{{ (doc.file_size / (1024 * 1024)).toFixed(2)
                   }}{{ ' ' + UI_TEXT.common.megabytes }}</span
                 >
               </p>
             </div>
-            <div :class="appConfig.layout.divider"></div>
+            <div :class="LAYOUT_CONFIG.divider"></div>
             <p>
               {{ ' ' + UI_TEXT.documents.issued + ' '
-              }}<span :class="[FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]">{{
+              }}<span :class="TYPOGRAPHY_CONFIG.metaHighlight">{{
                 doc.documents?.issue_date
                   ? new Date(doc.documents.issue_date).toLocaleDateString()
                   : UI_TEXT.common.notAvailable
@@ -253,7 +238,7 @@
             </p>
             <p>
               {{ ' ' + UI_TEXT.documents.ends + ' '
-              }}<span :class="[FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]">{{
+              }}<span :class="TYPOGRAPHY_CONFIG.metaHighlight">{{
                 doc.documents?.expiry_date
                   ? new Date(doc.documents.expiry_date).toLocaleDateString()
                   : UI_TEXT.common.notAvailable
@@ -262,7 +247,7 @@
           </div>
         </BaseCard>
       </div>
-      <div v-else :class="appConfig.typography.statusLoading">
+      <div v-else :class="TYPOGRAPHY_CONFIG.statusLoading">
         {{
           searchQuery || filterType !== 'ALL'
             ? UI_TEXT.documents.noMatchingDocuments
@@ -272,13 +257,11 @@
     </div>
   </div>
 
-  <!-- ========================= -->
   <!-- MEMBER DOCUMENTS (leader) -->
-  <!-- ========================= -->
-  <div v-if="isCurrentUserLeader" :class="appConfig.layout.pageWrapper">
-    <div :class="[appConfig.calendar.eventsHeaderRow, SPACING_TOKENS.mb.lg]">
-      <div :class="appConfig.calendar.headerActionLeft">
-        <div :class="appConfig.calendar.headerSearchWrapper">
+  <div v-if="isCurrentUserLeader" :class="LAYOUT_CONFIG.pageWrapper">
+    <div :class="LAYOUT_CONFIG.headerRow">
+      <div :class="LAYOUT_CONFIG.headerActionLeft">
+        <div :class="LAYOUT_CONFIG.headerSearchWrapper">
           <BaseSearchInput
             v-model="memberSearchQuery"
             :placeholder="UI_TEXT.documents.searchPrivate"
@@ -319,15 +302,14 @@
         </UPopover>
       </div>
 
-      <div :class="appConfig.typography.sectionTitleTransparent">
+      <div :class="TYPOGRAPHY_CONFIG.sectionTitleTransparent">
         {{ UI_TEXT.documents.memberDocumentsHeading }}
       </div>
 
-      <div :class="appConfig.calendar.headerActionRight" />
+      <div :class="LAYOUT_CONFIG.headerActionRight" />
     </div>
 
-    <!-- Loading -->
-    <div v-if="isLoadingMemberDocuments" :class="appConfig.typography.statusLoading">
+    <div v-if="isLoadingMemberDocuments" :class="TYPOGRAPHY_CONFIG.statusLoading">
       {{ ' ' + UI_TEXT.documents.loadingMemberDocuments + ' ' }}
     </div>
 
@@ -337,35 +319,29 @@
           (t) => t.value !== 'ALL' && (memberFilterType === 'ALL' || memberFilterType === t.value),
         )"
         :key="type.value"
-        :class="appConfig.layout.sectionWrapper"
+        :class="LAYOUT_CONFIG.sectionWrapper"
       >
-        <h2 :class="appConfig.typography.sectionTitleTransparent">
+        <h2 :class="TYPOGRAPHY_CONFIG.sectionTitleTransparent">
           {{ type.label }}
         </h2>
 
-        <!-- Documents of this type -->
         <div
           v-if="filteredMemberDocuments(type.value).length > 0"
-          :class="appConfig.layout.documentGrid"
+          :class="LAYOUT_CONFIG.documentGrid"
         >
           <BaseCard
             v-for="doc in filteredMemberDocuments(type.value)"
             :key="doc.file_id"
             variant="documentGlass"
-            :class="appConfig.layout.headerRelative"
+            :class="LAYOUT_CONFIG.headerRelative"
           >
-            <div :class="appConfig.layout.documentCardHeader">
-              <p :class="[FONT_WEIGHTS.bold, TEXT_SIZES.sm, SPACING_TOKENS.pr.sm, 'truncate']">
-                {{ doc.file_name }}
-              </p>
+            <div :class="LAYOUT_CONFIG.documentCardHeader">
+              <p :class="TYPOGRAPHY_CONFIG.documentHeaderTitle">{{ doc.file_name }}</p>
             </div>
 
-            <div :class="appConfig.layout.documentCardImage">
-              <UIcon
-                name="i-heroicons-document-text"
-                :class="[SIZE_TOKENS.avatar.lg, COLOR_TOKENS.text.primaryFaint]"
-              />
-              <div :class="appConfig.layout.documentCardBottomActionEnd">
+            <div :class="LAYOUT_CONFIG.documentCardImage">
+              <UIcon name="i-heroicons-document-text" :class="TYPOGRAPHY_CONFIG.iconWatermarkLg" />
+              <div :class="LAYOUT_CONFIG.documentCardBottomActionEnd">
                 <BaseButton
                   icon="i-heroicons-eye"
                   variant="ghostDangerIconButton"
@@ -376,39 +352,39 @@
               </div>
             </div>
 
-            <div :class="appConfig.layout.documentCardMeta">
+            <div :class="LAYOUT_CONFIG.documentCardMeta">
               <p>
                 {{ ' ' + UI_TEXT.common.uploadedAt + ' '
-                }}<span :class="[FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]">{{
+                }}<span :class="TYPOGRAPHY_CONFIG.metaHighlight">{{
                   new Date(doc.created_at).toLocaleDateString()
                 }}</span>
               </p>
               <p>
                 {{ ' ' + UI_TEXT.documents.documentType + ' '
-                }}<span :class="[FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]">{{
+                }}<span :class="TYPOGRAPHY_CONFIG.metaHighlight">{{
                   doc.documents?.document_type ?? UI_TEXT.common.notAvailable
                 }}</span>
               </p>
-              <div :class="appConfig.layout.divider"></div>
-              <div :class="appConfig.layout.flexBetween">
+              <div :class="LAYOUT_CONFIG.divider"></div>
+              <div :class="LAYOUT_CONFIG.flexBetween">
                 <p>
                   {{ ' ' + UI_TEXT.documents.fileType + ' '
-                  }}<span :class="[FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]">{{
+                  }}<span :class="TYPOGRAPHY_CONFIG.metaHighlight">{{
                     doc.mime_type.split('/')[1] || UI_TEXT.common.unknown
                   }}</span>
                 </p>
                 <p>
                   {{ ' ' + UI_TEXT.documents.fileSize + ' '
-                  }}<span :class="[FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]"
+                  }}<span :class="TYPOGRAPHY_CONFIG.metaHighlight"
                     >{{ (doc.file_size / (1024 * 1024)).toFixed(2)
                     }}{{ ' ' + UI_TEXT.common.megabytes }}</span
                   >
                 </p>
               </div>
-              <div :class="appConfig.layout.divider"></div>
+              <div :class="LAYOUT_CONFIG.divider"></div>
               <p>
                 {{ ' ' + UI_TEXT.documents.issued + ' '
-                }}<span :class="[FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]">{{
+                }}<span :class="TYPOGRAPHY_CONFIG.metaHighlight">{{
                   doc.documents?.issue_date
                     ? new Date(doc.documents.issue_date).toLocaleDateString()
                     : UI_TEXT.common.notAvailable
@@ -416,7 +392,7 @@
               </p>
               <p>
                 {{ ' ' + UI_TEXT.documents.ends + ' '
-                }}<span :class="[FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]">{{
+                }}<span :class="TYPOGRAPHY_CONFIG.metaHighlight">{{
                   doc.documents?.expiry_date
                     ? new Date(doc.documents.expiry_date).toLocaleDateString()
                     : UI_TEXT.common.notAvailable
@@ -426,12 +402,8 @@
           </BaseCard>
         </div>
 
-        <!-- Empty per-type state -->
-        <div v-else :class="appConfig.typography.statusLoading">
-          <UIcon
-            name="i-heroicons-document-text"
-            :class="[SIZE_TOKENS.avatar.md, SPACING_TOKENS.mx.auto, SPACING_TOKENS.mb.sm, OPACITY_TOKENS.muted]"
-          />
+        <div v-else :class="TYPOGRAPHY_CONFIG.statusLoading">
+          <UIcon name="i-heroicons-document-text" :class="TYPOGRAPHY_CONFIG.iconEmptyState" />
           <p :class="TEXT_SIZES.sm">
             {{ ' ' + UI_TEXT.documents.no + ' ' }}{{ type.label.toLowerCase()
             }}{{ ' ' + UI_TEXT.documents.found + ' '
@@ -447,11 +419,8 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { useAppConfig } from '#imports';
 import type { GroupFile, PrivateDocumentMetadata } from '~/types/files.type';
 import type { GroupOutDto } from '~/types/groups.type';
-
-const appConfig = useAppConfig();
 
 const selectedGroup = defineModel<string | undefined>('selectedGroup');
 const searchQuery = defineModel<string>('searchQuery', { default: '' });

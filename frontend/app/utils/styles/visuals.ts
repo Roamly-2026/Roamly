@@ -94,7 +94,7 @@ export const SIZE_TOKENS = {
     lg: 'w-6 h-6',
     tall: '!w-6 !h-8',
     button: 'w-10 h-10',
-    hero: 'w-14 h-14'
+    hero: 'w-14 h-14',
   },
   // Avatars & Profile Pictures
   avatar: {

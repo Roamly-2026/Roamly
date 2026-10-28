@@ -9,16 +9,13 @@
       :cancel-text="UI_TEXT.common.cancel"
       :submit-text="UI_TEXT.common.save"
       :loading="isUpdatingProfile"
-      :ui-size="appConfig.layout.modalSizeSm"
+      :ui-size="LAYOUT_CONFIG.modalSizeSm"
       @cancel="profileStore.closeEditUsernameModal()"
       @submit="handleUpdateUsername"
     >
       <div>
-        <BaseInput
-          v-model="editFormData.username"
-          :label="UI_TEXT.auth.usernameLabel"
-        />
-        <p v-if="usernameError" :class="appConfig.typography.inputError">{{ usernameError }}</p>
+        <BaseInput v-model="editFormData.username" :label="UI_TEXT.auth.usernameLabel" />
+        <p v-if="usernameError" :class="TYPOGRAPHY_CONFIG.inputError">{{ usernameError }}</p>
       </div>
     </FormModal>
 
@@ -30,17 +27,13 @@
       :cancel-text="UI_TEXT.common.cancel"
       :submit-text="UI_TEXT.common.save"
       :loading="isUpdatingProfile"
-      :ui-size="appConfig.layout.modalSizeSm"
+      :ui-size="LAYOUT_CONFIG.modalSizeSm"
       @cancel="profileStore.closeEditEmailModal()"
       @submit="handleUpdateEmail"
     >
       <div>
-        <BaseInput
-          v-model="editFormData.email"
-          :label="UI_TEXT.auth.emailLabel"
-          type="email"
-        />
-        <p v-if="emailError" :class="appConfig.typography.inputError">{{ emailError }}</p>
+        <BaseInput v-model="editFormData.email" :label="UI_TEXT.auth.emailLabel" type="email" />
+        <p v-if="emailError" :class="TYPOGRAPHY_CONFIG.inputError">{{ emailError }}</p>
       </div>
     </FormModal>
 
@@ -52,7 +45,7 @@
       :cancel-text="UI_TEXT.common.cancel"
       :submit-text="UI_TEXT.common.save"
       :loading="isChangingPwd"
-      :ui-size="appConfig.layout.modalSizeSm"
+      :ui-size="LAYOUT_CONFIG.modalSizeSm"
       @cancel="profileStore.closeChangePasswordModal()"
       @submit="handleChangePassword"
     >
@@ -70,7 +63,7 @@
           type="password"
         />
       </div>
-      <p v-if="passwordError" :class="appConfig.typography.inputError">{{ passwordError }}</p>
+      <p v-if="passwordError" :class="TYPOGRAPHY_CONFIG.inputError">{{ passwordError }}</p>
     </FormModal>
 
     <!-- DELETE ACCOUNT MODAL -->
@@ -81,12 +74,12 @@
       :cancel-text="UI_TEXT.common.cancel"
       :confirm-text="UI_TEXT.common.delete"
       :loading="isDeleting"
-      :ui-size="appConfig.layout.modalSizeSm"
+      :ui-size="LAYOUT_CONFIG.modalSizeSm"
       @cancel="profileStore.closeDeleteModal()"
       @confirm="handleDeleteProfile"
     >
       <template #body>
-        <p :class="appConfig.typography.modalText">
+        <p :class="TYPOGRAPHY_CONFIG.modalText">
           {{ UI_TEXT.profile.deleteAccountConfirmation }}
         </p>
       </template>
@@ -96,12 +89,12 @@
     <BaseModal
       v-model:open="profileStore.isUploadPictureModalOpen"
       :title="UI_TEXT.profile.uploadPictureTitle"
-      :ui-size="appConfig.layout.modalSizeSm"
+      :ui-size="LAYOUT_CONFIG.modalSizeSm"
     >
       <template #body>
         <form
           id="upload-pic-form"
-          :class="appConfig.layout.modalForm"
+          :class="LAYOUT_CONFIG.modalForm"
           @submit.prevent="handleUploadPicture"
         >
           <div>
@@ -109,25 +102,25 @@
               :label="UI_TEXT.profile.selectFileLabel"
               type="file"
               accept="image/*"
-              :class="appConfig.layout.fileInput"
+              :class="LAYOUT_CONFIG.fileInput"
               @change="onPictureSelected"
             />
-            <p v-if="uploadPicError" :class="appConfig.typography.inputError">
+            <p v-if="uploadPicError" :class="TYPOGRAPHY_CONFIG.inputError">
               {{ uploadPicError }}
             </p>
           </div>
         </form>
       </template>
       <template #footer>
-        <div :class="appConfig.layout.modalActions">
+        <div :class="LAYOUT_CONFIG.modalActions">
           <BaseButton
-            :class="appConfig.typography.modalActionBtnCancel"
+            :class="TYPOGRAPHY_CONFIG.modalActionBtnCancel"
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="profileStore.closeUploadPictureModal()"
           />
           <BaseButton
-            :class="appConfig.typography.modalActionBtnOk"
+            :class="TYPOGRAPHY_CONFIG.modalActionBtnOk"
             :label="UI_TEXT.common.upload"
             variant="actionOkButton"
             type="submit"
@@ -142,27 +135,23 @@
     <BaseModal
       v-model:open="profileStore.isViewPictureModalOpen"
       :title="UI_TEXT.profile.pictureTitle"
-      :ui-size="appConfig.layout.modalSizeLg"
+      :ui-size="LAYOUT_CONFIG.modalSizeLg"
     >
       <template #body>
-        <div :class="appConfig.calendar.previewMapPlaceholder">
+        <div :class="CALENDAR_CONFIG.previewMapPlaceholder">
           <img
             v-if="profileStore.selectedUser?.profile_image_url"
             :src="profileStore.selectedUser.profile_image_url"
             :alt="UI_TEXT.profile.fullPicture"
-            :class="appConfig.layout.mediaCoverImage"
+            :class="LAYOUT_CONFIG.mediaCoverImage"
           />
-          <UIcon
-            v-else
-            name="i-heroicons-user"
-            :class="[SIZE_TOKENS.avatar.xl, COLOR_TOKENS.text.primaryFaint]"
-          />
+          <UIcon v-else name="i-heroicons-user" :class="TYPOGRAPHY_CONFIG.iconWatermarkXl" />
         </div>
       </template>
       <template #footer>
-        <div :class="appConfig.calendar.filterButtonWrapper">
+        <div :class="LAYOUT_CONFIG.rightButtonWrapper">
           <BaseButton
-            :class="appConfig.typography.modalActionBtnOk"
+            :class="TYPOGRAPHY_CONFIG.modalActionBtnOk"
             :label="UI_TEXT.profile.ok"
             @click="profileStore.closeViewPictureModal()"
           />
@@ -174,19 +163,17 @@
     <BaseModal
       v-model:open="profileStore.isUploadDocumentModalOpen"
       :title="UI_TEXT.documents.uploadTitle"
-      :ui-size="appConfig.layout.modalSizeMd"
+      :ui-size="LAYOUT_CONFIG.modalSizeMd"
     >
       <template #body>
         <form
           id="upload-doc-form"
-          :class="appConfig.layout.modalForm"
+          :class="LAYOUT_CONFIG.modalForm"
           @submit.prevent="profileStore.closeUploadDocumentModal()"
         >
           <BaseInput :label="UI_TEXT.profile.selectFileLabel" type="file" />
           <div>
-            <label :class="appConfig.typography.inputLabel">{{
-              UI_TEXT.documents.typeLabel
-            }}</label>
+            <label :class="TYPOGRAPHY_CONFIG.inputLabel">{{ UI_TEXT.documents.typeLabel }}</label>
             <USelect
               :items="[
                 { label: 'ID Card', value: 'id' },
@@ -196,22 +183,22 @@
               value-key="value"
             />
           </div>
-          <div :class="appConfig.layout.modalFormGrid2Col">
+          <div :class="LAYOUT_CONFIG.modalFormGrid2Col">
             <BaseInput :label="UI_TEXT.documents.issuedAtLabel" type="date" />
             <BaseInput :label="UI_TEXT.documents.endsAtLabel" type="date" />
           </div>
         </form>
       </template>
       <template #footer>
-        <div :class="appConfig.layout.modalActions">
+        <div :class="LAYOUT_CONFIG.modalActions">
           <BaseButton
-            :class="appConfig.typography.modalActionBtnCancel"
+            :class="TYPOGRAPHY_CONFIG.modalActionBtnCancel"
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             @click="profileStore.closeUploadDocumentModal()"
           />
           <BaseButton
-            :class="appConfig.typography.modalActionBtnOk"
+            :class="TYPOGRAPHY_CONFIG.modalActionBtnOk"
             :label="UI_TEXT.common.upload"
             type="submit"
             form="upload-doc-form"
@@ -242,9 +229,7 @@ import {
   changePasswordSchema,
 } from '~/utils/schemas/users.schema';
 import type { ApiError } from '~/types/apiError.type';
-import { useAppConfig } from '#imports';
 
-const appConfig = useAppConfig();
 const profileStore = useProfileStore();
 const router = useRouter();
 const { logout } = useAuth();

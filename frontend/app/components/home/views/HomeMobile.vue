@@ -1,55 +1,53 @@
 <!-- frontend/app/components/home/views/HomeMobile.vue -->
 <template>
-  <div :class="appConfig.layout.homeWrapper">
+  <div :class="LAYOUT_CONFIG.homeWrapper">
     <!-- HERO SECTION -->
-    <section id="home" :class="[appConfig.layout.homeHeroSection, SPACING_TOKENS.mt.md]">
+    <section id="home" :class="LAYOUT_CONFIG.homeHeroSection">
       <BaseButton
         :label="UI_TEXT.home.getStarted"
         to="/groups"
         variant="actionHeroButton"
         :class="SPACING_TOKENS.mb.xl"
       />
-      <p :class="appConfig.typography.homeHeroText">
+      <p :class="TYPOGRAPHY_CONFIG.homeHeroText">
         {{ UI_TEXT.home.description }}
       </p>
     </section>
 
     <!-- FEATURE CARDS SECTION -->
-    <section :class="appConfig.layout.homeCardsSection">
+    <section :class="LAYOUT_CONFIG.homeCardsSection">
       <BaseCard
         v-for="card in featureCards"
         :key="card.id"
         :variant="activeCard === card.id ? 'outlineGlass' : 'interactiveGlass'"
       >
-        <div :class="[appConfig.layout.cardContentCenter, SPACING_TOKENS.p.sm]">
-          <!-- Card Content Wrapper -->
-          <div :class="appConfig.layout.cardContentCenter">
+        <div :class="LAYOUT_CONFIG.cardContentCenter">
+          <div :class="LAYOUT_CONFIG.cardContentCenter">
             <h3
-              :class="[
-                appConfig.typography.cardTitleCenter,
-                activeCard === card.id ? COLOR_TOKENS.text.inverse : COLOR_TOKENS.text.primary,
-              ]"
+              :class="
+                activeCard === card.id
+                  ? TYPOGRAPHY_CONFIG.cardTitleInverseCenter
+                  : TYPOGRAPHY_CONFIG.cardTitleCenter
+              "
             >
               {{ card.title }}
             </h3>
 
             <UIcon
               :name="card.icon"
-              :class="[
-                SIZE_TOKENS.avatar.lg,
-                OPACITY_TOKENS.soft,
-                INTERACTION_TOKENS.base,
-                activeCard === card.id ? COLOR_TOKENS.text.inverse : COLOR_TOKENS.text.brandAccent,
-              ]"
+              :class="
+                activeCard === card.id
+                  ? TYPOGRAPHY_CONFIG.homeCardIconActive
+                  : TYPOGRAPHY_CONFIG.homeCardIconInactive
+              "
             />
 
             <p
-              :class="[
-                TEXT_SIZES.sm,
-                TEXT_LEADING.relaxed,
-                SPACING_TOKENS.mb.sm,
-                activeCard === card.id ? COLOR_TOKENS.text.inverse : COLOR_TOKENS.text.primarySoft,
-              ]"
+              :class="
+                activeCard === card.id
+                  ? TYPOGRAPHY_CONFIG.homeCardDescActive
+                  : TYPOGRAPHY_CONFIG.homeCardDescInactive
+              "
             >
               {{ card.desc }}
             </p>
@@ -58,30 +56,15 @@
           <!-- Bottom Action Button -->
           <BaseButton
             variant="ghost"
-            :class="[
-              appConfig.typography.navLink,
-              FONT_WEIGHTS.bold,
-              TEXT_TRACKING.wide,
-              SPACING_TOKENS.mt.sm,
-              activeCard === card.id ? COLOR_TOKENS.text.inverse : COLOR_TOKENS.text.brandAccent,
-            ]"
+            :class="TYPOGRAPHY_CONFIG.authResendBtn"
             @click="emit('toggleCard', card.id)"
           >
             {{ activeCard === card.id ? UI_TEXT.home.showLess : UI_TEXT.home.learnMore }}
           </BaseButton>
 
           <!-- Extended Description (Active State) -->
-          <div
-            v-if="activeCard === card.id"
-            :class="[
-              appConfig.layout.divider,
-              SPACING_TOKENS.pt.md,
-              COLOR_TOKENS.text.inverse,
-              OPACITY_TOKENS.high,
-              TEXT_LEADING.relaxed,
-            ]"
-          >
-            <ul :class="[appConfig.layout.formWrapper, SPACING_TOKENS.pl.lg]">
+          <div v-if="activeCard === card.id" :class="TYPOGRAPHY_CONFIG.homeCardExtendedBox">
+            <ul :class="LAYOUT_CONFIG.formWrapper">
               <li v-for="(item, index) in card.extendedDesc" :key="index">
                 {{ item }}
               </li>
@@ -92,21 +75,21 @@
     </section>
 
     <!-- ABOUT SECTION -->
-    <section id="about" :class="appConfig.layout.homeContentSection">
-      <h2 :class="appConfig.typography.homeSectionTitle">{{ UI_TEXT.home.aboutHeading }}</h2>
-      <p :class="appConfig.typography.homeSectionText">{{ UI_TEXT.home.aboutDescription }}</p>
+    <section id="about" :class="LAYOUT_CONFIG.homeContentSection">
+      <h2 :class="TYPOGRAPHY_CONFIG.homeSectionTitle">{{ UI_TEXT.home.aboutHeading }}</h2>
+      <p :class="TYPOGRAPHY_CONFIG.homeSectionText">{{ UI_TEXT.home.aboutDescription }}</p>
     </section>
 
     <!-- SUPPORT SECTION -->
-    <section id="support" :class="[appConfig.layout.homeContentSection, SPACING_TOKENS.mb.xl]">
-      <h2 :class="appConfig.typography.homeSectionTitle">{{ UI_TEXT.home.supportHeading }}</h2>
-      <p :class="appConfig.typography.homeSectionText">{{ UI_TEXT.home.supportDescription }}</p>
+    <section id="support" :class="LAYOUT_CONFIG.homeContentSection">
+      <h2 :class="TYPOGRAPHY_CONFIG.homeSectionTitle">{{ UI_TEXT.home.supportHeading }}</h2>
+      <p :class="TYPOGRAPHY_CONFIG.homeSectionText">{{ UI_TEXT.home.supportDescription }}</p>
     </section>
 
     <!-- CONTACT SECTION -->
-    <section id="contact" :class="[appConfig.layout.homeContentSection, SPACING_TOKENS.mb.xl]">
-      <h2 :class="appConfig.typography.homeSectionTitle">{{ UI_TEXT.home.contactUs }}</h2>
-      <div :class="[appConfig.layout.actionGroup, SPACING_TOKENS.mt.md]">
+    <section id="contact" :class="LAYOUT_CONFIG.homeContentSection">
+      <h2 :class="TYPOGRAPHY_CONFIG.homeSectionTitle">{{ UI_TEXT.home.contactUs }}</h2>
+      <div :class="LAYOUT_CONFIG.actionGroupCenter">
         <BaseButton
           v-for="link in contactLinks"
           :key="link.name"
@@ -122,8 +105,6 @@
 </template>
 
 <script setup lang="ts">
-import { useAppConfig } from '#imports';
-
 interface FeatureCard {
   id: string;
   title: string;
@@ -138,8 +119,6 @@ interface ContactLink {
   url: string;
   target: string;
 }
-
-const appConfig = useAppConfig();
 
 defineProps<{
   featureCards: FeatureCard[];

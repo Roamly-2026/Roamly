@@ -5,40 +5,37 @@
     <BaseModal
       v-model:open="eventsStore.isParticipantsModalOpen"
       :title="UI_TEXT.events.eventParticipants"
-      :ui-size="appConfig.layout.modalSizeMd"
+      :ui-size="LAYOUT_CONFIG.modalSizeMd"
     >
       <template #body>
-        <div :class="appConfig.calendar.participantModalScroll">
+        <div :class="LAYOUT_CONFIG.listModalScroll">
           <div
             v-for="user in eventsStore.currentEventParticipants"
             :key="user.uuid"
-            :class="appConfig.calendar.participantCard"
+            :class="LAYOUT_CONFIG.listCard"
             @click="handleOpenUserProfile(user)"
           >
-            <div :class="appConfig.calendar.previewTitleRow">
-              <div :class="appConfig.layout.actionGroup">
+            <div :class="LAYOUT_CONFIG.flexBetween">
+              <div :class="LAYOUT_CONFIG.actionGroup">
                 <UAvatar
                   :alt="user.username"
                   :src="user.profile_image_url || undefined"
                   icon="i-heroicons-user"
                   size="xl"
-                  :class="appConfig.calendar.participantCardAvatar"
+                  :class="LAYOUT_CONFIG.listCardAvatar"
                 />
 
-                <div :class="appConfig.calendar.participantCardInfo">
-                  <div :class="appConfig.calendar.headerTitleRow">
-                    <h4 :class="appConfig.calendar.participantCardName">{{ user.username }}</h4>
+                <div :class="LAYOUT_CONFIG.listCardInfo">
+                  <div :class="LAYOUT_CONFIG.headerTitleRow">
+                    <h4 :class="TYPOGRAPHY_CONFIG.listCardName">{{ user.username }}</h4>
                     <UTooltip v-if="isGroupLeader(user)" :text="UI_TEXT.events.groupLeader">
-                      <UIcon
-                        name="i-heroicons-star"
-                        :class="[SIZE_TOKENS.icon.sm, COLOR_TOKENS.text.brandAccent]"
-                      />
+                      <UIcon name="i-heroicons-star" :class="TYPOGRAPHY_CONFIG.iconBrandSm" />
                     </UTooltip>
                   </div>
-                  <span :class="appConfig.calendar.participantCardRole">
+                  <span :class="TYPOGRAPHY_CONFIG.badgeRole">
                     {{ isEventCreator(user) ? UI_TEXT.events.creator : UI_TEXT.events.participant }}
                   </span>
-                  <p :class="appConfig.calendar.participantCardEmail">{{ user.email }}</p>
+                  <p :class="TYPOGRAPHY_CONFIG.bodySmMutedTruncate">{{ user.email }}</p>
                 </div>
               </div>
               <BaseButton
@@ -53,14 +50,14 @@
           </div>
           <div
             v-if="eventsStore.currentEventParticipants.length === 0"
-            :class="appConfig.calendar.emptyPreview"
+            :class="TYPOGRAPHY_CONFIG.emptyStateText"
           >
             {{ UI_TEXT.events.noParticipants }}
           </div>
         </div>
       </template>
       <template #footer>
-        <div :class="appConfig.calendar.filterButtonWrapper">
+        <div :class="LAYOUT_CONFIG.rightButtonWrapper">
           <BaseButton
             :label="UI_TEXT.common.close"
             variant="actionCancelButton"
@@ -77,14 +74,14 @@
       :cancel-text="UI_TEXT.common.cancel"
       :confirm-text="UI_TEXT.common.remove"
       :loading="removeParticipantMutation.isLoading.value"
-      :ui-size="appConfig.layout.modalSizeMd"
+      :ui-size="LAYOUT_CONFIG.modalSizeMd"
       @cancel="eventsStore.closeRemoveParticipantModal()"
       @confirm="confirmRemoveParticipant"
     >
       <template #body>
-        <p :class="appConfig.typography.modalText">
+        <p :class="TYPOGRAPHY_CONFIG.modalText">
           {{ ' ' + UI_TEXT.events.removeBeforeName }}
-          <span :class="appConfig.typography.modalInlineHighlight">{{
+          <span :class="TYPOGRAPHY_CONFIG.modalInlineHighlight">{{
             eventsStore.participantToRemove?.username
           }}</span>
           {{ UI_TEXT.events.removeAfterName + ' ' }}
@@ -96,35 +93,33 @@
     <BaseModal
       v-model:open="eventsStore.isAddMembersModalOpen"
       :title="UI_TEXT.events.addMembers"
-      :ui-size="appConfig.layout.modalSizeMd"
+      :ui-size="LAYOUT_CONFIG.modalSizeMd"
     >
       <template #body>
-        <div :class="appConfig.layout.modalForm">
-          <p :class="appConfig.typography.modalText">{{ UI_TEXT.events.selectMembers }}</p>
-          <div :class="appConfig.calendar.participantModalScroll">
+        <div :class="LAYOUT_CONFIG.modalForm">
+          <p :class="TYPOGRAPHY_CONFIG.modalText">{{ UI_TEXT.events.selectMembers }}</p>
+          <div :class="LAYOUT_CONFIG.listModalScroll">
             <div
               v-for="user in availableGroupMembers"
               :key="user.email"
               :class="[
-                appConfig.calendar.participantCard,
-                selectedEmailsToAdd.includes(user.email)
-                  ? [BORDER_TOKENS.ringBrand, COLOR_TOKENS.surface.brandTint]
-                  : '',
+                LAYOUT_CONFIG.listCard,
+                selectedEmailsToAdd.includes(user.email) ? LAYOUT_CONFIG.listCardSelected : '',
               ]"
               @click="toggleMemberSelection(user.email)"
             >
-              <div :class="appConfig.calendar.previewTitleRow">
-                <div :class="appConfig.layout.actionGroup">
+              <div :class="LAYOUT_CONFIG.flexBetween">
+                <div :class="LAYOUT_CONFIG.actionGroup">
                   <UAvatar
                     :alt="user.username"
                     :src="user.profile_image_url || undefined"
                     icon="i-heroicons-user"
                     size="xl"
-                    :class="appConfig.calendar.participantCardAvatar"
+                    :class="LAYOUT_CONFIG.listCardAvatar"
                   />
-                  <div :class="appConfig.calendar.participantCardInfo">
-                    <h4 :class="appConfig.calendar.participantCardName">{{ user.username }}</h4>
-                    <p :class="appConfig.calendar.participantCardEmail">{{ user.email }}</p>
+                  <div :class="LAYOUT_CONFIG.listCardInfo">
+                    <h4 :class="TYPOGRAPHY_CONFIG.listCardName">{{ user.username }}</h4>
+                    <p :class="TYPOGRAPHY_CONFIG.bodySmMutedTruncate">{{ user.email }}</p>
                   </div>
                 </div>
                 <UIcon
@@ -133,18 +128,17 @@
                       ? 'i-heroicons-check-circle-solid'
                       : 'i-heroicons-plus-circle'
                   "
-                  :class="[
-                    SIZE_TOKENS.icon.lg,
+                  :class="
                     selectedEmailsToAdd.includes(user.email)
-                      ? COLOR_TOKENS.text.brandAccent
-                      : COLOR_TOKENS.text.primaryFaint,
-                  ]"
+                      ? TYPOGRAPHY_CONFIG.iconBrandLg
+                      : TYPOGRAPHY_CONFIG.iconFaintSm
+                  "
                 />
               </div>
             </div>
             <div
               v-if="availableGroupMembers.length === 0"
-              :class="appConfig.calendar.emptyPreview"
+              :class="TYPOGRAPHY_CONFIG.emptyStateText"
             >
               {{ ' ' + UI_TEXT.events.noAvailableMembers + ' ' }}
             </div>
@@ -152,18 +146,18 @@
         </div>
       </template>
       <template #footer>
-        <div :class="appConfig.layout.modalActions">
+        <div :class="LAYOUT_CONFIG.modalActions">
           <BaseButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
-            :class="appConfig.typography.modalActionBtnCancel"
+            :class="TYPOGRAPHY_CONFIG.modalActionBtnCancel"
             :disabled="addParticipantsMutation.isLoading.value"
             @click="closeAddMembersModal"
           />
           <BaseButton
             :label="UI_TEXT.events.addSelected"
             variant="actionOkButton"
-            :class="appConfig.typography.modalActionBtnOk"
+            :class="TYPOGRAPHY_CONFIG.modalActionBtnOk"
             :loading="addParticipantsMutation.isLoading.value"
             :disabled="selectedEmailsToAdd.length === 0"
             @click="submitNewMembers"
@@ -176,7 +170,6 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { useAppConfig } from '#imports';
 import { useEventsStore } from '~/stores/events.modals.store';
 import { useGroupsStore } from '~/stores/groups.modals.store';
 import { useCurrentUserQuery } from '~/queries/user.query';
@@ -187,7 +180,6 @@ import {
 } from '~/queries/events.mutation';
 import type { EventCreatorDto } from '~/types/events.type';
 
-const appConfig = useAppConfig();
 const eventsStore = useEventsStore();
 const groupsStore = useGroupsStore();
 

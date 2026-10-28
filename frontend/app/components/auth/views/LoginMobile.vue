@@ -1,19 +1,17 @@
 <!-- frontend/app/components/auth/views/LoginMobile.vue -->
 <template>
-  <div :class="appConfig.layout.mobileAuthWrapper">
-    <!-- LOGIN FORM CARD -->
+  <div :class="LAYOUT_CONFIG.mobileAuthWrapper">
     <BaseCard>
-      <div :class="appConfig.typography.authTitleWrapper">
-        <h1 :class="appConfig.typography.authTitle">
+      <div :class="TYPOGRAPHY_CONFIG.authTitleWrapper">
+        <h1 :class="TYPOGRAPHY_CONFIG.authTitle">
           {{ UI_TEXT.auth.loginHeading }}
         </h1>
       </div>
 
-      <!-- FORM -->
       <UForm
         :schema="loginSchema"
         :state="form"
-        :class="appConfig.layout.formWrapper"
+        :class="LAYOUT_CONFIG.formWrapper"
         @submit="onSubmit"
       >
         <BaseInput
@@ -34,41 +32,39 @@
           :ui="{ base: SPACING_TOKENS.pxImportant.md }"
         />
 
-        <div v-if="error" :class="appConfig.typography.formStatusError">
+        <div v-if="error" :class="TYPOGRAPHY_CONFIG.formStatusError">
           {{ getErrorMessage(error) }}
         </div>
-        <div v-if="status === 'success'" :class="appConfig.typography.formStatusSuccess">
+        <div v-if="status === 'success'" :class="TYPOGRAPHY_CONFIG.formStatusSuccess">
           {{ UI_TEXT.auth.loginSuccess }}
         </div>
 
-        <!-- ACTIONS -->
-        <div :class="[appConfig.layout.modalActions, SPACING_TOKENS.pt.lg]">
+        <div :class="LAYOUT_CONFIG.modalActions">
           <BaseButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
             :disabled="isLoading"
-            :class="CARD_CONFIG.slots.root"
+            :class="LAYOUT_CONFIG.fullWidth"
             @click="clearForm"
           />
           <BaseButton
             type="submit"
             :label="UI_TEXT.auth.loginTitle"
             variant="actionOkButton"
-            :class="CARD_CONFIG.slots.root"
+            :class="LAYOUT_CONFIG.fullWidth"
             :loading="isLoading"
           />
         </div>
       </UForm>
     </BaseCard>
 
-    <!-- REGISTRATION PROMPT BUTTON -->
-    <div :class="appConfig.layout.singleButtonWrapper">
+    <div :class="LAYOUT_CONFIG.singleButtonWrapper">
       <BaseButton
         to="/register"
         :label="UI_TEXT.auth.registerPrompt"
         variant="actionAccentHeroButton"
         :tooltip="UI_TEXT.tooltips.registerPrompt"
-        :class="CARD_CONFIG.slots.root"
+        :class="LAYOUT_CONFIG.fullWidth"
       />
     </div>
   </div>
@@ -76,13 +72,10 @@
 
 <script setup lang="ts">
 import { reactive } from 'vue';
-import { useAppConfig } from '#imports';
 import type { FormSubmitEvent } from '#ui/types';
 import { loginSchema, type LoginFormState } from '~/utils/schemas/login.schema';
 import { getErrorMessage } from '~/utils/error.utils';
 import type { ApiError } from '~/types/apiError.type';
-
-const appConfig = useAppConfig();
 
 defineProps<{
   isLoading: boolean;

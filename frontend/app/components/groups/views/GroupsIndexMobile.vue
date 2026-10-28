@@ -1,15 +1,10 @@
 <!-- frontend/app/components/groups/views/IndexMobile.vue -->
 <template>
-  <div :class="appConfig.layout.pageWrapper">
-    <!-- PAGE TITLE -->
-    <h1 :class="appConfig.typography.pageTitle">{{ UI_TEXT.groups.heading }}</h1>
+  <div :class="LAYOUT_CONFIG.pageWrapper">
+    <h1 :class="TYPOGRAPHY_CONFIG.pageTitle">{{ UI_TEXT.groups.heading }}</h1>
 
-    <!-- ACTION BUTTONS -->
-    <div :class="appConfig.calendar.mobileToolbar">
-      <BaseSearchInput
-        v-model="searchQuery"
-        :placeholder="UI_TEXT.groups.searchGroups"
-      />
+    <div :class="LAYOUT_CONFIG.mobileToolbar">
+      <BaseSearchInput v-model="searchQuery" :placeholder="UI_TEXT.groups.searchGroups" />
 
       <BaseButton
         icon="i-heroicons-plus"
@@ -25,28 +20,24 @@
       />
     </div>
 
-    <!-- CONTENT SECTION -->
     <ClientOnly>
-      <!-- LOADING / ERROR STATES -->
-      <div v-if="isLoading && groupsList.length === 0" :class="appConfig.typography.statusLoading">
+      <div v-if="isLoading && groupsList.length === 0" :class="TYPOGRAPHY_CONFIG.statusLoading">
         {{ UI_TEXT.common.loading }}
       </div>
-      <div v-else-if="error" :class="appConfig.typography.statusError">
+      <div v-else-if="error" :class="TYPOGRAPHY_CONFIG.statusError">
         {{ UI_TEXT.errors.fetch }}
       </div>
 
-      <!-- GROUPS GRID -->
-      <div v-else-if="groupsList.length > 0" :class="appConfig.layout.cardContent">
-        <div v-if="filteredGroups.length > 0" :class="appConfig.layout.cardGrid">
+      <div v-else-if="groupsList.length > 0" :class="LAYOUT_CONFIG.cardContent">
+        <div v-if="filteredGroups.length > 0" :class="LAYOUT_CONFIG.cardGrid">
           <BaseCard
             v-for="group in filteredGroups"
             :key="group.uuid"
             variant="pointedGlass"
-            :class="[appConfig.layout.headerRelative, INTERACTION_TOKENS.base]"
+            :class="[LAYOUT_CONFIG.headerRelative, INTERACTION_TOKENS.base]"
             @click="router.push(`/groups/${group.uuid}/members`)"
           >
-            <!-- LEAVE BUTTON -->
-            <div :class="appConfig.layout.cardCornerLeft">
+            <div :class="LAYOUT_CONFIG.cardCornerLeft">
               <BaseButton
                 icon="i-heroicons-arrow-right-on-rectangle"
                 variant="ghostDangerIconButton"
@@ -55,10 +46,9 @@
               />
             </div>
 
-            <!-- DELETE BUTTON -->
             <div
               v-if="group.role.toLowerCase() === 'leader'"
-              :class="appConfig.layout.cardCornerRight"
+              :class="LAYOUT_CONFIG.cardCornerRight"
             >
               <BaseButton
                 icon="i-heroicons-trash"
@@ -68,40 +58,36 @@
               />
             </div>
 
-            <!-- CARD CONTENT -->
-            <div :class="appConfig.layout.cardContent">
-              <h3 :class="appConfig.typography.cardTitleCenter">{{ group.name }}</h3>
-              <p :class="[TEXT_SIZES.sm, COLOR_TOKENS.text.primarySoft, FONT_WEIGHTS.medium]">
+            <div :class="LAYOUT_CONFIG.cardContent">
+              <h3 :class="TYPOGRAPHY_CONFIG.cardTitleCenter">{{ group.name }}</h3>
+              <p :class="TYPOGRAPHY_CONFIG.bodySmSoft">
                 {{ UI_TEXT.groups.yourRoleLabel }}
-                <span :class="[FONT_WEIGHTS.bold, 'capitalize']">{{ group.role }}</span>
+                <span :class="TYPOGRAPHY_CONFIG.metaHighlightCap">{{ group.role }}</span>
               </p>
-              <div :class="appConfig.layout.cardFooter">
+              <div :class="LAYOUT_CONFIG.cardFooter">
                 <div>
-                  <p :class="OPACITY_TOKENS.subtle">{{ UI_TEXT.groups.createdAtLabel }}</p>
-                  <p :class="FONT_WEIGHTS.semibold">{{ group.created_at }}</p>
+                  <p :class="TYPOGRAPHY_CONFIG.metaLabelSoft">
+                    {{ UI_TEXT.groups.createdAtLabel }}
+                  </p>
+                  <p :class="TYPOGRAPHY_CONFIG.metaTime">{{ group.created_at }}</p>
                 </div>
-                <div :class="[appConfig.calendar.headerTitleRow, FONT_WEIGHTS.semibold]">
-                  <span>{{ group.current_size }}</span>
-                  <UIcon
-                    name="i-heroicons-user"
-                    :class="[SIZE_TOKENS.icon.md, COLOR_TOKENS.text.brandAccent]"
-                  />
+                <div :class="LAYOUT_CONFIG.headerTitleRow">
+                  <span :class="TYPOGRAPHY_CONFIG.metaTime">{{ group.current_size }}</span>
+                  <UIcon name="i-heroicons-user" :class="TYPOGRAPHY_CONFIG.iconBrandMd" />
                 </div>
               </div>
             </div>
           </BaseCard>
         </div>
 
-        <!-- INFINITE SCROLL TRIGGER -->
-        <div ref="loadMoreTrigger" :class="appConfig.layout.infiniteScrollTrigger">
-          <span v-if="isFetchingNextPage" :class="[COLOR_TOKENS.text.primaryMuted, TEXT_SIZES.sm]">
+        <div ref="loadMoreTrigger" :class="LAYOUT_CONFIG.infiniteScrollTrigger">
+          <span v-if="isFetchingNextPage" :class="TYPOGRAPHY_CONFIG.bodySmMuted">
             {{ UI_TEXT.groups.loadingGroups }}
           </span>
         </div>
       </div>
 
-      <!-- EMPTY STATE -->
-      <div v-else :class="appConfig.typography.statusLoading">
+      <div v-else :class="TYPOGRAPHY_CONFIG.statusLoading">
         {{ UI_TEXT.groups.noGroups }}
       </div>
     </ClientOnly>
@@ -109,7 +95,6 @@
 </template>
 
 <script setup lang="ts">
-import { useAppConfig } from '#imports';
 import { useRouter } from 'vue-router';
 import { ref, computed } from 'vue';
 import { useIntersectionObserver } from '@vueuse/core';
@@ -117,7 +102,6 @@ import { useGroupsStore } from '~/stores/groups.modals.store';
 import type { GroupOutDto } from '~/types/groups.type';
 import type { ApiError } from '~/types/apiError.type';
 
-const appConfig = useAppConfig();
 const router = useRouter();
 const groupsStore = useGroupsStore();
 

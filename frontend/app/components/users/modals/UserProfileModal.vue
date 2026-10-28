@@ -3,27 +3,26 @@
   <BaseModal
     v-model:open="groupsStore.isUserProfileModalOpen"
     :dismissible="true"
-    :ui-size="appConfig.layout.modalSizeMd"
+    :ui-size="LAYOUT_CONFIG.modalSizeMd"
   >
     <template #body>
-      <div :class="appConfig.layout.modalScrollBody">
-        <!-- BASIC INFO -->
-        <div :class="appConfig.calendar.filterFormGroup">
-          <div :class="appConfig.layout.profileDetailRow">
-            <p :class="appConfig.typography.profileLabel">{{ UI_TEXT.auth.emailLabel }}</p>
-            <p :class="appConfig.typography.profileValue">{{ userProfile?.email ?? '—' }}</p>
+      <div :class="LAYOUT_CONFIG.modalScrollBody">
+        <div :class="LAYOUT_CONFIG.modalFormGroup">
+          <div :class="LAYOUT_CONFIG.profileDetailRow">
+            <p :class="TYPOGRAPHY_CONFIG.profileLabel">{{ UI_TEXT.auth.emailLabel }}</p>
+            <p :class="TYPOGRAPHY_CONFIG.profileValue">{{ userProfile?.email ?? '—' }}</p>
           </div>
-          <div :class="appConfig.layout.profileDetailRow">
-            <p :class="appConfig.typography.profileLabel">
+          <div :class="LAYOUT_CONFIG.profileDetailRow">
+            <p :class="TYPOGRAPHY_CONFIG.profileLabel">
               {{ UI_TEXT.groups.roleSelectionLabel }}
             </p>
-            <p :class="[appConfig.typography.profileValue, 'capitalize']">
+            <p :class="[TYPOGRAPHY_CONFIG.profileValue, 'capitalize']">
               {{ userProfile?.role ?? '—' }}
             </p>
           </div>
-          <div :class="appConfig.layout.profileDetailRow">
-            <p :class="appConfig.typography.profileLabel">{{ UI_TEXT.common.joined }}</p>
-            <p :class="appConfig.typography.profileValue">
+          <div :class="LAYOUT_CONFIG.profileDetailRow">
+            <p :class="TYPOGRAPHY_CONFIG.profileLabel">{{ UI_TEXT.common.joined }}</p>
+            <p :class="TYPOGRAPHY_CONFIG.profileValue">
               {{ userProfile?.joinedAt.slice(0, 10) ?? '—' }}
             </p>
           </div>
@@ -32,7 +31,7 @@
     </template>
 
     <template #footer>
-      <div :class="appConfig.calendar.filterButtonWrapper">
+      <div :class="LAYOUT_CONFIG.rightButtonWrapper">
         <BaseButton
           :label="UI_TEXT.common.close"
           variant="actionOkButton"
@@ -45,10 +44,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useAppConfig } from '#imports';
 import { useGroupsStore } from '~/stores/groups.modals.store';
 
-const appConfig = useAppConfig();
 const groupsStore = useGroupsStore();
 
 const userProfile = computed(() => groupsStore.selectedUserProfile);

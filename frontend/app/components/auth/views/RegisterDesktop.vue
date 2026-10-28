@@ -1,19 +1,17 @@
 <!-- frontend/app/components/auth/views/RegisterDesktop.vue -->
 <template>
-  <div :class="appConfig.layout.authWrapper">
+  <div :class="LAYOUT_CONFIG.authWrapper">
     <BaseCard>
-      <!-- TITLE -->
-      <div :class="appConfig.typography.authTitleWrapper">
-        <h1 :class="appConfig.typography.authTitle">
+      <div :class="TYPOGRAPHY_CONFIG.authTitleWrapper">
+        <h1 :class="TYPOGRAPHY_CONFIG.authTitle">
           {{ UI_TEXT.auth.registerHeading }}
         </h1>
       </div>
 
-      <!-- FORM -->
       <UForm
         :schema="registerSchema"
         :state="form"
-        :class="appConfig.layout.formWrapper"
+        :class="LAYOUT_CONFIG.formWrapper"
         @submit="onSubmit"
       >
         <BaseInput
@@ -56,14 +54,14 @@
           :placeholder="UI_TEXT.auth.passwordPlaceholder"
         />
 
-        <div v-if="error" :class="appConfig.typography.formStatusError">
+        <div v-if="error" :class="TYPOGRAPHY_CONFIG.formStatusError">
           {{ getErrorMessage(error) }}
         </div>
-        <div v-if="status === 'success'" :class="appConfig.typography.formStatusSuccess">
+        <div v-if="status === 'success'" :class="TYPOGRAPHY_CONFIG.formStatusSuccess">
           {{ UI_TEXT.auth.registerSuccess }}
         </div>
 
-        <div :class="appConfig.layout.formActions">
+        <div :class="LAYOUT_CONFIG.formActions">
           <BaseButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
@@ -80,12 +78,12 @@
       </UForm>
     </BaseCard>
 
-    <div :class="appConfig.layout.singleButtonWrapper">
+    <div :class="LAYOUT_CONFIG.singleButtonWrapper">
       <BaseButton
         to="/login"
         :label="UI_TEXT.auth.loginInstead"
         variant="actionAccentHeroButton"
-        :class="CARD_CONFIG.slots.root"
+        :class="LAYOUT_CONFIG.fullWidth"
       />
     </div>
   </div>
@@ -93,13 +91,10 @@
 
 <script setup lang="ts">
 import { reactive } from 'vue';
-import { useAppConfig } from '#imports';
 import type { FormSubmitEvent } from '#ui/types';
 import { registerSchema, type RegisterFormState } from '~/utils/schemas/register.schema';
 import { getErrorMessage } from '~/utils/error.utils';
 import type { ApiError } from '~/types/apiError.type';
-
-const appConfig = useAppConfig();
 
 defineProps<{
   isLoading: boolean;

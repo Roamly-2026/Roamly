@@ -4,12 +4,10 @@
     <div ref="mapContainer" :class="LAYOUT_CONFIG.mapCanvas"></div>
 
     <div :class="LAYOUT_CONFIG.mapSelectorFooter">
-      <div :class="CALENDAR_CONFIG.participantCardInfo">
-        <p :class="[TEXT_SIZES.sm, FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]">
-          {{ UI_TEXT.map.selectedLocation }}
-        </p>
-        <p :class="[TEXT_SIZES.sm, COLOR_TOKENS.text.primarySoft, SPACING_TOKENS.mt.xs]">
-          <span v-if="isLoadingAddress" :class="[OPACITY_TOKENS.subtle, 'animate-pulse']">{{
+      <div :class="LAYOUT_CONFIG.listCardInfo">
+        <p :class="TYPOGRAPHY_CONFIG.cardTitleSm">{{ UI_TEXT.map.selectedLocation }}</p>
+        <p :class="TYPOGRAPHY_CONFIG.bodySmSoft">
+          <span v-if="isLoadingAddress" :class="TYPOGRAPHY_CONFIG.loadingTitle">{{
             UI_TEXT.map.loadingAddress
           }}</span>
           <span v-else-if="currentSelection">{{ currentSelection.address }}</span>
@@ -60,7 +58,6 @@ interface MarkGeocodeEvent {
 
 const emit = defineEmits<{
   // triggers when the user confirms their selected location on the map
-  // [emit value]: location: { latitude: number; longitude: number; address: string }
   (e: 'confirm-location', location: { latitude: number; longitude: number; address: string }): void;
 }>();
 

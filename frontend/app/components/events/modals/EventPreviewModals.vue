@@ -3,31 +3,31 @@
   <BaseModal
     v-model:open="eventsStore.isPreviewModalOpen"
     :title="UI_TEXT.events.details"
-    :ui-size="appConfig.layout.modalSizeMd"
+    :ui-size="LAYOUT_CONFIG.modalSizeMd"
   >
     <template #body>
       <div
         v-if="eventsStore.previewEvent"
         :class="[
-          appConfig.layout.modalScrollBody,
+          LAYOUT_CONFIG.modalScrollBody,
           eventsStore.previewEvent.isExpired ? OPACITY_TOKENS.subtle : '',
         ]"
       >
-        <div :class="appConfig.calendar.previewTitleRow">
-          <div :class="appConfig.calendar.previewTypeWrapper">
+        <div :class="CALENDAR_CONFIG.previewTitleRow">
+          <div :class="CALENDAR_CONFIG.previewTypeWrapper">
             <UIcon
               :name="
                 eventsStore.previewEvent.is_private ? 'i-heroicons-user' : 'i-heroicons-user-group'
               "
-              :class="appConfig.calendar.previewTypeIcon"
+              :class="CALENDAR_CONFIG.previewTypeIcon"
             />
-            <span :class="appConfig.calendar.previewTypeText">{{
+            <span :class="CALENDAR_CONFIG.previewTypeText">{{
               eventsStore.previewEvent.is_private
                 ? UI_TEXT.events.privateEvent
                 : UI_TEXT.events.groupEvent
             }}</span>
           </div>
-          <div :class="appConfig.calendar.headerTitleRow">
+          <div :class="LAYOUT_CONFIG.headerTitleRow">
             <BaseButton
               v-if="
                 eventsStore.previewEvent.creator?.email === currentUserEmail &&
@@ -55,67 +55,67 @@
             />
           </div>
         </div>
-        <h2 :class="appConfig.calendar.previewMainTitle">
+        <h2 :class="CALENDAR_CONFIG.previewMainTitle">
           {{ eventsStore.previewEvent.title }}
           <span
             v-if="eventsStore.previewEvent.isExpired"
-            :class="appConfig.calendar.previewExpiredBadge"
+            :class="CALENDAR_CONFIG.previewExpiredBadge"
             >{{ UI_TEXT.events.expired }}</span
           >
         </h2>
 
-        <div :class="appConfig.calendar.previewMetaRow">
-          <div :class="appConfig.calendar.metaRowItem">
-            <span :class="appConfig.calendar.metaLabel">{{ UI_TEXT.events.creatorLabel }}</span
-            ><span :class="appConfig.calendar.metaValue">{{
+        <div :class="CALENDAR_CONFIG.previewMetaRow">
+          <div :class="CALENDAR_CONFIG.metaRowItem">
+            <span :class="CALENDAR_CONFIG.metaLabel">{{ UI_TEXT.events.creatorLabel }}</span
+            ><span :class="CALENDAR_CONFIG.metaValue">{{
               eventsStore.previewEvent.creator?.username
             }}</span>
           </div>
 
-          <div :class="appConfig.calendar.metaRowItem">
-            <span :class="appConfig.calendar.metaLabel">{{ UI_TEXT.events.dateLabel }}</span>
+          <div :class="CALENDAR_CONFIG.metaRowItem">
+            <span :class="CALENDAR_CONFIG.metaLabel">{{ UI_TEXT.events.dateLabel }}</span>
             <span
               v-if="
                 new Date(eventsStore.previewEvent.start_time).toLocaleDateString() ===
                 new Date(eventsStore.previewEvent.end_time).toLocaleDateString()
               "
-              :class="appConfig.calendar.metaValue"
+              :class="CALENDAR_CONFIG.metaValue"
             >
               {{ new Date(eventsStore.previewEvent.start_time).toLocaleDateString() }}
             </span>
-            <span v-else :class="appConfig.calendar.metaValue">
+            <span v-else :class="CALENDAR_CONFIG.metaValue">
               {{ new Date(eventsStore.previewEvent.start_time).toLocaleDateString() }} -
               {{ new Date(eventsStore.previewEvent.end_time).toLocaleDateString() }}
             </span>
           </div>
 
-          <div :class="appConfig.calendar.metaRowItem">
-            <span :class="appConfig.calendar.metaLabel">{{ UI_TEXT.events.timeLabel }}</span>
+          <div :class="CALENDAR_CONFIG.metaRowItem">
+            <span :class="CALENDAR_CONFIG.metaLabel">{{ UI_TEXT.events.timeLabel }}</span>
             <span
               v-if="
                 eventsStore.previewEvent.timeStartFormatted ===
                 eventsStore.previewEvent.timeEndFormatted
               "
-              :class="appConfig.calendar.metaValue"
+              :class="CALENDAR_CONFIG.metaValue"
             >
               {{ eventsStore.previewEvent.timeStartFormatted }}
             </span>
-            <span v-else :class="appConfig.calendar.metaValue">
+            <span v-else :class="CALENDAR_CONFIG.metaValue">
               {{ eventsStore.previewEvent.timeStartFormatted }} -
               {{ eventsStore.previewEvent.timeEndFormatted }}
             </span>
           </div>
 
-          <div :class="appConfig.calendar.metaRowItemCenter">
-            <span :class="appConfig.calendar.metaLabel">{{ UI_TEXT.events.membersLabel }}</span>
-            <div :class="appConfig.calendar.participantsGroup">
+          <div :class="CALENDAR_CONFIG.metaRowItemCenter">
+            <span :class="CALENDAR_CONFIG.metaLabel">{{ UI_TEXT.events.membersLabel }}</span>
+            <div :class="CALENDAR_CONFIG.participantsGroup">
               <template v-if="eventsStore.previewEvent.is_private">
                 <div
                   :class="[
-                    appConfig.calendar.participantsAvatars,
+                    CALENDAR_CONFIG.participantsAvatars,
                     (eventsStore.previewEvent.members?.length || 0) > 5
-                      ? appConfig.calendar.participantsOverlap
-                      : appConfig.calendar.participantsGap,
+                      ? CALENDAR_CONFIG.participantsOverlap
+                      : CALENDAR_CONFIG.participantsGap,
                   ]"
                 >
                   <UTooltip v-for="p in displayParticipants" :key="p.uuid" :text="p.username">
@@ -124,7 +124,7 @@
                       :src="p.profile_image_url || undefined"
                       icon="i-heroicons-user"
                       size="sm"
-                      :class="appConfig.calendar.participantAvatar"
+                      :class="CALENDAR_CONFIG.participantAvatar"
                       @click="handleOpenUserProfile(p)"
                     />
                   </UTooltip>
@@ -135,7 +135,7 @@
                     "
                   >
                     <div
-                      :class="appConfig.calendar.participantMoreBadge"
+                      :class="CALENDAR_CONFIG.participantMoreBadge"
                       @click="openAllParticipantsModal"
                     >
                       +{{ extraParticipantsCount }}
@@ -144,23 +144,23 @@
                 </div>
                 <BaseButton
                   variant="link"
-                  :class="appConfig.calendar.metaValueLink"
+                  :class="CALENDAR_CONFIG.metaValueLink"
                   @click="openAllParticipantsModal"
                   >{{ UI_TEXT.events.showParticipants }}
                 </BaseButton>
               </template>
               <template v-else>
-                <div :class="appConfig.calendar.eventItemWrapper">
-                  <span :class="[TEXT_SIZES.sm, FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]">{{
+                <div :class="CALENDAR_CONFIG.eventItemWrapper">
+                  <span :class="TYPOGRAPHY_CONFIG.metaHighlight">{{
                     UI_TEXT.common.everyone
                   }}</span>
                 </div>
               </template>
             </div>
           </div>
-          <div :class="[appConfig.calendar.filterFormGroup, SPACING_TOKENS.mt.sm]">
-            <span :class="appConfig.calendar.metaLabel">{{ UI_TEXT.events.descriptionLabel }}</span>
-            <span :class="appConfig.calendar.metaValue">{{
+          <div :class="LAYOUT_CONFIG.modalFormGroup">
+            <span :class="CALENDAR_CONFIG.metaLabel">{{ UI_TEXT.events.descriptionLabel }}</span>
+            <span :class="CALENDAR_CONFIG.metaValue">{{
               eventsStore.previewEvent.description
             }}</span>
           </div>
@@ -168,10 +168,10 @@
           <!-- map -->
           <div
             v-if="eventsStore.previewEvent.address || eventsStore.previewEvent.latitude !== null"
-            :class="[appConfig.calendar.filterFormGroup, SPACING_TOKENS.mt.md]"
+            :class="LAYOUT_CONFIG.modalFormGroup"
           >
-            <span :class="appConfig.calendar.metaLabel">{{ UI_TEXT.events.locationLabel }}</span>
-            <span v-if="eventsStore.previewEvent.address" :class="appConfig.calendar.metaValue">
+            <span :class="CALENDAR_CONFIG.metaLabel">{{ UI_TEXT.events.locationLabel }}</span>
+            <span v-if="eventsStore.previewEvent.address" :class="CALENDAR_CONFIG.metaValue">
               {{ eventsStore.previewEvent.address }}
             </span>
             <div
@@ -181,7 +181,7 @@
                 eventsStore.previewEvent.longitude !== null &&
                 eventsStore.previewEvent.longitude !== undefined
               "
-              :class="appConfig.calendar.previewMapPlaceholder"
+              :class="CALENDAR_CONFIG.previewMapPlaceholder"
             >
               <ClientOnly>
                 <EventMapPreview
@@ -193,10 +193,10 @@
           </div>
         </div>
       </div>
-      <div v-else :class="appConfig.calendar.emptyPreview">{{ UI_TEXT.events.selectEvent }}</div>
+      <div v-else :class="TYPOGRAPHY_CONFIG.emptyStateText">{{ UI_TEXT.events.selectEvent }}</div>
     </template>
     <template #footer>
-      <div :class="appConfig.calendar.filterButtonWrapper">
+      <div :class="LAYOUT_CONFIG.rightButtonWrapper">
         <BaseButton
           :label="UI_TEXT.common.close"
           variant="actionCancelButton"
@@ -209,14 +209,12 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useAppConfig } from '#imports';
 import { useEventsStore } from '~/stores/events.modals.store';
 import { useGroupsStore } from '~/stores/groups.modals.store';
 import { useCurrentUserQuery } from '~/queries/user.query';
 import { useGroupsQuery, useGroupInfosQuery } from '~/queries/groups.query';
 import type { EventCreatorDto } from '~/types/events.type';
 
-const appConfig = useAppConfig();
 const eventsStore = useEventsStore();
 const groupsStore = useGroupsStore();
 

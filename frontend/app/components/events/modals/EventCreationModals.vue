@@ -5,15 +5,15 @@
     <BaseModal
       v-model:open="eventsStore.isAddEventModalOpen"
       :title="UI_TEXT.tooltips.addEvent"
-      :ui-size="appConfig.layout.modalSizeMd"
+      :ui-size="LAYOUT_CONFIG.modalSizeMd"
     >
       <template #body>
-        <div :class="appConfig.layout.modalScrollBody">
+        <div :class="LAYOUT_CONFIG.modalScrollBody">
           <UForm
             id="add-event-form"
             :schema="createEventSchema"
             :state="formState"
-            :class="appConfig.layout.modalForm"
+            :class="LAYOUT_CONFIG.modalForm"
             @submit="onSubmit"
           >
             <BaseInput
@@ -25,7 +25,7 @@
 
             <UFormField name="start_time" :label="UI_TEXT.events.startDateTime">
               <template #default="{ error }">
-                <div :class="appConfig.layout.modalFormGrid2Col">
+                <div :class="LAYOUT_CONFIG.modalFormGrid2Col">
                   <UInput
                     v-model="formState.startDate"
                     type="date"
@@ -42,7 +42,7 @@
 
             <UFormField name="end_time" :label="UI_TEXT.events.endDateTime">
               <template #default="{ error }">
-                <div :class="appConfig.layout.modalFormGrid2Col">
+                <div :class="LAYOUT_CONFIG.modalFormGrid2Col">
                   <UInput
                     v-model="formState.endDate"
                     type="date"
@@ -68,8 +68,8 @@
             </UFormField>
 
             <!-- Location selector -->
-            <div :class="appConfig.calendar.filterFormGroup">
-              <span :class="appConfig.typography.inputLabel">{{
+            <div :class="LAYOUT_CONFIG.modalFormGroup">
+              <span :class="TYPOGRAPHY_CONFIG.inputLabel">{{
                 UI_TEXT.events.optionalLocation
               }}</span>
               <BaseButton
@@ -78,8 +78,8 @@
                 variant="glassOutlineButton"
                 @click="isMapSelectorOpen = true"
               />
-              <div v-if="formState.address" :class="appConfig.layout.filePreviewChip">
-                <span :class="appConfig.calendar.metaValue">
+              <div v-if="formState.address" :class="LAYOUT_CONFIG.filePreviewChip">
+                <span :class="CALENDAR_CONFIG.metaValue">
                   {{ formState.address }}
                 </span>
                 <BaseButton
@@ -90,7 +90,7 @@
               </div>
             </div>
 
-            <div :class="appConfig.layout.flexBetween">
+            <div :class="LAYOUT_CONFIG.flexBetween">
               <UCheckbox
                 v-model="formState.is_private"
                 variant="glass"
@@ -101,11 +101,11 @@
         </div>
       </template>
       <template #footer>
-        <div :class="appConfig.layout.modalActions">
+        <div :class="LAYOUT_CONFIG.modalActions">
           <BaseButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
-            :class="appConfig.typography.modalActionBtnCancel"
+            :class="TYPOGRAPHY_CONFIG.modalActionBtnCancel"
             @click="closeAndResetForm"
           />
           <BaseButton
@@ -113,7 +113,7 @@
             form="add-event-form"
             :label="UI_TEXT.common.add"
             variant="actionOkButton"
-            :class="appConfig.typography.modalActionBtnOk"
+            :class="TYPOGRAPHY_CONFIG.modalActionBtnOk"
             :loading="createEventMutation.isLoading.value"
           />
         </div>
@@ -121,10 +121,10 @@
     </BaseModal>
 
     <!-- MAP SELECTOR MODAL -->
-    <BaseModal v-model:open="isMapSelectorOpen" :ui-size="appConfig.layout.modalSizeLg">
+    <BaseModal v-model:open="isMapSelectorOpen" :ui-size="LAYOUT_CONFIG.modalSizeLg">
       <template #header>
-        <div :class="appConfig.calendar.previewTitleRow">
-          <h3 :class="appConfig.typography.cardTitle">{{ UI_TEXT.events.selectLocation }}</h3>
+        <div :class="LAYOUT_CONFIG.flexBetween">
+          <h3 :class="TYPOGRAPHY_CONFIG.cardTitle">{{ UI_TEXT.events.selectLocation }}</h3>
           <BaseButton
             icon="i-heroicons-x-mark"
             variant="ghostDangerIconButton"
@@ -133,8 +133,8 @@
         </div>
       </template>
       <template #body>
-        <div :class="appConfig.layout.modalScrollBody">
-          <div :class="appConfig.layout.modalMapWrapper">
+        <div :class="LAYOUT_CONFIG.modalScrollBody">
+          <div :class="LAYOUT_CONFIG.modalMapWrapper">
             <ClientOnly>
               <EventMapSelector
                 :is-open="isMapSelectorOpen"
@@ -163,12 +163,10 @@
 import { computed, reactive, ref, watch } from 'vue';
 import type { z } from 'zod';
 import type { FormSubmitEvent } from '#ui/types';
-import { useAppConfig } from '#imports';
 import { useEventsStore } from '~/stores/events.modals.store';
 import { useCreateEventMutation } from '~/queries/events.mutation';
 import { createEventSchema } from '~/utils/schemas/events.schema';
 
-const appConfig = useAppConfig();
 const eventsStore = useEventsStore();
 
 const isMapSelectorOpen = ref(false);

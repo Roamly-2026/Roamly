@@ -1,20 +1,18 @@
 <!-- frontend/app/components/auth/views/VerifyEmailMobile.vue -->
 <template>
-  <div :class="appConfig.layout.mobileAuthWrapper">
+  <div :class="LAYOUT_CONFIG.mobileAuthWrapper">
     <BaseCard>
-      <!-- TITLE -->
-      <div :class="appConfig.typography.authTitleWrapper">
-        <h1 :class="appConfig.typography.authTitle">{{ UI_TEXT.auth.verifyHeading }}</h1>
-        <p :class="[appConfig.typography.modalText, TEXT_LEADING.relaxed]">
+      <div :class="TYPOGRAPHY_CONFIG.authTitleWrapper">
+        <h1 :class="TYPOGRAPHY_CONFIG.authTitle">{{ UI_TEXT.auth.verifyHeading }}</h1>
+        <p :class="TYPOGRAPHY_CONFIG.modalText">
           {{ ' ' + UI_TEXT.auth.verifyBeforeEmail + ' '
-          }}<span :class="appConfig.typography.modalInlineHighlight">{{ email }}</span
+          }}<span :class="TYPOGRAPHY_CONFIG.modalInlineHighlight">{{ email }}</span
           >{{ UI_TEXT.auth.verifyAfterEmail + ' ' }}
         </p>
       </div>
 
-      <!-- OTP INPUTS -->
-      <div :class="appConfig.layout.formWrapper">
-        <div :class="[appConfig.layout.actionGroup, SPACING_TOKENS.mx.auto, SPACING_TOKENS.py.sm]">
+      <div :class="LAYOUT_CONFIG.formWrapper">
+        <div :class="LAYOUT_CONFIG.actionGroupCenter">
           <input
             v-for="(_, i) in otpCells"
             :key="i"
@@ -36,63 +34,57 @@
           />
         </div>
 
-        <!-- Error -->
-        <div v-if="error" :class="appConfig.typography.formStatusError">
+        <div v-if="error" :class="TYPOGRAPHY_CONFIG.formStatusError">
           {{ getErrorMessage(error) }}
         </div>
 
-        <!-- Success -->
-        <div v-if="isVerified" :class="appConfig.typography.formStatusSuccess">
+        <div v-if="isVerified" :class="TYPOGRAPHY_CONFIG.formStatusSuccess">
           {{ ' ' + UI_TEXT.auth.verified + ' ' }}
         </div>
 
-        <!-- Verify button -->
-        <div :class="appConfig.layout.singleButtonWrapper">
+        <div :class="LAYOUT_CONFIG.singleButtonWrapper">
           <BaseButton
             :label="UI_TEXT.auth.verify"
             variant="actionOkButton"
-            :class="CARD_CONFIG.slots.root"
+            :class="LAYOUT_CONFIG.fullWidth"
             :loading="isVerifying"
             :disabled="!isOtpComplete || isVerified"
             @click="emit('submit', otpValue)"
           />
         </div>
 
-        <!-- Divider -->
-        <div :class="appConfig.layout.divider" />
+        <div :class="LAYOUT_CONFIG.divider" />
 
-        <!-- Resend -->
-        <div :class="appConfig.layout.homeHeroSection">
-          <p :class="[TEXT_SIZES.xs, COLOR_TOKENS.text.muted]">{{ UI_TEXT.auth.noCode }}</p>
+        <div :class="LAYOUT_CONFIG.cardContentCenter">
+          <p :class="TYPOGRAPHY_CONFIG.captionMuted">{{ UI_TEXT.auth.noCode }}</p>
           <BaseButton
             :label="UI_TEXT.auth.resend"
             variant="link"
-            :class="[TEXT_SIZES.sm, FONT_WEIGHTS.semibold, COLOR_TOKENS.text.brandAccent]"
+            :class="TYPOGRAPHY_CONFIG.authResendBtn"
             :disabled="isResending || resendCooldown > 0 || isVerified"
             :loading="isResending"
             @click="emit('resend')"
           />
-          <p v-if="resendCooldown > 0" :class="[TEXT_SIZES.xs, COLOR_TOKENS.text.muted]">
+          <p v-if="resendCooldown > 0" :class="TYPOGRAPHY_CONFIG.captionMuted">
             {{ ' ' + UI_TEXT.auth.resendAvailable + ' ' }}{{ resendCooldown
             }}{{ UI_TEXT.auth.seconds + ' ' }}
           </p>
-          <div v-if="resendSuccess" :class="appConfig.typography.formStatusSuccess">
+          <div v-if="resendSuccess" :class="TYPOGRAPHY_CONFIG.formStatusSuccess">
             {{ ' ' + UI_TEXT.auth.resent + ' ' }}
           </div>
-          <div v-if="resendError" :class="appConfig.typography.formStatusError">
+          <div v-if="resendError" :class="TYPOGRAPHY_CONFIG.formStatusError">
             {{ getErrorMessage(resendError) }}
           </div>
         </div>
       </div>
     </BaseCard>
 
-    <!-- Back to register -->
-    <div :class="appConfig.layout.singleButtonWrapper">
+    <div :class="LAYOUT_CONFIG.singleButtonWrapper">
       <BaseButton
         to="/register"
         :label="UI_TEXT.auth.backToRegister"
         variant="actionAccentHeroButton"
-        :class="CARD_CONFIG.slots.root"
+        :class="LAYOUT_CONFIG.fullWidth"
       />
     </div>
   </div>
@@ -100,11 +92,8 @@
 
 <script setup lang="ts">
 import { reactive, ref, computed, watch } from 'vue';
-import { useAppConfig } from '#imports';
 import { getErrorMessage } from '~/utils/error.utils';
 import type { ApiError } from '~/types/apiError.type';
-
-const appConfig = useAppConfig();
 
 const props = defineProps<{
   email: string;

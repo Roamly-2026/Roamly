@@ -1,9 +1,8 @@
 <!-- frontend/app/components/media/views/MediaDesktop.vue -->
 <template>
-  <div :class="appConfig.layout.pageWrapper">
-    <!-- HEADER -->
-    <div :class="appConfig.layout.pageHeader">
-      <div :class="appConfig.calendar.headerActionLeft">
+  <div :class="LAYOUT_CONFIG.pageWrapper">
+    <div :class="LAYOUT_CONFIG.pageHeader">
+      <div :class="LAYOUT_CONFIG.headerActionLeft">
         <BaseButton
           v-if="isCurrentUserLeader"
           icon="i-heroicons-trash"
@@ -19,12 +18,11 @@
         />
       </div>
 
-      <!-- DROPDOWN HEADER -->
-      <div :class="appConfig.calendar.headerCenter">
+      <div :class="LAYOUT_CONFIG.headerCenter">
         <UPopover v-model:open="isGroupDropdownOpen">
-          <BaseButton variant="ghost" :class="appConfig.calendar.mobileHeaderButton">
-            <div :class="appConfig.calendar.mobileHeaderTitleRow">
-              <h1 :class="appConfig.typography.pageTitle">
+          <BaseButton variant="ghost" :class="LAYOUT_CONFIG.mobileHeaderButton">
+            <div :class="LAYOUT_CONFIG.mobileHeaderTitleRow">
+              <h1 :class="TYPOGRAPHY_CONFIG.pageTitle">
                 <ClientOnly :fallback="UI_TEXT.common.loading">
                   {{
                     isLoading
@@ -35,11 +33,7 @@
               </h1>
               <UIcon
                 name="i-heroicons-chevron-down"
-                :class="[
-                  SELECT_CONFIG.slots.trailingIcon,
-                  'static pointer-events-auto',
-                  isGroupDropdownOpen ? 'rotate-180' : '',
-                ]"
+                :class="[TYPOGRAPHY_CONFIG.iconBrandMd, isGroupDropdownOpen ? 'rotate-180' : '']"
               />
             </div>
           </BaseButton>
@@ -65,12 +59,12 @@
             </div>
           </template>
         </UPopover>
-        <p :class="appConfig.typography.pageSubtitle">
+        <p :class="TYPOGRAPHY_CONFIG.pageSubtitle">
           {{ UI_TEXT.media.groupPhotos }}
         </p>
       </div>
 
-      <div :class="appConfig.calendar.headerActionRight">
+      <div :class="LAYOUT_CONFIG.headerActionRight">
         <BaseButton
           icon="i-heroicons-users"
           variant="glassIconButton"
@@ -99,22 +93,19 @@
     </div>
 
     <!-- MEDIA SECTION -->
-    <div :class="appConfig.layout.sectionWrapper">
-      <div :class="[appConfig.calendar.eventsHeaderRow, SPACING_TOKENS.mb.lg]">
-        <div :class="appConfig.calendar.headerActionLeft">
-          <div :class="appConfig.calendar.headerSearchWrapper">
-            <BaseSearchInput
-              v-model="searchQuery"
-              :placeholder="UI_TEXT.media.search"
-            />
+    <div :class="LAYOUT_CONFIG.sectionWrapper">
+      <div :class="LAYOUT_CONFIG.headerRow">
+        <div :class="LAYOUT_CONFIG.headerActionLeft">
+          <div :class="LAYOUT_CONFIG.headerSearchWrapper">
+            <BaseSearchInput v-model="searchQuery" :placeholder="UI_TEXT.media.search" />
           </div>
         </div>
 
-        <div :class="appConfig.typography.sectionTitleTransparent">
+        <div :class="TYPOGRAPHY_CONFIG.sectionTitleTransparent">
           {{ UI_TEXT.media.groupPhotos }}
         </div>
 
-        <div :class="appConfig.calendar.headerActionRight">
+        <div :class="LAYOUT_CONFIG.headerActionRight">
           <BaseButton
             icon="i-heroicons-plus"
             variant="glassIconButtonHighlight"
@@ -124,25 +115,20 @@
         </div>
       </div>
 
-      <!-- Loading -->
-      <div v-if="isLoading" :class="appConfig.typography.statusLoading">
+      <div v-if="isLoading" :class="TYPOGRAPHY_CONFIG.statusLoading">
         {{ UI_TEXT.media.loading }}
       </div>
 
-      <!-- Media Grid -->
-      <div v-else-if="filteredMedia.length > 0" :class="appConfig.layout.documentGrid">
+      <div v-else-if="filteredMedia.length > 0" :class="LAYOUT_CONFIG.documentGrid">
         <BaseCard
           v-for="mediaItem in filteredMedia"
           :key="mediaItem.file_id"
           variant="documentGlass"
-          :class="appConfig.layout.headerRelative"
+          :class="LAYOUT_CONFIG.headerRelative"
         >
-          <!-- Title + delete -->
-          <div :class="appConfig.layout.documentCardHeader">
-            <p :class="[FONT_WEIGHTS.bold, TEXT_SIZES.sm, SPACING_TOKENS.pr.sm, 'truncate']">
-              {{ mediaItem.file_name }}
-            </p>
-            <div :class="appConfig.calendar.headerTitleRow">
+          <div :class="LAYOUT_CONFIG.documentCardHeader">
+            <p :class="TYPOGRAPHY_CONFIG.documentHeaderTitle">{{ mediaItem.file_name }}</p>
+            <div :class="LAYOUT_CONFIG.headerTitleRow">
               <BaseButton
                 v-if="isCurrentUserLeader"
                 icon="i-heroicons-trash"
@@ -153,25 +139,19 @@
             </div>
           </div>
 
-          <!-- Image preview -->
-          <div :class="appConfig.layout.documentCardImage">
+          <div :class="LAYOUT_CONFIG.documentCardImage">
             <img
               v-if="isImage(mediaItem.mime_type)"
               :src="mediaItem.download_url || mediaItem.file_url"
               :alt="mediaItem.file_name"
-              :class="appConfig.layout.mediaCoverImage"
+              :class="LAYOUT_CONFIG.mediaCoverImage"
             />
-            <div v-else :class="appConfig.layout.cardContentCenter">
-              <UIcon
-                name="i-heroicons-film"
-                :class="[SIZE_TOKENS.avatar.lg, COLOR_TOKENS.text.primaryFaint]"
-              />
-              <span :class="[TEXT_SIZES.xs, COLOR_TOKENS.text.muted]">{{
-                mediaItem.mime_type
-              }}</span>
+            <div v-else :class="LAYOUT_CONFIG.cardContentCenter">
+              <UIcon name="i-heroicons-film" :class="TYPOGRAPHY_CONFIG.iconWatermarkLg" />
+              <span :class="TYPOGRAPHY_CONFIG.captionMuted">{{ mediaItem.mime_type }}</span>
             </div>
 
-            <div :class="appConfig.layout.documentCardBottomActions">
+            <div :class="LAYOUT_CONFIG.documentCardBottomActions">
               <BaseButton
                 icon="i-heroicons-eye"
                 variant="ghostDangerIconButton"
@@ -195,40 +175,39 @@
             </div>
           </div>
 
-          <!-- Metadata -->
-          <div :class="appConfig.layout.documentCardMeta">
+          <div :class="LAYOUT_CONFIG.documentCardMeta">
             <p>
               {{ ' ' + UI_TEXT.common.uploadedBy + ' '
-              }}<span :class="[FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]">{{
+              }}<span :class="TYPOGRAPHY_CONFIG.metaHighlight">{{
                 mediaItem.creator?.username || UI_TEXT.common.unknown
               }}</span>
             </p>
             <p>
               {{ ' ' + UI_TEXT.common.uploadedAt + ' '
-              }}<span :class="[FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]">{{
+              }}<span :class="TYPOGRAPHY_CONFIG.metaHighlight">{{
                 new Date(mediaItem.created_at).toLocaleDateString()
               }}</span>
             </p>
             <div v-if="mediaItem.media_files?.description">
-              <div :class="appConfig.layout.divider"></div>
+              <div :class="LAYOUT_CONFIG.divider"></div>
               <p>
                 {{ ' ' + UI_TEXT.events.descriptionLabel + ' '
-                }}<span :class="[FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]">{{
+                }}<span :class="TYPOGRAPHY_CONFIG.metaHighlight">{{
                   mediaItem.media_files.description
                 }}</span>
               </p>
             </div>
-            <div :class="appConfig.layout.divider"></div>
-            <div :class="appConfig.layout.flexBetween">
+            <div :class="LAYOUT_CONFIG.divider"></div>
+            <div :class="LAYOUT_CONFIG.flexBetween">
               <p>
                 {{ ' ' + UI_TEXT.media.type + ' '
-                }}<span :class="[FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]">{{
+                }}<span :class="TYPOGRAPHY_CONFIG.metaHighlight">{{
                   mediaItem.mime_type?.split('/')[1] || UI_TEXT.common.unknown
                 }}</span>
               </p>
               <p>
                 {{ ' ' + UI_TEXT.media.size + ' '
-                }}<span :class="[FONT_WEIGHTS.bold, COLOR_TOKENS.text.primary]"
+                }}<span :class="TYPOGRAPHY_CONFIG.metaHighlight"
                   >{{ (mediaItem.file_size / (1024 * 1024)).toFixed(2)
                   }}{{ ' ' + UI_TEXT.common.megabytes }}</span
                 >
@@ -238,8 +217,7 @@
         </BaseCard>
       </div>
 
-      <!-- Empty state -->
-      <div v-else :class="appConfig.typography.statusLoading">
+      <div v-else :class="TYPOGRAPHY_CONFIG.statusLoading">
         {{ searchQuery ? UI_TEXT.media.noMatchingPhotos : UI_TEXT.media.noPhotos }}
       </div>
     </div>
@@ -248,11 +226,8 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { useAppConfig } from '#imports';
 import type { GroupFile } from '~/types/files.type';
 import type { GroupOutDto } from '~/types/groups.type';
-
-const appConfig = useAppConfig();
 
 const selectedGroup = defineModel<string | undefined>('selectedGroup');
 const searchQuery = defineModel<string>('searchQuery', { default: '' });

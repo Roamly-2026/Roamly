@@ -1,36 +1,31 @@
 <!-- frontend/app/components/headers/AppHeader.vue -->
 <template>
-  <header :class="[appConfig.layout.headerBase, appConfig.layout.headerSticky]">
+  <header :class="[LAYOUT_CONFIG.headerBase, LAYOUT_CONFIG.headerSticky]">
     <!-- LOGO SECTION -->
-    <div :class="appConfig.layout.headerLeft">
-      <NuxtLink to="/#home" :class="appConfig.layout.logoWrapper">
-        <UIcon
-          name="i-heroicons-map-pin"
-          :class="[SIZE_TOKENS.icon.lg, COLOR_TOKENS.text.brandAccent]"
-        />
-        <span :class="appConfig.typography.logoText">{{ UI_TEXT.common.brandName }}</span>
+    <div :class="LAYOUT_CONFIG.headerLeft">
+      <NuxtLink to="/#home" :class="LAYOUT_CONFIG.logoWrapper">
+        <UIcon name="i-heroicons-map-pin" :class="TYPOGRAPHY_CONFIG.iconBrandLg" />
+        <span :class="TYPOGRAPHY_CONFIG.logoText">{{ UI_TEXT.common.brandName }}</span>
       </NuxtLink>
     </div>
 
     <!-- DESKTOP NAV SECTION -->
-    <nav :class="appConfig.layout.navWrapper">
-      <NuxtLink to="/#home" :class="appConfig.typography.navLink">{{
-        UI_TEXT.home.title
-      }}</NuxtLink>
-      <NuxtLink to="/#about" :class="appConfig.typography.navLink">{{
+    <nav :class="LAYOUT_CONFIG.navWrapper">
+      <NuxtLink to="/#home" :class="TYPOGRAPHY_CONFIG.navLink">{{ UI_TEXT.home.title }}</NuxtLink>
+      <NuxtLink to="/#about" :class="TYPOGRAPHY_CONFIG.navLink">{{
         UI_TEXT.home.aboutTitle
       }}</NuxtLink>
-      <NuxtLink to="/#support" :class="appConfig.typography.navLink">{{
+      <NuxtLink to="/#support" :class="TYPOGRAPHY_CONFIG.navLink">{{
         UI_TEXT.home.supportTitle
       }}</NuxtLink>
     </nav>
 
     <!-- USER ACTIONS SECTION -->
-    <div :class="appConfig.layout.headerRight">
+    <div :class="LAYOUT_CONFIG.headerRight">
       <ClientOnly>
-        <div :class="appConfig.layout.actionGroup">
+        <div :class="LAYOUT_CONFIG.actionGroup">
           <template v-if="isAuthenticated">
-            <span :class="appConfig.typography.headerUsername">
+            <span :class="TYPOGRAPHY_CONFIG.headerUsername">
               {{ userProfile?.username || UI_TEXT.common.loading }}
             </span>
             <BaseButton
@@ -42,6 +37,7 @@
             <UDropdownMenu
               :items="profileDropdownItems"
               :content="{ align: 'end', side: 'bottom', sideOffset: 8 }"
+              :ui="DROPDOWN_MENU_CONFIG.slots"
             >
               <UAvatar
                 :src="userProfile?.profile_image_url || undefined"
@@ -54,7 +50,7 @@
             <BaseButton
               icon="i-heroicons-bars-3"
               variant="ghost"
-              :class="appConfig.layout.mobileMenuButton"
+              :class="LAYOUT_CONFIG.mobileMenuButton"
             />
           </template>
           <template v-else>
@@ -73,11 +69,9 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAppConfig } from '#imports';
 import { useCurrentUserQuery } from '~/queries/user.query';
 import type { DropdownMenuItem } from '@nuxt/ui';
 
-const appConfig = useAppConfig();
 const router = useRouter();
 const { isAuthenticated, logout } = useAuth();
 const { data: userProfile, error } = useCurrentUserQuery();

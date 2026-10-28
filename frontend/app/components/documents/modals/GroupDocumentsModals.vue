@@ -1,23 +1,20 @@
 <!-- frontend/app/components/documents/modals/GroupDocumentsModals.vue -->
 <template>
   <div>
-    <!-- ==================== -->
     <!-- UPLOAD DOCUMENT MODAL -->
-    <!-- ==================== -->
     <BaseModal
       v-model:open="documentsStore.isUploadModalOpen"
       :title="UI_TEXT.documents.uploadTitle"
-      :ui-size="appConfig.layout.modalSizeMd"
+      :ui-size="LAYOUT_CONFIG.modalSizeMd"
     >
       <template #body>
         <UForm
           id="upload-group-doc-form"
           :schema="uploadDocumentSchema"
           :state="uploadForm"
-          :class="appConfig.layout.modalForm"
+          :class="LAYOUT_CONFIG.modalForm"
           @submit="handleUpload"
         >
-          <!-- Select file -->
           <BaseInput
             :label="UI_TEXT.documents.selectFileWithSpace + UI_TEXT.documents.acceptedFormats"
             name="file"
@@ -26,7 +23,6 @@
             @change="onFileChange"
           />
 
-          <!-- Document type -->
           <UFormField :label="UI_TEXT.documents.typeLabel" name="documentType">
             <template #default>
               <USelect
@@ -41,16 +37,13 @@
             </template>
           </UFormField>
 
-          <div :class="appConfig.layout.modalFormGrid2Col">
-            <!-- Issue date -->
+          <div :class="LAYOUT_CONFIG.modalFormGrid2Col">
             <BaseInput
               v-model="uploadForm.issueDate"
               :label="UI_TEXT.documents.issueDate"
               name="issueDate"
               type="date"
             />
-
-            <!-- Expire date -->
             <BaseInput
               v-model="uploadForm.expiryDate"
               :label="UI_TEXT.documents.expiryDate"
@@ -59,25 +52,24 @@
             />
           </div>
 
-          <!-- Error Display -->
-          <div v-if="uploadError" :class="appConfig.typography.formStatusError">
+          <div v-if="uploadError" :class="TYPOGRAPHY_CONFIG.formStatusError">
             {{ getErrorMessage(uploadError) }}
           </div>
         </UForm>
       </template>
       <template #footer>
-        <div :class="appConfig.layout.flexBetween">
+        <div :class="LAYOUT_CONFIG.flexBetween">
           <BaseButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
-            :class="appConfig.typography.modalActionBtnCancel"
+            :class="TYPOGRAPHY_CONFIG.modalActionBtnCancel"
             @click="closeUploadModal"
           />
           <BaseButton
             type="submit"
             form="upload-group-doc-form"
             :label="UI_TEXT.common.upload"
-            :class="appConfig.typography.modalActionBtnOk"
+            :class="TYPOGRAPHY_CONFIG.modalActionBtnOk"
             :loading="uploadMutation.isLoading.value"
             :disabled="!uploadForm.file"
           />
@@ -85,34 +77,27 @@
       </template>
     </BaseModal>
 
-    <!-- ==================== -->
     <!-- UPDATE DOCUMENT MODAL -->
-    <!-- ==================== -->
     <BaseModal
       v-model:open="documentsStore.isGroupUpdateModalOpen"
       :title="UI_TEXT.documents.updateGroup"
-      :ui-size="appConfig.layout.modalSizeMd"
+      :ui-size="LAYOUT_CONFIG.modalSizeMd"
     >
       <template #body>
         <UForm
           id="update-group-doc-form"
           :schema="updateDocumentSchema"
           :state="updateForm"
-          :class="appConfig.layout.modalForm"
+          :class="LAYOUT_CONFIG.modalForm"
           @submit="handleUpdate"
         >
-          <!-- Current file name -->
-          <div v-if="groupFileToUpdate" :class="appConfig.layout.filePreviewChip">
-            <UIcon
-              name="i-heroicons-document-text"
-              :class="[SIZE_TOKENS.icon.sm, COLOR_TOKENS.text.primaryMuted]"
-            />
-            <span :class="[TEXT_SIZES.sm, COLOR_TOKENS.text.primaryMuted, 'truncate']">{{
+          <div v-if="groupFileToUpdate" :class="LAYOUT_CONFIG.filePreviewChip">
+            <UIcon name="i-heroicons-document-text" :class="TYPOGRAPHY_CONFIG.iconMutedSm" />
+            <span :class="TYPOGRAPHY_CONFIG.bodySmMutedTruncate">{{
               groupFileToUpdate.fileName
             }}</span>
           </div>
 
-          <!-- Replace file (optional) -->
           <BaseInput
             :label="UI_TEXT.documents.replaceFile"
             name="file"
@@ -121,7 +106,6 @@
             @change="onUpdateFileChange"
           />
 
-          <!-- Document type -->
           <UFormField :label="UI_TEXT.documents.typeLabel" name="documentType">
             <template #default>
               <USelect
@@ -136,16 +120,13 @@
             </template>
           </UFormField>
 
-          <div :class="appConfig.layout.modalFormGrid2Col">
-            <!-- Issue date -->
+          <div :class="LAYOUT_CONFIG.modalFormGrid2Col">
             <BaseInput
               v-model="updateForm.issueDate"
               :label="UI_TEXT.documents.issueDate"
               name="issueDate"
               type="date"
             />
-
-            <!-- Expiry date -->
             <BaseInput
               v-model="updateForm.expiryDate"
               :label="UI_TEXT.documents.expiryDate"
@@ -154,34 +135,31 @@
             />
           </div>
 
-          <!-- Error Display -->
-          <div v-if="updateError" :class="appConfig.typography.formStatusError">
+          <div v-if="updateError" :class="TYPOGRAPHY_CONFIG.formStatusError">
             {{ getErrorMessage(updateError) }}
           </div>
         </UForm>
       </template>
       <template #footer>
-        <div :class="appConfig.layout.flexBetween">
+        <div :class="LAYOUT_CONFIG.flexBetween">
           <BaseButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
-            :class="appConfig.typography.modalActionBtnCancel"
+            :class="TYPOGRAPHY_CONFIG.modalActionBtnCancel"
             @click="closeUpdateModal"
           />
           <BaseButton
             type="submit"
             form="update-group-doc-form"
             :label="UI_TEXT.common.save"
-            :class="appConfig.typography.modalActionBtnOk"
+            :class="TYPOGRAPHY_CONFIG.modalActionBtnOk"
             :loading="updateMutation.isLoading.value"
           />
         </div>
       </template>
     </BaseModal>
 
-    <!-- ==================== -->
     <!-- DELETE DOCUMENT MODAL -->
-    <!-- ==================== -->
     <ConfirmModal
       v-model:open="documentsStore.isDeleteModalOpen"
       :title="UI_TEXT.documents.deleteTitle"
@@ -189,16 +167,14 @@
       :cancel-text="UI_TEXT.common.cancel"
       :confirm-text="UI_TEXT.common.delete"
       :loading="deleteMutation.isLoading.value"
-      :ui-size="appConfig.layout.modalSizeMd"
+      :ui-size="LAYOUT_CONFIG.modalSizeMd"
       @cancel="documentsStore.closeDeleteModal()"
       @confirm="confirmDelete"
     >
       <template #body>
-        <p :class="appConfig.typography.modalText">
+        <p :class="TYPOGRAPHY_CONFIG.modalText">
           {{ UI_TEXT.documents.deleteDocumentBeforeName }}
-          <span :class="appConfig.typography.modalInlineHighlight">{{
-            fileToDelete?.fileName
-          }}</span
+          <span :class="TYPOGRAPHY_CONFIG.modalInlineHighlight">{{ fileToDelete?.fileName }}</span
           >{{ UI_TEXT.documents.cannotUndoSuffix }}
         </p>
       </template>
@@ -207,7 +183,6 @@
 </template>
 
 <script setup lang="ts">
-import { useAppConfig } from '#imports';
 import { computed, reactive, ref, watch } from 'vue';
 import { z } from 'zod';
 import type { FormSubmitEvent } from '#ui/types';
@@ -225,7 +200,6 @@ defineProps<{
   documentTypes?: { label: string; value: string }[];
 }>();
 
-const appConfig = useAppConfig();
 const documentsStore = useDocumentsStore();
 
 const uploadError = ref<ApiError | Error | null>(null);
