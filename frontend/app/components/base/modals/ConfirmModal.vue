@@ -25,7 +25,7 @@
         />
         <BaseButton
           :label="confirmText"
-          variant="actionDangerButton"
+          :variant="confirmVariant"
           :class="[TYPOGRAPHY_CONFIG.modalActionBtnOk, confirmBtnClass]"
           :loading="loading"
           @click="$emit('confirm')"
@@ -36,6 +36,8 @@
 </template>
 
 <script setup lang="ts">
+import type { ButtonProps } from '@nuxt/ui';
+
 withDefaults(
   defineProps<{
     open: boolean;
@@ -46,16 +48,18 @@ withDefaults(
     confirmText: string;
     loading?: boolean;
     uiSize?: string;
-    confirmBtnClass?: string;
     dismissible?: boolean;
+    confirmVariant?: ButtonProps['variant'];
+    confirmBtnClass?: string;
   }>(),
   {
     message: '',
     errorText: '',
     loading: false,
     uiSize: undefined,
-    confirmBtnClass: 'bg-error-500 hover:bg-error-600 text-white',
     dismissible: false,
+    confirmVariant: 'actionDangerButton',
+    confirmBtnClass: '',
   },
 );
 

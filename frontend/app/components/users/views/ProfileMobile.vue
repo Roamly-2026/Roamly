@@ -59,7 +59,7 @@
           <div :class="LAYOUT_CONFIG.profileDetailsWrapper">
             <div :class="LAYOUT_CONFIG.profileDetailRow">
               <p :class="TYPOGRAPHY_CONFIG.profileLabel">{{ UI_TEXT.auth.usernameLabel }}</p>
-              <div :class="[LAYOUT_CONFIG.flexBetween, LAYOUT_CONFIG.listCardInfo]">
+              <div :class="[LAYOUT_CONFIG.actionGroup, LAYOUT_CONFIG.flex1MinW0]">
                 <p :class="TYPOGRAPHY_CONFIG.profileValue">{{ currentUser.username }}</p>
                 <BaseButton
                   icon="i-heroicons-pencil"
@@ -72,7 +72,7 @@
 
             <div :class="LAYOUT_CONFIG.profileDetailRow">
               <p :class="TYPOGRAPHY_CONFIG.profileLabel">{{ UI_TEXT.auth.emailLabel }}</p>
-              <div :class="[LAYOUT_CONFIG.flexBetween, LAYOUT_CONFIG.listCardInfo]">
+              <div :class="[LAYOUT_CONFIG.actionGroup, LAYOUT_CONFIG.flex1MinW0]">
                 <p :class="TYPOGRAPHY_CONFIG.profileValue">{{ currentUser.email }}</p>
                 <BaseButton
                   icon="i-heroicons-pencil"
@@ -85,7 +85,7 @@
 
             <div :class="LAYOUT_CONFIG.profileDetailRow">
               <p :class="TYPOGRAPHY_CONFIG.profileLabel">{{ UI_TEXT.auth.passwordLabel }}</p>
-              <div :class="[LAYOUT_CONFIG.flexBetween, LAYOUT_CONFIG.listCardInfo]">
+              <div :class="[LAYOUT_CONFIG.actionGroup, LAYOUT_CONFIG.flex1MinW0]">
                 <p :class="TYPOGRAPHY_CONFIG.profileValueLg">************</p>
                 <BaseButton
                   icon="i-heroicons-pencil"
@@ -100,7 +100,7 @@
               <p :class="TYPOGRAPHY_CONFIG.profileLabel">
                 {{ UI_TEXT.profile.registeredLabel }}
               </p>
-              <div :class="[LAYOUT_CONFIG.flexBetween, LAYOUT_CONFIG.listCardInfo]">
+              <div :class="[LAYOUT_CONFIG.actionGroup, LAYOUT_CONFIG.flex1MinW0]">
                 <p :class="TYPOGRAPHY_CONFIG.profileValue">
                   {{
                     currentUser.created_at

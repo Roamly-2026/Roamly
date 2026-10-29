@@ -200,6 +200,7 @@
           <BaseButton
             :class="TYPOGRAPHY_CONFIG.modalActionBtnOk"
             :label="UI_TEXT.common.upload"
+            variant="actionOkButton"
             type="submit"
             form="upload-doc-form"
           />

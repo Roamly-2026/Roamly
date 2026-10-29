@@ -210,7 +210,7 @@
               ]"
               @click="$emit('open-preview-modal', event)"
             >
-              <div :class="[CALENDAR_CONFIG.eventItemWrapper, LAYOUT_CONFIG.listCardInfo]">
+              <div :class="CALENDAR_CONFIG.eventItemRowLeft">
                 <UTooltip
                   :text="
                     event.is_private ? UI_TEXT.events.privateLabel : UI_TEXT.events.groupEventLabel

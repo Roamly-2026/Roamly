@@ -22,7 +22,7 @@ export const COLOR_TOKENS = {
     tertiary:
       'bg-btn-tertiary hover:bg-btn-tertiary-hover active:bg-btn-tertiary-active text-btn-tertiary-text disabled:bg-btn-disabled disabled:text-btn-disabled-text',
     danger:
-      'bg-btn-danger hover:bg-btn-danger-hover active:bg-btn-danger-active text-btn-danger-text disabled:bg-btn-disabled disabled:text-btn-disabled-text',
+      '!bg-red-600 hover:!bg-red-700 active:!bg-red-800 !text-white disabled:bg-btn-disabled disabled:text-btn-disabled-text',
   },
 
   // Texts (including semantic opacity steps)

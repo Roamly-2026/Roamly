@@ -69,6 +69,7 @@
             type="submit"
             form="upload-private-doc-form"
             :label="UI_TEXT.common.upload"
+            variant="actionOkButton"
             :class="TYPOGRAPHY_CONFIG.modalActionBtnOk"
             :loading="uploadMutation.isLoading.value"
             :disabled="!uploadForm.file"
@@ -150,6 +151,7 @@
             type="submit"
             form="update-private-doc-form"
             :label="UI_TEXT.common.save"
+            variant="actionOkButton"
             :class="TYPOGRAPHY_CONFIG.modalActionBtnOk"
             :loading="isUpdating"
           />

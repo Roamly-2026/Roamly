@@ -106,7 +106,7 @@ export const SIZE_TOKENS = {
   },
   // Container & Dropdown Widths
   container: {
-    dropdownSm: 'w-36',
+    dropdownSm: 'w-52 min-w-52',
     dropdownMd: 'min-w-56',
     dropdownLg: 'sm:min-w-64',
     dropdownFilter: 'w-72',

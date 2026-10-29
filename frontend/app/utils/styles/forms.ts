@@ -30,6 +30,8 @@ export const INPUT_CONFIG = {
   slots: {
     root: 'w-full',
     base: 'w-full [&_input]:!px-4',
+    leading: '!pl-3.5 pointer-events-none flex items-center',
+    leadingIcon: `${SIZE_TOKENS.icon.md} ${COLOR_TOKENS.text.primaryMuted} shrink-0`,
   },
   variants: {
     variant: {
@@ -40,7 +42,7 @@ export const INPUT_CONFIG = {
         base: `${INPUT_APPEARANCES.error} ${RADIUS_TOKENS.md} ${INPUT_SIZES.md} [&_input]:!px-4`,
       },
       search: {
-        base: `${INPUT_APPEARANCES.glass} ${RADIUS_TOKENS.full} ${INPUT_SIZES.sm} [&_input]:!pl-10 [&_input]:!pr-4 w-full`,
+        base: `${INPUT_APPEARANCES.glass} ${RADIUS_TOKENS.full} ${INPUT_SIZES.sm} !pl-10 !pr-4 [&_input]:!pl-10 [&_input]:!pr-4 w-full`,
       },
     },
   },
@@ -73,7 +75,8 @@ export const TEXTAREA_CONFIG = {
 // 5. FORM FIELD CONFIG
 export const FORM_FIELD_CONFIG = {
   slots: {
+    root: 'w-full max-w-full min-w-0',
     label: `${TEXT_SIZES.sm} ${FONT_WEIGHTS.medium} ${COLOR_TOKENS.text.primary} ${SPACING_TOKENS.mb.xs} block`,
-    error: `${COLOR_TOKENS.status.error} ${TEXT_SIZES.sm} text-left ${FONT_WEIGHTS.normal}`,
+    error: `${COLOR_TOKENS.status.error} ${TEXT_SIZES.xs} text-left ${FONT_WEIGHTS.normal} break-words whitespace-normal w-full`,
   },
 } as const;

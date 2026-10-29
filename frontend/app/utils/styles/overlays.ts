@@ -42,8 +42,9 @@ export const SELECT_CONFIG = {
 export const DROPDOWN_MENU_CONFIG = {
   slots: {
     content: `${MENU_APPEARANCES.content} ${SPACING_TOKENS.p.xs} ${SIZE_TOKENS.container.dropdownSm}`,
-    item: `${MENU_APPEARANCES.itemBase} ${SPACING_TOKENS.gap.sm} w-full ${TEXT_SIZES.md} ${COLOR_TOKENS.text.primarySoft} hover:${COLOR_TOKENS.text.primary} ${MENU_APPEARANCES.itemHighlight}`,
-    itemLeadingIcon: `${SIZE_TOKENS.icon.tall} !text-btn-primary shrink-0`,
+    item: `${MENU_APPEARANCES.itemBase} ${SPACING_TOKENS.gap.sm} w-full !py-1.5 !px-3 ${TEXT_SIZES.sm} ${COLOR_TOKENS.text.primarySoft} hover:${COLOR_TOKENS.text.primary} ${MENU_APPEARANCES.itemHighlight} whitespace-nowrap`,
+    itemLeadingIcon: `${SIZE_TOKENS.icon.md} !text-btn-primary shrink-0`,
+    separator: `h-px ${BORDER_TOKENS.dividerTop} ${SPACING_TOKENS.my.xs}`,
   },
 } as const;
 
@@ -67,7 +68,7 @@ export const SELECT_MENU_CONFIG = {
 // 4. MODAL CONFIG
 export const MODAL_CONFIG = {
   slots: {
-    overlay: `fixed inset-0 ${Z_INDEX_TOKENS.overlay} ${COLOR_TOKENS.surface.overlay} backdrop-blur-sm`,
+    overlay: `fixed inset-0 ${Z_INDEX_TOKENS.overlay} bg-black/25 backdrop-blur-md`,
     content: `fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${Z_INDEX_TOKENS.modal} w-[95%] sm:w-full ${GLASS_TOKENS.modal} ${RADIUS_TOKENS.xlImportant} ${SHADOW_TOKENS.modal} !ring-1 !ring-surface-card/50 !divide-none !border-0 focus:!outline-none overflow-hidden flex flex-col`,
     header: `${SPACING_TOKENS.p.md} sm:${SPACING_TOKENS.px.lg} !border-0 !ring-0`,
     body: `${SPACING_TOKENS.responsive.cardPadding} !border-0 !ring-0`,

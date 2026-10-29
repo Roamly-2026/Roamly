@@ -6,7 +6,7 @@ const BASE_BUTTON = `inline-flex items-center justify-center ${RADIUS_TOKENS.ful
 export const BUTTON_SIZES = {
   xs: `${SIZE_TOKENS.controlHeight.xs} ${SPACING_TOKENS.pxImportant.md} ${SPACING_TOKENS.pyImportant.xs} ${TEXT_SIZES.xs} ${FONT_WEIGHTS.semibold}`,
   sm: `${SIZE_TOKENS.controlHeight.sm} ${SPACING_TOKENS.pxImportant.lg} ${SPACING_TOKENS.pyImportant.sm} ${TEXT_SIZES.xs} ${FONT_WEIGHTS.bold}`,
-  md: `${SIZE_TOKENS.controlHeight.md} ${SPACING_TOKENS.pxImportant.xl} ${TEXT_SIZES.sm} ${FONT_WEIGHTS.semibold} !min-w-18`,
+  md: `${SIZE_TOKENS.controlHeight.md} ${SPACING_TOKENS.pxImportant.xl} ${TEXT_SIZES.sm} ${FONT_WEIGHTS.semibold} !min-w-28 shrink-0 whitespace-nowrap`,
   lg: `${SIZE_TOKENS.controlHeight.xl} ${SPACING_TOKENS.pxImportant['2xl']} ${TEXT_SIZES.lg} ${FONT_WEIGHTS.bold}`,
   xl: `${SIZE_TOKENS.controlHeight['2xl']} ${SPACING_TOKENS.pxImportant['3xl']} !text-xl ${FONT_WEIGHTS.bold}`,
   // Icon buttons
@@ -34,12 +34,12 @@ export const BUTTON_APPEARANCES = {
   glassBrand: `${GLASS_TOKENS.default} ${COLOR_TOKENS.text.brandAccent} ${BORDER_TOKENS.ringSubtle} hover:bg-surface-subtle`,
 
   // Ghost styles
-  ghostDanger: `${COLOR_TOKENS.text.primaryMuted} hover:${COLOR_TOKENS.status.error}`,
-  ghostBrand: `${COLOR_TOKENS.text.inverse} hover:${COLOR_TOKENS.text.brandAccent}`,
+  ghostDanger: `${COLOR_TOKENS.text.primaryMuted} hover:!text-red-500 [&>span]:transition-colors hover:[&>span]:!text-red-500 hover:bg-red-500/10 ${RADIUS_TOKENS.full}`,
+  ghostBrand: `${COLOR_TOKENS.text.primaryMuted} hover:!text-btn-primary [&>span]:transition-colors hover:[&>span]:!text-btn-primary hover:bg-btn-primary/10 ${RADIUS_TOKENS.full}`,
 
   // Danger styles
   danger: `${COLOR_TOKENS.button.danger} ${SHADOW_TOKENS.sm}`,
-  dangerElevated: `${COLOR_TOKENS.button.danger} ${SHADOW_TOKENS.button} ${INTERACTION_TOKENS.lift}`,
+  dangerElevated: `${COLOR_TOKENS.button.danger} ${SHADOW_TOKENS.md} ${INTERACTION_TOKENS.lift}`,
 } as const;
 
 // 3. PREDEFINED BUTTON VARIANTS

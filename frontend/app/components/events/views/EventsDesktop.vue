@@ -213,10 +213,10 @@
               ]"
               @click="$emit('update:selected-event', event)"
             >
-              <div :class="[CALENDAR_CONFIG.eventItemWrapper, LAYOUT_CONFIG.listCardInfo]">
+              <div :class="CALENDAR_CONFIG.eventItemRowLeft">
                 <UTooltip
                   :text="
-                    event.is_private ? UI_TEXT.events.privateEvent : UI_TEXT.events.publicEvent
+                    event.is_private ? UI_TEXT.events.privateLabel : UI_TEXT.events.groupEventLabel
                   "
                 >
                   <UIcon

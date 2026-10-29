@@ -26,6 +26,7 @@
               icon="i-heroicons-arrow-left-on-rectangle"
               :label="UI_TEXT.auth.logoutTitle"
               variant="smallHollowActionButton"
+              :class="LAYOUT_CONFIG.desktopOnlyButton"
               @click="handleLogout"
             />
 
@@ -82,16 +83,20 @@ const { isAuthenticated, logout } = useAuth();
 const { data: userProfile } = useCurrentUserQuery();
 const { isMobile } = useScreenSize();
 
-const profileDropdownItems = ref<DropdownMenuItem[]>([
-  { label: UI_TEXT.common.profile, icon: 'i-heroicons-user-circle', to: '/users/profile' },
-  { label: UI_TEXT.common.groups, icon: 'i-heroicons-user-group', to: '/groups' },
-  { label: UI_TEXT.common.events, icon: 'i-heroicons-calendar-days', to: '/events' },
-  {
-    label: UI_TEXT.common.logout,
-    icon: 'i-heroicons-arrow-left-on-rectangle',
-    onSelect: () => handleLogout(),
-    class: 'text-red-500 font-semibold',
-  },
+const profileDropdownItems = ref<DropdownMenuItem[][]>([
+  [
+    { label: UI_TEXT.common.profile, icon: 'i-heroicons-user-circle', to: '/users/profile' },
+    { label: UI_TEXT.common.groups, icon: 'i-heroicons-user-group', to: '/groups' },
+    { label: UI_TEXT.common.events, icon: 'i-heroicons-calendar-days', to: '/events' },
+  ],
+  [
+    {
+      label: UI_TEXT.auth.logoutTitle,
+      icon: 'i-heroicons-arrow-left-on-rectangle',
+      onSelect: () => handleLogout(),
+      class: `${COLOR_TOKENS.status.error} ${FONT_WEIGHTS.semibold}`,
+    },
+  ],
 ]);
 
 const handleLogout = () => {

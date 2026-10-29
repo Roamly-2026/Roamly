@@ -258,7 +258,7 @@
   </div>
 
   <!-- MEMBER DOCUMENTS (leader) -->
-  <div v-if="isCurrentUserLeader" :class="LAYOUT_CONFIG.pageWrapper">
+  <div v-if="isCurrentUserLeader" :class="[LAYOUT_CONFIG.pageWrapper, SPACING_TOKENS.mt.xl]">
     <div :class="LAYOUT_CONFIG.headerRow">
       <div :class="LAYOUT_CONFIG.headerActionLeft">
         <div :class="LAYOUT_CONFIG.headerSearchWrapper">

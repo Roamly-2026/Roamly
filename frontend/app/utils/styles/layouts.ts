@@ -32,7 +32,7 @@ export const LAYOUT_CONFIG = {
   actionGroup: `flex items-center ${SPACING_TOKENS.gap.md}`,
   actionGroupCenter: `flex items-center justify-center ${SPACING_TOKENS.gap.sm} ${SPACING_TOKENS.py.sm}`,
   singleButtonWrapper: `${SPACING_TOKENS.pt.sm} text-center w-full`,
-  rightButtonWrapper: `${SPACING_TOKENS.mt.md} flex justify-end w-full`,
+  rightButtonWrapper: `${SPACING_TOKENS.mt.md} flex justify-start w-full`,
   divider: `${SPACING_TOKENS.my.xs} ${BORDER_TOKENS.dividerTop} w-full`,
   flexBetween: 'flex justify-between items-center w-full',
   cardCornerLeft: `absolute top-4 left-4 ${Z_INDEX_TOKENS.base}`,
@@ -48,6 +48,7 @@ export const LAYOUT_CONFIG = {
   navWrapper: `hidden md:flex flex-1 justify-center items-center ${SPACING_TOKENS.gap.xl} ${FONT_WEIGHTS.bold} ${TEXT_TRACKING.wide}`,
   headerRight: `flex-1 flex justify-end items-center ${SPACING_TOKENS.responsive.listGap}`,
   mobileMenuButton: `md:hidden ${COLOR_TOKENS.text.primary} ${SPACING_TOKENS.p.xs}`,
+  desktopOnlyButton: 'hidden sm:inline-flex',
 
   // ------------------- LOADING SCREEN -------------------
   loadingScreenWrapper: `fixed inset-0 ${Z_INDEX_TOKENS.modal} ${GLASS_TOKENS.page} flex flex-col items-center justify-center ${SPACING_TOKENS.gap.lg}`,
@@ -64,10 +65,10 @@ export const LAYOUT_CONFIG = {
 
   // ------------------- AUTH PAGES (Login / Register / Verify) -------------------
   mainAuth: `flex-1 flex items-center justify-center w-full ${SPACING_TOKENS.responsive.cardPadding}`,
-  authWrapper: `w-full ${SIZE_TOKENS.container.cardMd} shrink-0 ${SPACING_TOKENS.mx.auto} flex flex-col ${SPACING_TOKENS.responsive.gridGap}`,
-  mobileAuthWrapper: `w-full ${SIZE_TOKENS.container.cardMd} shrink-0 ${SPACING_TOKENS.mx.auto} flex flex-col ${SPACING_TOKENS.gap.lg}`,
-  formWrapper: `w-full min-w-0 flex flex-col ${SPACING_TOKENS.responsive.listGap}`,
-  formActions: `flex items-center justify-between ${SPACING_TOKENS.pt.lg}`,
+  authWrapper: `w-[92vw] sm:w-[28rem] max-w-[28rem] shrink-0 ${SPACING_TOKENS.mx.auto} flex flex-col ${SPACING_TOKENS.responsive.gridGap}`,
+  mobileAuthWrapper: `w-[92vw] max-w-[28rem] shrink-0 ${SPACING_TOKENS.mx.auto} flex flex-col ${SPACING_TOKENS.gap.lg}`,
+  formWrapper: `w-full max-w-full min-w-0 flex flex-col ${SPACING_TOKENS.responsive.listGap}`,
+  formActions: `flex items-center justify-between ${SPACING_TOKENS.mt.md} ${SPACING_TOKENS.pt.lg} ${SPACING_TOKENS.mb.xs} ${SPACING_TOKENS.px.xs}`,
 
   // ------------------- GROUPS, MEMBERS & LIST CARDS -------------------
   cardGrid: `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ${SPACING_TOKENS.responsive.gridGap} w-full`,
@@ -78,8 +79,8 @@ export const LAYOUT_CONFIG = {
   memberCardContent: 'flex-1 flex flex-col justify-between h-full min-h-16 min-w-0',
 
   // Shared List Cards (Participants, Shared Groups, Access Lists)
-  listModalScroll: `flex flex-col ${SPACING_TOKENS.gap.sm} overflow-y-auto max-h-[540px] ${SPACING_TOKENS.pr.sm} w-full custom-scrollbar`,
-  listCard: `flex items-center ${SPACING_TOKENS.gap.md} w-full !${SPACING_TOKENS.p.md} bg-surface-card/40 ${RADIUS_TOKENS.lg} ${BORDER_TOKENS.ringSubtle} hover:bg-surface-card/60 ${INTERACTION_TOKENS.base} shrink-0`,
+  listModalScroll: `flex flex-col ${SPACING_TOKENS.gap.sm} overflow-y-auto max-h-[540px] ${SPACING_TOKENS.p.xs} w-full custom-scrollbar`,
+  listCard: `flex items-center justify-between ${SPACING_TOKENS.gap.md} w-full !p-4 bg-surface-card/40 ${RADIUS_TOKENS.lg} ${BORDER_TOKENS.ringSubtle} hover:bg-surface-card/60 ${INTERACTION_TOKENS.base} shrink-0`,
   listCardSelected: `${BORDER_TOKENS.ringBrand} ${COLOR_TOKENS.surface.brandTint}`,
   listCardAvatar: `shrink-0 ${SHADOW_TOKENS.sm} ${SIZE_TOKENS.avatar.md}`,
   listCardInfo: 'flex flex-col flex-1 min-w-0',
@@ -110,7 +111,7 @@ export const LAYOUT_CONFIG = {
   modalForm: `flex flex-col ${SPACING_TOKENS.gap.md} ${SPACING_TOKENS.py.sm}`,
   modalFormGroup: `flex flex-col ${SPACING_TOKENS.gap.sm}`,
   modalFormGrid2Col: `grid grid-cols-1 sm:grid-cols-2 ${SPACING_TOKENS.gap.md}`,
-  modalActions: `flex flex-col-reverse sm:flex-row items-center justify-between w-full ${SPACING_TOKENS.gap.sm} sm:gap-0`,
+  modalActions: `flex flex-col-reverse sm:flex-row items-center justify-between w-full ${SPACING_TOKENS.gap.sm} sm:gap-0 ${SPACING_TOKENS.mb.xs} ${SPACING_TOKENS.px.xs}`,
   modalSizeSm: `w-full ${SIZE_TOKENS.container.modalMd} !w-[90%] !mx-auto sm:!w-full`,
   modalSizeMd: `w-full ${SIZE_TOKENS.container.modalLg} !w-[90%] !mx-auto sm:!w-full`,
   modalSizeLg: `w-full ${SIZE_TOKENS.container.modalXl} !w-[90%] !mx-auto sm:!w-full`,

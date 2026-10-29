@@ -34,7 +34,7 @@
       <div :class="LAYOUT_CONFIG.rightButtonWrapper">
         <BaseButton
           :label="UI_TEXT.common.close"
-          variant="actionOkButton"
+          variant="actionCancelButton"
           @click="groupsStore.closeUserProfileModal()"
         />
       </div>

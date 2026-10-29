@@ -61,7 +61,7 @@
           {{ UI_TEXT.auth.registerSuccess }}
         </div>
 
-        <div :class="LAYOUT_CONFIG.modalActions">
+        <div :class="[LAYOUT_CONFIG.modalActions, SPACING_TOKENS.mt.md, SPACING_TOKENS.pt.md]">
           <BaseButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
