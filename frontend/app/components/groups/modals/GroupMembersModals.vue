@@ -9,7 +9,7 @@
       :cancel-text="UI_TEXT.common.cancel"
       :submit-text="UI_TEXT.common.save"
       :loading="isUpdating"
-      :ui-size="appConfig.layout.modalSizeSm"
+      :ui-size="LAYOUT_CONFIG.modalSizeSm"
       @cancel="groupsStore.closeUpdateModal()"
       @submit="handleUpdateGroup"
     >
@@ -18,9 +18,8 @@
           v-model="updateGroupName"
           :label="UI_TEXT.groups.nameLabel"
           :placeholder="UI_TEXT.groups.namePlaceholder"
-          class="w-full"
         />
-        <p v-if="updateError" :class="appConfig.typography.inputError">{{ updateError }}</p>
+        <p v-if="updateError" :class="TYPOGRAPHY_CONFIG.inputError">{{ updateError }}</p>
       </div>
     </FormModal>
 
@@ -34,7 +33,7 @@
       :loading="isInviting"
       :disable-cancel="!!inviteSuccess"
       :disable-submit="!!inviteSuccess"
-      :ui-size="appConfig.layout.modalSizeSm"
+      :ui-size="LAYOUT_CONFIG.modalSizeSm"
       @cancel="groupsStore.closeInviteModal()"
       @submit="handleInviteUser"
     >
@@ -44,24 +43,21 @@
           :label="UI_TEXT.groups.emailLabel"
           :placeholder="UI_TEXT.groups.emailPlaceholder"
           variant="glass"
-          class="w-full"
         />
       </div>
       <div>
-        <label :class="appConfig.typography.inputLabel">{{
-          UI_TEXT.groups.roleSelectionLabel
-        }}</label>
+        <label :class="TYPOGRAPHY_CONFIG.inputLabel">{{ UI_TEXT.groups.roleSelectionLabel }}</label>
         <USelect
           v-model="inviteRole"
           :items="roleOptions"
           label-key="label"
           value-key="value"
           :popper="{ strategy: 'fixed', placement: 'bottom-start' }"
-          :ui="{ content: 'z-[9999]' }"
+          :ui="{ content: Z_INDEX_TOKENS.modal }"
         />
       </div>
-      <p v-if="inviteError" :class="appConfig.typography.modalErrorBox">{{ inviteError }}</p>
-      <p v-if="inviteSuccess" :class="appConfig.typography.modalSuccessBox">
+      <p v-if="inviteError" :class="TYPOGRAPHY_CONFIG.modalErrorBox">{{ inviteError }}</p>
+      <p v-if="inviteSuccess" :class="TYPOGRAPHY_CONFIG.modalSuccessBox">
         {{ inviteSuccess }}
       </p>
     </FormModal>
@@ -74,14 +70,14 @@
       :cancel-text="UI_TEXT.common.cancel"
       :confirm-text="UI_TEXT.common.remove"
       :loading="isRemoving"
-      :ui-size="appConfig.layout.modalSizeSm"
+      :ui-size="LAYOUT_CONFIG.modalSizeSm"
       @cancel="groupsStore.closeRemoveUserModal()"
       @confirm="handleRemoveUser"
     >
       <template #body>
-        <p :class="appConfig.typography.modalText">
+        <p :class="TYPOGRAPHY_CONFIG.modalText">
           {{ UI_TEXT.groups.removeUserConfirmation }}
-          <span :class="appConfig.typography.modalHighlight"
+          <span :class="TYPOGRAPHY_CONFIG.modalHighlight"
             >„{{ groupsStore.selectedUserEmailToRemove }}”</span
           >
         </p>
@@ -96,14 +92,15 @@
       :cancel-text="UI_TEXT.common.cancel"
       :confirm-text="UI_TEXT.groups.promote"
       :loading="isPromoting"
-      :ui-size="appConfig.layout.modalSizeSm"
+      :ui-size="LAYOUT_CONFIG.modalSizeSm"
+      :confirm-btn-class="BUTTON_APPEARANCES.primaryElevated"
       @cancel="groupsStore.closePromoteUserModal()"
       @confirm="handlePromoteUser"
     >
       <template #body>
-        <p :class="appConfig.typography.modalText">
+        <p :class="TYPOGRAPHY_CONFIG.modalText">
           {{ ' ' + UI_TEXT.groups.promoteBeforeName + ' '
-          }}<span :class="appConfig.typography.modalInlineHighlight"
+          }}<span :class="TYPOGRAPHY_CONFIG.modalInlineHighlight"
             >„{{ groupsStore.selectedUserNameToPromote }}”</span
           >{{ ' ' + UI_TEXT.groups.promoteAfterName + ' ' }}
         </p>
@@ -118,15 +115,15 @@
       :cancel-text="UI_TEXT.common.cancel"
       :confirm-text="UI_TEXT.groups.demote"
       :loading="isDemoting"
-      :ui-size="appConfig.layout.modalSizeSm"
-      confirm-btn-class="text-orange-500 hover:text-white hover:bg-orange-600 ring-orange-500"
+      :ui-size="LAYOUT_CONFIG.modalSizeSm"
+      :confirm-btn-class="BUTTON_APPEARANCES.dangerElevated"
       @cancel="groupsStore.closeDemoteUserModal()"
       @confirm="handleDemoteUser"
     >
       <template #body>
-        <p :class="appConfig.typography.modalText">
+        <p :class="TYPOGRAPHY_CONFIG.modalText">
           {{ ' ' + UI_TEXT.groups.demoteBeforeName + ' '
-          }}<span :class="appConfig.typography.modalInlineHighlight"
+          }}<span :class="TYPOGRAPHY_CONFIG.modalInlineHighlight"
             >„{{ groupsStore.selectedUserNameToDemote }}”</span
           >{{ ' ' + UI_TEXT.groups.demoteAfterName + ' ' }}
         </p>
@@ -147,12 +144,10 @@ import {
   usePromoteUserMutation,
   useDemoteUserMutation,
 } from '~/queries/groups.mutation';
-import { useAppConfig } from '#imports';
 import { getErrorMessage } from '~/utils/error.utils';
 import { updateGroupSchema, inviteUserSchema } from '~/utils/schemas/groups.schema';
 
 /* --- COMPOSABLES --- */
-const appConfig = useAppConfig();
 const groupsStore = useGroupsStore();
 const route = useRoute();
 const membersGroupUuid = computed(() => route.params.uuid as string);

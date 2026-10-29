@@ -1,22 +1,18 @@
 <!-- frontend/app/components/auth/views/VerifyEmailMobile.vue -->
 <template>
-  <div :class="appConfig.layout.mobileAuthWrapper">
+  <div :class="LAYOUT_CONFIG.mobileAuthWrapper">
     <BaseCard>
-      <!-- TITLE -->
-      <div :class="appConfig.typography.authTitleWrapper">
-        <h1 :class="appConfig.typography.authTitle">{{ UI_TEXT.auth.verifyHeading }}</h1>
-        <p :class="`text-sm text-surface-400 text-center ${SPACING_TOKENS.mt.xs} leading-relaxed`">
+      <div :class="TYPOGRAPHY_CONFIG.authTitleWrapper">
+        <h1 :class="TYPOGRAPHY_CONFIG.authTitle">{{ UI_TEXT.auth.verifyHeading }}</h1>
+        <p :class="TYPOGRAPHY_CONFIG.modalText">
           {{ ' ' + UI_TEXT.auth.verifyBeforeEmail + ' '
-          }}<span class="font-semibold text-dark-text break-all">{{ email }}</span
+          }}<span :class="TYPOGRAPHY_CONFIG.modalInlineHighlight">{{ email }}</span
           >{{ UI_TEXT.auth.verifyAfterEmail + ' ' }}
         </p>
       </div>
 
-      <!-- OTP INPUTS -->
-      <div :class="appConfig.layout.formWrapper">
-        <div
-          :class="`flex items-center justify-center ${SPACING_TOKENS.gap.sm} ${SPACING_TOKENS.py.sm}`"
-        >
+      <div :class="LAYOUT_CONFIG.formWrapper">
+        <div :class="LAYOUT_CONFIG.actionGroupCenter">
           <input
             v-for="(_, i) in otpCells"
             :key="i"
@@ -25,11 +21,11 @@
             type="text"
             inputmode="numeric"
             maxlength="1"
-            class="w-11 h-13 text-center text-xl font-bold rounded-xl border-2 outline-none transition-all duration-150 bg-white/5 text-dark-text caret-brand-500 border-surface-500/30 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/30 disabled:opacity-40"
-            :class="{
-              'border-error-500 focus:border-error-500 focus:ring-error-500/30': !!error,
-              'border-success-500 focus:border-success-500 focus:ring-success-500/30': isVerified,
-            }"
+            :class="[
+              OTP_INPUT_CONFIG.mobile,
+              error ? OTP_INPUT_CONFIG.error : '',
+              isVerified ? OTP_INPUT_CONFIG.success : '',
+            ]"
             :disabled="isVerifying || isVerified"
             @input="onInput(i, $event)"
             @keydown="onKeydown(i, $event)"
@@ -38,74 +34,57 @@
           />
         </div>
 
-        <!-- Error -->
-        <div v-if="error" :class="appConfig.typography.formStatusError" class="text-center">
+        <div v-if="error" :class="TYPOGRAPHY_CONFIG.formStatusError">
           {{ getErrorMessage(error) }}
         </div>
 
-        <!-- Success -->
-        <div v-if="isVerified" :class="appConfig.typography.formStatusSuccess" class="text-center">
+        <div v-if="isVerified" :class="TYPOGRAPHY_CONFIG.formStatusSuccess">
           {{ ' ' + UI_TEXT.auth.verified + ' ' }}
         </div>
 
-        <!-- Verify button -->
-        <div :class="`flex flex-col ${SPACING_TOKENS.pt.sm} w-full`">
+        <div :class="LAYOUT_CONFIG.singleButtonWrapper">
           <BaseButton
             :label="UI_TEXT.auth.verify"
-            class="w-full"
+            variant="actionOkButton"
+            :class="LAYOUT_CONFIG.fullWidth"
             :loading="isVerifying"
             :disabled="!isOtpComplete || isVerified"
             @click="emit('submit', otpValue)"
           />
         </div>
 
-        <!-- Divider -->
-        <div :class="`flex items-center ${SPACING_TOKENS.gap.sm} ${SPACING_TOKENS.py.xs}`">
-          <div class="flex-1 h-px bg-surface-500/20" />
-          <span class="text-xs text-surface-400">{{ UI_TEXT.auth.or }}</span>
-          <div class="flex-1 h-px bg-surface-500/20" />
-        </div>
+        <div :class="LAYOUT_CONFIG.divider" />
 
-        <!-- Resend -->
-        <div :class="`flex flex-col items-center ${SPACING_TOKENS.gap.xs}`">
-          <p class="text-xs text-surface-400">{{ UI_TEXT.auth.noCode }}</p>
+        <div :class="LAYOUT_CONFIG.cardContentCenter">
+          <p :class="TYPOGRAPHY_CONFIG.captionMuted">{{ UI_TEXT.auth.noCode }}</p>
           <BaseButton
             :label="UI_TEXT.auth.resend"
             variant="link"
-            class="text-sm font-semibold text-brand-500 hover:text-brand-400 disabled:opacity-40 disabled:cursor-not-allowed"
+            :class="TYPOGRAPHY_CONFIG.authResendBtn"
             :disabled="isResending || resendCooldown > 0 || isVerified"
             :loading="isResending"
             @click="emit('resend')"
           />
-          <p v-if="resendCooldown > 0" class="text-xs text-surface-400">
+          <p v-if="resendCooldown > 0" :class="TYPOGRAPHY_CONFIG.captionMuted">
             {{ ' ' + UI_TEXT.auth.resendAvailable + ' ' }}{{ resendCooldown
             }}{{ UI_TEXT.auth.seconds + ' ' }}
           </p>
-          <div
-            v-if="resendSuccess"
-            :class="appConfig.typography.formStatusSuccess"
-            class="text-xs text-center"
-          >
+          <div v-if="resendSuccess" :class="TYPOGRAPHY_CONFIG.formStatusSuccess">
             {{ ' ' + UI_TEXT.auth.resent + ' ' }}
           </div>
-          <div
-            v-if="resendError"
-            :class="appConfig.typography.formStatusError"
-            class="text-xs text-center"
-          >
+          <div v-if="resendError" :class="TYPOGRAPHY_CONFIG.formStatusError">
             {{ getErrorMessage(resendError) }}
           </div>
         </div>
       </div>
     </BaseCard>
 
-    <!-- Back to register -->
-    <div :class="appConfig.layout.singleButtonWrapper">
+    <div :class="LAYOUT_CONFIG.singleButtonWrapper">
       <BaseButton
         to="/register"
         :label="UI_TEXT.auth.backToRegister"
         variant="actionAccentHeroButton"
-        class="w-full"
+        :class="LAYOUT_CONFIG.fullWidth"
       />
     </div>
   </div>
@@ -113,11 +92,8 @@
 
 <script setup lang="ts">
 import { reactive, ref, computed, watch } from 'vue';
-import { useAppConfig } from '#imports';
 import { getErrorMessage } from '~/utils/error.utils';
 import type { ApiError } from '~/types/apiError.type';
-
-const appConfig = useAppConfig();
 
 const props = defineProps<{
   email: string;

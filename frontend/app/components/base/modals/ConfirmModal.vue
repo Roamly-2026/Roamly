@@ -8,24 +8,25 @@
   >
     <template #body>
       <slot name="body">
-        <p :class="appConfig.typography.modalText">{{ message }}</p>
+        <p :class="TYPOGRAPHY_CONFIG.modalText">{{ message }}</p>
       </slot>
-      <p v-if="errorText" :class="[appConfig.typography.modalErrorBox, 'mt-2']">
+      <p v-if="errorText" :class="TYPOGRAPHY_CONFIG.modalErrorBox">
         {{ errorText }}
       </p>
     </template>
 
     <template #footer>
-      <div :class="appConfig.layout.modalActions || appConfig.layout.flexBetween">
+      <div :class="LAYOUT_CONFIG.modalActions">
         <BaseButton
           :label="cancelText"
           variant="actionCancelButton"
-          :class="appConfig.typography.modalActionBtnCancel"
+          :class="TYPOGRAPHY_CONFIG.modalActionBtnCancel"
           @click="$emit('cancel')"
         />
         <BaseButton
           :label="confirmText"
-          :class="[appConfig.typography.modalActionBtnOk, confirmBtnClass]"
+          :variant="confirmVariant"
+          :class="[TYPOGRAPHY_CONFIG.modalActionBtnOk, confirmBtnClass]"
           :loading="loading"
           @click="$emit('confirm')"
         />
@@ -35,9 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { useAppConfig } from '#imports';
-
-const appConfig = useAppConfig();
+import type { ButtonProps } from '@nuxt/ui';
 
 withDefaults(
   defineProps<{
@@ -49,16 +48,18 @@ withDefaults(
     confirmText: string;
     loading?: boolean;
     uiSize?: string;
-    confirmBtnClass?: string;
     dismissible?: boolean;
+    confirmVariant?: ButtonProps['variant'];
+    confirmBtnClass?: string;
   }>(),
   {
     message: '',
     errorText: '',
     loading: false,
     uiSize: undefined,
-    confirmBtnClass: 'bg-error-500 hover:bg-error-600 text-white',
     dismissible: false,
+    confirmVariant: 'actionDangerButton',
+    confirmBtnClass: '',
   },
 );
 

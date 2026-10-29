@@ -1,33 +1,32 @@
 <!-- frontend/app/components/headers/GeneralHeader.vue -->
 <template>
-  <header :class="[appConfig.layout.headerBase, appConfig.layout.headerSticky]">
+  <header :class="[LAYOUT_CONFIG.headerBase, LAYOUT_CONFIG.headerSticky]">
     <!-- BACK BUTTON SECTION -->
-
-    <div :class="['flex-1 flex items-center', SPACING_TOKENS.gap.md]">
-      <BaseButton icon="i-heroicons-arrow-left" variant="glassIconButton" class="shrink-0" to="/" />
+    <div :class="LAYOUT_CONFIG.headerLeft">
+      <BaseButton icon="i-heroicons-arrow-left" variant="glassIconButton" to="/" />
     </div>
 
     <!-- LOGO SECTION -->
-    <div class="flex-1 flex justify-center">
-      <NuxtLink to="/" :class="appConfig.layout.logoWrapper">
-        <UIcon name="i-heroicons-map-pin" class="w-7 h-7 text-brand-500 hidden sm:block" />
-        <span :class="appConfig.typography.logoText">{{ UI_TEXT.common.brandName }}</span>
+    <div :class="LAYOUT_CONFIG.headerCenter">
+      <NuxtLink to="/" :class="LAYOUT_CONFIG.logoWrapper">
+        <UIcon name="i-heroicons-map-pin" :class="TYPOGRAPHY_CONFIG.iconBrandLg" />
+        <span :class="TYPOGRAPHY_CONFIG.logoText">{{ UI_TEXT.common.brandName }}</span>
       </NuxtLink>
     </div>
 
     <!-- USER ACTIONS SECTION -->
-    <div :class="appConfig.layout.headerRight">
+    <div :class="LAYOUT_CONFIG.headerRight">
       <ClientOnly>
-        <div :class="['flex items-center', SPACING_TOKENS.responsive.listGap]">
+        <div :class="LAYOUT_CONFIG.actionGroup">
           <template v-if="isAuthenticated">
-            <span class="font-bold text-dark-text tracking-wide text-sm hidden sm:block">
+            <span :class="TYPOGRAPHY_CONFIG.headerUsername">
               {{ userProfile?.username || UI_TEXT.common.loading }}
             </span>
             <BaseButton
               icon="i-heroicons-arrow-left-on-rectangle"
               :label="UI_TEXT.auth.logoutTitle"
               variant="smallHollowActionButton"
-              class="hidden sm:flex"
+              :class="LAYOUT_CONFIG.desktopOnlyButton"
               @click="handleLogout"
             />
 
@@ -36,17 +35,14 @@
               v-if="!isMobile"
               :items="profileDropdownItems"
               :content="{ align: 'end', side: 'bottom', sideOffset: 8 }"
+              :ui="DROPDOWN_MENU_CONFIG.slots"
             >
-              <BaseButton
-                variant="ghost"
-                class="p-0 m-0 rounded-full hover:bg-transparent focus-visible:ring-2 focus-visible:ring-brand-500 transition-transform hover:scale-105 cursor-pointer"
-              >
-                <UAvatar
-                  :src="userProfile?.profile_image_url || undefined"
-                  :alt="userProfile?.username || UI_TEXT.common.user"
-                  icon="i-heroicons-user"
-                />
-              </BaseButton>
+              <UAvatar
+                :src="userProfile?.profile_image_url || undefined"
+                :alt="userProfile?.username || UI_TEXT.common.user"
+                icon="i-heroicons-user"
+                :class="INTERACTION_TOKENS.lift"
+              />
             </UDropdownMenu>
 
             <!-- Mobile menu -->
@@ -60,16 +56,12 @@
             <UDropdownMenu
               :items="profileDropdownItems"
               :content="{ align: 'end', side: 'bottom', sideOffset: 8 }"
-              :ui="{
-                content: 'w-36',
-                itemLeadingIcon: 'w-10 h-10 text-brand-500 shrink-0',
-                item: `${SPACING_TOKENS.gap.sm} text-md`,
-              }"
+              :ui="DROPDOWN_MENU_CONFIG.slots"
             >
               <BaseButton
                 icon="i-heroicons-bars-3"
                 variant="ghost"
-                :class="['md:hidden text-dark-text', SPACING_TOKENS.p.xs]"
+                :class="LAYOUT_CONFIG.mobileMenuButton"
               />
             </UDropdownMenu>
           </template>
@@ -82,27 +74,29 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAppConfig } from '#imports';
 import { useCurrentUserQuery } from '~/queries/user.query';
 import { useScreenSize } from '~/composables/useScreenSize';
 import type { DropdownMenuItem } from '@nuxt/ui';
 
-const appConfig = useAppConfig();
 const router = useRouter();
 const { isAuthenticated, logout } = useAuth();
 const { data: userProfile } = useCurrentUserQuery();
 const { isMobile } = useScreenSize();
 
-const profileDropdownItems = ref<DropdownMenuItem[]>([
-  { label: UI_TEXT.common.profile, icon: 'i-heroicons-user-circle', to: '/users/profile' },
-  { label: UI_TEXT.common.groups, icon: 'i-heroicons-user-group', to: '/groups' },
-  { label: UI_TEXT.common.events, icon: 'i-heroicons-calendar-days', to: '/events' },
-  {
-    label: UI_TEXT.common.logout,
-    icon: 'i-heroicons-arrow-left-on-rectangle',
-    onSelect: () => handleLogout(),
-    class: 'text-red-500 font-semibold',
-  },
+const profileDropdownItems = ref<DropdownMenuItem[][]>([
+  [
+    { label: UI_TEXT.common.profile, icon: 'i-heroicons-user-circle', to: '/users/profile' },
+    { label: UI_TEXT.common.groups, icon: 'i-heroicons-user-group', to: '/groups' },
+    { label: UI_TEXT.common.events, icon: 'i-heroicons-calendar-days', to: '/events' },
+  ],
+  [
+    {
+      label: UI_TEXT.auth.logoutTitle,
+      icon: 'i-heroicons-arrow-left-on-rectangle',
+      onSelect: () => handleLogout(),
+      class: `${COLOR_TOKENS.status.error} ${FONT_WEIGHTS.semibold}`,
+    },
+  ],
 ]);
 
 const handleLogout = () => {

@@ -5,20 +5,15 @@
     <BaseModal
       v-model:open="eventsStore.isAddEventModalOpen"
       :title="UI_TEXT.tooltips.addEvent"
-      :ui-size="appConfig.layout.modalSizeMd"
+      :ui-size="LAYOUT_CONFIG.modalSizeMd"
     >
       <template #body>
-        <div
-          :class="[
-            appConfig.calendar.previewWrapper,
-            'p-2! pr-3! gap-4! md:overflow-visible md:max-h-none overflow-y-auto max-h-[70vh] overscroll-contain custom-scrollbar flex flex-col',
-          ]"
-        >
+        <div :class="LAYOUT_CONFIG.modalScrollBody">
           <UForm
             id="add-event-form"
             :schema="createEventSchema"
             :state="formState"
-            :class="appConfig.layout.modalForm"
+            :class="LAYOUT_CONFIG.modalForm"
             @submit="onSubmit"
           >
             <BaseInput
@@ -28,47 +23,39 @@
               :placeholder="UI_TEXT.events.titlePlaceholder"
             />
 
-            <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
-              <UFormField name="start_time" :label="UI_TEXT.events.startDateTime">
-                <template #default="{ error }">
-                  <div class="flex gap-2 w-full">
-                    <UInput
-                      v-model="formState.startDate"
-                      type="date"
-                      class="w-full"
-                      :variant="error ? 'glassError' : 'glass'"
-                    />
-                    <UInput
-                      v-model="formState.startTime"
-                      type="time"
-                      class="w-full"
-                      :variant="error ? 'glassError' : 'glass'"
-                    />
-                  </div>
-                </template>
-              </UFormField>
-            </div>
+            <UFormField name="start_time" :label="UI_TEXT.events.startDateTime">
+              <template #default="{ error }">
+                <div :class="LAYOUT_CONFIG.modalFormGrid2Col">
+                  <UInput
+                    v-model="formState.startDate"
+                    type="date"
+                    :variant="error ? 'glassError' : 'glass'"
+                  />
+                  <UInput
+                    v-model="formState.startTime"
+                    type="time"
+                    :variant="error ? 'glassError' : 'glass'"
+                  />
+                </div>
+              </template>
+            </UFormField>
 
-            <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
-              <UFormField name="end_time" :label="UI_TEXT.events.endDateTime">
-                <template #default="{ error }">
-                  <div class="flex gap-2 w-full">
-                    <UInput
-                      v-model="formState.endDate"
-                      type="date"
-                      class="w-full"
-                      :variant="error ? 'glassError' : 'glass'"
-                    />
-                    <UInput
-                      v-model="formState.endTime"
-                      type="time"
-                      class="w-full"
-                      :variant="error ? 'glassError' : 'glass'"
-                    />
-                  </div>
-                </template>
-              </UFormField>
-            </div>
+            <UFormField name="end_time" :label="UI_TEXT.events.endDateTime">
+              <template #default="{ error }">
+                <div :class="LAYOUT_CONFIG.modalFormGrid2Col">
+                  <UInput
+                    v-model="formState.endDate"
+                    type="date"
+                    :variant="error ? 'glassError' : 'glass'"
+                  />
+                  <UInput
+                    v-model="formState.endTime"
+                    type="time"
+                    :variant="error ? 'glassError' : 'glass'"
+                  />
+                </div>
+              </template>
+            </UFormField>
 
             <UFormField name="description" :label="UI_TEXT.events.description">
               <template #default="{ error }">
@@ -81,8 +68,8 @@
             </UFormField>
 
             <!-- Location selector -->
-            <div class="mt-4 flex flex-col gap-2">
-              <span class="text-sm font-medium text-dark-text">{{
+            <div :class="LAYOUT_CONFIG.modalFormGroup">
+              <span :class="TYPOGRAPHY_CONFIG.inputLabel">{{
                 UI_TEXT.events.optionalLocation
               }}</span>
               <BaseButton
@@ -91,41 +78,34 @@
                 variant="glassOutlineButton"
                 @click="isMapSelectorOpen = true"
               />
-              <div
-                v-if="formState.address"
-                class="flex items-start justify-between gap-2 p-2 bg-surface-50 border border-surface-200 rounded-md w-full overflow-hidden box-border"
-              >
-                <span
-                  class="text-sm text-dark-text/80 wrap-break-word whitespace-normal min-w-0 flex-1"
-                >
+              <div v-if="formState.address" :class="LAYOUT_CONFIG.filePreviewChip">
+                <span :class="CALENDAR_CONFIG.metaValue">
                   {{ formState.address }}
                 </span>
                 <BaseButton
                   icon="i-heroicons-x-mark"
                   variant="ghostDangerIconButton"
-                  size="xs"
-                  class="p-0 shrink-0 self-center"
                   @click="clearLocation"
                 />
               </div>
             </div>
 
-            <div class="mt-2 flex items-center justify-between">
+            <div :class="LAYOUT_CONFIG.flexBetween">
               <UCheckbox
                 v-model="formState.is_private"
                 variant="glass"
                 :label="UI_TEXT.events.markPrivate"
-                :ui="{ base: 'w-5 h-5 cursor-pointer border-2 border-dark-text/30' }"
               />
             </div>
           </UForm>
         </div>
       </template>
       <template #footer>
-        <div :class="[appConfig.layout.flexBetween, 'mt-4']">
+        <div :class="LAYOUT_CONFIG.modalActions">
           <BaseButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
+            :class="TYPOGRAPHY_CONFIG.modalActionBtnCancel"
             @click="closeAndResetForm"
           />
           <BaseButton
@@ -133,6 +113,7 @@
             form="add-event-form"
             :label="UI_TEXT.common.add"
             variant="actionOkButton"
+            :class="TYPOGRAPHY_CONFIG.modalActionBtnOk"
             :loading="createEventMutation.isLoading.value"
           />
         </div>
@@ -140,21 +121,20 @@
     </BaseModal>
 
     <!-- MAP SELECTOR MODAL -->
-    <BaseModal v-model:open="isMapSelectorOpen" :ui-size="appConfig.layout.modalSizeLg">
+    <BaseModal v-model:open="isMapSelectorOpen" :ui-size="LAYOUT_CONFIG.modalSizeLg">
       <template #header>
-        <div class="flex justify-between items-center w-full">
-          <h3 class="text-xl font-bold text-dark-text">{{ UI_TEXT.events.selectLocation }}</h3>
+        <div :class="LAYOUT_CONFIG.flexBetween">
+          <h3 :class="TYPOGRAPHY_CONFIG.cardTitle">{{ UI_TEXT.events.selectLocation }}</h3>
           <BaseButton
             icon="i-heroicons-x-mark"
-            variant="ghost"
-            class="hover:bg-error-50 hover:text-error-500 rounded-full transition-all duration-200"
+            variant="ghostDangerIconButton"
             @click="isMapSelectorOpen = false"
           />
         </div>
       </template>
       <template #body>
-        <div class="max-h-[70vh] overflow-y-auto custom-scrollbar flex flex-col gap-4 p-1">
-          <div class="h-[45vh] w-full shrink-0">
+        <div :class="LAYOUT_CONFIG.modalScrollBody">
+          <div :class="LAYOUT_CONFIG.modalMapWrapper">
             <ClientOnly>
               <EventMapSelector
                 :is-open="isMapSelectorOpen"
@@ -183,12 +163,10 @@
 import { computed, reactive, ref, watch } from 'vue';
 import type { z } from 'zod';
 import type { FormSubmitEvent } from '#ui/types';
-import { useAppConfig } from '#imports';
 import { useEventsStore } from '~/stores/events.modals.store';
 import { useCreateEventMutation } from '~/queries/events.mutation';
 import { createEventSchema } from '~/utils/schemas/events.schema';
 
-const appConfig = useAppConfig();
 const eventsStore = useEventsStore();
 
 const isMapSelectorOpen = ref(false);

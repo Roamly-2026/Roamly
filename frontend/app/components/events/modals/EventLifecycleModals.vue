@@ -8,14 +8,16 @@
       :cancel-text="UI_TEXT.common.cancel"
       :confirm-text="UI_TEXT.common.delete"
       :loading="deleteEventMutation.isLoading.value"
-      :ui-size="appConfig.layout.modalSizeMd"
+      :ui-size="LAYOUT_CONFIG.modalSizeMd"
       @cancel="eventsStore.closeDeleteEventModal()"
       @confirm="handleConfirmDelete"
     >
       <template #body>
-        <p :class="appConfig.typography.modalText">
-          {{ ' ' + UI_TEXT.events.deleteBeforeTitle
-          }}{{ eventsStore.selectedEventToDelete?.title }}"?
+        <p :class="TYPOGRAPHY_CONFIG.modalText">
+          {{ ' ' + UI_TEXT.events.deleteBeforeTitle }}
+          <span :class="TYPOGRAPHY_CONFIG.modalInlineHighlight"
+            >„{{ eventsStore.selectedEventToDelete?.title }}”</span
+          >?
         </p>
       </template>
     </ConfirmModal>
@@ -27,13 +29,16 @@
       :cancel-text="UI_TEXT.common.cancel"
       :confirm-text="UI_TEXT.common.leave"
       :loading="leaveEventMutation.isLoading.value"
-      :ui-size="appConfig.layout.modalSizeMd"
+      :ui-size="LAYOUT_CONFIG.modalSizeMd"
       @cancel="eventsStore.closeLeaveEventModal()"
       @confirm="handleConfirmLeave"
     >
       <template #body>
-        <p :class="appConfig.typography.modalText">
-          {{ ' ' + UI_TEXT.events.leaveBeforeTitle }}{{ eventsStore.selectedEventToLeave?.title }}"?
+        <p :class="TYPOGRAPHY_CONFIG.modalText">
+          {{ ' ' + UI_TEXT.events.leaveBeforeTitle }}
+          <span :class="TYPOGRAPHY_CONFIG.modalInlineHighlight"
+            >„{{ eventsStore.selectedEventToLeave?.title }}”</span
+          >?
         </p>
       </template>
     </ConfirmModal>
@@ -42,12 +47,10 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useAppConfig } from '#imports';
 import { useEventsStore } from '~/stores/events.modals.store';
 import { useCurrentUserQuery } from '~/queries/user.query';
 import { useDeleteEventMutation, useLeaveEventMutation } from '~/queries/events.mutation';
 
-const appConfig = useAppConfig();
 const eventsStore = useEventsStore();
 
 const { data: currentUser } = useCurrentUserQuery();

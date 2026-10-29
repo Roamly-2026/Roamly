@@ -1,170 +1,107 @@
 <!-- frontend/app/components/views/mobile/users/ProfileMobile.vue -->
 <template>
-  <div :class="appConfig.layout.pageWrapper">
-    <!-- PAGE TITLE -->
+  <div :class="LAYOUT_CONFIG.pageWrapper">
     <div>
-      <h1 :class="appConfig.typography.pageTitle">{{ UI_TEXT.profile.heading }}</h1>
+      <h1 :class="TYPOGRAPHY_CONFIG.pageTitle">{{ UI_TEXT.profile.heading }}</h1>
     </div>
 
-    <!-- CONTENT SECTION -->
     <ClientOnly>
-      <!-- LOADING / ERROR STATES -->
-      <div v-if="isLoading" :class="appConfig.typography.statusLoading">
+      <div v-if="isLoading" :class="TYPOGRAPHY_CONFIG.statusLoading">
         {{ UI_TEXT.common.loading }}
       </div>
-      <div v-else-if="error" :class="appConfig.typography.statusError">
+      <div v-else-if="error" :class="TYPOGRAPHY_CONFIG.statusError">
         {{ UI_TEXT.errors.fetch }}
       </div>
 
-      <div v-else-if="currentUser" class="w-full relative flex flex-col">
+      <div v-else-if="currentUser" :class="LAYOUT_CONFIG.cardContent">
         <!-- PROFILE CARD SECTION -->
-        <div
-          :class="[
-            appConfig.layout.profileCard,
-            'p-4! flex-row! items-center',
-            SPACING_TOKENS.gap.md,
-          ]"
-        >
-          <!-- Delete Button -->
-          <div class="absolute top-2 left-2 z-10">
+        <div :class="LAYOUT_CONFIG.profileCard">
+          <div :class="LAYOUT_CONFIG.cardCornerRight">
             <BaseButton
               icon="i-heroicons-trash"
               variant="glassIconButtonDanger"
-              class="w-7! h-7!"
               :tooltip="UI_TEXT.tooltips.deleteProfile"
               @click="profileStore.openDeleteModal(currentUser)"
             />
           </div>
 
-          <!-- Profile picture -->
-          <div
-            :class="appConfig.layout.profilePictureWrapper"
-            class="top-3 w-20! h-20! my-0! ml-0! shrink-0 relative"
-          >
-            <div :class="appConfig.layout.profilePictureInner">
+          <div :class="LAYOUT_CONFIG.profilePictureWrapper">
+            <div :class="LAYOUT_CONFIG.profilePictureInner">
               <img
                 v-if="currentUser.profile_image_url"
                 :src="currentUser.profile_image_url"
                 :alt="UI_TEXT.common.profile"
-                class="w-full h-full object-cover"
+                :class="LAYOUT_CONFIG.mediaCoverImage"
               />
-              <UIcon v-else name="i-heroicons-user" class="w-10 h-10 text-surface-500" />
+              <UIcon v-else name="i-heroicons-user" :class="TYPOGRAPHY_CONFIG.iconAvatarInverse" />
 
-              <div
-                class="absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t from-black/50 to-transparent pointer-events-none"
-              ></div>
+              <div :class="LAYOUT_CONFIG.profilePictureOverlay"></div>
 
-              <BaseButton
-                icon="i-heroicons-eye"
-                variant="ghostDangerIconButton"
-                class="text-surface-500 w-6! h-6! p-0 absolute bottom-0.5 left-0.5"
-                :tooltip="UI_TEXT.tooltips.viewPicture"
-                @click="profileStore.openViewPictureModal(currentUser)"
-              />
+              <div :class="LAYOUT_CONFIG.documentCardBottomActions">
+                <BaseButton
+                  icon="i-heroicons-eye"
+                  variant="ghostBrandIconButton"
+                  :tooltip="UI_TEXT.tooltips.viewPicture"
+                  @click="profileStore.openViewPictureModal(currentUser)"
+                />
 
-              <BaseButton
-                icon="i-heroicons-arrow-up-tray"
-                variant="ghostDangerIconButton"
-                class="text-surface-500 w-6! h-6! p-0 absolute bottom-0.5 right-0.5"
-                :tooltip="UI_TEXT.tooltips.uploadPicture"
-                @click="profileStore.openUploadPictureModal()"
-              />
+                <BaseButton
+                  icon="i-heroicons-arrow-up-tray"
+                  variant="ghostBrandIconButton"
+                  :tooltip="UI_TEXT.tooltips.uploadPicture"
+                  @click="profileStore.openUploadPictureModal()"
+                />
+              </div>
             </div>
           </div>
 
           <!-- User details -->
-          <div
-            :class="[
-              appConfig.layout.profileDetailsWrapper,
-              'text-sm! flex-1 min-w-0',
-              SPACING_TOKENS.gap.xs,
-            ]"
-          >
-            <!-- Username -->
-            <div :class="[appConfig.layout.profileDetailRow, SPACING_TOKENS.gap.sm]">
-              <p :class="appConfig.typography.profileLabel" class="w-16! text-[10px]!">
-                {{ UI_TEXT.auth.usernameLabel }}
-              </p>
-              <div
-                :class="[
-                  appConfig.layout.actionGroup,
-                  'justify-between flex-1 min-w-0',
-                  SPACING_TOKENS.gap.xs,
-                ]"
-              >
-                <p :class="appConfig.typography.profileValue" class="text-sm! truncate">
-                  {{ currentUser.username }}
-                </p>
+          <div :class="LAYOUT_CONFIG.profileDetailsWrapper">
+            <div :class="LAYOUT_CONFIG.profileDetailRow">
+              <p :class="TYPOGRAPHY_CONFIG.profileLabel">{{ UI_TEXT.auth.usernameLabel }}</p>
+              <div :class="[LAYOUT_CONFIG.actionGroup, LAYOUT_CONFIG.flex1MinW0]">
+                <p :class="TYPOGRAPHY_CONFIG.profileValue">{{ currentUser.username }}</p>
                 <BaseButton
                   icon="i-heroicons-pencil"
                   variant="ghostDangerIconButton"
                   :tooltip="UI_TEXT.tooltips.editUsername"
-                  class="w-6! h-6! p-0 shrink-0"
                   @click="profileStore.openEditUsernameModal(currentUser)"
                 />
               </div>
             </div>
-            <!-- Email -->
-            <div :class="[appConfig.layout.profileDetailRow, SPACING_TOKENS.gap.sm]">
-              <p :class="appConfig.typography.profileLabel" class="w-16! text-[10px]!">
-                {{ UI_TEXT.auth.emailLabel }}
-              </p>
-              <div
-                :class="[
-                  appConfig.layout.actionGroup,
-                  'justify-between flex-1 min-w-0',
-                  SPACING_TOKENS.gap.xs,
-                ]"
-              >
-                <p :class="appConfig.typography.profileValue" class="text-xs! truncate">
-                  {{ currentUser.email }}
-                </p>
+
+            <div :class="LAYOUT_CONFIG.profileDetailRow">
+              <p :class="TYPOGRAPHY_CONFIG.profileLabel">{{ UI_TEXT.auth.emailLabel }}</p>
+              <div :class="[LAYOUT_CONFIG.actionGroup, LAYOUT_CONFIG.flex1MinW0]">
+                <p :class="TYPOGRAPHY_CONFIG.profileValue">{{ currentUser.email }}</p>
                 <BaseButton
                   icon="i-heroicons-pencil"
                   variant="ghostDangerIconButton"
-                  class="w-6! h-6! p-0 shrink-0"
                   :tooltip="UI_TEXT.tooltips.editEmail"
                   @click="profileStore.openEditEmailModal(currentUser)"
                 />
               </div>
             </div>
-            <!-- Password -->
-            <div :class="[appConfig.layout.profileDetailRow, SPACING_TOKENS.gap.sm]">
-              <p :class="appConfig.typography.profileLabel" class="w-16! text-[10px]!">
-                {{ UI_TEXT.auth.passwordLabel }}
-              </p>
-              <div
-                :class="[
-                  appConfig.layout.actionGroup,
-                  'justify-between flex-1 min-w-0',
-                  SPACING_TOKENS.gap.xs,
-                ]"
-              >
-                <p :class="[appConfig.typography.profileValueLg, 'text-sm!', SPACING_TOKENS.mt.xs]">
-                  ********
-                </p>
+
+            <div :class="LAYOUT_CONFIG.profileDetailRow">
+              <p :class="TYPOGRAPHY_CONFIG.profileLabel">{{ UI_TEXT.auth.passwordLabel }}</p>
+              <div :class="[LAYOUT_CONFIG.actionGroup, LAYOUT_CONFIG.flex1MinW0]">
+                <p :class="TYPOGRAPHY_CONFIG.profileValueLg">************</p>
                 <BaseButton
                   icon="i-heroicons-pencil"
                   variant="ghostDangerIconButton"
-                  class="w-6! h-6! p-0 shrink-0"
                   :tooltip="UI_TEXT.tooltips.editPassword"
                   @click="profileStore.openChangePasswordModal()"
                 />
               </div>
             </div>
-            <!-- Registered -->
-            <div :class="[appConfig.layout.profileDetailRow, SPACING_TOKENS.gap.sm]">
-              <p :class="appConfig.typography.profileLabel" class="w-16! text-[10px]!">
+
+            <div :class="LAYOUT_CONFIG.profileDetailRow">
+              <p :class="TYPOGRAPHY_CONFIG.profileLabel">
                 {{ UI_TEXT.profile.registeredLabel }}
               </p>
-              <div
-                :class="[
-                  appConfig.layout.actionGroup,
-                  'justify-between flex-1 min-w-0',
-                  SPACING_TOKENS.gap.xs,
-                ]"
-              >
-                <p :class="appConfig.typography.profileValue" class="text-xs! truncate">
+              <div :class="[LAYOUT_CONFIG.actionGroup, LAYOUT_CONFIG.flex1MinW0]">
+                <p :class="TYPOGRAPHY_CONFIG.profileValue">
                   {{
                     currentUser.created_at
                       ? new Date(currentUser.created_at).toLocaleDateString()
@@ -177,13 +114,9 @@
         </div>
 
         <!-- DOCUMENT SECTION -->
-        <div :class="[appConfig.layout.sectionWrapper, SPACING_TOKENS.mt.lg]">
-          <div :class="[appConfig.layout.pageHeader, SPACING_TOKENS.mb.md]">
-            <h2 :class="appConfig.typography.sectionTitleTransparent" class="text-xl">
-              {{ UI_TEXT.profile.documentsHeading }}
-            </h2>
-            <div :class="[appConfig.layout.actionGroup, 'justify-center', SPACING_TOKENS.mt.sm]">
-              <!-- Filter popover -->
+        <div :class="LAYOUT_CONFIG.sectionWrapper">
+          <div :class="LAYOUT_CONFIG.pageHeader">
+            <div :class="LAYOUT_CONFIG.headerActionLeft">
               <UPopover>
                 <BaseButton
                   icon="i-heroicons-funnel"
@@ -192,14 +125,14 @@
                       ? UI_TEXT.common.filter
                       : privateDocumentTypes.find((d) => d.value === filterType)?.label
                   "
-                  variant="glassButton"
                   :tooltip="UI_TEXT.tooltips.filterDocuments"
+                  variant="glassButton"
                 />
                 <template #content="{ close }">
-                  <div :class="[appConfig.ui.dropdownMenu.slots.content, 'w-fit']">
+                  <div :class="DROPDOWN_MENU_CONFIG.slots.content">
                     <BaseButton
                       variant="ghost"
-                      :class="appConfig.ui.dropdownMenu.slots.item"
+                      :class="DROPDOWN_MENU_CONFIG.slots.item"
                       @click="
                         filterType = 'ALL';
                         close();
@@ -208,7 +141,7 @@
                       <template #leading>
                         <UIcon
                           :name="filterType === 'ALL' ? 'i-heroicons-check' : 'i-heroicons-funnel'"
-                          :class="appConfig.ui.dropdownMenu.slots.itemLeadingIcon"
+                          :class="DROPDOWN_MENU_CONFIG.slots.itemLeadingIcon"
                         />
                       </template>
                       {{ UI_TEXT.common.allTypes }}
@@ -217,7 +150,7 @@
                       v-for="type in privateDocumentTypes"
                       :key="type.value"
                       variant="ghost"
-                      :class="appConfig.ui.dropdownMenu.slots.item"
+                      :class="DROPDOWN_MENU_CONFIG.slots.item"
                       @click="
                         filterType = type.value;
                         close();
@@ -228,7 +161,7 @@
                           :name="
                             filterType === type.value ? 'i-heroicons-check' : 'i-heroicons-funnel'
                           "
-                          :class="appConfig.ui.dropdownMenu.slots.itemLeadingIcon"
+                          :class="DROPDOWN_MENU_CONFIG.slots.itemLeadingIcon"
                         />
                       </template>
                       {{ type.label }}
@@ -237,7 +170,6 @@
                 </template>
               </UPopover>
 
-              <!-- Upload button -->
               <BaseButton
                 icon="i-heroicons-plus"
                 variant="glassIconButton"
@@ -245,120 +177,114 @@
                 @click="emit('upload')"
               />
             </div>
+
+            <h2 :class="TYPOGRAPHY_CONFIG.sectionTitleTransparent">
+              {{ UI_TEXT.profile.documentsHeading }}
+            </h2>
+            <div :class="LAYOUT_CONFIG.headerActionRight"></div>
           </div>
 
-          <!-- Loading state -->
-          <div v-if="isLoadingDocuments" :class="appConfig.typography.statusLoading">
+          <div v-if="isLoadingDocuments" :class="TYPOGRAPHY_CONFIG.statusLoading">
             {{ ' ' + UI_TEXT.documents.loading + ' ' }}
           </div>
 
-          <!-- Document List (vertical on mobile) -->
-          <div
-            v-else-if="filteredDocuments.length > 0"
-            :class="`flex flex-col ${SPACING_TOKENS.gap.md} w-full`"
-          >
+          <div v-else-if="filteredDocuments.length > 0" :class="LAYOUT_CONFIG.documentGrid">
             <BaseCard
               v-for="doc in filteredDocuments"
               :key="doc.file_id"
               variant="documentGlass"
-              class="relative w-full"
+              :class="LAYOUT_CONFIG.headerRelative"
             >
-              <!-- Title and action buttons -->
-              <div :class="appConfig.layout.documentCardHeader">
-                <p class="font-bold truncate pr-2 shadow-sm text-sm">{{ doc.file_name }}</p>
-                <div :class="`flex items-center ${SPACING_TOKENS.gap.xs}`">
+              <div :class="LAYOUT_CONFIG.documentCardHeader">
+                <p :class="TYPOGRAPHY_CONFIG.documentHeaderTitle">{{ doc.file_name }}</p>
+                <div :class="LAYOUT_CONFIG.headerTitleRow">
                   <BaseButton
-                    icon="i-heroicons-key-solid"
+                    icon="i-heroicons-key"
                     variant="ghostBrandIconButton"
-                    class="text-surface-500"
                     :tooltip="UI_TEXT.profile.accessDetails"
                     @click="emit('access', doc)"
                   />
                   <BaseButton
                     icon="i-heroicons-share"
                     variant="ghostBrandIconButton"
-                    class="text-surface-500"
                     :tooltip="UI_TEXT.profile.share"
                     @click.prevent="emit('share', doc)"
                   />
                   <BaseButton
                     icon="i-heroicons-pencil"
-                    variant="ghostDangerIconButton"
-                    class="text-surface-500"
+                    variant="ghostBrandIconButton"
                     :tooltip="UI_TEXT.tooltips.editDocument"
                     @click="emit('edit', doc)"
                   />
                   <BaseButton
                     icon="i-heroicons-trash"
                     variant="ghostDangerIconButton"
-                    class="text-surface-500"
                     :tooltip="UI_TEXT.tooltips.deleteDocument"
                     @click="emit('delete', doc)"
                   />
                 </div>
               </div>
 
-              <!-- File Preview -->
-              <div :class="appConfig.layout.documentCardImage" class="h-32!">
-                <UIcon name="i-heroicons-document-text" class="w-12 h-12 text-surface-500/50" />
-                <div
-                  :class="`absolute bottom-2 ${SPACING_TOKENS.px.md} w-full flex justify-between`"
-                >
+              <div :class="LAYOUT_CONFIG.documentCardImage">
+                <UIcon
+                  name="i-heroicons-document-text"
+                  :class="TYPOGRAPHY_CONFIG.iconWatermarkLg"
+                />
+                <div :class="LAYOUT_CONFIG.documentCardBottomActions">
                   <BaseButton
                     icon="i-heroicons-eye"
                     variant="ghostBrandIconButton"
-                    class="text-dark-text/70"
+                    :class="COLOR_TOKENS.text.primaryMuted"
                     :tooltip="UI_TEXT.tooltips.viewDocument"
                     @click.prevent="emit('view', doc)"
                   />
                   <BaseButton
                     icon="i-heroicons-arrow-down-tray"
                     variant="ghostBrandIconButton"
-                    class="text-dark-text/70"
+                    :class="COLOR_TOKENS.text.primaryMuted"
                     :tooltip="UI_TEXT.tooltips.downloadDocument"
                     @click.prevent="emit('download', doc)"
                   />
                 </div>
               </div>
 
-              <!-- Metadata -->
-              <div :class="appConfig.layout.documentCardMeta">
+              <div :class="LAYOUT_CONFIG.documentCardMeta">
                 <p>
                   {{ ' ' + UI_TEXT.common.uploadedAt + ' '
-                  }}<span class="font-bold text-dark-text">
+                  }}<span :class="TYPOGRAPHY_CONFIG.metaHighlight">
                     {{ new Date(doc.created_at).toLocaleDateString() }}
                   </span>
                 </p>
                 <p>
                   {{ ' ' + UI_TEXT.documents.documentType + ' '
-                  }}<span class="font-bold text-dark-text">
+                  }}<span :class="TYPOGRAPHY_CONFIG.metaHighlight">
                     {{ doc.documents?.document_type ?? UI_TEXT.common.notAvailable }}
                   </span>
                 </p>
 
-                <div :class="appConfig.layout.divider"></div>
+                <div :class="LAYOUT_CONFIG.divider"></div>
 
-                <div :class="appConfig.layout.flexBetween">
+                <div :class="LAYOUT_CONFIG.flexBetween">
                   <p>
                     {{ ' ' + UI_TEXT.documents.fileType + ' '
-                    }}<span class="font-bold text-dark-text">
+                    }}<span :class="TYPOGRAPHY_CONFIG.metaHighlight">
                       {{ doc.mime_type?.split('/')[1] ?? UI_TEXT.common.unknown }}
                     </span>
                   </p>
                   <p>
                     {{ ' ' + UI_TEXT.documents.fileSize + ' '
-                    }}<span class="font-bold text-dark-text">
+                    }}<span :class="TYPOGRAPHY_CONFIG.metaHighlight">
                       {{ (doc.file_size / (1024 * 1024)).toFixed(2)
                       }}{{ ' ' + UI_TEXT.common.megabytes + ' ' }}</span
                     >
                   </p>
                 </div>
 
-                <div :class="appConfig.layout.divider"></div>
+                <div :class="LAYOUT_CONFIG.divider"></div>
 
                 <p>
                   {{ ' ' + UI_TEXT.documents.issued + ' '
-                  }}<span class="font-bold text-dark-text">
+                  }}<span :class="TYPOGRAPHY_CONFIG.metaHighlight">
                     {{
                       doc.documents?.issue_date
                         ? new Date(doc.documents.issue_date).toLocaleDateString()
@@ -368,7 +294,7 @@
                 </p>
                 <p>
                   {{ ' ' + UI_TEXT.documents.ends + ' '
-                  }}<span class="font-bold text-dark-text">
+                  }}<span :class="TYPOGRAPHY_CONFIG.metaHighlight">
                     {{
                       doc.documents?.expiry_date
                         ? new Date(doc.documents.expiry_date).toLocaleDateString()
@@ -380,8 +306,7 @@
             </BaseCard>
           </div>
 
-          <!-- Empty state -->
-          <div v-else :class="appConfig.typography.statusLoading">
+          <div v-else :class="TYPOGRAPHY_CONFIG.statusLoading">
             {{
               filterType !== 'ALL'
                 ? UI_TEXT.profile.noMatchingDocuments
@@ -396,14 +321,11 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { useAppConfig } from '#imports';
 import type { useProfileStore } from '~/stores/profile.modals.store';
 import type { useDocumentsStore } from '~/stores/documents.modals.store';
 import type { UserOutDto } from '~/types/user.type';
 import type { ApiError } from '~/types/apiError.type';
 import type { PrivateDocumentMetadata } from '~/types/files.type';
-
-const appConfig = useAppConfig();
 
 const props = defineProps<{
   currentUser: UserOutDto | null | undefined;

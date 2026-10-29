@@ -1,6 +1,6 @@
 <!-- frontend/app/components/events/map/EventMapPreview-->
 <template>
-  <div ref="mapContainer" class="w-full h-full z-0"></div>
+  <div ref="mapContainer" :class="LAYOUT_CONFIG.mapCanvas"></div>
 </template>
 
 <script setup lang="ts">
