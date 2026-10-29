@@ -1,8 +1,18 @@
 import { Prisma } from '@prisma/client';
 
+export const creatorSelect = {
+  select: {
+    uuid: true,
+    username: true,
+    email: true,
+    profile_image_url: true,
+  },
+} as const;
+
 export type privateDocumentMetadata = Prisma.filesGetPayload<{
   include: {
     documents: true;
+    creator: typeof creatorSelect;
   };
 }>;
 
@@ -25,13 +35,7 @@ export type GroupFile = Prisma.filesGetPayload<{
     documents: true;
     media_files: true;
 
-    creator: {
-      select: {
-        email: true;
-        username: true;
-        uuid: true;
-      };
-    };
+    creator: typeof creatorSelect;
   };
 }>;
 
@@ -48,3 +52,11 @@ export type PaginatedGroupFiles = {
     count: number;
   };
 };
+
+export type GroupMemberPrivateDocument = Prisma.filesGetPayload<{
+  include: {
+    documents: true;
+    owner: typeof creatorSelect;
+    file_shares: true;
+  };
+}>;
