@@ -11,6 +11,7 @@ import {
 } from '../constants/permission.constants';
 import { SYSTEM_ROLES, type SystemRole } from '../constants/roles.constants';
 
+// it gets a users system role, permission list for custom roles and its user specific modifiers and return its permissions
 export const resolvePermissions = (
   systemRole: SystemRole,
   rolePermissions: unknown = [],
