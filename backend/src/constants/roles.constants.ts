@@ -1,13 +1,8 @@
 import { MEMBER_PERMISSIONS, PERMISSIONS } from './permission.constants';
+import { SystemRole } from '@prisma/client';
 
-export const SYSTEM_ROLES = {
-  OWNER: 'OWNER',
-  ADMIN: 'ADMIN',
-  MEMBER: 'MEMBER',
-  CUSTOM: 'CUSTOM',
-} as const;
-
-export type SystemRole = (typeof SYSTEM_ROLES)[keyof typeof SYSTEM_ROLES];
+export const SYSTEM_ROLES = SystemRole;
+export type { SystemRole } from '@prisma/client';
 
 export const ROLE_PRESETS = {
   LEADER: {
