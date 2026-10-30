@@ -36,9 +36,9 @@ main()
   })
   .catch(async (error: unknown) => {
     if (error instanceof Error) {
-      console.error(error.message);
+      logger.error(error.message);
     } else {
-      console.log('Unknown error happend while seeding the database!');
+      logger.error('Unknown error happend while seeding the database!');
     }
     await prisma.$disconnect();
     await pool.end();

@@ -23,3 +23,16 @@ export const customPermissionsSchema = customPermissionsBaseSchema.refine(
     !value.allow.some((permission: Permission): boolean => value.deny.includes(permission)),
   { message: 'A permission cannot be both allowed and denied!' },
 );
+
+export const roleNameSchema = z
+  .string()
+  .trim()
+  .min(1, 'Role name is required!')
+  .max(255, 'Role name cannot exceed 255 characters!')
+  .refine(
+    (name: string): boolean =>
+      !Object.values(SYSTEM_ROLES).some(
+        (role: string): boolean => role.toLowerCase() === name.toLowerCase(),
+      ),
+    { message: 'Role name is reserved!' },
+  );
