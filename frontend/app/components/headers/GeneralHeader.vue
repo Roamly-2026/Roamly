@@ -3,7 +3,11 @@
   <header :class="[LAYOUT_CONFIG.headerBase, LAYOUT_CONFIG.headerSticky]">
     <!-- BACK BUTTON SECTION -->
     <div :class="LAYOUT_CONFIG.headerLeft">
-      <BaseButton icon="i-heroicons-arrow-left" variant="glassIconButton" to="/" />
+      <BaseButton 
+        icon="i-heroicons-arrow-left"
+        variant="glassIconButton"
+        @click="handleBack"
+      />
     </div>
 
     <!-- LOGO SECTION -->
@@ -72,4 +76,12 @@ const handleLogout = () => {
   logout();
   router.push('/login');
 };
+
+const handleBack = () => {
+  if (router.options.history.state.back) {
+    router.back();
+  } else {
+    router.push('/');
+  }
+}
 </script>

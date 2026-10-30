@@ -40,6 +40,12 @@
 
         <div :class="LAYOUT_CONFIG.headerActionRight">
           <BaseButton
+            icon="i-heroicons-map"
+            variant="glassIconButton"
+            :to="mapRoute"
+            :tooltip=UI_TEXT.tooltips.groupMap
+          />
+          <BaseButton
             icon="i-heroicons-users"
             variant="glassIconButtonBrand"
             :to="membersRoute"
@@ -368,6 +374,9 @@ const mediaRoute = computed(() =>
 );
 const documentsRoute = computed(() =>
   groupUuid.value ? `/files/documents?groupId=${groupUuid.value}` : '/files/documents',
+);
+const mapRoute = computed(() =>
+  groupUuid.value ? `/groups/${groupUuid.value}/map` : '/groups',
 );
 
 const isCurrentUser = (email: string) => {
