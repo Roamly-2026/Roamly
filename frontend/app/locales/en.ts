@@ -424,6 +424,7 @@ export const UI_TEXT = {
     promoteUser: 'Promote user to leader',
     removeUser: 'Remove user from group',
     addEvent: 'Add Event',
+    groupMap: 'View events on map',
   },
   errors: {
     createGroup: 'An error occurred while creating the group. Please try again.',

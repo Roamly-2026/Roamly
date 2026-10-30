@@ -1,10 +1,15 @@
 <!-- frontend/app/components/headers/GeneralHeader.vue -->
 <template>
   <header :class="[appConfig.layout.headerBase, appConfig.layout.headerSticky]">
+    
     <!-- BACK BUTTON SECTION -->
-
     <div :class="['flex-1 flex items-center', SPACING_TOKENS.gap.md]">
-      <BaseButton icon="i-heroicons-arrow-left" variant="glassIconButton" class="shrink-0" to="/" />
+      <BaseButton 
+        icon="i-heroicons-arrow-left"
+        variant="glassIconButton"
+        class="shrink-0"
+        @click="handleBack"
+      />
     </div>
 
     <!-- LOGO SECTION -->
@@ -109,4 +114,12 @@ const handleLogout = () => {
   logout();
   router.push('/login');
 };
+
+const handleBack = () => {
+  if (router.options.history.state.back) {
+    router.back();
+  } else {
+    router.push('/');
+  }
+}
 </script>
