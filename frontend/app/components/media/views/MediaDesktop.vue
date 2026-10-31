@@ -73,12 +73,15 @@
     </div>
 
     <!-- MEDIA SECTION -->
-    <div :class="LAYOUT_CONFIG.sectionWrapper">
+    <div :class="[LAYOUT_CONFIG.sectionWrapper, SPACING_TOKENS.mb.xl]">
       <div :class="LAYOUT_CONFIG.headerRow">
         <div :class="LAYOUT_CONFIG.headerActionLeft">
           <div :class="LAYOUT_CONFIG.headerSearchWrapper">
             <BaseSearchInput v-model="searchQuery" :placeholder="UI_TEXT.media.search" />
           </div>
+
+          <!-- VIEW SWITCHER -->
+          <ViewSwitcher v-model="viewMode" />
         </div>
 
         <div :class="TYPOGRAPHY_CONFIG.sectionTitleTransparent">
@@ -87,6 +90,7 @@
 
         <div :class="LAYOUT_CONFIG.headerActionRight">
           <BaseButton
+            v-if="isCurrentUserLeader"
             icon="i-heroicons-plus"
             variant="glassIconButtonHighlight"
             :tooltip="UI_TEXT.media.uploadPhoto"
@@ -99,103 +103,122 @@
         {{ UI_TEXT.media.loading }}
       </div>
 
-      <div v-else-if="filteredMedia.length > 0" :class="LAYOUT_CONFIG.documentGrid">
-        <BaseCard
-          v-for="mediaItem in filteredMedia"
-          :key="mediaItem.file_id"
-          variant="documentGlass"
-          :class="LAYOUT_CONFIG.headerRelative"
-        >
-          <div :class="LAYOUT_CONFIG.documentCardHeader">
-            <p :class="TYPOGRAPHY_CONFIG.documentHeaderTitle">{{ mediaItem.file_name }}</p>
-            <div :class="LAYOUT_CONFIG.headerTitleRow">
-              <BaseButton
-                v-if="isCurrentUserLeader"
-                icon="i-heroicons-trash"
-                variant="ghostDangerIconButton"
-                :tooltip="UI_TEXT.common.delete"
-                @click="emit('delete', mediaItem)"
-              />
-            </div>
-          </div>
+      <template v-else-if="filteredMedia.length > 0">
+        <!-- LIST VIEW -->
+        <FilesListView
+          v-if="viewMode === 'list'"
+          :files="filteredMedia"
+          :is-current-user-leader="isCurrentUserLeader"
+          @delete="emit('delete', $event as GroupFile)"
+          @download="(url, filename) => emit('download', url, filename)"
+        />
 
-          <div :class="LAYOUT_CONFIG.documentCardImage">
-            <img
-              v-if="isImage(mediaItem.mime_type)"
-              :src="mediaItem.download_url || mediaItem.file_url"
-              :alt="mediaItem.file_name"
-              :class="LAYOUT_CONFIG.mediaCoverImage"
-            />
-            <div v-else :class="LAYOUT_CONFIG.cardContentCenter">
-              <UIcon name="i-heroicons-film" :class="TYPOGRAPHY_CONFIG.iconWatermarkLg" />
-              <span :class="TYPOGRAPHY_CONFIG.captionMuted">{{ mediaItem.mime_type }}</span>
+        <!-- Media Grid -->
+        <div v-else :class="LAYOUT_CONFIG.documentGrid">
+          <BaseCard
+            v-for="mediaItem in filteredMedia"
+            :key="mediaItem.file_id"
+            variant="documentGlass"
+            :class="LAYOUT_CONFIG.headerRelative"
+          >
+            <!-- Title + delete -->
+            <div :class="LAYOUT_CONFIG.documentCardHeader">
+              <p :class="TYPOGRAPHY_CONFIG.documentHeaderTitle">{{ mediaItem.file_name }}</p>
+              <div :class="LAYOUT_CONFIG.headerTitleRow">
+                <BaseButton
+                  v-if="isCurrentUserLeader"
+                  icon="i-heroicons-trash"
+                  variant="ghostDangerIconButton"
+                  :tooltip="UI_TEXT.common.delete"
+                  @click="emit('delete', mediaItem)"
+                />
+              </div>
             </div>
 
-            <div :class="LAYOUT_CONFIG.documentCardBottomActions">
-              <BaseButton
-                icon="i-heroicons-eye"
-                variant="ghostDangerIconButton"
-                :href="mediaItem.download_url || mediaItem.file_url"
-                target="_blank"
-                :tooltip="UI_TEXT.common.view"
+            <!-- Image preview -->
+            <div :class="LAYOUT_CONFIG.documentCardImage">
+              <img
+                v-if="isImage(mediaItem.mime_type)"
+                :src="mediaItem.download_url || mediaItem.file_url"
+                :alt="mediaItem.file_name"
+                :class="LAYOUT_CONFIG.mediaCoverImage"
               />
-              <BaseButton
-                icon="i-heroicons-arrow-down-tray"
-                variant="ghostBrandIconButton"
-                :class="COLOR_TOKENS.text.primaryMuted"
-                :tooltip="UI_TEXT.common.download"
-                @click.prevent="
-                  emit(
-                    'download',
-                    mediaItem.download_url || mediaItem.file_url,
-                    mediaItem.file_name,
-                  )
-                "
-              />
-            </div>
-          </div>
+              <div v-else :class="LAYOUT_CONFIG.cardContentCenter">
+                <UIcon name="i-heroicons-film" :class="TYPOGRAPHY_CONFIG.iconWatermarkLg" />
+                <span :class="TYPOGRAPHY_CONFIG.captionMuted">{{ mediaItem.mime_type }}</span>
+              </div>
 
-          <div :class="LAYOUT_CONFIG.documentCardMeta">
-            <p>
-              {{ ' ' + UI_TEXT.common.uploadedBy + ' '
-              }}<span :class="TYPOGRAPHY_CONFIG.metaHighlight">{{
-                mediaItem.creator?.username || UI_TEXT.common.unknown
-              }}</span>
-            </p>
-            <p>
-              {{ ' ' + UI_TEXT.common.uploadedAt + ' '
-              }}<span :class="TYPOGRAPHY_CONFIG.metaHighlight">{{
-                new Date(mediaItem.created_at).toLocaleDateString()
-              }}</span>
-            </p>
-            <div v-if="mediaItem.media_files?.description">
+              <div :class="LAYOUT_CONFIG.documentCardBottomActions">
+                <BaseButton
+                  icon="i-heroicons-eye"
+                  variant="ghostDangerIconButton"
+                  :href="mediaItem.download_url || mediaItem.file_url"
+                  target="_blank"
+                  :tooltip="UI_TEXT.common.view"
+                />
+                <BaseButton
+                  icon="i-heroicons-arrow-down-tray"
+                  variant="ghostBrandIconButton"
+                  :class="COLOR_TOKENS.text.primaryMuted"
+                  :tooltip="UI_TEXT.common.download"
+                  @click.prevent="
+                    emit(
+                      'download',
+                      mediaItem.download_url || mediaItem.file_url,
+                      mediaItem.file_name,
+                    )
+                  "
+                />
+              </div>
+            </div>
+
+            <!-- Metadata -->
+            <div :class="LAYOUT_CONFIG.documentCardMeta">
+              <div :class="['flex items-center', SPACING_TOKENS.mb.xs, SPACING_TOKENS.gap.xs]">
+                <UAvatar
+                  :src="mediaItem.creator?.profile_image_url || undefined"
+                  :alt="mediaItem.creator?.username"
+                  class="w-6! h-6! text-[10px] shrink-0 rounded-full object-cover"
+                />
+                <span :class="TYPOGRAPHY_CONFIG.metaHighlight">
+                  {{ mediaItem.creator?.username || UI_TEXT.common.unknown }}
+                </span>
+              </div>
+
+              <p>
+                {{ ' ' + UI_TEXT.common.uploadedAt + ' ' }}
+                <span :class="TYPOGRAPHY_CONFIG.metaHighlight">
+                  {{ new Date(mediaItem.created_at).toLocaleDateString() }}
+                </span>
+              </p>
+              <div v-if="mediaItem.media_files?.description">
+                <div :class="LAYOUT_CONFIG.divider"></div>
+                <p>
+                  {{ ' ' + UI_TEXT.events.descriptionLabel + ' ' }}
+                  <span :class="TYPOGRAPHY_CONFIG.metaHighlight">
+                    {{ mediaItem.media_files.description }}
+                  </span>
+                </p>
+              </div>
               <div :class="LAYOUT_CONFIG.divider"></div>
-              <p>
-                {{ ' ' + UI_TEXT.events.descriptionLabel + ' '
-                }}<span :class="TYPOGRAPHY_CONFIG.metaHighlight">{{
-                  mediaItem.media_files.description
-                }}</span>
-              </p>
+              <div :class="LAYOUT_CONFIG.flexBetween">
+                <p>
+                  {{ ' ' + UI_TEXT.media.type + ' ' }}
+                  <span :class="TYPOGRAPHY_CONFIG.metaHighlight">
+                    {{ mediaItem.mime_type?.split('/')[1] || UI_TEXT.common.unknown }}
+                  </span>
+                </p>
+                <p>
+                  {{ ' ' + UI_TEXT.media.size + ' ' }}
+                  <span :class="TYPOGRAPHY_CONFIG.metaHighlight">
+                    {{ formatFileSize(mediaItem.file_size) }}
+                  </span>
+                </p>
+              </div>
             </div>
-            <div :class="LAYOUT_CONFIG.divider"></div>
-            <div :class="LAYOUT_CONFIG.flexBetween">
-              <p>
-                {{ ' ' + UI_TEXT.media.type + ' '
-                }}<span :class="TYPOGRAPHY_CONFIG.metaHighlight">{{
-                  mediaItem.mime_type?.split('/')[1] || UI_TEXT.common.unknown
-                }}</span>
-              </p>
-              <p>
-                {{ ' ' + UI_TEXT.media.size + ' '
-                }}<span :class="TYPOGRAPHY_CONFIG.metaHighlight"
-                  >{{ (mediaItem.file_size / (1024 * 1024)).toFixed(2)
-                  }}{{ ' ' + UI_TEXT.common.megabytes }}</span
-                >
-              </p>
-            </div>
-          </div>
-        </BaseCard>
-      </div>
+          </BaseCard>
+        </div>
+      </template>
 
       <div v-else :class="TYPOGRAPHY_CONFIG.statusLoading">
         {{ searchQuery ? UI_TEXT.media.noMatchingPhotos : UI_TEXT.media.noPhotos }}
@@ -206,8 +229,12 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import { useLocalStorage } from '@vueuse/core';
 import type { GroupFile } from '~/types/files.type';
 import type { GroupOutDto } from '~/types/groups.type';
+import type { ViewMode } from '~/components/files/ViewSwitcher.vue';
+import FilesListView from '~/components/files/FilesListView.vue';
+import ViewSwitcher from '~/components/files/ViewSwitcher.vue';
 
 const selectedGroup = defineModel<string | undefined>('selectedGroup');
 const searchQuery = defineModel<string>('searchQuery', { default: '' });
@@ -245,4 +272,6 @@ const filteredMedia = computed<GroupFile[]>(() => {
   if (!q) return props.media;
   return props.media.filter((m) => m.file_name.toLowerCase().includes(q));
 });
+
+const viewMode = useLocalStorage<ViewMode>('roamly_files_view_mode', 'grid');
 </script>
