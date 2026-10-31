@@ -331,7 +331,9 @@
           {{ UI_TEXT.documents.memberDocumentsHeading }}
         </div>
 
-        <div :class="LAYOUT_CONFIG.headerActionRight" />
+        <div :class="LAYOUT_CONFIG.headerActionRight">
+          <!-- intentionally empty — leaders cannot upload on behalf of members -->
+        </div>
       </div>
 
       <!-- Loading -->

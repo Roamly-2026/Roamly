@@ -205,6 +205,7 @@ import { getErrorMessage } from '~/utils/error.utils';
 import type { ApiError } from '~/types/apiError.type';
 
 const props = defineProps<{
+  // a list of available document types for categorization, formatted as label-value pairs
   documentTypes?: { label: string; value: string }[];
 }>();
 
@@ -250,6 +251,7 @@ const onFileChange = (e: Event) => {
 
 const uploadGroupUuidRef = computed(() => documentsStore.uploadGroupUuid || undefined);
 
+// Keep the full mutation object — never destructure isLoading out of it
 const uploadMutation = useUploadGroupDocumentMutation(uploadGroupUuidRef, {
   onSuccess: () => {
     uploadError.value = null;
@@ -311,6 +313,7 @@ const updateForm = reactive<UpdateFormState>({
 const groupFileToUpdate = computed(() => documentsStore.groupFileToUpdate);
 const updateGroupUuidRef = computed(() => documentsStore.groupFileToUpdate?.groupUuid);
 
+// Pre-fill the update form when the modal opens
 watch(
   () => documentsStore.groupFileToUpdate,
   (file) => {

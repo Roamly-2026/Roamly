@@ -491,6 +491,7 @@ const selectGroup = (uuid: string) => {
   isGroupDropdownOpen.value = false;
 };
 
+// Contextual navigation routes scoped to the currently active group
 const membersRoute = computed(() =>
   selectedGroup.value ? `/groups/${selectedGroup.value}/members` : '/groups',
 );
