@@ -511,4 +511,12 @@ export const UI_TEXT = {
     editPassword: 'Edit Password',
     edit: 'Edit',
   },
+  files: {
+    fileName: 'Name',
+    type: 'Type',
+    size: 'Size',
+    actions: 'Actions',
+    gridView: 'Grid View',
+    listView: 'List View',
+  },
 };

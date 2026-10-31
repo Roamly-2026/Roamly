@@ -9,25 +9,30 @@
     >
       <template #body>
         <UForm
-          id="upload-group-doc-form"
+          ref="uploadFormRef"
           :schema="uploadDocumentSchema"
           :state="uploadForm"
           :class="LAYOUT_CONFIG.modalForm"
           @submit="handleUpload"
         >
-          <BaseInput
+          <!-- Select file -->
+          <UFormField
             :label="UI_TEXT.documents.selectFileWithSpace + UI_TEXT.documents.acceptedFormats"
             name="file"
-            type="file"
-            icon="i-heroicons-document-arrow-up"
-            @change="onFileChange"
-          />
+          >
+            <BaseInput
+              name="file"
+              type="file"
+              icon="i-heroicons-document-arrow-up"
+              @change="onFileChange"
+            />
+          </UFormField>
 
           <UFormField :label="UI_TEXT.documents.typeLabel" name="documentType">
             <template #default>
               <USelect
                 v-model="uploadForm.documentType"
-                :items="documentTypes"
+                :items="selectableDocumentTypes"
                 label-key="label"
                 value-key="value"
                 :placeholder="UI_TEXT.documents.selectType"
@@ -57,6 +62,7 @@
           </div>
         </UForm>
       </template>
+
       <template #footer>
         <div :class="LAYOUT_CONFIG.flexBetween">
           <BaseButton
@@ -66,13 +72,12 @@
             @click="closeUploadModal"
           />
           <BaseButton
-            type="submit"
-            form="upload-group-doc-form"
             :label="UI_TEXT.common.upload"
             variant="actionOkButton"
             :class="TYPOGRAPHY_CONFIG.modalActionBtnOk"
             :loading="uploadMutation.isLoading.value"
-            :disabled="!uploadForm.file"
+            :disabled="!uploadForm.file || !uploadForm.documentType"
+            @click="submitUploadForm"
           />
         </div>
       </template>
@@ -86,7 +91,7 @@
     >
       <template #body>
         <UForm
-          id="update-group-doc-form"
+          ref="updateFormRef"
           :schema="updateDocumentSchema"
           :state="updateForm"
           :class="LAYOUT_CONFIG.modalForm"
@@ -99,19 +104,21 @@
             }}</span>
           </div>
 
-          <BaseInput
-            :label="UI_TEXT.documents.replaceFile"
-            name="file"
-            type="file"
-            icon="i-heroicons-document-arrow-up"
-            @change="onUpdateFileChange"
-          />
+          <!-- Replace file (optional) -->
+          <UFormField :label="UI_TEXT.documents.replaceFile" name="file">
+            <BaseInput
+              name="file"
+              type="file"
+              icon="i-heroicons-document-arrow-up"
+              @change="onUpdateFileChange"
+            />
+          </UFormField>
 
           <UFormField :label="UI_TEXT.documents.typeLabel" name="documentType">
             <template #default>
               <USelect
                 v-model="updateForm.documentType"
-                :items="documentTypes"
+                :items="selectableDocumentTypes"
                 label-key="label"
                 value-key="value"
                 :placeholder="UI_TEXT.documents.selectType"
@@ -141,6 +148,7 @@
           </div>
         </UForm>
       </template>
+
       <template #footer>
         <div :class="LAYOUT_CONFIG.flexBetween">
           <BaseButton
@@ -150,12 +158,11 @@
             @click="closeUpdateModal"
           />
           <BaseButton
-            type="submit"
-            form="update-group-doc-form"
             :label="UI_TEXT.common.save"
             variant="actionOkButton"
             :class="TYPOGRAPHY_CONFIG.modalActionBtnOk"
             :loading="updateMutation.isLoading.value"
+            @click="submitUpdateForm"
           />
         </div>
       </template>
@@ -176,8 +183,8 @@
       <template #body>
         <p :class="TYPOGRAPHY_CONFIG.modalText">
           {{ UI_TEXT.documents.deleteDocumentBeforeName }}
-          <span :class="TYPOGRAPHY_CONFIG.modalInlineHighlight">{{ fileToDelete?.fileName }}</span
-          >{{ UI_TEXT.documents.cannotUndoSuffix }}
+          <span :class="TYPOGRAPHY_CONFIG.modalInlineHighlight">{{ fileToDelete?.fileName }}</span>
+          {{ UI_TEXT.documents.cannotUndoSuffix }}
         </p>
       </template>
     </ConfirmModal>
@@ -197,12 +204,18 @@ import {
 import { getErrorMessage } from '~/utils/error.utils';
 import type { ApiError } from '~/types/apiError.type';
 
-defineProps<{
-  // a list of available document types for categorization, formatted as label-value pairs
+const props = defineProps<{
   documentTypes?: { label: string; value: string }[];
 }>();
 
+const selectableDocumentTypes = computed(() =>
+  (props.documentTypes || []).filter((t) => t.value !== 'ALL'),
+);
+
 const documentsStore = useDocumentsStore();
+
+const uploadFormRef = ref();
+const updateFormRef = ref();
 
 const uploadError = ref<ApiError | Error | null>(null);
 const updateError = ref<ApiError | Error | null>(null);
@@ -237,7 +250,6 @@ const onFileChange = (e: Event) => {
 
 const uploadGroupUuidRef = computed(() => documentsStore.uploadGroupUuid || undefined);
 
-// Keep the full mutation object — never destructure isLoading out of it
 const uploadMutation = useUploadGroupDocumentMutation(uploadGroupUuidRef, {
   onSuccess: () => {
     uploadError.value = null;
@@ -247,6 +259,12 @@ const uploadMutation = useUploadGroupDocumentMutation(uploadGroupUuidRef, {
     uploadError.value = err as Error;
   },
 });
+
+const submitUploadForm = () => {
+  if (uploadFormRef.value) {
+    uploadFormRef.value.submit();
+  }
+};
 
 const closeUploadModal = () => {
   documentsStore.closeUploadModal();
@@ -291,10 +309,8 @@ const updateForm = reactive<UpdateFormState>({
 });
 
 const groupFileToUpdate = computed(() => documentsStore.groupFileToUpdate);
-
 const updateGroupUuidRef = computed(() => documentsStore.groupFileToUpdate?.groupUuid);
 
-// Pre-fill the update form when the modal opens
 watch(
   () => documentsStore.groupFileToUpdate,
   (file) => {
@@ -310,6 +326,12 @@ watch(
 const onUpdateFileChange = (e: Event) => {
   const target = e.target as HTMLInputElement;
   updateForm.file = target.files?.[0] ?? null;
+};
+
+const submitUpdateForm = () => {
+  if (updateFormRef.value) {
+    updateFormRef.value.submit();
+  }
 };
 
 const closeUpdateModal = () => {
@@ -349,7 +371,6 @@ const handleUpdate = (event: FormSubmitEvent<UpdateFormState>) => {
 // -------------------------
 
 const fileToDelete = computed(() => documentsStore.fileToDelete);
-
 const deleteGroupUuidRef = computed(() => documentsStore.fileToDelete?.groupUuid);
 
 const deleteMutation = useDeleteGroupFileMutation(deleteGroupUuidRef, {
