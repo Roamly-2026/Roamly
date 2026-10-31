@@ -2,13 +2,13 @@
 <template>
   <div
     :class="[
-      'hidden md:grid grid-cols-12 items-center text-xs font-bold text-dark-text/70 uppercase tracking-wider select-none border-b border-dark-text/10',
+      'hidden md:grid grid-cols-12 items-center w-full text-xs font-bold text-dark-text/70 uppercase tracking-wider select-none border-b border-dark-text/10',
       SPACING_TOKENS.gap.md,
       SPACING_TOKENS.px.lg,
       SPACING_TOKENS.py.sm,
     ]"
   >
-    <!-- File Name column -->
+    <!-- File Name column (4) -->
     <div
       class="col-span-4 flex items-center cursor-pointer hover:text-dark-text transition-colors"
       @click="emit('sort', 'file_name')"
@@ -21,12 +21,12 @@
       />
     </div>
 
-    <!-- Type column -->
+    <!-- Type column (2) -->
     <div
       class="col-span-2 flex items-center cursor-pointer hover:text-dark-text transition-colors"
       @click="emit('sort', 'type')"
     >
-      <span>{{ UI_TEXT.files.type }}</span>
+      <span>{{ UI_TEXT.media.type || 'Type' }}</span>
       <UIcon
         v-if="sortKey === 'type'"
         :name="sortOrder === 'asc' ? 'i-heroicons-chevron-up' : 'i-heroicons-chevron-down'"
@@ -34,12 +34,12 @@
       />
     </div>
 
-    <!-- Size column -->
+    <!-- Size column (2) -->
     <div
       class="col-span-2 flex items-center cursor-pointer hover:text-dark-text transition-colors"
       @click="emit('sort', 'file_size')"
     >
-      <span>{{ UI_TEXT.files.size }}</span>
+      <span>{{ UI_TEXT.media.size || 'Size' }}</span>
       <UIcon
         v-if="sortKey === 'file_size'"
         :name="sortOrder === 'asc' ? 'i-heroicons-chevron-up' : 'i-heroicons-chevron-down'"
@@ -47,18 +47,18 @@
       />
     </div>
 
-    <!-- Uploaded by column -->
+    <!-- Uploaded by column (2) -->
     <div class="col-span-2 flex items-center">
-      <span>{{ UI_TEXT.common.uploadedBy }}</span>
+      <span>{{ UI_TEXT.common.uploadedBy || 'Uploaded by' }}</span>
     </div>
 
-    <!-- Date + Actions column -->
+    <!-- Date + Actions column (2) -->
     <div
       class="col-span-2 flex items-center justify-between cursor-pointer hover:text-dark-text transition-colors"
       @click="emit('sort', 'created_at')"
     >
       <div class="flex items-center">
-        <span>{{ UI_TEXT.common.uploadedAt }}</span>
+        <span>{{ UI_TEXT.common.uploadedAt || 'Date' }}</span>
         <UIcon
           v-if="sortKey === 'created_at'"
           :name="sortOrder === 'asc' ? 'i-heroicons-chevron-up' : 'i-heroicons-chevron-down'"

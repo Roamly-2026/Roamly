@@ -15,18 +15,19 @@
 </template>
 
 <script setup lang="ts">
-import type { GroupFile } from '~/types/files.type';
+import { ref, computed } from 'vue';
+import type { GroupFile, PrivateDocumentMetadata } from '~/types/files.type';
 import type { SortKey, SortOrder } from '~/components/files/FilesListHeader.vue';
 import FilesListHeader from '~/components/files/FilesListHeader.vue';
 import FilesListRow from '~/components/files/FilesListRow.vue';
 
 const props = defineProps<{
-  files: GroupFile[];
+  files: (GroupFile | PrivateDocumentMetadata)[];
   isCurrentUserLeader: boolean;
 }>();
 
 const emit = defineEmits<{
-  delete: [file: GroupFile];
+  delete: [file: GroupFile | PrivateDocumentMetadata];
   download: [url: string | undefined, filename: string];
 }>();
 

@@ -71,7 +71,9 @@
       </div>
     </div>
 
+    <!-- ==================== -->
     <!-- GROUP DOCUMENT SECTION -->
+    <!-- ==================== -->
     <div :class="[LAYOUT_CONFIG.sectionWrapper, SPACING_TOKENS.mb.xl]">
       <div :class="LAYOUT_CONFIG.headerRow">
         <div :class="LAYOUT_CONFIG.headerActionLeft">
@@ -211,9 +213,7 @@
               <p>
                 {{ ' ' + UI_TEXT.documents.documentType + ' ' }}
                 <span :class="TYPOGRAPHY_CONFIG.metaHighlight">
-                  {{
-                    doc.documents?.document_type.toLocaleLowerCase() || UI_TEXT.common.notAvailable
-                  }}
+                  {{ doc.documents?.document_type?.toLowerCase() || UI_TEXT.common.notAvailable }}
                 </span>
               </p>
               <div :class="LAYOUT_CONFIG.divider"></div>
@@ -271,7 +271,9 @@
       </div>
     </div>
 
+    <!-- ========================= -->
     <!-- MEMBER DOCUMENTS (leader) -->
+    <!-- ========================= -->
     <div
       v-if="isCurrentUserLeader"
       :class="[
@@ -332,6 +334,7 @@
         <div :class="LAYOUT_CONFIG.headerActionRight" />
       </div>
 
+      <!-- Loading -->
       <div v-if="isLoadingMemberDocuments" :class="TYPOGRAPHY_CONFIG.statusLoading">
         {{ ' ' + UI_TEXT.documents.loadingMemberDocuments + ' ' }}
       </div>
