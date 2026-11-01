@@ -86,7 +86,11 @@
           <div :class="`flex flex-col ${SPACING_TOKENS.gap.lg} ${SPACING_TOKENS.p.md}`">
             <!-- Uploader -->
             <div :class="`flex items-center ${SPACING_TOKENS.gap.md}`">
-              <UAvatar :src="activeMedia.creator?.uuid ? undefined : undefined" icon="i-heroicons-user" size="md" />
+              <UAvatar 
+                :src="(activeMedia.creator as any)?.profile_image_url || undefined" 
+                icon="i-heroicons-user" 
+                class="!w-9 !h-9 min-w-[36px] min-h-[36px] shrink-0" 
+              />
               <div class="flex flex-col">
                 <span class="text-sm font-bold text-dark-text">{{ activeMedia.creator?.username }}</span>
                 <span class="text-xs text-dark-text/60">
@@ -137,7 +141,11 @@
                   :key="tag.users.uuid"
                   :class="`flex items-center ${SPACING_TOKENS.gap.xs} px-2 py-1 rounded-full bg-surface-100 border border-surface-200`"
                 >
-                  <UAvatar :src="tag.users.profile_image_url || undefined" :alt="tag.users.username" size="3xs" />
+                  <UAvatar 
+                    :src="tag.users.profile_image_url || undefined" 
+                    :alt="tag.users.username" 
+                    class="!w-6 !h-6 min-w-[24px] min-h-[24px] shrink-0" 
+                  />
                   <span class="text-xs font-medium text-dark-text">{{ tag.users.username }}</span>
                 </div>
               </div>
