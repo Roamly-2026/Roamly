@@ -246,3 +246,67 @@ export const useDeleteSharingMutation = (options?: MutationOptions) => {
 
   return mutation;
 };
+
+export const useUploadGroupMediaMutation = (
+  groupUuid: Ref<string | undefined>,
+  options?: MutationOptions,
+) => {
+  const queryCache = useQueryCache();
+  const toast = useToast();
+
+  return useMutation({
+    mutation: (formData: FormData) => {
+      if (!groupUuid.value) throw new Error(UI_TEXT.errors.groupUuidRequired);
+      return filesService.uploadGroupMediaFile(groupUuid.value, formData);
+    },
+    onSuccess: () => {
+      toast.add({
+        title: UI_TEXT.common.success,
+        description: UI_TEXT.media.uploaded,
+        color: 'success',
+      });
+      queryCache.invalidateQueries({ key: ['group-files', groupUuid.value ?? null] });
+      options?.onSuccess?.();
+    },
+    onError: (error) => {
+      toast.add({
+        title: UI_TEXT.common.error,
+        description: getErrorMessage(error),
+        color: 'error',
+      });
+      options?.onError?.(error);
+    },
+  });
+};
+
+export const useUpdateGroupMediaMutation = (
+  groupUuid: Ref<string | undefined>,
+  options?: MutationOptions,
+) => {
+  const queryCache = useQueryCache();
+  const toast = useToast();
+
+  return useMutation({
+    mutation: ({ fileId, formData }: { fileId: number; formData: FormData }) => {
+      if (!groupUuid.value) throw new Error(UI_TEXT.errors.groupUuidRequired);
+      return filesService.updateGroupMediaFile(groupUuid.value, fileId, formData);
+    },
+    onSuccess: () => {
+      toast.add({
+        title: UI_TEXT.common.success,
+        description: UI_TEXT.documents.updated,
+        color: 'success',
+      });
+      queryCache.invalidateQueries({ key: ['group-files', groupUuid.value ?? null] });
+      options?.onSuccess?.();
+    },
+    onError: (error) => {
+      toast.add({
+        title: UI_TEXT.common.error,
+        description: getErrorMessage(error),
+        color: 'error',
+      });
+      options?.onError?.(error);
+    },
+  });
+};
