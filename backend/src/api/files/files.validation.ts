@@ -68,9 +68,78 @@ export const groupDocumentDataSchema = z
     },
   );
 
-export const groupMediaDataSchema = z.object({
-  description: z.string().max(255, 'Description can not be longer than 255 characters!').optional(),
-});
+const parseJsonArray = (val: unknown): unknown => {
+  if (typeof val === 'string') {
+    if (val.trim() === '') return [];
+    try {
+      return JSON.parse(val);
+    } catch {
+      return [];
+    }
+  }
+  return val;
+};
+
+const groupMediaFields = {
+  description: z.preprocess(
+    (val: unknown): unknown => (val === '' ? undefined : val),
+    z.string().trim().max(512, 'Description can not be longer than 512 characters!').optional(),
+  ),
+
+  taken_at: z.preprocess(
+    (val: unknown): unknown => (val === '' ? undefined : val),
+    z.iso.datetime('Invalid date format! Use ISO format (YYYY-MM-DDTHH:MM:SS.MSZ)').optional(),
+  ),
+
+  location_name: z.preprocess(
+    (val: unknown): unknown => (val === '' ? undefined : val),
+    z.string().trim().max(255).optional(),
+  ),
+
+  latitude: z.preprocess(
+    (val: unknown): unknown =>
+      val === undefined || val === '' || val === null ? undefined : Number(val),
+    z.number().min(-90, 'Latitude must be between -90 and 90').max(90, 'Latitude must be between -90 and 90').optional(),
+  ),
+
+  longitude: z.preprocess(
+    (val: unknown): unknown =>
+      val === undefined || val === '' || val === null ? undefined : Number(val),
+    z.number().min(-180, 'Longitude must be between -180 and 180').max(180, 'Longitude must be between -180 and 180').optional(),
+  ),
+
+  tagged_user_uuids: z.preprocess(
+    parseJsonArray,
+    z.array(z.string().uuid('Invalid user UUID format!')).optional(),
+  ),
+};
+
+const validateCoordinates = (data: { latitude?: number; longitude?: number }): boolean => {
+  const hasLat = data.latitude !== undefined;
+  const hasLng = data.longitude !== undefined;
+  return hasLat === hasLng;
+};
+
+export const groupMediaDataSchema = z
+  .object(groupMediaFields)
+  .refine(
+    validateCoordinates,
+    {
+      message: 'Latitude and longitude must be provided together!',
+      path: ['latitude'],
+    },
+  );
+
+export const groupMediaUpdateSchema = z
+  .object(groupMediaFields)
+  .partial()
+  .refine(
+    validateCoordinates,
+    {
+      message: 'Latitude and longitude must be provided together!',
+      path: ['latitude'],
+    },
+  );
 
 export const groupDocumentUpdateSchema = z
   .object({

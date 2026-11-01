@@ -90,9 +90,23 @@ model groups {
 }
 
 model media_files {
-  file_id     Int     @id
-  description String? @db.VarChar(255)
-  files       files   @relation(fields: [file_id], references: [file_id], onDelete: Cascade, onUpdate: NoAction)
+  file_id       Int          @id
+  description   String?      @db.VarChar(512)
+  taken_at      DateTime?    @db.Timestamp(6)
+  location_name String?      @db.VarChar(255)
+  latitude      Float?
+  longitude     Float?
+  files         files        @relation(fields: [file_id], references: [file_id], onDelete: Cascade, onUpdate: NoAction)
+  media_tags    media_tags[]
+}
+
+model media_tags {
+  file_id       Int
+  user_id       Int
+  media_files   media_files  @relation(fields: [file_id], references: [file_id], onDelete: Cascade, onUpdate: NoAction)
+  users         users        @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([file_id, user_id])
 }
 
 model roles {
@@ -117,6 +131,7 @@ model users {
   uploaded_files     files[]              @relation("FilesUploadedByUser")
   owned_files        files[]              @relation("FilesOwnedByUser")
   group_profiles     group_profiles[]
+  media_tags         media_tags[]
 }
 
 model documents {

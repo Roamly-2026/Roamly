@@ -20,9 +20,23 @@ export interface DocumentDto {
   expiry_date: string | null;
 }
 
+export interface MediaTagDto {
+  users: {
+    uuid: string;
+    username: string;
+    email: string;
+    profile_image_url?: string | null;
+  };
+}
+
 export interface MediaDto {
   media_id: number;
   description: string | null;
+  taken_at?: string | null;
+  location_name?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  media_tags?: MediaTagDto[];
 }
 
 export interface FileDto {
