@@ -270,6 +270,7 @@ export const updateEvent = async (
   }
 
   let participantOperations = undefined;
+  let rsvpOperations = undefined;
 
   if (data.visibility && data.visibility !== existingEvent.visibility.name) {
     if (data.visibility === EVENT_VISIBILITY.PUBLIC) {
@@ -279,6 +280,10 @@ export const updateEvent = async (
     } else if (data.visibility === EVENT_VISIBILITY.PRIVATE) {
       participantOperations = {
         create: [{ user_id: existingEvent.creator_id }],
+      };
+      // after going private only the creator is a participant, the others lose access
+      rsvpOperations = {
+        deleteMany: { user_id: { not: existingEvent.creator_id } },
       };
     }
   }
@@ -299,6 +304,7 @@ export const updateEvent = async (
         : undefined,
 
       event_participants: participantOperations,
+      event_rsvps: rsvpOperations,
 
       latitude: data.latitude,
       longitude: data.longitude,
@@ -530,12 +536,99 @@ export const removeParticipantFromEvent = async (
     },
   });
 
-  await prisma.event_participants.delete({
+  await prisma.$transaction([
+    prisma.event_rsvps.deleteMany({
+      where: {
+        event_id: existingEvent.event_id,
+        user_id: targetUser.user_id,
+      },
+    }),
+    prisma.event_participants.delete({
+      where: {
+        event_id_user_id: {
+          user_id: targetUser.user_id,
+          event_id: existingEvent.event_id,
+        },
+      },
+    }),
+  ]);
+};
+
+export const setEventRsvp = async (
+  userUuid: string,
+  groupUuid: string,
+  eventUuid: string,
+  status: string,
+): Promise<{ status: string }> => {
+  const userGroupInfo = await prisma.group_profiles.findFirst({
+    where: {
+      users: {
+        uuid: userUuid,
+      },
+      groups: {
+        uuid: groupUuid,
+      },
+    },
+
+    include: {
+      users: true,
+      groups: true,
+      roles: true,
+    },
+  });
+
+  userGroupInfoValidate(userGroupInfo);
+
+  if (userGroupInfo.roles.type !== ROLES.LEADER && userGroupInfo.roles.type !== ROLES.MEMBER) {
+    throw new ForbiddenError('User must be part of the group to respond to events in it!');
+  }
+
+  const existingEvent = await prisma.events.findUniqueOrThrow({
+    where: {
+      uuid: eventUuid,
+      groups: {
+        uuid: groupUuid,
+      },
+    },
+
+    include: {
+      visibility: true,
+      event_participants: {
+        where: {
+          user_id: userGroupInfo.users.user_id,
+        },
+      },
+    },
+  });
+
+  const canSeeEvent =
+    userGroupInfo.roles.type === ROLES.LEADER ||
+    existingEvent.creator_id === userGroupInfo.users.user_id ||
+    existingEvent.visibility.name === EVENT_VISIBILITY.PUBLIC ||
+    existingEvent.event_participants.length > 0;
+
+  if (!canSeeEvent) {
+    throw new ForbiddenError('Only users who can see the event can respond to it!');
+  }
+
+  return prisma.event_rsvps.upsert({
     where: {
       event_id_user_id: {
-        user_id: targetUser.user_id,
         event_id: existingEvent.event_id,
+        user_id: userGroupInfo.users.user_id,
       },
+    },
+    update: {
+      status,
+    },
+    create: {
+      event_id: existingEvent.event_id,
+      user_id: userGroupInfo.users.user_id,
+      group_id: existingEvent.group_id,
+      status,
+    },
+    select: {
+      status: true,
     },
   });
 };
