@@ -17,12 +17,18 @@ export default defineNuxtConfig({
 
   vite: {
     optimizeDeps: {
-      include: ['@vue/devtools-core', 'zod', 'leaflet', 'leaflet-control-geocoder'],
+      include: [
+        '@vue/devtools-core',
+        'libphonenumber-js',
+        'zod',
+        'leaflet',
+        'leaflet-control-geocoder',
+      ],
     },
   },
 
   imports: {
-    dirs: ['utils/constants', 'utils/schemas', 'locales'],
+    dirs: ['utils/**', 'locales'],
   },
 
   postcss: {

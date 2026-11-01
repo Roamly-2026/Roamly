@@ -9,7 +9,7 @@
       :cancel-text="UI_TEXT.common.cancel"
       :submit-text="UI_TEXT.common.create"
       :loading="isCreating"
-      :ui-size="appConfig.layout.modalSizeSm"
+      :ui-size="LAYOUT_CONFIG.modalSizeSm"
       @cancel="groupsStore.closeCreateModal"
       @submit="handleCreateGroup"
     >
@@ -19,9 +19,8 @@
           :label="UI_TEXT.groups.nameLabel"
           :placeholder="UI_TEXT.groups.namePlaceholder"
           variant="glass"
-          class="w-full"
         />
-        <p v-if="createError" :class="appConfig.typography.inputError">{{ createError }}</p>
+        <p v-if="createError" :class="TYPOGRAPHY_CONFIG.inputError">{{ createError }}</p>
       </div>
     </FormModal>
 
@@ -33,17 +32,14 @@
       :cancel-text="UI_TEXT.common.cancel"
       :confirm-text="UI_TEXT.common.delete"
       :loading="isDeleting"
-      :ui-size="appConfig.layout.modalSizeSm"
+      :ui-size="LAYOUT_CONFIG.modalSizeSm"
       @cancel="groupsStore.closeDeleteModal"
       @confirm="confirmDelete"
     >
       <template #body>
-        <p :class="appConfig.typography.modalText">
+        <p :class="TYPOGRAPHY_CONFIG.modalText">
           {{ UI_TEXT.groups.deleteConfirmation }}
-          <span
-            v-if="groupsStore.selectedGroupToDelete"
-            :class="appConfig.typography.modalHighlight"
-          >
+          <span v-if="groupsStore.selectedGroupToDelete" :class="TYPOGRAPHY_CONFIG.modalHighlight">
             „{{ groupsStore.selectedGroupToDelete.name }}”
           </span>
         </p>
@@ -58,18 +54,15 @@
       :cancel-text="UI_TEXT.common.cancel"
       :confirm-text="UI_TEXT.common.leave"
       :loading="isLeaving"
-      :ui-size="appConfig.layout.modalSizeSm"
+      :ui-size="LAYOUT_CONFIG.modalSizeSm"
       @cancel="groupsStore.closeLeaveModal"
       @confirm="confirmLeave"
     >
       <template #body>
-        <div :class="appConfig.layout.modalForm">
-          <p :class="appConfig.typography.modalText">
+        <div :class="LAYOUT_CONFIG.modalForm">
+          <p :class="TYPOGRAPHY_CONFIG.modalText">
             {{ UI_TEXT.groups.leaveConfirmation }}
-            <span
-              v-if="groupsStore.selectedGroupToLeave"
-              :class="appConfig.typography.modalHighlight"
-            >
+            <span v-if="groupsStore.selectedGroupToLeave" :class="TYPOGRAPHY_CONFIG.modalHighlight">
               „{{ groupsStore.selectedGroupToLeave.name }}”
             </span>
           </p>
@@ -78,7 +71,7 @@
               groupsStore.selectedGroupToLeave?.current_size === 1 &&
               groupsStore.selectedGroupToLeave?.role?.toLowerCase() === 'leader'
             "
-            :class="appConfig.typography.modalErrorBox"
+            :class="TYPOGRAPHY_CONFIG.modalErrorBox"
           >
             {{ UI_TEXT.groups.leaveWarning }}
           </p>
@@ -98,10 +91,8 @@ import {
   useDeleteGroupMutation,
   useLeaveGroupMutation,
 } from '~/queries/groups.mutation';
-import { useAppConfig } from '#imports';
 
 /* --- COMPOSABLES --- */
-const appConfig = useAppConfig();
 const groupsStore = useGroupsStore();
 const router = useRouter();
 

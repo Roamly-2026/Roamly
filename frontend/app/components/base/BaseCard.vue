@@ -8,11 +8,8 @@
 </template>
 
 <script setup lang="ts">
-/* --- IMPORTS --- */
 import type { CardProps } from '@nuxt/ui';
 
-/* --- PROPS --- */
-// Everything else (class, @click...) falls through to UCard
 withDefaults(
   defineProps<{
     variant?: CardProps['variant'];

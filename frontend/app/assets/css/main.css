@@ -1,32 +1,66 @@
 @import 'tailwindcss';
 @import './toast.css';
+@import './tokens.css';
+@import './utilities.css';
 
 @theme {
-  /* Brand colors */
-  --color-brand-50: #f0fdf4;
-  --color-brand-500: #7a9a82;
-  --color-brand-600: #68856f;
-  --color-brand-950: #052e16;
+  /* Surfaces (bg-surface-*) */
+  --color-surface-page: var(--theme-bg-page);
+  --color-surface-card: var(--theme-bg-card);
+  --color-surface-card-hover: var(--theme-bg-card-hover);
+  --color-surface-modal: var(--theme-bg-modal);
+  --color-surface-subtle: var(--theme-bg-subtle);
+  --color-surface-overlay: var(--theme-bg-overlay);
 
-  /* Akcent and surface colors */
-  --color-accent-500: #e5a93b;
-  --color-accent-600: #d49933;
-  --color-dark-text: #2f3e32;
-  --color-surface-500: #edf1ee;
-  --color-surface-600: #e2e8e4;
-  --color-input-bg: #e8f0f5;
-  --color-input-border: #d0e0eb;
-  --color-light-bg: #faf9f6;
+  /* Buttons (bg-btn-*, text-btn-*) */
+  --color-btn-primary: var(--theme-btn-primary-bg);
+  --color-btn-primary-hover: var(--theme-btn-primary-hover);
+  --color-btn-primary-active: var(--theme-btn-primary-active);
+  --color-btn-primary-text: var(--theme-btn-primary-text);
 
-  /* Status and secondary colors */
-  --color-success-400: #4ade80;
-  --color-error-50: #fef2f2;
-  --color-error-300: #fca5a5;
-  --color-error-400: #f87171;
-  --color-error-500: #ef4444;
-  --color-error-900: #7f1d1d;
-  --color-text-muted: #9ca3af;
-  --color-text-secondary: #6b7280;
+  --color-btn-secondary: var(--theme-btn-secondary-bg);
+  --color-btn-secondary-hover: var(--theme-btn-secondary-hover);
+  --color-btn-secondary-active: var(--theme-btn-secondary-active);
+  --color-btn-secondary-text: var(--theme-btn-secondary-text);
+
+  --color-btn-tertiary: var(--theme-btn-tertiary-bg);
+  --color-btn-tertiary-hover: var(--theme-btn-tertiary-hover);
+  --color-btn-tertiary-active: var(--theme-btn-tertiary-active);
+  --color-btn-tertiary-text: var(--theme-btn-tertiary-text);
+
+  --color-btn-danger: var(--theme-btn-danger-bg);
+  --color-btn-danger-hover: var(--theme-btn-danger-hover);
+  --color-btn-danger-active: var(--theme-btn-danger-active);
+  --color-btn-danger-text: var(--theme-btn-danger-text);
+
+  --color-btn-disabled: var(--theme-btn-disabled-bg);
+  --color-btn-disabled-text: var(--theme-btn-disabled-text);
+
+  /* Texts (text-content-*) */
+  --color-content-primary: var(--theme-text-primary);
+  --color-content-secondary: var(--theme-text-secondary);
+  --color-content-muted: var(--theme-text-muted);
+  --color-content-inverse: var(--theme-text-inverse);
+  --color-content-brand: var(--theme-text-brand);
+
+  /* Inputs (bg-field-*, border-field-*) */
+  --color-field-bg: var(--theme-input-bg);
+  --color-field-border: var(--theme-input-border);
+  --color-field-focus: var(--theme-input-focus-border);
+  --color-field-placeholder: var(--theme-input-placeholder);
+  --color-field-disabled: var(--theme-input-disabled-bg);
+
+  /* Borders (border-line-*) */
+  --color-line-default: var(--theme-border-default);
+  --color-line-strong: var(--theme-border-strong);
+  --color-line-focus: var(--theme-border-focus);
+
+  /* Status(bg-status-*, text-status-*, border-status-*) */
+  --color-status-success: var(--theme-status-success);
+  --color-status-error: var(--theme-status-error);
+  --color-status-error-bg: var(--theme-status-error-bg);
+  --color-status-error-border: var(--theme-status-error-border);
+  --color-status-error-text: var(--theme-status-error-text);
 }
 
 html {
@@ -53,6 +87,6 @@ body {
 input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='button']):not(
     [type='submit']
   ) {
-  padding-left: 1rem !important; /* 16px - SPACING_TOKENS.px.md */
-  padding-right: 1rem !important; /* 16px - SPACING_TOKENS.px.md */
+  padding-left: 1rem; /* 16px - SPACING_TOKENS.px.md */
+  padding-right: 1rem; /* 16px - SPACING_TOKENS.px.md */
 }

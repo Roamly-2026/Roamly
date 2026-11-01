@@ -4,16 +4,22 @@
     :open="open"
     :dismissible="dismissible"
     :close="closeIcon"
-    :ui="{ content: uiSize }"
+    :ui="{
+      overlay: MODAL_CONFIG.slots.overlay,
+      content: `${MODAL_CONFIG.slots.content} ${uiSize || LAYOUT_CONFIG.modalSizeMd}`,
+      header: MODAL_CONFIG.slots.header,
+      body: MODAL_CONFIG.slots.body,
+      footer: MODAL_CONFIG.slots.footer,
+    }"
     @update:open="$emit('update:open', $event)"
   >
     <!-- Hiding default Nuxt UI slots -->
-    <template #default><div class="hidden"></div></template>
-    <template #close><div class="hidden"></div></template>
+    <template #default><span /></template>
+    <template #close><span /></template>
 
     <template v-if="$slots.header || title" #header>
       <slot name="header">
-        <h3 class="text-xl font-bold text-dark-text">{{ title }}</h3>
+        <h3 :class="TYPOGRAPHY_CONFIG.cardTitle">{{ title }}</h3>
       </slot>
     </template>
 

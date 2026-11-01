@@ -9,14 +9,14 @@
       :cancel-text="UI_TEXT.common.cancel"
       :confirm-text="UI_TEXT.common.join"
       :loading="isJoining"
-      :ui-size="appConfig.layout.modalSizeSm"
+      :ui-size="LAYOUT_CONFIG.modalSizeSm"
       @cancel="groupsStore.closeJoinModal"
       @confirm="confirmJoin"
     >
       <template #body>
-        <p :class="appConfig.typography.modalText">
+        <p :class="TYPOGRAPHY_CONFIG.modalText">
           {{ UI_TEXT.groups.joinConfirmation }}
-          <span v-if="groupsStore.selectedGroupToJoin" :class="appConfig.typography.modalHighlight">
+          <span v-if="groupsStore.selectedGroupToJoin" :class="TYPOGRAPHY_CONFIG.modalHighlight">
             „{{ groupsStore.selectedGroupToJoin.name }}”
           </span>
         </p>
@@ -31,17 +31,14 @@
       :cancel-text="UI_TEXT.common.cancel"
       :confirm-text="UI_TEXT.common.decline"
       :loading="isLeaving"
-      :ui-size="appConfig.layout.modalSizeSm"
+      :ui-size="LAYOUT_CONFIG.modalSizeSm"
       @cancel="groupsStore.closeDeclineModal"
       @confirm="confirmDecline"
     >
       <template #body>
-        <p :class="appConfig.typography.modalText">
+        <p :class="TYPOGRAPHY_CONFIG.modalText">
           {{ UI_TEXT.groups.declineInviteConfirmation }}
-          <span
-            v-if="groupsStore.selectedGroupToDecline"
-            :class="appConfig.typography.modalHighlight"
-          >
+          <span v-if="groupsStore.selectedGroupToDecline" :class="TYPOGRAPHY_CONFIG.modalHighlight">
             „{{ groupsStore.selectedGroupToDecline.name }}”
           </span>
         </p>
@@ -55,11 +52,9 @@
 import { computed } from 'vue';
 import { useGroupsStore } from '~/stores/groups.modals.store';
 import { useJoinGroupMutation, useLeaveGroupMutation } from '~/queries/groups.mutation';
-import { useAppConfig } from '#imports';
 import { getErrorMessage } from '~/utils/error.utils';
 
 /* --- COMPOSABLES --- */
-const appConfig = useAppConfig();
 const groupsStore = useGroupsStore();
 
 const isJoining = computed(() => joinMutation.isLoading.value);

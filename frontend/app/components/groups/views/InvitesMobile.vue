@@ -1,34 +1,26 @@
 <!-- frontend/app/components/groups/views/InvitesMobile.vue -->
 <template>
-  <div :class="appConfig.layout.pageWrapper">
-    <!-- PAGE TITLE -->
-    <h1 :class="appConfig.typography.pageTitle">{{ UI_TEXT.groups.invitesHeading }}</h1>
+  <div :class="LAYOUT_CONFIG.pageWrapper">
+    <h1 :class="TYPOGRAPHY_CONFIG.pageTitle">{{ UI_TEXT.groups.invitesHeading }}</h1>
 
-    <!-- CONTENT SECTION -->
     <ClientOnly>
-      <!-- LOADING / ERROR STATES -->
-      <div v-if="isLoading && invitesList.length === 0" :class="appConfig.typography.statusLoading">
+      <div v-if="isLoading && invitesList.length === 0" :class="TYPOGRAPHY_CONFIG.statusLoading">
         {{ UI_TEXT.common.loading }}
       </div>
-      <div v-else-if="error" :class="appConfig.typography.statusError">
+      <div v-else-if="error" :class="TYPOGRAPHY_CONFIG.statusError">
         {{ UI_TEXT.errors.fetch }}
       </div>
 
-      <!-- INVITES GRID -->
-      <div
-        v-else-if="invitesList.length > 0"
-        :class="`flex flex-col ${SPACING_TOKENS.gap.lg} w-full`"
-      >
-        <div :class="appConfig.layout.cardGrid">
+      <div v-else-if="invitesList.length > 0" :class="LAYOUT_CONFIG.cardContent">
+        <div :class="LAYOUT_CONFIG.cardGrid">
           <BaseCard
             v-for="group in invitesList"
             :key="group.uuid"
             variant="interactiveGlass"
-            class="relative flex flex-col justify-between cursor-pointer w-full"
+            :class="[LAYOUT_CONFIG.headerRelative, INTERACTION_TOKENS.base]"
             @click="groupsStore.openJoinModal(group)"
           >
-            <!-- DECLINE BUTTON -->
-            <div class="absolute top-4 right-4 z-10">
+            <div :class="LAYOUT_CONFIG.cardCornerRight">
               <BaseButton
                 icon="i-heroicons-x-mark"
                 variant="ghostDangerIconButton"
@@ -37,41 +29,40 @@
               />
             </div>
 
-            <!-- CARD CONTENT -->
-            <div :class="appConfig.layout.cardContent">
-              <h3 :class="appConfig.typography.cardTitleCenter">{{ group.name }}</h3>
-              <p class="text-sm text-center text-dark-text/80 font-medium">
+            <div :class="LAYOUT_CONFIG.cardContent">
+              <h3 :class="TYPOGRAPHY_CONFIG.cardTitleCenter">{{ group.name }}</h3>
+              <p :class="TYPOGRAPHY_CONFIG.bodySmSoft">
                 {{
                   group.leaders.length > 1
                     ? UI_TEXT.groups.leadersLabel
                     : UI_TEXT.groups.leaderLabel
                 }}
-                <span class="font-bold">{{ group.leaders.join(', ') }}</span>
+                <span :class="TYPOGRAPHY_CONFIG.metaHighlight">{{ group.leaders.join(', ') }}</span>
               </p>
-              <div :class="appConfig.layout.cardFooter">
+              <div :class="LAYOUT_CONFIG.cardFooter">
                 <div>
-                  <p class="opacity-70">{{ UI_TEXT.groups.createdAtLabel }}</p>
-                  <p class="font-semibold">{{ group.created_at }}</p>
+                  <p :class="TYPOGRAPHY_CONFIG.metaLabelSoft">
+                    {{ UI_TEXT.groups.createdAtLabel }}
+                  </p>
+                  <p :class="TYPOGRAPHY_CONFIG.metaTime">{{ group.created_at }}</p>
                 </div>
-                <div :class="`flex items-center ${SPACING_TOKENS.gap.xs} font-semibold`">
-                  <span>{{ group.current_size }}</span>
-                  <UIcon name="i-heroicons-user" class="w-5 h-5 text-brand-500" />
+                <div :class="LAYOUT_CONFIG.headerTitleRow">
+                  <span :class="TYPOGRAPHY_CONFIG.metaTime">{{ group.current_size }}</span>
+                  <UIcon name="i-heroicons-user" :class="TYPOGRAPHY_CONFIG.iconBrandMd" />
                 </div>
               </div>
             </div>
           </BaseCard>
         </div>
 
-        <!-- INFINITE SCROLL TRIGGER -->
-        <div ref="loadMoreTrigger" class="h-10 w-full flex items-center justify-center">
-          <span v-if="isFetchingNextPage" class="text-dark-text/70 text-sm">
+        <div ref="loadMoreTrigger" :class="LAYOUT_CONFIG.infiniteScrollTrigger">
+          <span v-if="isFetchingNextPage" :class="TYPOGRAPHY_CONFIG.bodySmMuted">
             {{ UI_TEXT.groups.loadingGroups }}
           </span>
         </div>
       </div>
 
-      <!-- EMPTY STATE -->
-      <div v-else :class="appConfig.typography.statusLoading">
+      <div v-else :class="TYPOGRAPHY_CONFIG.statusLoading">
         {{ UI_TEXT.groups.noInvites }}
       </div>
     </ClientOnly>
@@ -79,14 +70,12 @@
 </template>
 
 <script setup lang="ts">
-import { useAppConfig } from '#imports';
 import { ref } from 'vue';
 import { useIntersectionObserver } from '@vueuse/core';
 import { useGroupsStore } from '~/stores/groups.modals.store';
 import type { GroupInvitesOutDto } from '~/types/groups.type';
 import type { ApiError } from '~/types/apiError.type';
 
-const appConfig = useAppConfig();
 const groupsStore = useGroupsStore();
 
 defineProps<{

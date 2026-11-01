@@ -8,22 +8,22 @@
     @update:open="$emit('update:open', $event)"
   >
     <template #body>
-      <form :id="formId" :class="appConfig.layout.modalForm" @submit.prevent="$emit('submit')">
+      <form :id="formId" :class="LAYOUT_CONFIG.modalForm" @submit.prevent="$emit('submit')">
         <slot name="body">
           <slot></slot>
         </slot>
-        <p v-if="errorText" :class="[appConfig.typography.inputError, 'mt-2']">
+        <p v-if="errorText" :class="TYPOGRAPHY_CONFIG.inputError">
           {{ errorText }}
         </p>
       </form>
     </template>
 
     <template #footer>
-      <div :class="appConfig.layout.modalActions || appConfig.layout.flexBetween">
+      <div :class="LAYOUT_CONFIG.modalActions">
         <BaseButton
           :label="cancelText"
           variant="actionCancelButton"
-          :class="appConfig.typography.modalActionBtnCancel"
+          :class="TYPOGRAPHY_CONFIG.modalActionBtnCancel"
           :disabled="disableCancel"
           @click="$emit('cancel')"
         />
@@ -31,7 +31,7 @@
           type="submit"
           :form="formId"
           :label="submitText"
-          :class="appConfig.typography.modalActionBtnOk"
+          :class="TYPOGRAPHY_CONFIG.modalActionBtnOk"
           :loading="loading"
           :disabled="disableSubmit"
         />
@@ -41,10 +41,6 @@
 </template>
 
 <script setup lang="ts">
-import { useAppConfig } from '#imports';
-
-const appConfig = useAppConfig();
-
 withDefaults(
   defineProps<{
     open: boolean;
