@@ -1,35 +1,37 @@
 /* --- toast container in upper-right corner --- */
 [aria-label='Notifications (F8)'] > ol {
-  position: fixed;
-  top: 1.5rem;
-  right: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  z-index: 99999;
-  width: 24rem;
-  max-width: calc(100vw - 3rem);
-  outline: none;
-  pointer-events: none;
+  position: fixed !important;
+  top: 1.5rem !important;
+  right: 1.5rem !important;
+  margin: 0.5rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.75rem !important;
+  z-index: 99999 !important;
+  width: 24rem !important;
+  max-width: calc(100vw - 3rem) !important;
+  outline: none !important;
+  pointer-events: none !important;
 }
 
 /* --- toast card --- */
 [data-reka-collection-item] {
-  pointer-events: auto; /* card is clickable */
-  background-color: color-mix(in srgb, var(--color-surface-500) 95%, transparent);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--color-brand-500);
-  border-radius: 0.75rem;
-  padding: 1rem 1.25rem;
+  pointer-events: auto !important; /* card is clickable */
+  background-color: color-mix(in srgb, var(--color-surface-card) 95%, transparent) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 2px solid var(--color-btn-primary) !important;
+  border-radius: 1rem !important;
+  padding: 1rem 1.25rem !important;
+  margin: 0.25rem 0 !important;
   box-shadow:
-    0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -4px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  position: relative;
-  overflow: hidden;
+    0 20px 40px -10px rgba(0, 0, 0, 0.25),
+    0 4px 10px -2px rgba(0, 0, 0, 0.15) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.25rem !important;
+  position: relative !important;
+  overflow: hidden !important;
 
   /* slide in animation */
   animation: toastSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -55,16 +57,16 @@
 }
 
 [data-slot='title'] {
-  color: var(--color-brand-950);
-  font-weight: 600;
-  font-size: 0.95rem;
-  line-height: 1.2;
+  color: var(--color-content-primary) !important;
+  font-weight: 700 !important;
+  font-size: 0.95rem !important;
+  line-height: 1.2 !important;
 }
 
 [data-slot='description'] {
-  color: var(--color-text-secondary);
-  font-size: 0.85rem;
-  line-height: 1.4;
+  color: var(--color-content-secondary) !important;
+  font-size: 0.85rem !important;
+  line-height: 1.4 !important;
 }
 
 /* --- toast animations --- */

@@ -22,17 +22,8 @@
             <span :class="TYPOGRAPHY_CONFIG.headerUsername">
               {{ userProfile?.username || UI_TEXT.common.loading }}
             </span>
-            <BaseButton
-              icon="i-heroicons-arrow-left-on-rectangle"
-              :label="UI_TEXT.auth.logoutTitle"
-              variant="smallHollowActionButton"
-              :class="LAYOUT_CONFIG.desktopOnlyButton"
-              @click="handleLogout"
-            />
 
-            <!-- Desktop menu -->
             <UDropdownMenu
-              v-if="!isMobile"
               :items="profileDropdownItems"
               :content="{ align: 'end', side: 'bottom', sideOffset: 8 }"
               :ui="DROPDOWN_MENU_CONFIG.slots"
@@ -42,26 +33,6 @@
                 :alt="userProfile?.username || UI_TEXT.common.user"
                 icon="i-heroicons-user"
                 :class="INTERACTION_TOKENS.lift"
-              />
-            </UDropdownMenu>
-
-            <!-- Mobile menu -->
-            <UAvatar
-              v-if="isMobile"
-              :src="userProfile?.profile_image_url || undefined"
-              :alt="userProfile?.username || UI_TEXT.common.user"
-              icon="i-heroicons-user"
-            />
-
-            <UDropdownMenu
-              :items="profileDropdownItems"
-              :content="{ align: 'end', side: 'bottom', sideOffset: 8 }"
-              :ui="DROPDOWN_MENU_CONFIG.slots"
-            >
-              <BaseButton
-                icon="i-heroicons-bars-3"
-                variant="ghost"
-                :class="LAYOUT_CONFIG.mobileMenuButton"
               />
             </UDropdownMenu>
           </template>
@@ -75,13 +46,11 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useCurrentUserQuery } from '~/queries/user.query';
-import { useScreenSize } from '~/composables/useScreenSize';
 import type { DropdownMenuItem } from '@nuxt/ui';
 
 const router = useRouter();
 const { isAuthenticated, logout } = useAuth();
 const { data: userProfile } = useCurrentUserQuery();
-const { isMobile } = useScreenSize();
 
 const profileDropdownItems = ref<DropdownMenuItem[][]>([
   [

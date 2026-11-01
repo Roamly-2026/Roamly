@@ -36,10 +36,14 @@ export const BUTTON_APPEARANCES = {
   // Ghost styles
   ghostDanger: `${COLOR_TOKENS.text.primaryMuted} hover:!text-red-500 [&>span]:transition-colors hover:[&>span]:!text-red-500 hover:bg-red-500/10 ${RADIUS_TOKENS.full}`,
   ghostBrand: `${COLOR_TOKENS.text.primaryMuted} hover:!text-btn-primary [&>span]:transition-colors hover:[&>span]:!text-btn-primary hover:bg-btn-primary/10 ${RADIUS_TOKENS.full}`,
+  ghostInverse: `${COLOR_TOKENS.text.inverse} ${OPACITY_TOKENS.soft} hover:${OPACITY_TOKENS.full} hover:bg-surface-card/20 ${RADIUS_TOKENS.full}`,
 
   // Danger styles
   danger: `${COLOR_TOKENS.button.danger} ${SHADOW_TOKENS.sm}`,
   dangerElevated: `${COLOR_TOKENS.button.danger} ${SHADOW_TOKENS.md} ${INTERACTION_TOKENS.lift}`,
+
+  // Picture overlay
+  pictureOverlay: `bg-black/60 backdrop-blur-md !text-white [&>span]:!text-white hover:!bg-btn-primary hover:!text-btn-primary-text ${RADIUS_TOKENS.full} ${SHADOW_TOKENS.sm}`,
 } as const;
 
 // 3. PREDEFINED BUTTON VARIANTS
@@ -64,9 +68,12 @@ export const BUTTON_VARIANTS = {
 
   ghostDangerIconButton: `${INTERACTION_TOKENS.base} ${BUTTON_SIZES.iconSm} ${BUTTON_APPEARANCES.ghostDanger}`,
   ghostBrandIconButton: `${INTERACTION_TOKENS.base} ${BUTTON_SIZES.iconSm} ${BUTTON_APPEARANCES.ghostBrand}`,
+  ghostInverseIconButton: `${INTERACTION_TOKENS.base} ${BUTTON_SIZES.iconSm} ${BUTTON_APPEARANCES.ghostInverse}`,
 
   smallDangerActionButton: `${BASE_BUTTON} ${BUTTON_SIZES.sm} ${BUTTON_APPEARANCES.danger}`,
   actionDangerButton: `${BASE_BUTTON} ${BUTTON_SIZES.lg} ${BUTTON_APPEARANCES.dangerElevated}`,
+
+  pictureOverlayIconButton: `${INTERACTION_TOKENS.base} ${BUTTON_SIZES.iconSm} !p-1.5 ${BUTTON_APPEARANCES.pictureOverlay}`,
 } as const;
 
 export const BUTTON_CONFIG = {

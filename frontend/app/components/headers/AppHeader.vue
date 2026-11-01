@@ -28,13 +28,6 @@
             <span :class="TYPOGRAPHY_CONFIG.headerUsername">
               {{ userProfile?.username || UI_TEXT.common.loading }}
             </span>
-            <BaseButton
-              icon="i-heroicons-arrow-left-on-rectangle"
-              :label="UI_TEXT.auth.logoutTitle"
-              variant="smallHollowActionButton"
-              :class="LAYOUT_CONFIG.desktopOnlyButton"
-              @click="handleLogout"
-            />
             <UDropdownMenu
               :items="profileDropdownItems"
               :content="{ align: 'end', side: 'bottom', sideOffset: 8 }"
@@ -45,18 +38,6 @@
                 :alt="userProfile?.username || UI_TEXT.common.user"
                 icon="i-heroicons-user"
                 :class="INTERACTION_TOKENS.lift"
-              />
-            </UDropdownMenu>
-            <!-- mobile menu button -->
-            <UDropdownMenu
-              :items="profileDropdownItems"
-              :content="{ align: 'end', side: 'bottom', sideOffset: 8 }"
-              :ui="DROPDOWN_MENU_CONFIG.slots"
-            >
-              <BaseButton
-                icon="i-heroicons-bars-3"
-                variant="ghost"
-                :class="LAYOUT_CONFIG.mobileMenuButton"
               />
             </UDropdownMenu>
           </template>

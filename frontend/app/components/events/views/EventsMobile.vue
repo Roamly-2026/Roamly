@@ -46,7 +46,10 @@
               </h1>
               <UIcon
                 name="i-heroicons-chevron-down"
-                :class="[TYPOGRAPHY_CONFIG.iconBrandMd, isGroupDropdownOpen ? 'rotate-180' : '']"
+                :class="[
+                  TYPOGRAPHY_CONFIG.iconDropdownChevron,
+                  isGroupDropdownOpen ? 'rotate-180' : '',
+                ]"
               />
             </div>
             <p :class="TYPOGRAPHY_CONFIG.pageSubtitle">
@@ -138,14 +141,10 @@
         <div :class="LAYOUT_CONFIG.mobileToolbar">
           <UPopover
             v-model:open="isDateDropdownOpen"
-            :class="LAYOUT_CONFIG.listCardInfo"
+            :class="LAYOUT_CONFIG.flex1MinW0"
             :popper="{ strategy: 'fixed', placement: 'bottom-start' }"
           >
-            <BaseButton
-              block
-              variant="glassOutlineButton"
-              :class="CALENDAR_CONFIG.mobileDateButton"
-            >
+            <BaseButton block variant="ghost" :class="CALENDAR_CONFIG.mobileDateButton">
               <span :class="TYPOGRAPHY_CONFIG.cardTitleSm">{{
                 selectedDayDetails
                   ? `${selectedDayDetails.date} (${selectedDayDetails.dayOfWeek})`
@@ -162,19 +161,19 @@
                   {{ UI_TEXT.events.loadingDays }}
                 </div>
                 <template v-else>
-                  <BaseButton
+                  <button
                     v-for="day in sortedDaysList"
                     :key="day.id"
+                    type="button"
                     :class="[
                       WIDE_DROPDOWN_MENU_CONFIG.slots.item,
                       selectedDayId === day.id ? CALENDAR_CONFIG.eventListItemSelected : '',
                       day.isExpired ? CALENDAR_CONFIG.expiredItemWrapper : '',
                     ]"
-                    variant="ghost"
                     @click="selectDay(day.id)"
                   >
                     {{ day.date }} ({{ day.dayOfWeek }})
-                  </BaseButton>
+                  </button>
                 </template>
               </div>
             </template>
@@ -182,7 +181,7 @@
           <BaseButton
             icon="i-heroicons-clock"
             :label="showOnlyActiveEvents ? UI_TEXT.events.active : UI_TEXT.common.all"
-            :variant="showOnlyActiveEvents ? 'glassOutlineButton' : 'glassButton'"
+            variant="glassButton"
             :class="
               showOnlyActiveEvents
                 ? CALENDAR_CONFIG.activeToggleFilterBtn

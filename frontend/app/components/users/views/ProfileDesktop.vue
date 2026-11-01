@@ -40,14 +40,14 @@
               <div :class="LAYOUT_CONFIG.documentCardBottomActions">
                 <BaseButton
                   icon="i-heroicons-eye"
-                  variant="ghostBrandIconButton"
+                  variant="pictureOverlayIconButton"
                   :tooltip="UI_TEXT.tooltips.viewPicture"
                   @click="profileStore.openViewPictureModal(currentUser)"
                 />
 
                 <BaseButton
                   icon="i-heroicons-arrow-up-tray"
-                  variant="ghostBrandIconButton"
+                  variant="pictureOverlayIconButton"
                   :tooltip="UI_TEXT.tooltips.uploadPicture"
                   @click="profileStore.openUploadPictureModal()"
                 />

@@ -17,6 +17,8 @@ export const LAYOUT_CONFIG = {
   headerTitleRow: `flex items-center ${SPACING_TOKENS.gap.xs}`,
   headerActionRight: `flex items-center ${SPACING_TOKENS.gap.md} flex-1 justify-end`,
   headerSearchWrapper: `flex items-center w-full ${SIZE_TOKENS.container.search} ${SPACING_TOKENS.ml.md}`,
+  headerDropdownButton: `flex flex-col justify-center items-center ${SPACING_TOKENS.gap.xs} ${SPACING_TOKENS.p.none} hover:bg-transparent cursor-pointer outline-none`,
+  headerDropdownTitleRow: `flex items-center ${SPACING_TOKENS.gap.sm}`,
 
   // Mobile Shared Page & Toolbar Layouts
   mobilePageWrapper: `flex flex-col flex-1 ${SPACING_TOKENS.gap.md} w-full ${SPACING_TOKENS.p.md} pb-20`,

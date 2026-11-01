@@ -69,6 +69,7 @@ export const TYPOGRAPHY_CONFIG = {
   iconWatermarkXl: `${SIZE_TOKENS.avatar.xl} ${COLOR_TOKENS.text.primaryFaint}`,
   iconAvatarInverse: `${SIZE_TOKENS.avatar.lg} ${COLOR_TOKENS.text.inverse}`,
   iconEmptyState: `${SIZE_TOKENS.avatar.md} ${SPACING_TOKENS.mx.auto} ${SPACING_TOKENS.mb.sm} ${OPACITY_TOKENS.muted}`,
+  iconDropdownChevron: `${SIZE_TOKENS.icon.lg} ${COLOR_TOKENS.text.inverse} ${OPACITY_TOKENS.high} transition-transform duration-200 shrink-0`,
 
   // ------------------- STATUS & ERRORS -------------------
   statusLoading: `text-center ${SPACING_TOKENS.py.xl} ${COLOR_TOKENS.text.inverse}`,

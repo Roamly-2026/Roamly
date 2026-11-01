@@ -18,8 +18,8 @@ export const CALENDAR_CONFIG = {
   filterButtonWrapper: LAYOUT_CONFIG.rightButtonWrapper,
   clearFilterActive: `${COLOR_TOKENS.status.error} ${BORDER_TOKENS.ringError} hover:bg-status-error/20 ${INTERACTION_TOKENS.base}`,
   clearFilterDisabled: `${COLOR_TOKENS.text.primaryFaint} ${BORDER_TOKENS.ringSubtle} bg-transparent hover:bg-transparent ${OPACITY_TOKENS.muted} cursor-not-allowed`,
-  activeToggleFilterBtn: `${BORDER_TOKENS.ringBrand} ${COLOR_TOKENS.surface.brandTint} ${COLOR_TOKENS.text.brandAccent} ${SIZE_TOKENS.controlHeight.md} shrink-0 whitespace-nowrap !px-4`,
-  inactiveToggleFilterBtn: `${SIZE_TOKENS.controlHeight.md} shrink-0 whitespace-nowrap !px-4`,
+  activeToggleFilterBtn: `${SIZE_TOKENS.controlHeight.md} !w-28 justify-center !px-4 shrink-0 whitespace-nowrap !bg-btn-primary !text-btn-primary-text ${BORDER_TOKENS.ringBrand} ${SHADOW_TOKENS.sm}`,
+  inactiveToggleFilterBtn: `${SIZE_TOKENS.controlHeight.md} !w-28 justify-center !px-4 shrink-0 whitespace-nowrap`,
 
   // Grid & Columns
   eventsGrid: `grid grid-cols-1 md:grid-cols-12 ${SPACING_TOKENS.gap.xs} flex-1 min-h-0 ${GLASS_TOKENS.medium} ${BORDER_TOKENS.medium} ${RADIUS_TOKENS.md} overflow-hidden ${SHADOW_TOKENS.lg}`,
@@ -65,7 +65,7 @@ export const CALENDAR_CONFIG = {
 
   // Mobile Calendar Styles
   mobileFilterButton: `${SIZE_TOKENS.controlHeight.md} ${RADIUS_TOKENS.full} !px-4 ${TEXT_SIZES.sm} ${FONT_WEIGHTS.semibold} ${BORDER_TOKENS.medium} bg-surface-card/70 shrink-0 whitespace-nowrap`,
-  mobileDateButton: `flex justify-between items-center ${RADIUS_TOKENS.full} ${SPACING_TOKENS.px.lg} bg-surface-card/30 ${BORDER_TOKENS.strong} ${COLOR_TOKENS.text.primary} ${SHADOW_TOKENS.inner} ${FONT_WEIGHTS.bold}`,
+  mobileDateButton: `flex justify-between items-center w-full ${SIZE_TOKENS.controlHeight.md} ${RADIUS_TOKENS.full} ${SPACING_TOKENS.px.lg} bg-surface-card/30 ${BORDER_TOKENS.strong} ${COLOR_TOKENS.text.primary} ${SHADOW_TOKENS.inner} ${FONT_WEIGHTS.bold}`,
   mobileEventsWrapper: `flex flex-col w-full ${SPACING_TOKENS.mt.sm} ${BORDER_TOKENS.ringSubtle} ${RADIUS_TOKENS.md} overflow-hidden ${GLASS_TOKENS.faint}`,
   mobileEventItem: `flex items-center justify-between ${SPACING_TOKENS.p.md} ${GLASS_TOKENS.subtle} hover:bg-surface-card/60 ${INTERACTION_TOKENS.base}`,
   mobileEventItemBorder: BORDER_TOKENS.dividerBottom,

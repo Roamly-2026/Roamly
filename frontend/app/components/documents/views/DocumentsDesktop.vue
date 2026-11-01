@@ -22,8 +22,8 @@
       <!-- DROPDOWN HEADER -->
       <div :class="LAYOUT_CONFIG.headerCenter">
         <UPopover v-model:open="isGroupDropdownOpen">
-          <BaseButton variant="ghost" :class="LAYOUT_CONFIG.mobileHeaderButton">
-            <div :class="LAYOUT_CONFIG.mobileHeaderTitleRow">
+          <BaseButton variant="ghost" :class="LAYOUT_CONFIG.headerDropdownButton">
+            <div :class="LAYOUT_CONFIG.headerDropdownTitleRow">
               <h1 :class="TYPOGRAPHY_CONFIG.pageTitle">
                 <ClientOnly :fallback="UI_TEXT.common.loading">
                   {{
@@ -35,7 +35,10 @@
               </h1>
               <UIcon
                 name="i-heroicons-chevron-down"
-                :class="[TYPOGRAPHY_CONFIG.iconBrandMd, isGroupDropdownOpen ? 'rotate-180' : '']"
+                :class="[
+                  TYPOGRAPHY_CONFIG.iconDropdownChevron,
+                  isGroupDropdownOpen ? 'rotate-180' : '',
+                ]"
               />
             </div>
           </BaseButton>

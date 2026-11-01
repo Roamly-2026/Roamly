@@ -48,7 +48,10 @@
               </h1>
               <UIcon
                 name="i-heroicons-chevron-down"
-                :class="[TYPOGRAPHY_CONFIG.iconBrandMd, isGroupDropdownOpen ? 'rotate-180' : '']"
+                :class="[
+                  TYPOGRAPHY_CONFIG.iconDropdownChevron,
+                  isGroupDropdownOpen ? 'rotate-180' : '',
+                ]"
               />
             </div>
             <p :class="TYPOGRAPHY_CONFIG.pageSubtitle">

@@ -28,7 +28,7 @@
             <BaseButton
               v-if="isCurrentUserLeader"
               icon="i-heroicons-pencil"
-              variant="ghostBrandIconButton"
+              variant="ghostInverseIconButton"
               :tooltip="UI_TEXT.tooltips.editGroup"
               @click="groupsStore.openUpdateModal(groupInfos?.name || '')"
             />

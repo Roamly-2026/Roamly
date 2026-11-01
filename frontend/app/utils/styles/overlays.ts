@@ -50,8 +50,8 @@ export const DROPDOWN_MENU_CONFIG = {
 
 export const WIDE_DROPDOWN_MENU_CONFIG = {
   slots: {
-    content: `${MENU_APPEARANCES.content} ${SPACING_TOKENS.p.sm} ${SIZE_TOKENS.container.dropdownLg}`,
-    item: `flex items-start ${SPACING_TOKENS.gap.sm} w-full justify-start text-left ${SPACING_TOKENS.px.md} ${SPACING_TOKENS.py.sm} ${TEXT_SIZES.md} ${FONT_WEIGHTS.medium} ${COLOR_TOKENS.text.primarySoft} hover:${COLOR_TOKENS.text.primary} ${MENU_APPEARANCES.itemHighlight}`,
+    content: `${MENU_APPEARANCES.content} ${SPACING_TOKENS.p.sm} ${SIZE_TOKENS.container.dropdownLg} max-h-64 overflow-y-auto custom-scrollbar flex flex-col ${SPACING_TOKENS.gap.xs}`,
+    item: `flex items-center ${SPACING_TOKENS.gap.sm} w-full shrink-0 ${SIZE_TOKENS.controlHeight.md} justify-start text-left ${SPACING_TOKENS.px.md} ${SPACING_TOKENS.py.sm} ${TEXT_SIZES.sm} ${FONT_WEIGHTS.medium} ${COLOR_TOKENS.text.primarySoft} hover:${COLOR_TOKENS.text.primary} ${MENU_APPEARANCES.itemHighlight}`,
     itemLeadingIcon: `!w-6 !h-6 !text-btn-primary shrink-0`,
   },
 } as const;
