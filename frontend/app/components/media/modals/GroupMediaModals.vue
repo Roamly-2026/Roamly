@@ -242,6 +242,7 @@ import EventMapSelector from '~/components/events/map/EventMapSelector.client.vu
 
 const appConfig = useAppConfig();
 const mediaStore = useMediaModalsStore();
+const route = useRoute(); // Initialize route instance
 
 const isMapSelectorOpen = ref(false);
 const mapTarget = ref<'upload' | 'update'>('upload');
@@ -253,8 +254,8 @@ const isUpdating = ref(false);
 // Fallback to active media group ID when opening directly from Lightbox
 const activeGroupUuid = computed(() => 
   mediaStore.uploadGroupUuid || 
+  (route.query.groupId as string) || 
   mediaStore.mediaToUpdate?.group_id?.toString() || 
-  mediaStore.mediaToDelete?.group_id?.toString() || 
   ''
 );
 
