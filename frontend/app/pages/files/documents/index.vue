@@ -167,7 +167,7 @@ const openUploadModal = () => {
     toast.add({
       title: UI_TEXT.common.warning,
       description: UI_TEXT.errors.selectGroupFirst,
-      class: 'toast-error'
+      class: 'toast-error',
     });
   }
 };

@@ -99,9 +99,9 @@ const renderMarkers = () => {
 const initMap = () => {
   if (!mapContainer.value) {
     toast.add({
-        title: UI_TEXT.common.error,
-        description: UI_TEXT.map.initError,
-        class: 'toast-error'
+      title: UI_TEXT.common.error,
+      description: UI_TEXT.map.initError,
+      class: 'toast-error',
     });
 
     return;

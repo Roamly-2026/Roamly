@@ -3,11 +3,7 @@
   <header :class="[LAYOUT_CONFIG.headerBase, LAYOUT_CONFIG.headerSticky]">
     <!-- BACK BUTTON SECTION -->
     <div :class="LAYOUT_CONFIG.headerLeft">
-      <BaseButton
-        icon="i-heroicons-arrow-left"
-        variant="glassIconButton"
-        @click="handleBack"
-      />
+      <BaseButton icon="i-heroicons-arrow-left" variant="glassIconButton" @click="handleBack" />
     </div>
 
     <!-- LOGO SECTION -->

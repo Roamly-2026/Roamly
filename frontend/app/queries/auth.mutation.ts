@@ -20,7 +20,7 @@ export const useLoginUserMutation = (onSuccessCallback?: () => void) => {
       toast.add({
         title: UI_TEXT.auth.loginError,
         description: getErrorMessage(error),
-        class: 'toast-error'
+        class: 'toast-error',
       });
     },
   });
@@ -40,7 +40,7 @@ export const useVerifyEmailMutation = (options?: {
       toast.add({
         title: UI_TEXT.common.success,
         description: UI_TEXT.auth.verified,
-        class: 'toast-success'
+        class: 'toast-success',
       });
       options?.onSuccess?.();
     },
@@ -48,7 +48,7 @@ export const useVerifyEmailMutation = (options?: {
       toast.add({
         title: UI_TEXT.auth.verificationError,
         description: getErrorMessage(error),
-        class: 'toast-error'
+        class: 'toast-error',
       });
       options?.onError?.(error);
     },
@@ -67,7 +67,7 @@ export const useResendVerificationMutation = (options?: {
       toast.add({
         title: UI_TEXT.auth.emailSent,
         description: UI_TEXT.auth.emailSentDescription,
-        class: 'toast-success'
+        class: 'toast-success',
       });
       options?.onSuccess?.();
     },
@@ -75,7 +75,7 @@ export const useResendVerificationMutation = (options?: {
       toast.add({
         title: UI_TEXT.auth.emailError,
         description: getErrorMessage(error),
-        class: 'toast-error'
+        class: 'toast-error',
       });
       options?.onError?.(error);
     },

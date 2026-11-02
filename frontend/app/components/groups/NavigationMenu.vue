@@ -3,9 +3,9 @@
   <div
     v-if="isMobile"
     :class="[
-        'flex flex-row items-center justify-center w-full overflow-x-auto custom-scrollbar pb-1',
-        SPACING_TOKENS.gap.sm,
-        SPACING_TOKENS.pr.sm
+      'flex flex-row items-center justify-center w-full overflow-x-auto custom-scrollbar pb-1',
+      SPACING_TOKENS.gap.sm,
+      SPACING_TOKENS.pr.sm,
     ]"
   >
     <BaseButton
@@ -13,7 +13,7 @@
       :key="item.id"
       :icon="item.icon"
       :to="item.to"
-      :variant="activeTab === item.id ? 'glassIconButtonBrand' : 'glassIconButton'"      
+      :variant="activeTab === item.id ? 'glassIconButtonBrand' : 'glassIconButton'"
       :tooltip="item.label"
     />
   </div>
@@ -24,7 +24,7 @@
       v-for="item in navItems"
       :key="item.id"
       :icon="item.icon"
-      :variant="activeTab === item.id ? 'glassIconButtonBrand' : 'glassIconButton'"      
+      :variant="activeTab === item.id ? 'glassIconButtonBrand' : 'glassIconButton'"
       :to="item.to"
       :tooltip="item.label"
     />

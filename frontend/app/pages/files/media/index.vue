@@ -240,7 +240,7 @@ const handleUpload = async () => {
     toast.add({
       title: UI_TEXT.common.success,
       description: UI_TEXT.media.uploaded,
-      class: 'toast-success'
+      class: 'toast-success',
     });
     closeUploadModal();
   } catch {
@@ -269,7 +269,11 @@ const confirmDelete = async () => {
   try {
     await filesService.deleteGroupFile(selectedGroupUuid.value, fileToDelete.value.file_id);
     queryCache.invalidateQueries({ key: ['group-files', selectedGroupUuid.value] });
-    toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.media.deleted, class: 'toast-success'});
+    toast.add({
+      title: UI_TEXT.common.success,
+      description: UI_TEXT.media.deleted,
+      class: 'toast-success',
+    });
     isDeleteModalOpen.value = false;
     fileToDelete.value = null;
   } catch {
