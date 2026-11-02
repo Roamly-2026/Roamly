@@ -62,4 +62,8 @@
   --theme-status-error-bg: #fef2f2;
   --theme-status-error-border: #fca5a5;
   --theme-status-error-text: #7f1d1d;
+
+  /* Toasts */
+  --theme-toast-success-border: #7a9a82;
+  --theme-toast-error-border: #7f1d1d;
 }

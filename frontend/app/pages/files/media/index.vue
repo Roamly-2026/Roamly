@@ -237,7 +237,11 @@ const handleUpload = async () => {
 
     await filesService.uploadGroupMediaFile(selectedGroupUuid.value, formData);
     queryCache.invalidateQueries({ key: ['group-files', selectedGroupUuid.value] });
-    toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.media.uploaded });
+    toast.add({
+      title: UI_TEXT.common.success,
+      description: UI_TEXT.media.uploaded,
+      class: 'toast-success'
+    });
     closeUploadModal();
   } catch {
     uploadError.value = UI_TEXT.media.uploadFailed;
@@ -265,7 +269,7 @@ const confirmDelete = async () => {
   try {
     await filesService.deleteGroupFile(selectedGroupUuid.value, fileToDelete.value.file_id);
     queryCache.invalidateQueries({ key: ['group-files', selectedGroupUuid.value] });
-    toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.media.deleted });
+    toast.add({ title: UI_TEXT.common.success, description: UI_TEXT.media.deleted, class: 'toast-success'});
     isDeleteModalOpen.value = false;
     fileToDelete.value = null;
   } catch {

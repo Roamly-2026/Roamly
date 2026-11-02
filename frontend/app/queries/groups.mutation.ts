@@ -19,7 +19,7 @@ export const useCreateGroupMutation = (options?: MutationOptions) => {
       toast.add({
         title: UI_TEXT.common.success,
         description: UI_TEXT.groups.created,
-        color: 'success',
+        class: 'toast-success'
       });
       queryCache.invalidateQueries({ key: ['groups', 'list'] });
       options?.onSuccess?.();
@@ -28,7 +28,7 @@ export const useCreateGroupMutation = (options?: MutationOptions) => {
       toast.add({
         title: UI_TEXT.common.error,
         description: getErrorMessage(error),
-        color: 'error',
+        class: 'toast-error'
       });
       options?.onError?.(error);
     },
@@ -45,7 +45,7 @@ export const useDeleteGroupMutation = (options?: MutationOptions) => {
       toast.add({
         title: UI_TEXT.common.success,
         description: UI_TEXT.groups.deleted,
-        color: 'success',
+        class: 'toast-success'
       });
       queryCache.invalidateQueries({ key: ['groups', 'list'] });
       options?.onSuccess?.();
@@ -54,7 +54,7 @@ export const useDeleteGroupMutation = (options?: MutationOptions) => {
       toast.add({
         title: UI_TEXT.common.error,
         description: getErrorMessage(error),
-        color: 'error',
+        class: 'toast-error'
       });
       options?.onError?.(error);
     },
@@ -71,7 +71,7 @@ export const useJoinGroupMutation = (options?: MutationOptions) => {
       toast.add({
         title: UI_TEXT.common.success,
         description: UI_TEXT.groups.joined,
-        color: 'success',
+        class: 'toast-success'
       });
       queryCache.invalidateQueries({ key: ['groups', 'invites'] });
       queryCache.invalidateQueries({ key: ['groups', 'list'] });
@@ -81,7 +81,7 @@ export const useJoinGroupMutation = (options?: MutationOptions) => {
       toast.add({
         title: UI_TEXT.common.error,
         description: getErrorMessage(error),
-        color: 'error',
+        class: 'toast-error'
       });
       options?.onError?.(error);
     },
@@ -98,7 +98,7 @@ export const useLeaveGroupMutation = (options?: MutationOptions) => {
       toast.add({
         title: UI_TEXT.common.success,
         description: UI_TEXT.groups.left,
-        color: 'success',
+        class: 'toast-success'
       });
       queryCache.invalidateQueries({ key: ['groups', 'invites'] });
       queryCache.invalidateQueries({ key: ['groups', 'list'] });
@@ -108,7 +108,7 @@ export const useLeaveGroupMutation = (options?: MutationOptions) => {
       toast.add({
         title: UI_TEXT.common.error,
         description: getErrorMessage(error),
-        color: 'error',
+        class: 'toast-error'
       });
       options?.onError?.(error);
     },
@@ -126,7 +126,7 @@ export const useUpdateGroupMutation = (options?: MutationOptions) => {
       toast.add({
         title: UI_TEXT.common.success,
         description: UI_TEXT.groups.updated,
-        color: 'success',
+        class: 'toast-success'
       });
       queryCache.invalidateQueries({ key: ['groups', 'list'] });
       queryCache.invalidateQueries({ key: ['groups', 'infos', variables.groupUuid] });
@@ -136,7 +136,7 @@ export const useUpdateGroupMutation = (options?: MutationOptions) => {
       toast.add({
         title: UI_TEXT.common.error,
         description: getErrorMessage(error),
-        color: 'error',
+        class: 'toast-error'
       });
       options?.onError?.(error);
     },
@@ -158,7 +158,7 @@ export const useInviteUserMutation = (options?: MutationOptions) => {
       toast.add({
         title: UI_TEXT.common.success,
         description: UI_TEXT.groups.inviteSuccess,
-        color: 'success',
+        class: 'toast-success'
       });
       options?.onSuccess?.();
     },
@@ -166,7 +166,7 @@ export const useInviteUserMutation = (options?: MutationOptions) => {
       toast.add({
         title: UI_TEXT.common.error,
         description: getErrorMessage(error),
-        color: 'error',
+        class: 'toast-error'
       });
       options?.onError?.(error);
     },
@@ -184,7 +184,7 @@ export const useRemoveUserMutation = (options?: MutationOptions) => {
       toast.add({
         title: UI_TEXT.common.success,
         description: UI_TEXT.groups.removed,
-        color: 'success',
+        class: 'toast-success'
       });
       queryCache.invalidateQueries({ key: ['groups', 'infos', variables.groupUuid] });
       options?.onSuccess?.();
@@ -193,7 +193,7 @@ export const useRemoveUserMutation = (options?: MutationOptions) => {
       toast.add({
         title: UI_TEXT.common.error,
         description: getErrorMessage(error),
-        color: 'error',
+        class: 'toast-error'
       });
       options?.onError?.(error);
     },
@@ -211,7 +211,7 @@ export const usePromoteUserMutation = (options?: MutationOptions) => {
       toast.add({
         title: UI_TEXT.common.success,
         description: UI_TEXT.groups.promoted,
-        color: 'success',
+        class: 'toast-success'
       });
       queryCache.invalidateQueries({ key: ['groups', 'infos', variables.groupUuid] });
       options?.onSuccess?.();
@@ -220,7 +220,7 @@ export const usePromoteUserMutation = (options?: MutationOptions) => {
       toast.add({
         title: UI_TEXT.common.error,
         description: getErrorMessage(error),
-        color: 'error',
+        class: 'toast-error'
       });
       options?.onError?.(error);
     },
@@ -238,7 +238,7 @@ export const useDemoteUserMutation = (options?: MutationOptions) => {
       toast.add({
         title: UI_TEXT.common.success,
         description: UI_TEXT.groups.demoted,
-        color: 'success',
+        class: 'toast-success'
       });
       queryCache.invalidateQueries({ key: ['groups', 'infos', variables.groupUuid] });
       options?.onSuccess?.();
@@ -247,7 +247,7 @@ export const useDemoteUserMutation = (options?: MutationOptions) => {
       toast.add({
         title: UI_TEXT.common.error,
         description: getErrorMessage(error),
-        color: 'error',
+        class: 'toast-error'
       });
       options?.onError?.(error);
     },

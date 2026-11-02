@@ -17,7 +17,7 @@
 /* --- toast card --- */
 [data-reka-collection-item] {
   pointer-events: auto !important; /* card is clickable */
-  background-color: color-mix(in srgb, var(--color-surface-card) 95%, transparent) !important;
+  background-color: color-mix(in srgb, var(--color-surface-card) 45%, transparent) !important;
   backdrop-filter: blur(16px) !important;
   -webkit-backdrop-filter: blur(16px) !important;
   border: 2px solid var(--color-btn-primary) !important;
@@ -35,6 +35,15 @@
 
   /* slide in animation */
   animation: toastSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+[data-reka-collection-item].toast-error {
+  border-color: var(--theme-toast-error-border) !important;
+}
+
+/* --- toast success state --- */
+[data-reka-collection-item].toast-success {
+  border-color: var(--theme-toast-success-border) !important;
 }
 
 /* toast closing state */

@@ -336,7 +336,7 @@ const handleUpdate = async (event: FormSubmitEvent<UpdateFormState>) => {
     toast.add({
       title: UI_TEXT.common.success,
       description: UI_TEXT.documents.updated,
-      color: 'success',
+      class: 'toast-success'
     });
 
     closeUpdateModal();
@@ -346,7 +346,7 @@ const handleUpdate = async (event: FormSubmitEvent<UpdateFormState>) => {
     toast.add({
       title: UI_TEXT.common.error,
       description: getErrorMessage(err),
-      color: 'error',
+      class: 'toast-error'
     });
   } finally {
     isUpdating.value = false;

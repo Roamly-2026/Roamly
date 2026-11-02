@@ -2,32 +2,29 @@
   <!-- Mobile -->
   <div
     v-if="isMobile"
-    class="flex flex-row items-center justify-center gap-2 w-full overflow-x-auto custom-scrollbar pr-2 pb-1"
+    :class="[
+        'flex flex-row items-center justify-center w-full overflow-x-auto custom-scrollbar pb-1',
+        SPACING_TOKENS.gap.sm,
+        SPACING_TOKENS.pr.sm
+    ]"
   >
     <BaseButton
       v-for="item in navItems"
       :key="item.id"
       :icon="item.icon"
       :to="item.to"
-      variant="glassIconButton"
+      :variant="activeTab === item.id ? 'glassIconButtonBrand' : 'glassIconButton'"      
       :tooltip="item.label"
-      :class="[
-        'shrink-0',
-        activeTab === item.id
-          ? 'text-brand-500 bg-brand-50 dark:bg-brand-900/20'
-          : 'text-dark-text',
-      ]"
     />
   </div>
 
   <!-- Desktop -->
-  <div v-else class="flex items-center gap-2">
+  <div v-else :class="`flex items-center ${SPACING_TOKENS.gap.sm}`">
     <BaseButton
       v-for="item in navItems"
       :key="item.id"
       :icon="item.icon"
-      variant="glassIconButton"
-      :class="activeTab === item.id ? 'text-brand-500' : ''"
+      :variant="activeTab === item.id ? 'glassIconButtonBrand' : 'glassIconButton'"      
       :to="item.to"
       :tooltip="item.label"
     />

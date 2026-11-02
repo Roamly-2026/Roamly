@@ -5,7 +5,6 @@
 
 <script setup lang="ts">
 import L from 'leaflet';
-
 import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
 
 const defaultIconPrototype = L.Icon.Default.prototype as L.Icon & { _getIconUrl?: () => string };
@@ -29,6 +28,8 @@ const emit = defineEmits<{
 const mapContainer = ref<HTMLElement | null>(null);
 let map: L.Map | null = null;
 let markersGroup: L.LayerGroup | null = null;
+
+const toast = useToast();
 
 const getCustomPin = (visibility?: 'private' | 'public') => {
   const colorClass = visibility === 'private' ? 'red' : 'yellow';
@@ -73,7 +74,10 @@ const renderMarkers = () => {
     if (loc.title) {
       const typeLabel = loc.visibility === 'private' ? '(Private)' : '(Public)';
       marker.bindTooltip(
-        `<div class="font-sans text-center"><b>${loc.title}</b><br/><span class="text-xs opacity-70">${typeLabel}</span></div>`,
+        `<div class="text-center">
+            <span class="${FONT_WEIGHTS.bold} ${COLOR_TOKENS.text.primary}">${loc.title}</span><br/>
+            <span class="${TEXT_SIZES.xs} ${OPACITY_TOKENS.subtle} ${COLOR_TOKENS.text.primaryMuted}">${typeLabel}</span>
+        </div>`,
       );
     }
 
@@ -94,12 +98,16 @@ const renderMarkers = () => {
 
 const initMap = () => {
   if (!mapContainer.value) {
-    // ide nem lenne rossz egy toast
+    toast.add({
+        title: UI_TEXT.common.error,
+        description: UI_TEXT.map.initError,
+        class: 'toast-error'
+    });
+
     return;
   }
 
   map = L.map(mapContainer.value);
-  // map = L.map(mapContainer.value).setView([props.latitude, props.longitude], 15);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: UI_TEXT.map.attribution,

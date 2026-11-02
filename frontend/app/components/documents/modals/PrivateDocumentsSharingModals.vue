@@ -159,7 +159,7 @@ const handleRevokeAccess = (groupName: string) => {
     toast.add({
       title: UI_TEXT.common.error,
       description: UI_TEXT.errors.groupUuidNotFound,
-      color: 'error',
+      class: 'toast-error'
     });
     return;
   }

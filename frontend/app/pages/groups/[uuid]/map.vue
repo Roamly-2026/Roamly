@@ -4,18 +4,22 @@
     <ClientOnly>
       <template #fallback>
         <div class="fixed inset-0 flex items-center justify-center z-0">
-          <span class="opacity-50 font-medium">{{ UI_TEXT.common.loading }}</span>
+          <span :class="[OPACITY_TOKENS.subtle, FONT_WEIGHTS.medium]">
+            {{ UI_TEXT.common.loading }}
+          </span>
         </div>
       </template>
-      <div class="fixed inset-0 z-0 bg-surface-500/20">
+      <div :class="['fixed inset-0 z-0', GLASS_TOKENS.faint]">
         <MapDesktop
           v-if="!isLoading"
           :locations="mapCoordinates"
           @marker-click="handleMarkerClick"
         />
 
-        <div v-else-if="error">
-          <span :class="appConfig.typography.statusError">{{ UI_TEXT.common.error }}</span>
+        <div v-else-if="error" class="fixed inset-0 flex items-center justify-center z-0">
+          <span :class="TYPOGRAPHY_CONFIG.statusError">
+            {{ UI_TEXT.common.error }}
+          </span>
         </div>
       </div>
     </ClientOnly>
@@ -28,7 +32,6 @@
 /* --- IMPORTS --- */
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { useAppConfig } from '#imports';
 import { useProtectedPage } from '~/composables/useProtectedPage';
 import { useEventsQuery } from '~/queries/events.query';
 import { useEventsStore } from '~/stores/events.modals.store';
@@ -40,7 +43,6 @@ definePageMeta({ layout: 'general', middleware: ['auth'] });
 /* --- COMPOSABLES & STORES --- */
 useProtectedPage();
 const route = useRoute();
-const appConfig = useAppConfig();
 const eventsStore = useEventsStore();
 
 /* --- STATE & COMPUTED --- */

@@ -27,7 +27,7 @@ export const useCreateEventMutation = (
       toast.add({
         title: UI_TEXT.common.success,
         description: UI_TEXT.events.created,
-        color: 'success',
+        class: 'toast-success'
       });
       queryCache.invalidateQueries({ key: ['events', groupUuid.value ?? null] });
       queryCache.invalidateQueries({ key: ['events-dates', groupUuid.value ?? null] });
@@ -37,7 +37,7 @@ export const useCreateEventMutation = (
       toast.add({
         title: UI_TEXT.common.error,
         description: getErrorMessage(error),
-        color: 'error',
+        class: 'toast-error'
       });
       options?.onError?.(error);
     },
@@ -60,7 +60,7 @@ export const useDeleteEventMutation = (
       toast.add({
         title: UI_TEXT.common.success,
         description: UI_TEXT.events.deleted,
-        color: 'success',
+        class: 'toast-success'
       });
       queryCache.invalidateQueries({ key: ['events', groupUuid.value ?? null] });
       queryCache.invalidateQueries({ key: ['events-dates', groupUuid.value ?? null] });
@@ -70,7 +70,7 @@ export const useDeleteEventMutation = (
       toast.add({
         title: UI_TEXT.common.error,
         description: getErrorMessage(error),
-        color: 'error',
+        class: 'toast-error'
       });
       options?.onError?.(error);
     },
@@ -97,7 +97,7 @@ export const useAddParticipantsMutation = (
       toast.add({
         title: UI_TEXT.common.success,
         description: UI_TEXT.events.membersAdded,
-        color: 'success',
+        class: 'toast-success'
       });
       queryCache.invalidateQueries({ key: ['events', groupUuid.value ?? null] });
       options?.onSuccess?.();
@@ -106,7 +106,7 @@ export const useAddParticipantsMutation = (
       toast.add({
         title: UI_TEXT.common.error,
         description: getErrorMessage(error),
-        color: 'error',
+        class: 'toast-error'
       });
       options?.onError?.(error);
     },
@@ -129,7 +129,7 @@ export const useLeaveEventMutation = (
       toast.add({
         title: UI_TEXT.common.success,
         description: UI_TEXT.events.left,
-        color: 'success',
+        class: 'toast-success'
       });
       queryCache.invalidateQueries({ key: ['events', groupUuid.value ?? null] });
       options?.onSuccess?.();
@@ -138,7 +138,7 @@ export const useLeaveEventMutation = (
       toast.add({
         title: UI_TEXT.common.error,
         description: getErrorMessage(error),
-        color: 'error',
+        class: 'toast-error'
       });
       options?.onError?.(error);
     },
@@ -161,7 +161,7 @@ export const useRemoveParticipantMutation = (
       toast.add({
         title: UI_TEXT.common.success,
         description: UI_TEXT.events.participantRemoved,
-        color: 'success',
+        class: 'toast-success'
       });
       queryCache.invalidateQueries({ key: ['events', groupUuid.value ?? null] });
       options?.onSuccess?.();
@@ -170,7 +170,7 @@ export const useRemoveParticipantMutation = (
       toast.add({
         title: UI_TEXT.common.error,
         description: getErrorMessage(error),
-        color: 'error',
+        class: 'toast-error'
       });
       options?.onError?.(error);
     },
