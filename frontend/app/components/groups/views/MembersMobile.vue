@@ -1,33 +1,11 @@
 <!-- frontend/app/components/groups/views/MembersMobile.vue -->
 <template>
   <div :class="LAYOUT_CONFIG.pageWrapper">
+    <!-- HEADER & SEARCH SECTION -->
     <div :class="LAYOUT_CONFIG.cardContent">
-      <!-- NAV ACTIONS -->
+      <!-- NAV ACTIONS (Members, Calendar, Photos, Docs) -->
       <div :class="LAYOUT_CONFIG.mobileTopActions">
-        <BaseButton
-          icon="i-heroicons-users"
-          variant="glassIconButtonBrand"
-          :to="membersRoute"
-          :tooltip="UI_TEXT.tooltips.members"
-        />
-        <BaseButton
-          icon="i-heroicons-calendar"
-          variant="glassIconButton"
-          :to="eventsRoute"
-          :tooltip="UI_TEXT.tooltips.calendar"
-        />
-        <BaseButton
-          icon="i-heroicons-photo"
-          variant="glassIconButton"
-          :to="mediaRoute"
-          :tooltip="UI_TEXT.tooltips.photos"
-        />
-        <BaseButton
-          icon="i-heroicons-document-text"
-          variant="glassIconButton"
-          :to="documentsRoute"
-          :tooltip="UI_TEXT.tooltips.documents"
-        />
+        <NavigationMenu :group-uuid="groupUuid" active-tab="members" :is-mobile="true" />
       </div>
 
       <!-- TITLE & ACTIONS -->
@@ -348,20 +326,6 @@ const todayUpcomingEvents = computed(() => {
     .sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime())
     .slice(0, 3);
 });
-
-// Contextual nav
-const membersRoute = computed(() =>
-  groupUuid.value ? `/groups/${groupUuid.value}/members` : '/groups',
-);
-const eventsRoute = computed(() =>
-  groupUuid.value ? `/events?groupId=${groupUuid.value}` : '/events',
-);
-const mediaRoute = computed(() =>
-  groupUuid.value ? `/files/media?groupId=${groupUuid.value}` : '/files/media',
-);
-const documentsRoute = computed(() =>
-  groupUuid.value ? `/files/documents?groupId=${groupUuid.value}` : '/files/documents',
-);
 
 const isCurrentUser = (email: string) => {
   return props.currentUserEmail === email;

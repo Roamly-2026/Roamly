@@ -2,30 +2,7 @@
 <template>
   <div :class="LAYOUT_CONFIG.mobilePageWrapper">
     <div :class="LAYOUT_CONFIG.mobileTopActions">
-      <BaseButton
-        icon="i-heroicons-users"
-        variant="glassIconButton"
-        :to="membersRoute"
-        :tooltip="UI_TEXT.tooltips.members"
-      />
-      <BaseButton
-        icon="i-heroicons-calendar"
-        variant="glassIconButtonBrand"
-        :to="eventsRoute"
-        :tooltip="UI_TEXT.tooltips.calendar"
-      />
-      <BaseButton
-        icon="i-heroicons-photo"
-        variant="glassIconButton"
-        :to="mediaRoute"
-        :tooltip="UI_TEXT.tooltips.photos"
-      />
-      <BaseButton
-        icon="i-heroicons-document-text"
-        variant="glassIconButton"
-        :to="documentsRoute"
-        :tooltip="UI_TEXT.tooltips.documents"
-      />
+      <NavigationMenu :group-uuid="selectedGroupUuid" active-tab="events" :is-mobile="true" />
     </div>
 
     <div :class="LAYOUT_CONFIG.mobileMainWrapper">
@@ -250,11 +227,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import type { GroupOutDto } from '~/types/groups.type';
 import type { EventCreatorDto, UiDay, UiEvent } from '~/types/events.type';
 
-const props = defineProps<{
+defineProps<{
   userGroupsList: GroupOutDto[];
   selectedGroupUuid?: string;
   selectedGroupDetails?: GroupOutDto;
@@ -302,20 +279,4 @@ const clearFilters = () => {
   filterStartDate.value = '';
   filterEndDate.value = '';
 };
-
-// Contextual navigation routes scoped to the currently active group
-const membersRoute = computed(() =>
-  props.selectedGroupUuid ? `/groups/${props.selectedGroupUuid}/members` : '/groups',
-);
-const eventsRoute = computed(() =>
-  props.selectedGroupUuid ? `/events?groupId=${props.selectedGroupUuid}` : '/events',
-);
-const mediaRoute = computed(() =>
-  props.selectedGroupUuid ? `/files/media?groupId=${props.selectedGroupUuid}` : '/files/media',
-);
-const documentsRoute = computed(() =>
-  props.selectedGroupUuid
-    ? `/files/documents?groupId=${props.selectedGroupUuid}`
-    : '/files/documents',
-);
 </script>

@@ -39,36 +39,7 @@
         </div>
 
         <div :class="LAYOUT_CONFIG.headerActionRight">
-          <BaseButton
-            icon="i-heroicons-map"
-            variant="glassIconButton"
-            :to="mapRoute"
-            :tooltip=UI_TEXT.tooltips.groupMap
-          />
-          <BaseButton
-            icon="i-heroicons-users"
-            variant="glassIconButtonBrand"
-            :to="membersRoute"
-            :tooltip="UI_TEXT.tooltips.members"
-          />
-          <BaseButton
-            icon="i-heroicons-calendar"
-            variant="glassIconButton"
-            :to="eventsRoute"
-            :tooltip="UI_TEXT.tooltips.calendar"
-          />
-          <BaseButton
-            icon="i-heroicons-photo"
-            variant="glassIconButton"
-            :to="mediaRoute"
-            :tooltip="UI_TEXT.tooltips.photos"
-          />
-          <BaseButton
-            icon="i-heroicons-document-text"
-            variant="glassIconButton"
-            :to="documentsRoute"
-            :tooltip="UI_TEXT.tooltips.documents"
-          />
+          <NavigationMenu :group-uuid="groupUuid" active-tab="members" :is-mobile="false" />
         </div>
       </div>
 
@@ -361,23 +332,6 @@ const todayUpcomingEvents = computed(() => {
     .sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime())
     .slice(0, 3);
 });
-
-// Contextual nav
-const membersRoute = computed(() =>
-  groupUuid.value ? `/groups/${groupUuid.value}/members` : '/groups',
-);
-const eventsRoute = computed(() =>
-  groupUuid.value ? `/events?groupId=${groupUuid.value}` : '/events',
-);
-const mediaRoute = computed(() =>
-  groupUuid.value ? `/files/media?groupId=${groupUuid.value}` : '/files/media',
-);
-const documentsRoute = computed(() =>
-  groupUuid.value ? `/files/documents?groupId=${groupUuid.value}` : '/files/documents',
-);
-const mapRoute = computed(() =>
-  groupUuid.value ? `/groups/${groupUuid.value}/map` : '/groups',
-);
 
 const isCurrentUser = (email: string) => {
   return props.currentUserEmail === email;

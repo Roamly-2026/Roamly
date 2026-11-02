@@ -42,6 +42,7 @@ export const UI_TEXT = {
     uploadedBy: 'Uploaded by:',
     uploadedAt: 'Uploaded at:',
     megabytes: 'MB',
+    menu: 'Menu',
   },
   auth: {
     loginTitle: 'Log in',
