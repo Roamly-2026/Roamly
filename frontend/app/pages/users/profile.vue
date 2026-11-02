@@ -168,7 +168,7 @@ const handleView = async (doc: PrivateDocumentMetadata) => {
     toast.add({
       title: UI_TEXT.common.error,
       description: getErrorMessage(err),
-      color: 'error',
+      class: 'toast-error',
     });
   }
 };
@@ -195,7 +195,7 @@ const handleDownload = async (doc: PrivateDocumentMetadata) => {
     toast.add({
       title: UI_TEXT.common.error,
       description: getErrorMessage(err),
-      color: 'error',
+      class: 'toast-error',
     });
   }
 };

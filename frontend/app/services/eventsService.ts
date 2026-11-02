@@ -27,10 +27,18 @@ export const eventsService = {
     return res.data || [];
   },
 
-  async getEvents(groupUuid: string, startDate?: string, endDate?: string): Promise<EventOutDto[]> {
+  async getEvents(
+    groupUuid: string,
+    startDate?: string,
+    endDate?: string,
+    limit?: number,
+    cursor?: string,
+  ): Promise<EventOutDto[]> {
     const query = new URLSearchParams();
     if (startDate) query.append('start_date', startDate);
     if (endDate) query.append('end_date', endDate);
+    if (limit) query.append('limit', limit.toString());
+    if (cursor) query.append('cursor', cursor);
 
     const qStr = query.toString();
     const queryPart = qStr ? `?${qStr}` : '';

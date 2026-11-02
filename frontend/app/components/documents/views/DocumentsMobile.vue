@@ -2,30 +2,7 @@
 <template>
   <div :class="LAYOUT_CONFIG.mobilePageWrapper">
     <div :class="LAYOUT_CONFIG.mobileTopActions">
-      <BaseButton
-        icon="i-heroicons-users"
-        variant="glassIconButton"
-        :tooltip="UI_TEXT.common.members"
-        :to="membersRoute"
-      />
-      <BaseButton
-        icon="i-heroicons-calendar"
-        variant="glassIconButton"
-        :tooltip="UI_TEXT.common.calendar"
-        :to="eventsRoute"
-      />
-      <BaseButton
-        icon="i-heroicons-photo"
-        variant="glassIconButton"
-        :tooltip="UI_TEXT.common.photos"
-        :to="mediaRoute"
-      />
-      <BaseButton
-        icon="i-heroicons-document-text"
-        variant="glassIconButtonBrand"
-        :tooltip="UI_TEXT.common.documents"
-        :to="documentsRoute"
-      />
+      <NavigationMenu :group-uuid="selectedGroup" active-tab="documents" :is-mobile="true" />
     </div>
 
     <div :class="LAYOUT_CONFIG.mobileMainWrapper">
@@ -429,20 +406,6 @@ const selectGroup = (uuid: string) => {
   selectedGroup.value = uuid;
   isGroupDropdownOpen.value = false;
 };
-
-// Contextual navigation routes scoped to the currently active group
-const membersRoute = computed(() =>
-  selectedGroup.value ? `/groups/${selectedGroup.value}/members` : '/groups',
-);
-const eventsRoute = computed(() =>
-  selectedGroup.value ? `/events?groupId=${selectedGroup.value}` : '/events',
-);
-const mediaRoute = computed(() =>
-  selectedGroup.value ? `/files/media?groupId=${selectedGroup.value}` : '/files/media',
-);
-const documentsRoute = computed(() =>
-  selectedGroup.value ? `/files/documents?groupId=${selectedGroup.value}` : '/files/documents',
-);
 
 // Filters private member documents by specific category and case-insensitive filename search
 const filteredMemberDocuments = (typeValue: string): PrivateDocumentMetadata[] => {

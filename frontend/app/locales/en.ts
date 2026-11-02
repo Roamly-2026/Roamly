@@ -42,6 +42,7 @@ export const UI_TEXT = {
     uploadedBy: 'Uploaded by:',
     uploadedAt: 'Uploaded at:',
     megabytes: 'MB',
+    menu: 'Menu',
   },
   auth: {
     loginTitle: 'Log in',
@@ -298,6 +299,7 @@ export const UI_TEXT = {
     searchAddress: 'Search for address...',
     attribution:
       '&copy; <a href=https://leafletjs.com/>Leaflet</a> | <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    initError: 'Could not initialize map!',
   },
   documents: {
     deleteTitle: 'Delete Document',
@@ -424,6 +426,7 @@ export const UI_TEXT = {
     promoteUser: 'Promote user to leader',
     removeUser: 'Remove user from group',
     addEvent: 'Add Event',
+    groupMap: 'View events on map',
   },
   errors: {
     createGroup: 'An error occurred while creating the group. Please try again.',

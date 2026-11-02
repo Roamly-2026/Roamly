@@ -1,31 +1,9 @@
 <!-- frontend/app/components/media/views/MediaMobile.vue -->
 <template>
   <div :class="LAYOUT_CONFIG.mobilePageWrapper">
+    <!-- TOP NAV BUTTONS -->
     <div :class="LAYOUT_CONFIG.mobileTopActions">
-      <BaseButton
-        icon="i-heroicons-users"
-        variant="glassIconButton"
-        :to="membersRoute"
-        :tooltip="UI_TEXT.common.members"
-      />
-      <BaseButton
-        icon="i-heroicons-calendar"
-        variant="glassIconButton"
-        :to="eventsRoute"
-        :tooltip="UI_TEXT.common.calendar"
-      />
-      <BaseButton
-        icon="i-heroicons-photo"
-        variant="glassIconButtonBrand"
-        :to="mediaRoute"
-        :tooltip="UI_TEXT.common.photos"
-      />
-      <BaseButton
-        icon="i-heroicons-document-text"
-        variant="glassIconButton"
-        :to="documentsRoute"
-        :tooltip="UI_TEXT.common.documents"
-      />
+      <NavigationMenu :group-uuid="selectedGroup" active-tab="media" :is-mobile="true" />
     </div>
 
     <div :class="LAYOUT_CONFIG.mobileMainWrapper">
@@ -236,20 +214,6 @@ const selectGroup = (uuid: string) => {
   selectedGroup.value = uuid;
   isGroupDropdownOpen.value = false;
 };
-
-// Contextual nav routes
-const membersRoute = computed(() =>
-  selectedGroup.value ? `/groups/${selectedGroup.value}/members` : '/groups',
-);
-const eventsRoute = computed(() =>
-  selectedGroup.value ? `/events?groupId=${selectedGroup.value}` : '/events',
-);
-const mediaRoute = computed(() =>
-  selectedGroup.value ? `/files/media?groupId=${selectedGroup.value}` : '/files/media',
-);
-const documentsRoute = computed(() =>
-  selectedGroup.value ? `/files/documents?groupId=${selectedGroup.value}` : '/files/documents',
-);
 
 const isImage = (mimeType: string) => mimeType?.startsWith('image/');
 

@@ -19,7 +19,7 @@ export const useCreateUserMutation = (options?: MutationOptions) => {
       toast.add({
         title: UI_TEXT.common.success,
         description: UI_TEXT.auth.registerSuccess,
-        color: 'success',
+        class: 'toast-success',
       });
       options?.onSuccess?.();
     },
@@ -27,7 +27,7 @@ export const useCreateUserMutation = (options?: MutationOptions) => {
       toast.add({
         title: UI_TEXT.common.error,
         description: getErrorMessage(error),
-        color: 'error',
+        class: 'toast-error',
       });
       options?.onError?.(error);
     },
@@ -45,7 +45,7 @@ export const useUpdateProfileMutation = (options?: MutationOptions) => {
       toast.add({
         title: UI_TEXT.common.success,
         description: UI_TEXT.profile.updated,
-        color: 'success',
+        class: 'toast-success',
       });
       queryCache.invalidateQueries({ key: ['users', 'current'] });
       options?.onSuccess?.();
@@ -54,7 +54,7 @@ export const useUpdateProfileMutation = (options?: MutationOptions) => {
       toast.add({
         title: UI_TEXT.common.error,
         description: getErrorMessage(error),
-        color: 'error',
+        class: 'toast-error',
       });
       options?.onError?.(error);
     },
@@ -71,7 +71,7 @@ export const useChangePasswordMutation = (options?: MutationOptions) => {
       toast.add({
         title: UI_TEXT.common.success,
         description: UI_TEXT.profile.passwordChanged,
-        color: 'success',
+        class: 'toast-success',
       });
       options?.onSuccess?.();
     },
@@ -79,7 +79,7 @@ export const useChangePasswordMutation = (options?: MutationOptions) => {
       toast.add({
         title: UI_TEXT.common.error,
         description: getErrorMessage(error),
-        color: 'error',
+        class: 'toast-error',
       });
       options?.onError?.(error);
     },
@@ -95,7 +95,7 @@ export const useDeleteProfileMutation = (options?: MutationOptions) => {
       toast.add({
         title: UI_TEXT.common.success,
         description: UI_TEXT.profile.deleted,
-        color: 'success',
+        class: 'toast-success',
       });
       options?.onSuccess?.();
     },
@@ -103,7 +103,7 @@ export const useDeleteProfileMutation = (options?: MutationOptions) => {
       toast.add({
         title: UI_TEXT.common.error,
         description: getErrorMessage(error),
-        color: 'error',
+        class: 'toast-error',
       });
       options?.onError?.(error);
     },
@@ -120,7 +120,7 @@ export const useUploadProfilePictureMutation = (options?: MutationOptions) => {
       toast.add({
         title: UI_TEXT.common.success,
         description: UI_TEXT.profile.pictureUploaded,
-        color: 'success',
+        class: 'toast-success',
       });
       queryCache.invalidateQueries({ key: ['users', 'current'] });
       options?.onSuccess?.();
@@ -129,7 +129,7 @@ export const useUploadProfilePictureMutation = (options?: MutationOptions) => {
       toast.add({
         title: UI_TEXT.common.error,
         description: getErrorMessage(error),
-        color: 'error',
+        class: 'toast-error',
       });
       options?.onError?.(error);
     },

@@ -164,7 +164,11 @@ const openUploadModal = () => {
   if (selectedGroupUuid.value) {
     documentsStore.openUploadModal(selectedGroupUuid.value);
   } else {
-    toast.add({ title: UI_TEXT.common.warning, description: UI_TEXT.errors.selectGroupFirst });
+    toast.add({
+      title: UI_TEXT.common.warning,
+      description: UI_TEXT.errors.selectGroupFirst,
+      class: 'toast-error',
+    });
   }
 };
 
