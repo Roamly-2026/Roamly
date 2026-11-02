@@ -11,7 +11,7 @@
       </template>
       <div :class="['fixed inset-0 z-0', GLASS_TOKENS.faint]">
         <MapDesktop
-          v-if="!isLoading"
+          v-if="!isLoading && !error"
           :locations="mapCoordinates"
           @marker-click="handleMarkerClick"
         />

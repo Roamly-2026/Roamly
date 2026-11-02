@@ -299,7 +299,7 @@ export const UI_TEXT = {
     searchAddress: 'Search for address...',
     attribution:
       '&copy; <a href=https://leafletjs.com/>Leaflet</a> | <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    initError: 'Could not initialie map!',
+    initError: 'Could not initialize map!',
   },
   documents: {
     deleteTitle: 'Delete Document',

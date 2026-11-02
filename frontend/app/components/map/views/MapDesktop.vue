@@ -44,6 +44,17 @@ const getCustomPin = (visibility?: 'private' | 'public') => {
   });
 };
 
+// escapes the event title
+const escapeHtml = (unsafeText?: string) => {
+  if (!unsafeText) return '';
+  return unsafeText
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+};
+
 const renderMarkers = () => {
   if (!map) {
     return;
@@ -73,9 +84,11 @@ const renderMarkers = () => {
     // small bubble with the event title
     if (loc.title) {
       const typeLabel = loc.visibility === 'private' ? '(Private)' : '(Public)';
+      const safeLocationTitle = escapeHtml(loc.title);
+
       marker.bindTooltip(
         `<div class="text-center">
-            <span class="${FONT_WEIGHTS.bold} ${COLOR_TOKENS.text.primary}">${loc.title}</span><br/>
+            <span class="${FONT_WEIGHTS.bold} ${COLOR_TOKENS.text.primary}">${safeLocationTitle}</span><br/>
             <span class="${TEXT_SIZES.xs} ${OPACITY_TOKENS.subtle} ${COLOR_TOKENS.text.primaryMuted}">${typeLabel}</span>
         </div>`,
       );
