@@ -1,6 +1,6 @@
 <!-- frontend/app/components/files/FilesListView.vue -->
 <template>
-  <div :class="['flex flex-col w-full', SPACING_TOKENS.gap.sm]">
+  <div :class="['flex flex-col', LAYOUT_CONFIG.fullWidth, SPACING_TOKENS.gap.sm]">
     <FilesListHeader :sort-key="sortKey" :sort-order="sortOrder" @sort="toggleSort" />
 
     <FilesListRow

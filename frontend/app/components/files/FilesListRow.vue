@@ -2,7 +2,13 @@
 <template>
   <div
     :class="[
-      'w-full bg-surface-500/70 backdrop-blur-xl rounded-2xl ring-1 ring-surface-500/50 shadow-sm hover:bg-surface-500/90 transition-all',
+      'w-full',
+      GLASS_TOKENS.default,
+      RADIUS_TOKENS.lg,
+      BORDER_TOKENS.ringCard,
+      SHADOW_TOKENS.sm,
+      INTERACTION_TOKENS.base,
+      'hover:bg-surface-card/90',
       SPACING_TOKENS.px.lg,
       SPACING_TOKENS.py.md,
     ]"
@@ -17,26 +23,27 @@
           SPACING_TOKENS.px.xs,
         ]"
       >
-        <div class="w-9 h-9 rounded-xl bg-surface-600/30 flex items-center justify-center shrink-0">
+        <div
+          :class="[
+            SIZE_TOKENS.avatar.sm,
+            RADIUS_TOKENS.md,
+            COLOR_TOKENS.surface.subtle,
+            'flex items-center justify-center shrink-0',
+          ]"
+        >
           <UIcon
             :name="getFileIcon(file.mime_type, file.file_name)"
-            class="w-5 h-5 text-brand-500"
+            :class="TYPOGRAPHY_CONFIG.iconBrandSm"
           />
         </div>
-        <span class="font-bold text-sm text-dark-text truncate" :title="file.file_name">
+        <span :class="[TYPOGRAPHY_CONFIG.cardTitleSm, 'truncate']" :title="file.file_name">
           {{ file.file_name }}
         </span>
       </div>
 
       <!-- Type tag (2 cols) -->
       <div class="col-span-2 flex items-center min-w-0">
-        <span
-          :class="[
-            'text-xs font-semibold rounded-full bg-surface-600/30 text-dark-text/80 truncate max-w-full',
-            SPACING_TOKENS.px.sm,
-            SPACING_TOKENS.py.xs,
-          ]"
-        >
+        <span :class="[TYPOGRAPHY_CONFIG.badgeRole, 'truncate max-w-full']">
           {{
             file.documents?.document_type ||
             getFileExtension(file.file_name) ||
@@ -47,7 +54,7 @@
       </div>
 
       <!-- Size (2 cols) -->
-      <div class="col-span-2 text-sm text-dark-text/80 font-medium">
+      <div :class="['col-span-2', TYPOGRAPHY_CONFIG.bodySmSoft]">
         {{ formatFileSize(file.file_size) }}
       </div>
 
@@ -58,14 +65,14 @@
           :alt="fileUser?.username"
           class="w-7! h-7! text-xs shrink-0 rounded-full object-cover"
         />
-        <span class="text-sm font-medium text-dark-text truncate">
+        <span :class="[TYPOGRAPHY_CONFIG.bodySmSoft, 'truncate']">
           {{ fileUser?.username || UI_TEXT.common.unknown }}
         </span>
       </div>
 
       <!-- Date + Actions (2 cols) -->
       <div class="col-span-2 flex items-center justify-between">
-        <span class="text-xs text-dark-text/70 shrink-0">
+        <span :class="[TYPOGRAPHY_CONFIG.captionMuted, 'shrink-0']">
           {{ new Date(file.created_at).toLocaleDateString() }}
         </span>
 
@@ -100,20 +107,21 @@
         <div :class="['flex items-center min-w-0 flex-1', SPACING_TOKENS.gap.sm]">
           <UIcon
             :name="getFileIcon(file.mime_type, file.file_name)"
-            class="w-5 h-5 text-brand-500 shrink-0"
+            :class="[TYPOGRAPHY_CONFIG.iconBrandSm, 'shrink-0']"
           />
-          <span class="font-bold text-sm text-dark-text truncate">
+          <span :class="[TYPOGRAPHY_CONFIG.cardTitleSm, 'truncate']">
             {{ file.file_name }}
           </span>
         </div>
-        <span class="text-xs text-dark-text/70 shrink-0">
+        <span :class="[TYPOGRAPHY_CONFIG.captionMuted, 'shrink-0']">
           {{ formatFileSize(file.file_size) }}
         </span>
       </div>
 
       <div
         :class="[
-          'flex items-center justify-between border-t border-dark-text/10 text-xs',
+          'flex items-center justify-between text-xs',
+          BORDER_TOKENS.dividerTop,
           SPACING_TOKENS.pt.xs,
         ]"
       >
@@ -123,7 +131,7 @@
             :alt="fileUser?.username"
             class="w-6! h-6! text-[10px] shrink-0 rounded-full object-cover"
           />
-          <span class="text-dark-text/80 truncate">
+          <span :class="[TYPOGRAPHY_CONFIG.bodySmMutedTruncate]">
             {{ fileUser?.username || UI_TEXT.common.unknown }}
           </span>
         </div>
