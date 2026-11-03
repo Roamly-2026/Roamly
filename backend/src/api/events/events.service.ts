@@ -612,6 +612,12 @@ export const setEventRsvp = async (
     throw new ForbiddenError('Only users who can see the event can respond to it!');
   }
 
+  // responses can only be changed until the event ends
+
+  if (existingEvent.end_time < new Date()) {
+    throw new BadRequestError('You can not respond to an event that has already ended!');
+  }
+
   return prisma.event_rsvps.upsert({
     where: {
       event_id_user_id: {
