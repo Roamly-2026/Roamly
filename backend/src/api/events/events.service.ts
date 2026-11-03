@@ -1,8 +1,9 @@
 import prisma from '../../prisma';
 import { event_participants, events, group_profiles, users } from '@prisma/client';
 import { BadRequestError, ForbiddenError } from '../../utils/ServerError';
-import { EVENT_VISIBILITY } from '../../constants/events.constants';
+import { EVENT_RSVP_STATUS, EVENT_VISIBILITY } from '../../constants/events.constants';
 import { ROLES } from '../../constants/roles.constants';
+import { EventListItem, EventRsvpMember, EventWithRsvps } from '../../types/events.types';
 import * as sendMail from '../shared/email.service';
 import { logger } from '../../config/logger.config';
 
@@ -643,7 +644,7 @@ export const listEvents = async (
     limit?: number;
     cursor?: string;
   },
-): Promise<events[]> => {
+): Promise<EventWithRsvps[]> => {
   const userGroupInfo = await prisma.group_profiles.findFirst({
     where: {
       users: {
@@ -760,10 +761,42 @@ export const listEvents = async (
           email: true,
         },
       },
+      event_rsvps: {
+        where: {
+          OR: [{ user_id: userGroupInfo.users.user_id }, { status: EVENT_RSVP_STATUS.GOING }],
+        },
+        orderBy: { created_at: 'asc' },
+        select: {
+          user_id: true,
+          status: true,
+          group_profiles: {
+            select: {
+              users: {
+                select: {
+                  uuid: true,
+                  username: true,
+                  profile_image_url: true,
+                },
+              },
+            },
+          },
+        },
+      },
     },
   });
 
-  return eventList;
+  // adding the user's own response and the members who are going
+
+  return eventList.map((event: EventListItem) => ({
+    ...event,
+    my_rsvp_status:
+      event.event_rsvps.find(
+        (rsvp: { user_id: number }) => rsvp.user_id === userGroupInfo.users.user_id,
+      )?.status ?? null,
+    going_members: event.event_rsvps
+      .filter((rsvp: { status: string }) => rsvp.status === EVENT_RSVP_STATUS.GOING)
+      .map((rsvp: { group_profiles: { users: EventRsvpMember } }) => rsvp.group_profiles.users),
+  }));
 };
 
 export const listEventStartDates = async (
