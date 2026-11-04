@@ -52,6 +52,13 @@ router.get(
 );
 
 router.get(
+  '/:groupUuid/my-permissions',
+  validateData(zodSchemas.groupUuidValidationSchema, 'params'),
+  requireGroupAccess,
+  groupsController.getMyPermissions,
+);
+
+router.get(
   '/:groupUuid',
   validateData(zodSchemas.groupUuidValidationSchema, 'params'),
   requireGroupAccess,

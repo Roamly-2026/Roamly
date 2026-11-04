@@ -3,8 +3,8 @@ import { hashPassword, validatePassword } from '../../utils/password.utils';
 import { userProfileInfo } from '../../types/users.types';
 import { BadRequestError } from '../../utils/ServerError';
 import { deletePublicFileFromCloud, uploadPublicFileToCloud } from '../../utils/storage.util';
-import { ROLES } from '../../constants/roles.constants';
 import { Prisma } from '@prisma/client';
+import { SYSTEM_ROLES } from '../../constants/roles.constants';
 
 export const getProfile = async (uuid: string): Promise<userProfileInfo> => {
   const user = await prisma.users.findFirstOrThrow({
@@ -55,8 +55,15 @@ export const deleteProfile = async (userUuid: string): Promise<void> => {
       user_id: user.user_id,
     },
     include: {
-      groups: true,
-      roles: true,
+      groups: {
+        include: {
+          _count: {
+            select: {
+              group_profiles: true,
+            },
+          },
+        },
+      },
     },
   });
 
@@ -66,37 +73,38 @@ export const deleteProfile = async (userUuid: string): Promise<void> => {
   for (const profile of usersAllProfiles) {
     const group = profile.groups;
 
-    if (group.current_size > 1) {
-      if (profile.roles.type === ROLES.LEADER) {
-        const numberOfLeaders = await prisma.group_profiles.count({
-          where: {
-            group_id: group.group_id,
-            roles: {
-              type: ROLES.LEADER,
-            },
-          },
-        });
-
-        if (numberOfLeaders === 1) {
-          throw new BadRequestError(
-            `Cannot delete profile. You are the only leader of the group "${group.name}". Please promote another member to leader or delete the group first.`,
-          );
-        }
+    if (profile.system_role === SYSTEM_ROLES.OWNER) {
+      if (group._count.group_profiles > 1) {
+        throw new BadRequestError(
+          `Cannot delete profile. You own the group "${group.name}", which still has other members. Delete the group first.`,
+        );
       }
 
-      multiMemberGroupsToDecrement.push(group.group_id);
-    } else {
       singleMemberGroupsToDelete.push(group.group_id);
+    } else {
+      multiMemberGroupsToDecrement.push(group.group_id);
     }
   }
 
   const transactionOperations: Prisma.PrismaPromise<unknown>[] = [];
 
-  if (singleMemberGroupsToDelete.length > 0) {
+  for (const groupId of singleMemberGroupsToDelete) {
     transactionOperations.push(
-      prisma.groups.deleteMany({
+      //  delete is needed instead of delete many because delete many does not show erorrs, just gives back a 0
+      prisma.groups.delete({
         where: {
-          group_id: { in: singleMemberGroupsToDelete },
+          group_id: groupId,
+          group_profiles: {
+            some: {
+              user_id: user.user_id,
+              system_role: SYSTEM_ROLES.OWNER,
+            },
+            none: {
+              user_id: {
+                not: user.user_id,
+              },
+            },
+          },
         },
       }),
     );
@@ -106,7 +114,14 @@ export const deleteProfile = async (userUuid: string): Promise<void> => {
     transactionOperations.push(
       prisma.groups.updateMany({
         where: {
-          group_id: { in: multiMemberGroupsToDecrement },
+          group_id: {
+            in: multiMemberGroupsToDecrement,
+          },
+          group_profiles: {
+            some: {
+              user_id: user.user_id,
+            },
+          },
         },
         data: {
           current_size: { decrement: 1 },
