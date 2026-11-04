@@ -36,6 +36,7 @@ export const BUTTON_APPEARANCES = {
   // Ghost styles
   ghostDanger: `${COLOR_TOKENS.text.primaryMuted} hover:!text-red-500 [&>span]:transition-colors hover:[&>span]:!text-red-500 hover:bg-red-500/10 ${RADIUS_TOKENS.full}`,
   ghostBrand: `${COLOR_TOKENS.text.primaryMuted} hover:!text-btn-primary [&>span]:transition-colors hover:[&>span]:!text-btn-primary hover:bg-btn-primary/10 ${RADIUS_TOKENS.full}`,
+  ghostSecondary: `${COLOR_TOKENS.text.primaryMuted} hover:!text-btn-secondary [&>span]:transition-colors hover:[&>span]:!text-btn-secondary hover:bg-btn-secondary/10 ${RADIUS_TOKENS.full}`,
   ghostInverse: `${COLOR_TOKENS.text.inverse} ${OPACITY_TOKENS.soft} hover:${OPACITY_TOKENS.full} hover:bg-surface-card/20 ${RADIUS_TOKENS.full}`,
 
   // Danger styles
@@ -72,6 +73,7 @@ export const BUTTON_VARIANTS = {
 
   smallGhostBrandButton: `${BASE_BUTTON} ${BUTTON_SIZES.sm} ${BORDER_TOKENS.ringSubtle} ${BUTTON_APPEARANCES.ghostBrand}`,
   smallGhostDangerButton: `${BASE_BUTTON} ${BUTTON_SIZES.sm} ${BORDER_TOKENS.ringSubtle} ${BUTTON_APPEARANCES.ghostDanger}`,
+  smallGhostSecondaryButton: `${BASE_BUTTON} ${BUTTON_SIZES.sm} ${BORDER_TOKENS.ringSubtle} ${BUTTON_APPEARANCES.ghostSecondary}`,
 
   smallDangerActionButton: `${BASE_BUTTON} ${BUTTON_SIZES.sm} ${BUTTON_APPEARANCES.danger}`,
   actionDangerButton: `${BASE_BUTTON} ${BUTTON_SIZES.lg} ${BUTTON_APPEARANCES.dangerElevated}`,

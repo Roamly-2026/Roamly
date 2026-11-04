@@ -12,6 +12,7 @@
       <div :class="['fixed inset-0 z-0', GLASS_TOKENS.faint]">
         <MapDesktop
           v-if="!isPending && !error"
+          :key="groupUuid"
           :locations="mapCoordinates"
           @marker-click="handleMarkerClick"
         />

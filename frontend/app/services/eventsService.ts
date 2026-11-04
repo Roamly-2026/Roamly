@@ -94,4 +94,11 @@ export const eventsService = {
       body: { status },
     });
   },
+
+  async removeRsvp(groupUuid: string, eventUuid: string): Promise<void> {
+    const api = useApi();
+    return await api(`/events/${groupUuid}/${eventUuid}/rsvp`, {
+      method: 'DELETE',
+    });
+  },
 };

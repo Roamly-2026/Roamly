@@ -185,8 +185,12 @@ export const useSetEventRsvpMutation = (
   const toast = useToast();
 
   return useMutation({
-    mutation: (data: { eventUuid: string; status: RsvpStatus }) => {
+    mutation: (data: { eventUuid: string; status: RsvpStatus | null }) => {
       if (!groupUuid.value) throw new Error(UI_TEXT.errors.groupUuidRequired);
+      // a null status removes the user's response
+      if (!data.status) {
+        return eventsService.removeRsvp(groupUuid.value, data.eventUuid);
+      }
       return eventsService.setRsvp(groupUuid.value, data.eventUuid, data.status);
     },
     // the highlighted button is the feedback

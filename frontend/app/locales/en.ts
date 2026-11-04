@@ -292,6 +292,8 @@ export const UI_TEXT = {
     rsvpLabel: 'Attendance:',
     rsvpGoing: "I'll be there",
     rsvpNotGoing: "I won't be there",
+    rsvpMaybe: 'Maybe',
+    rsvpRemove: 'Click again to remove your response',
     goingSuffix: ' going',
     noOneGoing: 'No one has confirmed yet.',
   },

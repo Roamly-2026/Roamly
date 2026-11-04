@@ -172,8 +172,27 @@
                     ? 'smallPrimaryActionButton'
                     : 'smallGhostBrandButton'
                 "
-                :disabled="eventsStore.previewEvent.isExpired"
+                :tooltip="
+                  myRsvpStatus === EVENT_RSVP_STATUS.GOING ? UI_TEXT.events.rsvpRemove : undefined
+                "
+                :disabled="eventsStore.previewEvent.isExpired || setRsvpMutation.isLoading.value"
                 @click="handleRsvp(EVENT_RSVP_STATUS.GOING)"
+              />
+              <BaseButton
+                icon="i-heroicons-question-mark-circle"
+                :label="UI_TEXT.events.rsvpMaybe"
+                :class="CALENDAR_CONFIG.previewRsvpButton"
+                :ui="{ leadingIcon: CALENDAR_CONFIG.previewRsvpButtonIcon }"
+                :variant="
+                  myRsvpStatus === EVENT_RSVP_STATUS.MAYBE
+                    ? 'smallAccentActionButton'
+                    : 'smallGhostSecondaryButton'
+                "
+                :tooltip="
+                  myRsvpStatus === EVENT_RSVP_STATUS.MAYBE ? UI_TEXT.events.rsvpRemove : undefined
+                "
+                :disabled="eventsStore.previewEvent.isExpired || setRsvpMutation.isLoading.value"
+                @click="handleRsvp(EVENT_RSVP_STATUS.MAYBE)"
               />
               <BaseButton
                 icon="i-heroicons-x-mark"
@@ -185,7 +204,12 @@
                     ? 'smallDangerActionButton'
                     : 'smallGhostDangerButton'
                 "
-                :disabled="eventsStore.previewEvent.isExpired"
+                :tooltip="
+                  myRsvpStatus === EVENT_RSVP_STATUS.NOT_GOING
+                    ? UI_TEXT.events.rsvpRemove
+                    : undefined
+                "
+                :disabled="eventsStore.previewEvent.isExpired || setRsvpMutation.isLoading.value"
                 @click="handleRsvp(EVENT_RSVP_STATUS.NOT_GOING)"
               />
             </div>
@@ -381,24 +405,29 @@ const setRsvpMutation = useSetEventRsvpMutation(
 );
 
 // the modal shows a copy of the event, so it is updated here right away
+// the modal shows a copy of the event, so it is updated here right away
 const handleRsvp = (status: RsvpStatus) => {
   const event = eventsStore.previewEvent;
   const user = currentUser.value;
-  if (!event || !user || event.my_rsvp_status === status) return;
+  // one request at a time, so a failed earlier request can not overwrite a later choice
+  if (!event || !user || setRsvpMutation.isLoading.value) return;
+
+  // clicking the selected button again removes the response
+  const newStatus = event.my_rsvp_status === status ? null : status;
 
   previousRsvp = { status: event.my_rsvp_status, members: event.going_members };
 
   const otherMembers = event.going_members.filter((m) => m.uuid !== user.uuid);
-  event.my_rsvp_status = status;
+  event.my_rsvp_status = newStatus;
   event.going_members =
-    status === EVENT_RSVP_STATUS.GOING
+    newStatus === EVENT_RSVP_STATUS.GOING
       ? [
           ...otherMembers,
           { uuid: user.uuid, username: user.username, profile_image_url: user.profile_image_url },
         ]
       : otherMembers;
 
-  setRsvpMutation.mutate({ eventUuid: event.uuid, status });
+  setRsvpMutation.mutate({ eventUuid: event.uuid, status: newStatus });
 };
 </script>
 
