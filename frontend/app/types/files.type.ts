@@ -6,6 +6,13 @@ export type PrivateDocumentType = 'ID' | 'PASSPORT' | 'DRIVING_LICENSE' | 'OTHER
 export type GroupDocumentType =
   'TICKET' | 'BOOKING_CONFIRMATION' | 'HOTEL_VOUCHER' | 'GUEST_REGISTRATION_CARD' | 'OTHER';
 
+export interface FileUserDto {
+  uuid: string;
+  username: string;
+  email: string;
+  profile_image_url: string | null;
+}
+
 export interface DocumentDto {
   document_id: number;
   document_type: string;
@@ -36,22 +43,15 @@ export interface PrivateDocumentMetadata extends FileDto {
   documents: DocumentDto | null;
   // Present when fetched via the leader-only group endpoint
   // (getAllPrivateDocumentsMetadataOfAllUsersInAGroup).
-  owner?: {
-    uuid: string;
-    username: string;
-    email: string;
-    profile_image_url: string | null;
-  };
+  creator?: FileUserDto;
+
+  owner?: FileUserDto;
 }
 
 export interface GroupFile extends FileDto {
   documents: DocumentDto | null;
   media_files: MediaDto | null;
-  creator: {
-    email: string;
-    username: string;
-    uuid: string;
-  };
+  creator: FileUserDto;
   download_url?: string;
 }
 

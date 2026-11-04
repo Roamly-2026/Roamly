@@ -7,6 +7,8 @@ import {
   GroupFile,
   PaginatedGroupFiles,
   privateDocumentMetadata,
+  creatorSelect,
+  GroupMemberPrivateDocument,
 } from '../../types/files.types';
 import { ROLES } from '../../constants/roles.constants';
 import * as FILE_CONSTANTS from '../../constants/files.constants';
@@ -180,6 +182,7 @@ export const getAllPrivateDocumentsMetadataOfAUser = async (
     },
     include: {
       documents: true,
+      creator: creatorSelect,
     },
     orderBy: {
       created_at: 'desc',
@@ -948,13 +951,7 @@ export const getGroupFiles = async (
     include: {
       documents: true,
       media_files: true,
-      creator: {
-        select: {
-          email: true,
-          username: true,
-          uuid: true,
-        },
-      },
+      creator: creatorSelect,
     },
 
     orderBy: [{ created_at: 'desc' }, { file_id: 'desc' }],
@@ -1006,7 +1003,7 @@ export const getAllPrivateDocumentsMetadataOfAllUsersInAGroup = async (
     documentType?: string;
     targetUserUuid?: string;
   },
-): Promise<privateDocumentMetadata[]> => {
+): Promise<GroupMemberPrivateDocument[]> => {
   const userGroupInfo = await prisma.group_profiles.findFirst({
     where: {
       users: {
@@ -1049,14 +1046,7 @@ export const getAllPrivateDocumentsMetadataOfAllUsersInAGroup = async (
     },
 
     include: {
-      owner: {
-        select: {
-          uuid: true,
-          username: true,
-          email: true,
-          profile_image_url: true,
-        },
-      },
+      owner: creatorSelect,
       documents: true,
 
       file_shares: {
