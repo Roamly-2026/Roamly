@@ -103,6 +103,17 @@ class GroupsController extends BaseController {
     });
   });
 
+  public getMyPermissions = this.handleAsync((_req: Request, res: Response): void => {
+    const { systemRole, customRole, customPermissions, effectivePermissions } =
+      res.locals.permissions!;
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Your permissions in the group:',
+      data: { systemRole, customRole, customPermissions, effectivePermissions },
+    });
+  });
+
   public listAllInfosOfOneGroup = this.handleAsync(
     async (req: Request, res: Response): Promise<void> => {
       const context = res.locals.permissions!;
