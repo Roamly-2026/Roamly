@@ -89,13 +89,6 @@ class EventsController extends BaseController {
   public listEvents = this.handleAsync(async (req: Request, res: Response): Promise<void> => {
     const context = res.locals.permissions!;
 
-    const { start_date, end_date, title, limit, cursor } = req.query as {
-      start_date?: string;
-      end_date?: string;
-      title?: string;
-      limit?: number;
-      cursor?: string;
-    };
     const filters = req.query as unknown as ListEventsQuery;
 
     const eventList = await eventService.listEvents(context, filters);

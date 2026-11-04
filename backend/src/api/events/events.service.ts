@@ -1,6 +1,6 @@
 import prisma from '../../prisma';
-import { event_participants, events, group_profiles, Prisma, users } from '@prisma/client';
-import { BadRequestError, ForbiddenError } from '../../utils/ServerError';
+import { Prisma } from '@prisma/client';
+import { BadRequestError } from '../../utils/ServerError';
 import { EVENT_VISIBILITY } from '../../constants/events.constants';
 import * as sendMail from '../shared/email.service';
 import { logger } from '../../config/logger.config';
@@ -542,11 +542,3 @@ export const listEventStartDates = async (context: PermissionContext): Promise<s
 
   return uniqueDates;
 };
-
-function userGroupInfoValidate(userGroupInfo: group_profiles | null): asserts userGroupInfo {
-  if (!userGroupInfo) {
-    throw new ForbiddenError(
-      'User either is not part of the group, or the group or the user does not exist!',
-    );
-  }
-}
