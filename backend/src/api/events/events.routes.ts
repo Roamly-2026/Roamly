@@ -51,6 +51,12 @@ router.put(
   eventsController.setEventRsvp,
 );
 
+router.delete(
+  '/:groupUuid/:eventUuid/rsvp',
+  validateData(zodSchemas.groupEventUuidParamSchema, 'params'),
+  eventsController.removeEventRsvp,
+);
+
 router.get(
   '/:groupUuid',
   validateData(zodSchemas.groupUuidParamSchema, 'params'),

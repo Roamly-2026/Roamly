@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client';
+import { EventRsvpStatus } from '../constants/events.constants';
 
 export type EventRsvpMember = Prisma.usersGetPayload<{
   select: {
@@ -49,7 +50,7 @@ export type EventListItem = Prisma.eventsGetPayload<{
   };
 }>;
 
-export type EventWithRsvps = EventListItem & {
-  my_rsvp_status: string | null;
+export type EventWithRsvps = Omit<EventListItem, 'event_rsvps'> & {
+  my_rsvp_status: EventRsvpStatus | null;
   going_members: EventRsvpMember[];
 };

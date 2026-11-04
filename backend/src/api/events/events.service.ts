@@ -1,7 +1,11 @@
 import prisma from '../../prisma';
 import { event_participants, events, group_profiles, users } from '@prisma/client';
 import { BadRequestError, ForbiddenError } from '../../utils/ServerError';
-import { EVENT_RSVP_STATUS, EVENT_VISIBILITY } from '../../constants/events.constants';
+import {
+  EVENT_RSVP_STATUS,
+  EVENT_VISIBILITY,
+  EventRsvpStatus,
+} from '../../constants/events.constants';
 import { ROLES } from '../../constants/roles.constants';
 import { EventListItem, EventRsvpMember, EventWithRsvps } from '../../types/events.types';
 import * as sendMail from '../shared/email.service';
@@ -559,83 +563,44 @@ export const setEventRsvp = async (
   userUuid: string,
   groupUuid: string,
   eventUuid: string,
-  status: string,
-): Promise<{ status: string }> => {
-  const userGroupInfo = await prisma.group_profiles.findFirst({
-    where: {
-      users: {
-        uuid: userUuid,
-      },
-      groups: {
-        uuid: groupUuid,
-      },
-    },
-
-    include: {
-      users: true,
-      groups: true,
-      roles: true,
-    },
-  });
-
-  userGroupInfoValidate(userGroupInfo);
-
-  if (userGroupInfo.roles.type !== ROLES.LEADER && userGroupInfo.roles.type !== ROLES.MEMBER) {
-    throw new ForbiddenError('User must be part of the group to respond to events in it!');
-  }
-
-  const existingEvent = await prisma.events.findUniqueOrThrow({
-    where: {
-      uuid: eventUuid,
-      groups: {
-        uuid: groupUuid,
-      },
-    },
-
-    include: {
-      visibility: true,
-      event_participants: {
-        where: {
-          user_id: userGroupInfo.users.user_id,
-        },
-      },
-    },
-  });
-
-  const canSeeEvent =
-    userGroupInfo.roles.type === ROLES.LEADER ||
-    existingEvent.creator_id === userGroupInfo.users.user_id ||
-    existingEvent.visibility.name === EVENT_VISIBILITY.PUBLIC ||
-    existingEvent.event_participants.length > 0;
-
-  if (!canSeeEvent) {
-    throw new ForbiddenError('Only users who can see the event can respond to it!');
-  }
-
-  // responses can only be changed until the event ends
-
-  if (existingEvent.end_time < new Date()) {
-    throw new BadRequestError('You can not respond to an event that has already ended!');
-  }
+  status: EventRsvpStatus,
+): Promise<{ status: EventRsvpStatus }> => {
+  const { userId, eventId, groupId } = await validateRsvpAccess(userUuid, groupUuid, eventUuid);
 
   return prisma.event_rsvps.upsert({
     where: {
       event_id_user_id: {
-        event_id: existingEvent.event_id,
-        user_id: userGroupInfo.users.user_id,
+        event_id: eventId,
+        user_id: userId,
       },
     },
     update: {
       status,
     },
     create: {
-      event_id: existingEvent.event_id,
-      user_id: userGroupInfo.users.user_id,
-      group_id: existingEvent.group_id,
+      event_id: eventId,
+      user_id: userId,
+      group_id: groupId,
       status,
     },
     select: {
       status: true,
+    },
+  });
+};
+
+export const removeEventRsvp = async (
+  userUuid: string,
+  groupUuid: string,
+  eventUuid: string,
+): Promise<void> => {
+  const { userId, eventId } = await validateRsvpAccess(userUuid, groupUuid, eventUuid);
+
+  // deleteMany, so removing a response that does not exist is not an error
+  await prisma.event_rsvps.deleteMany({
+    where: {
+      event_id: eventId,
+      user_id: userId,
     },
   });
 };
@@ -793,13 +758,12 @@ export const listEvents = async (
 
   // adding the user's own response and the members who are going
 
-  return eventList.map((event: EventListItem) => ({
+  return eventList.map(({ event_rsvps, ...event }: EventListItem) => ({
     ...event,
     my_rsvp_status:
-      event.event_rsvps.find(
-        (rsvp: { user_id: number }) => rsvp.user_id === userGroupInfo.users.user_id,
-      )?.status ?? null,
-    going_members: event.event_rsvps
+      event_rsvps.find((rsvp: { user_id: number }) => rsvp.user_id === userGroupInfo.users.user_id)
+        ?.status ?? null,
+    going_members: event_rsvps
       .filter((rsvp: { status: string }) => rsvp.status === EVENT_RSVP_STATUS.GOING)
       .map((rsvp: { group_profiles: { users: EventRsvpMember } }) => rsvp.group_profiles.users),
   }));
@@ -881,4 +845,73 @@ function userGroupInfoValidate(userGroupInfo: group_profiles | null): asserts us
       'User either is not part of the group, or the group or the user does not exist!',
     );
   }
+}
+
+// a user can respond to an event if they can see it and it has not ended yet
+async function validateRsvpAccess(
+  userUuid: string,
+  groupUuid: string,
+  eventUuid: string,
+): Promise<{ userId: number; eventId: number; groupId: number }> {
+  const userGroupInfo = await prisma.group_profiles.findFirst({
+    where: {
+      users: {
+        uuid: userUuid,
+      },
+      groups: {
+        uuid: groupUuid,
+      },
+    },
+
+    include: {
+      users: true,
+      groups: true,
+      roles: true,
+    },
+  });
+
+  userGroupInfoValidate(userGroupInfo);
+
+  if (userGroupInfo.roles.type !== ROLES.LEADER && userGroupInfo.roles.type !== ROLES.MEMBER) {
+    throw new ForbiddenError('User must be part of the group to respond to events in it!');
+  }
+
+  const existingEvent = await prisma.events.findUniqueOrThrow({
+    where: {
+      uuid: eventUuid,
+      groups: {
+        uuid: groupUuid,
+      },
+    },
+
+    include: {
+      visibility: true,
+      event_participants: {
+        where: {
+          user_id: userGroupInfo.users.user_id,
+        },
+      },
+    },
+  });
+
+  const canSeeEvent =
+    userGroupInfo.roles.type === ROLES.LEADER ||
+    existingEvent.creator_id === userGroupInfo.users.user_id ||
+    existingEvent.visibility.name === EVENT_VISIBILITY.PUBLIC ||
+    existingEvent.event_participants.length > 0;
+
+  if (!canSeeEvent) {
+    throw new ForbiddenError('Only users who can see the event can respond to it!');
+  }
+
+  // responses can only be changed until the event ends
+  if (existingEvent.end_time < new Date()) {
+    throw new BadRequestError('You can not respond to an event that has already ended!');
+  }
+
+  return {
+    userId: userGroupInfo.users.user_id,
+    eventId: existingEvent.event_id,
+    groupId: existingEvent.group_id,
+  };
 }
