@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import * as FILE_CONSTANTS from '../../constants/files.constants';
-import { ROLES } from '../../constants/roles.constants';
 
 export const privateDocumentDataSchema = z
   .object({
@@ -35,9 +34,7 @@ export const groupUuidValidationSchema = z.object({
 });
 
 export const sharingUpdateSchema = z.object({
-  accessLevel: z.enum([ROLES.LEADER, ROLES.MEMBER], {
-    message: `Access level parameter is required and must be either ${ROLES.LEADER} or ${ROLES.MEMBER}!`,
-  }),
+  audience: z.enum(FILE_CONSTANTS.DOCUMENT_AUDIENCE),
 });
 
 export const groupDocumentDataSchema = z
@@ -259,3 +256,6 @@ export const getAllFilterQuerySchema = z.object({
 
   targetUserUuid: z.uuid('Target user query param must be a valid uuid!').optional(),
 });
+
+export type PaginatedFilesQuery = z.infer<typeof paginatedQuerySchema>;
+export type SharedDocumentsFilter = z.infer<typeof getAllFilterQuerySchema>;
