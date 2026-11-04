@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { BaseController } from '../../utils/BaseController';
 import * as fileService from './files.service';
 import * as FILE_CONSTANTS from '../../constants/files.constants';
+import type { PaginatedFilesQuery, SharedDocumentsFilter } from './files.validation';
 
 class FilesController extends BaseController {
   public uploadPrivateDocument = this.handleAsync(
@@ -122,13 +123,13 @@ class FilesController extends BaseController {
 
       const fileId = parseInt(req.params.fileId as string, 10);
 
-      const { groupUuid, accessLevel } = req.body;
+      const { groupUuid, audience } = req.body;
 
       const sharingInformation = await fileService.shareDocumentsWithGroup(
         user.uuid,
         groupUuid,
         fileId,
-        accessLevel,
+        audience,
       );
 
       res.status(201).json({
@@ -156,19 +157,15 @@ class FilesController extends BaseController {
 
   public updateSharingConditions = this.handleAsync(
     async (req: Request, res: Response): Promise<void> => {
-      const user = res.locals.user!;
+      const context = res.locals.permissions!;
+      const { audience } = req.body;
 
       const fileId = parseInt(req.params.fileId as string, 10);
 
-      const groupUuid = req.params.groupUuid as string;
-
-      const { accessLevel } = req.body;
-
       const updatedSharingConditions = await fileService.updateSharingConditions(
-        user.uuid,
-        groupUuid,
+        context,
         fileId,
-        accessLevel,
+        audience,
       );
 
       res.status(200).json({
@@ -200,9 +197,8 @@ class FilesController extends BaseController {
 
   public uploadGroupDocument = this.handleAsync(
     async (req: Request, res: Response): Promise<void> => {
-      const user = res.locals.user!;
+      const context = res.locals.permissions!;
       const file = req.file;
-      const groupUuid = req.params.groupUuid as string;
       const { document_type, issue_date, expiry_date } = req.body;
 
       if (!file) {
@@ -215,8 +211,7 @@ class FilesController extends BaseController {
       }
 
       const uploadedDocument = await fileService.uploadGroupDocument(
-        user.uuid,
-        groupUuid,
+        context,
         file,
         document_type,
         issue_date,
@@ -233,11 +228,9 @@ class FilesController extends BaseController {
 
   public uploadGroupMediaFile = this.handleAsync(
     async (req: Request, res: Response): Promise<void> => {
-      const user = res.locals.user!;
+      const context = res.locals.permissions!;
 
       const file = req.file;
-
-      const groupUuid = req.params.groupUuid as string;
 
       const { description } = req.body;
 
@@ -250,12 +243,7 @@ class FilesController extends BaseController {
         return;
       }
 
-      const uploadedMedia = await fileService.uploadGroupMediaFile(
-        user.uuid,
-        groupUuid,
-        file,
-        description,
-      );
+      const uploadedMedia = await fileService.uploadGroupMediaFile(context, file, description);
 
       res.status(201).json({
         status: 'success',
@@ -267,9 +255,7 @@ class FilesController extends BaseController {
 
   public updateGroupDocument = this.handleAsync(
     async (req: Request, res: Response): Promise<void> => {
-      const user = res.locals.user!;
-
-      const groupUuid = req.params.groupUuid as string;
+      const context = res.locals.permissions!;
 
       const fileId = parseInt(req.params.fileId as string, 10);
 
@@ -278,8 +264,7 @@ class FilesController extends BaseController {
       const { document_type, issue_date, expiry_date } = req.body;
 
       const updatedGroupDocument = await fileService.updateGroupDocument(
-        user.uuid,
-        groupUuid,
+        context,
         fileId,
         document_type,
         file,
@@ -297,9 +282,7 @@ class FilesController extends BaseController {
 
   public updateGroupMediaFile = this.handleAsync(
     async (req: Request, res: Response): Promise<void> => {
-      const user = res.locals.user!;
-
-      const groupUuid = req.params.groupUuid as string;
+      const context = res.locals.permissions!;
 
       const fileId = parseInt(req.params.fileId as string, 10);
 
@@ -308,8 +291,7 @@ class FilesController extends BaseController {
       const { description } = req.body;
 
       const updatedGroupMedia = await fileService.updateGroupMediaFile(
-        user.uuid,
-        groupUuid,
+        context,
         fileId,
         file,
         description,
@@ -324,13 +306,11 @@ class FilesController extends BaseController {
   );
 
   public deleteGroupFile = this.handleAsync(async (req: Request, res: Response): Promise<void> => {
-    const user = res.locals.user!;
-
-    const groupUuid = req.params.groupUuid as string;
+    const context = res.locals.permissions!;
 
     const fileId = parseInt(req.params.fileId as string, 10);
 
-    await fileService.deleteGroupFile(user.uuid, groupUuid, fileId);
+    await fileService.deleteGroupFile(context, fileId);
 
     res.status(200).json({
       status: 'success',
@@ -339,23 +319,11 @@ class FilesController extends BaseController {
   });
 
   public getGroupFiles = this.handleAsync(async (req: Request, res: Response): Promise<void> => {
-    const user = res.locals.user!;
+    const context = res.locals.permissions!;
 
-    const groupUuid = req.params.groupUuid as string;
+    const { limit, cursor, type } = req.query as unknown as PaginatedFilesQuery;
 
-    const limit = req.query.limit as unknown as number;
-
-    const cursor = req.query.cursor as unknown as number | undefined;
-
-    const type = req.query.type as unknown as string;
-
-    const paginatedFiles = await fileService.getGroupFiles(
-      user.uuid,
-      groupUuid,
-      limit,
-      cursor,
-      type,
-    );
+    const paginatedFiles = await fileService.getGroupFiles(context, limit, cursor, type);
 
     res.status(200).json({
       status: 'success',
@@ -366,21 +334,12 @@ class FilesController extends BaseController {
 
   public getAllPrivateDocumentsMetadataOfAllUsersInAGroup = this.handleAsync(
     async (req: Request, res: Response): Promise<void> => {
-      const user = res.locals.user!;
+      const context = res.locals.permissions!;
 
-      const groupUuid = req.params.groupUuid as string;
-
-      const filters = {
-        documentType: req.query.documentType as string | undefined,
-        targetUserUuid: req.query.targetUserUuid as string | undefined,
-      };
+      const filters = req.query as unknown as SharedDocumentsFilter;
 
       const listOfAllPrivateDocuments =
-        await fileService.getAllPrivateDocumentsMetadataOfAllUsersInAGroup(
-          user.uuid,
-          groupUuid,
-          filters,
-        );
+        await fileService.getAllPrivateDocumentsMetadataOfAllUsersInAGroup(context, filters);
 
       res.status(200).json({
         status: 'success',

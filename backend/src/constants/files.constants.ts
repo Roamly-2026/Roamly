@@ -1,3 +1,5 @@
+import { DocumentAudience } from '@prisma/client';
+
 export const OWNERSHIP = {
   PRIVATE: 'PRIVATE',
   GROUP: 'GROUP',
@@ -25,3 +27,7 @@ export const URL_TYPE = {
 } as const;
 
 export type urlType = (typeof URL_TYPE)[keyof typeof URL_TYPE];
+
+export const DOCUMENT_AUDIENCE = DocumentAudience;
+
+export type { DocumentAudience } from '@prisma/client';

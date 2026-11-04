@@ -6,6 +6,18 @@ datasource db {
   provider = "postgresql"
 }
 
+enum SystemRole {
+  OWNER
+  ADMIN
+  MEMBER
+  CUSTOM
+}
+
+enum DocumentAudience {
+  GROUP_MEMBERS
+  DOCUMENT_REVIEWERS
+}
+
 model event_participants {
   event_id Int
   user_id  Int
@@ -43,14 +55,16 @@ model visibilities {
 }
 
 model group_profiles {
-  user_id     Int
-  group_id    Int
-  role_id     Int
-  nickname    String? @unique @db.VarChar(64)
-  description String? @db.VarChar(255)
-  groups      groups  @relation(fields: [group_id], references: [group_id], onDelete: Cascade, onUpdate: NoAction)
-  roles       roles   @relation(fields: [role_id], references: [role_id], onUpdate: NoAction)
-  users       users   @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+  user_id            Int
+  group_id           Int
+  system_role        SystemRole @default(MEMBER)
+  custom_role_id     Int?
+  custom_permissions Json       @default("{\"allow\":[],\"deny\":[]}") @db.JsonB
+  nickname           String?    @unique @db.VarChar(64)
+  description        String?    @db.VarChar(255)
+  groups             groups     @relation(fields: [group_id], references: [group_id], onDelete: Cascade, onUpdate: NoAction)
+  users              users      @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+  custom_role        roles?     @relation(fields: [custom_role_id, group_id], references: [role_id, group_id], onDelete: NoAction, onUpdate: NoAction)
 
   @@id([user_id, group_id])
 }
@@ -66,6 +80,10 @@ model groups {
   file_shares    file_shares[]
   files          files[]
   group_profiles group_profiles[]
+
+  groupInvites group_invites[]
+
+  roles roles[]
 }
 
 model media_files {
@@ -74,10 +92,33 @@ model media_files {
   files       files   @relation(fields: [file_id], references: [file_id], onDelete: Cascade, onUpdate: NoAction)
 }
 
+model group_invites {
+  user_id        Int
+  group_id       Int
+  invited_by     Int?
+  system_role    SystemRole @default(MEMBER)
+  custom_role_id Int?
+  created_at     DateTime   @default(now()) @db.Timestamp(6)
+  groups         groups     @relation(fields: [group_id], references: [group_id], onDelete: Cascade, onUpdate: NoAction)
+  invited_user   users      @relation("ReceivedInvites", fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+  inviter        users?     @relation("SentInvites", fields: [invited_by], references: [user_id], onDelete: SetNull, onUpdate: NoAction)
+  custom_role    roles?     @relation(fields: [custom_role_id, group_id], references: [role_id, group_id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([user_id, group_id])
+}
+
 model roles {
-  role_id        Int              @id @default(autoincrement())
-  type           String           @unique @db.VarChar(255)
+  role_id     Int      @id @default(autoincrement())
+  uuid        String   @unique @default(uuid()) @db.Uuid
+  group_id    Int
+  name        String   @db.VarChar(255)
+  permissions String[] @default([])
+
+  groups         groups           @relation(fields: [group_id], references: [group_id], onDelete: Cascade, onUpdate: NoAction)
   group_profiles group_profiles[]
+  group_invites  group_invites[]
+
+  @@unique([role_id, group_id])
 }
 
 model users {
@@ -96,6 +137,9 @@ model users {
   uploaded_files     files[]              @relation("FilesUploadedByUser")
   owned_files        files[]              @relation("FilesOwnedByUser")
   group_profiles     group_profiles[]
+
+  received_invites group_invites[] @relation("ReceivedInvites")
+  sent_invites     group_invites[] @relation("SentInvites")
 }
 
 model documents {
@@ -128,14 +172,14 @@ model files {
 }
 
 model file_shares {
-  file_id      Int
-  group_id     Int
-  shared_by    Int?
-  shared_at    DateTime @default(now()) @db.Timestamp(6)
-  access_level String   @default("ALL") @db.VarChar(32)
-  files        files    @relation(fields: [file_id], references: [file_id], onDelete: Cascade, onUpdate: NoAction)
-  groups       groups   @relation(fields: [group_id], references: [group_id], onDelete: Cascade, onUpdate: NoAction)
-  users        users?   @relation(fields: [shared_by], references: [user_id], onUpdate: NoAction)
+  file_id   Int
+  group_id  Int
+  shared_by Int?
+  shared_at DateTime         @default(now()) @db.Timestamp(6)
+  audience  DocumentAudience @default(GROUP_MEMBERS)
+  files     files            @relation(fields: [file_id], references: [file_id], onDelete: Cascade, onUpdate: NoAction)
+  groups    groups           @relation(fields: [group_id], references: [group_id], onDelete: Cascade, onUpdate: NoAction)
+  users     users?           @relation(fields: [shared_by], references: [user_id], onUpdate: NoAction)
 
   @@id([file_id, group_id])
 }

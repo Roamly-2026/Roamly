@@ -1,80 +1,152 @@
 import prisma from '../../prisma';
-import { event_participants, events, group_profiles, users } from '@prisma/client';
-import { BadRequestError, ForbiddenError } from '../../utils/ServerError';
+import { Prisma } from '@prisma/client';
+import { BadRequestError } from '../../utils/ServerError';
 import { EVENT_VISIBILITY } from '../../constants/events.constants';
-import { ROLES } from '../../constants/roles.constants';
 import * as sendMail from '../shared/email.service';
 import { logger } from '../../config/logger.config';
+import { PERMISSIONS } from '../../constants/permission.constants';
+import { PermissionContext } from '../../types/permissions.types';
+import { assertPermission } from '../shared/permissions.service';
+import {
+  CreatedEvent,
+  EventMember,
+  EventParticipant,
+  EventWithVisibility,
+  ListedEvent,
+} from '../../types/events.types';
+import { resolvePermissions } from '../../utils/permissions.utils';
+import { CreateEventInput, ListEventsQuery, UpdateEventInput } from './events.validation';
 
-export const createEvent = async (
-  userUuid: string,
-  groupUuid: string,
-  data: {
-    title: string;
-    description?: string;
-    start_time: string;
-    end_time?: string;
-    visibility: string;
-    latitude?: number | null;
-    longitude?: number | null;
-    address?: string | null;
-    participant_emails?: string[];
-  },
-): Promise<events> => {
-  const userGroupInfo = await prisma.group_profiles.findFirst({
-    where: {
-      users: {
-        uuid: userUuid,
-      },
-      groups: {
-        uuid: groupUuid,
-      },
-    },
-    include: {
-      users: true,
-      groups: true,
-      roles: true,
-    },
-  });
+const assertEventWriteAccess = (context: PermissionContext, creatorId: number): void => {
+  assertPermission(
+    context,
+    //  if the creator calls the function he needs contribute permission and if he wants to modify others events than manage
+    creatorId === context.userId ? PERMISSIONS.EVENTS_CONTRIBUTE : PERMISSIONS.EVENTS_MANAGE,
+  );
+};
 
-  userGroupInfoValidate(userGroupInfo);
+const getEventReadFilter = (context: PermissionContext): Prisma.eventsWhereInput => {
+  assertPermission(context, PERMISSIONS.EVENTS_READ);
 
-  // if the event is supposed to be private and there are given participant emails
-  let participantIds: number[] = [];
-
-  if (data.visibility === EVENT_VISIBILITY.PRIVATE) {
-    participantIds.push(userGroupInfo.users.user_id);
-
-    if (data.participant_emails && data.participant_emails.length > 0) {
-      const participants = await prisma.users.findMany({
-        where: {
-          email: {
-            in: data.participant_emails,
-          },
-          group_profiles: {
-            some: {
-              group_id: userGroupInfo.groups.group_id,
-              roles: {
-                type: {
-                  in: [ROLES.LEADER, ROLES.MEMBER],
-                },
+  return {
+    group_id: context.groupId,
+    // if a user has manage permission, it can read all events
+    OR: context.effectivePermissions.includes(PERMISSIONS.EVENTS_MANAGE)
+      ? undefined
+      : [
+          //  if not it can read the ones, where its participating, the owner of or is public
+          {
+            event_participants: {
+              some: {
+                user_id: context.userId,
               },
             },
           },
+          {
+            creator_id: context.userId,
+          },
+          {
+            visibility: {
+              name: EVENT_VISIBILITY.PUBLIC,
+            },
+          },
+        ],
+  };
+};
+
+const getGroupMembersWithEventReadPermission = async (
+  groupId: number,
+  // optional filtering on users
+  userFilter: Prisma.usersWhereInput = {},
+): Promise<EventMember[]> => {
+  const profiles = await prisma.group_profiles.findMany({
+    where: {
+      group_id: groupId,
+      users: userFilter,
+    },
+    select: {
+      system_role: true,
+      custom_permissions: true,
+      custom_role: {
+        select: {
+          permissions: true,
+        },
+      },
+      users: {
+        select: {
+          user_id: true,
+          email: true,
+          username: true,
+        },
+      },
+    },
+  });
+
+  const members: EventMember[] = [];
+
+  for (const profile of profiles) {
+    const permissions = resolvePermissions(
+      profile.system_role,
+      profile.custom_role?.permissions ?? [],
+      profile.custom_permissions,
+    );
+
+    if (permissions.includes(PERMISSIONS.EVENTS_READ)) {
+      members.push(profile.users);
+    }
+  }
+
+  return members;
+};
+
+export const createEvent = async (
+  context: PermissionContext,
+  data: CreateEventInput,
+): Promise<CreatedEvent> => {
+  assertPermission(context, PERMISSIONS.EVENTS_CONTRIBUTE);
+
+  const creator = await prisma.users.findUniqueOrThrow({
+    where: {
+      user_id: context.userId,
+    },
+    select: {
+      email: true,
+      username: true,
+    },
+  });
+
+  let participantIds: number[] = [];
+  let participants: EventMember[] = [];
+
+  if (data.visibility === EVENT_VISIBILITY.PRIVATE) {
+    participantIds.push(context.userId);
+
+    if (data.participant_emails && data.participant_emails.length > 0) {
+      participants = await getGroupMembersWithEventReadPermission(context.groupId, {
+        email: {
+          in: data.participant_emails,
         },
       });
 
       if (participants.length !== data.participant_emails.length) {
         throw new BadRequestError(
-          'One or more invited users are not part of this group, or do not exist!',
+          'One or more invited users are not active group members with event read permission!',
         );
       }
 
-      const additionalIds = participants.map((p: users) => p.user_id);
-
-      participantIds = [...new Set([...participantIds, ...additionalIds])];
+      participantIds = [
+        ...new Set([
+          ...participantIds,
+          ...participants.map((participant: EventMember): number => participant.user_id),
+        ]),
+      ];
     }
   }
+
+  const notificationRecipients =
+    data.visibility === EVENT_VISIBILITY.PUBLIC
+      ? await getGroupMembersWithEventReadPermission(context.groupId)
+      : participants;
 
   const newEvent = await prisma.events.create({
     data: {
@@ -91,13 +163,13 @@ export const createEvent = async (
 
       groups: {
         connect: {
-          group_id: userGroupInfo.groups.group_id,
+          group_id: context.groupId,
         },
       },
 
       creator: {
         connect: {
-          user_id: userGroupInfo.users.user_id,
+          user_id: context.userId,
         },
       },
 
@@ -131,106 +203,31 @@ export const createEvent = async (
     },
   });
 
-  // private event notification email sending
-  if (
-    data.visibility === EVENT_VISIBILITY.PRIVATE &&
-    data.participant_emails &&
-    data.participant_emails.length > 0
-  ) {
-    const formattedDate = newEvent.start_time.toLocaleDateString();
+  // event notification email sending for both private and public events
+  const formattedDate = newEvent.start_time.toLocaleDateString();
 
-    data.participant_emails.forEach((email: string) => {
-      if (email !== userGroupInfo.users.email) {
-        sendMail
-          .sendEventAssignedEmail(
-            email,
-            newEvent.title,
-            formattedDate,
-            userGroupInfo.users.username,
-          )
-          .catch((err: unknown) => {
-            logger.warn({ err }, 'Event notification email could not be sent');
-          });
-      }
-    });
-  }
-
-  // public event notification email sending
-  if (data.visibility === EVENT_VISIBILITY.PUBLIC) {
-    const formattedDate = newEvent.start_time.toLocaleDateString();
-
-    const groupMembers = await prisma.users.findMany({
-      where: {
-        group_profiles: {
-          some: {
-            group_id: userGroupInfo.groups.group_id,
-          },
-        },
-        user_id: {
-          not: userGroupInfo.users.user_id,
-        },
-      },
-      select: {
-        email: true,
-      },
-    });
-
-    groupMembers.forEach((member: { email: string }) => {
+  notificationRecipients.forEach((member: EventMember): void => {
+    if (member.email !== creator.email) {
       sendMail
-        .sendEventAssignedEmail(
-          member.email,
-          newEvent.title,
-          formattedDate,
-          userGroupInfo.users.username,
-        )
+        .sendEventAssignedEmail(member.email, newEvent.title, formattedDate, creator.username)
         .catch((err: unknown) => {
           logger.warn({ err }, 'Event notification email could not be sent');
         });
-    });
-  }
+    }
+  });
 
   return newEvent;
 };
 
 export const updateEvent = async (
-  userUuid: string,
-  groupUuid: string,
+  context: PermissionContext,
   eventUuid: string,
-  data: {
-    title?: string;
-    description?: string;
-    start_time?: string;
-    end_time?: string | null;
-    visibility?: string;
-    latitude?: number | null;
-    longitude?: number | null;
-    address?: string | null;
-  },
-): Promise<events> => {
-  const userGroupInfo = await prisma.group_profiles.findFirst({
-    where: {
-      users: {
-        uuid: userUuid,
-      },
-      groups: {
-        uuid: groupUuid,
-      },
-    },
-    include: {
-      users: true,
-      groups: true,
-      roles: true,
-    },
-  });
-
-  userGroupInfoValidate(userGroupInfo);
-
+  data: UpdateEventInput,
+): Promise<EventWithVisibility> => {
   const existingEvent = await prisma.events.findUniqueOrThrow({
     where: {
       uuid: eventUuid,
-      groups: {
-        uuid: groupUuid,
-      },
+      group_id: context.groupId,
     },
 
     include: {
@@ -238,14 +235,7 @@ export const updateEvent = async (
     },
   });
 
-  if (
-    existingEvent.creator_id !== userGroupInfo.users.user_id &&
-    userGroupInfo.roles.type !== ROLES.LEADER
-  ) {
-    throw new ForbiddenError(
-      'Only the creator of the event or the leaders of the group can update the event!',
-    );
-  }
+  assertEventWriteAccess(context, existingEvent.creator_id);
 
   // validating the end_time and start_time,
   // so if a user updates only one of them they still can't be in the wrong order
@@ -277,8 +267,15 @@ export const updateEvent = async (
         deleteMany: {},
       };
     } else if (data.visibility === EVENT_VISIBILITY.PRIVATE) {
+      //  a creator needs to be eligible to join, and wont be added automatically as a participant
+      const eligibleCreators = await getGroupMembersWithEventReadPermission(context.groupId, {
+        user_id: existingEvent.creator_id,
+      });
+
       participantOperations = {
-        create: [{ user_id: existingEvent.creator_id }],
+        create: eligibleCreators.map((creator: EventMember): { user_id: number } => ({
+          user_id: creator.user_id,
+        })),
       };
     }
   }
@@ -314,82 +311,52 @@ export const updateEvent = async (
 };
 
 export const addNewParticipants = async (
-  userUuid: string,
-  groupUuid: string,
+  context: PermissionContext,
   eventUuid: string,
   participant_emails: string[],
-): Promise<event_participants[]> => {
-  const userGroupInfo = await prisma.group_profiles.findFirst({
-    where: {
-      users: {
-        uuid: userUuid,
-      },
-      groups: {
-        uuid: groupUuid,
-      },
-    },
-
-    include: {
-      users: true,
-      groups: true,
-      roles: true,
-    },
-  });
-
-  userGroupInfoValidate(userGroupInfo);
-
+): Promise<EventParticipant[]> => {
   // can the user update this event
   const existingEvent = await prisma.events.findUniqueOrThrow({
     where: {
       uuid: eventUuid,
-      groups: {
-        uuid: groupUuid,
-      },
+      group_id: context.groupId,
     },
     include: {
       visibility: true,
     },
   });
 
+  assertEventWriteAccess(context, existingEvent.creator_id);
+
   if (existingEvent.visibility.name === EVENT_VISIBILITY.PUBLIC) {
     throw new BadRequestError('You can not add participants to public events!');
   }
 
-  if (
-    existingEvent.creator_id !== userGroupInfo.users.user_id &&
-    userGroupInfo.roles.type !== ROLES.LEADER
-  ) {
-    throw new ForbiddenError(
-      'Only the creator of the event or the leaders of the group can add participants to the event!',
-    );
-  }
-
-  const participants = await prisma.users.findMany({
-    where: {
-      email: {
-        in: participant_emails,
-      },
-      group_profiles: {
-        some: {
-          group_id: userGroupInfo.groups.group_id,
-          roles: {
-            type: {
-              in: [ROLES.LEADER, ROLES.MEMBER],
-            },
-          },
-        },
-      },
+  const participants = await getGroupMembersWithEventReadPermission(context.groupId, {
+    email: {
+      in: participant_emails,
     },
   });
 
   if (participants.length !== participant_emails.length) {
-    throw new BadRequestError('One or more invited users are not part of this group!');
+    throw new BadRequestError(
+      'One or more invited users are not active group members with event read permission!',
+    );
   }
 
+  const inviter = await prisma.users.findUniqueOrThrow({
+    where: {
+      user_id: context.userId,
+    },
+    select: {
+      username: true,
+    },
+  });
+
   const updatedParticipantList = await prisma.event_participants.createManyAndReturn({
-    data: participants.map((p: users) => ({
+    data: participants.map((participant: EventMember): { event_id: number; user_id: number } => ({
       event_id: existingEvent.event_id,
-      user_id: p.user_id,
+      user_id: participant.user_id,
     })),
 
     skipDuplicates: true,
@@ -408,17 +375,12 @@ export const addNewParticipants = async (
   if (updatedParticipantList.length > 0) {
     const formattedDate = existingEvent.start_time.toLocaleDateString();
 
-    updatedParticipantList.forEach((participantRecord: { users: { email: string } }) => {
+    updatedParticipantList.forEach((participantRecord: EventParticipant) => {
       const email = participantRecord.users.email;
 
       if (email) {
         sendMail
-          .sendEventAssignedEmail(
-            email,
-            existingEvent.title,
-            formattedDate,
-            userGroupInfo.users.username,
-          )
+          .sendEventAssignedEmail(email, existingEvent.title, formattedDate, inviter.username)
           .catch((err: unknown) => {
             logger.warn({ err }, 'Event notification email could not be sent');
           });
@@ -426,50 +388,18 @@ export const addNewParticipants = async (
     });
   }
 
-  return updatedParticipantList as unknown as event_participants[];
+  return updatedParticipantList;
 };
 
-export const deleteEvent = async (
-  userUuid: string,
-  groupUuid: string,
-  eventUuid: string,
-): Promise<void> => {
-  const userGroupInfo = await prisma.group_profiles.findFirst({
-    where: {
-      users: {
-        uuid: userUuid,
-      },
-      groups: {
-        uuid: groupUuid,
-      },
-    },
-
-    include: {
-      users: true,
-      groups: true,
-      roles: true,
-    },
-  });
-
-  userGroupInfoValidate(userGroupInfo);
-
+export const deleteEvent = async (context: PermissionContext, eventUuid: string): Promise<void> => {
   const existingEvent = await prisma.events.findUniqueOrThrow({
     where: {
       uuid: eventUuid,
-      groups: {
-        uuid: groupUuid,
-      },
+      group_id: context.groupId,
     },
   });
 
-  if (
-    userGroupInfo.users.user_id !== existingEvent.creator_id &&
-    userGroupInfo.roles.type !== ROLES.LEADER
-  ) {
-    throw new ForbiddenError(
-      'Only the creator of the event or the leaders of the group can delete the event!',
-    );
-  }
+  assertEventWriteAccess(context, existingEvent.creator_id);
 
   await prisma.events.delete({
     where: {
@@ -479,49 +409,20 @@ export const deleteEvent = async (
 };
 
 export const removeParticipantFromEvent = async (
-  userUuid: string,
-  groupUuid: string,
+  context: PermissionContext,
   eventUuid: string,
   targetParticipantUuid: string,
 ): Promise<void> => {
-  const userGroupInfo = await prisma.group_profiles.findFirst({
-    where: {
-      users: {
-        uuid: userUuid,
-      },
-      groups: {
-        uuid: groupUuid,
-      },
-    },
-
-    include: {
-      users: true,
-      groups: true,
-      roles: true,
-    },
-  });
-
-  userGroupInfoValidate(userGroupInfo);
-
   const existingEvent = await prisma.events.findUniqueOrThrow({
     where: {
       uuid: eventUuid,
-      groups: {
-        uuid: groupUuid,
-      },
+      group_id: context.groupId,
     },
   });
 
-  // participants can be removed by group leaders,
-  // event creators and by themselves
-  if (
-    userGroupInfo.roles.type !== ROLES.LEADER &&
-    userGroupInfo.users.user_id !== existingEvent.creator_id &&
-    userGroupInfo.users.uuid !== targetParticipantUuid
-  ) {
-    throw new ForbiddenError(
-      'Only the creator of the event, the leaders of the group or the same participant can remove a participant!',
-    );
+  // active group members can remove their own participation
+  if (targetParticipantUuid !== context.userUuid) {
+    assertEventWriteAccess(context, existingEvent.creator_id);
   }
 
   const targetUser = await prisma.users.findUniqueOrThrow({
@@ -541,40 +442,10 @@ export const removeParticipantFromEvent = async (
 };
 
 export const listEvents = async (
-  userUuid: string,
-  groupUuid: string,
-  filters: {
-    start_date?: string;
-    end_date?: string;
-    title?: string;
-    limit?: number;
-    cursor?: string;
-  },
-): Promise<events[]> => {
-  const userGroupInfo = await prisma.group_profiles.findFirst({
-    where: {
-      users: {
-        uuid: userUuid,
-      },
-      groups: {
-        uuid: groupUuid,
-      },
-    },
-
-    include: {
-      users: true,
-      groups: true,
-      roles: true,
-    },
-  });
-
-  userGroupInfoValidate(userGroupInfo);
-
-  if (userGroupInfo.roles.type !== ROLES.LEADER && userGroupInfo.roles.type !== ROLES.MEMBER) {
-    throw new ForbiddenError('User must be part of the group to list events in it!');
-  }
-
-  const isLeader = userGroupInfo.roles.type === ROLES.LEADER;
+  context: PermissionContext,
+  filters: ListEventsQuery,
+): Promise<ListedEvent[]> => {
+  const eventReadFilter = getEventReadFilter(context);
 
   // if the start and end is the same date, the filter will not work because
   // we would filter from 00:00 to 00:00, so we change the end dates hour to midnight
@@ -598,12 +469,12 @@ export const listEvents = async (
   }
 
   const eventList = await prisma.events.findMany({
-    take: filters.limit,
+    take: filters.limit ?? 15,
     skip: filters.cursor ? 1 : 0,
     cursor: filters.cursor ? { uuid: filters.cursor } : undefined,
 
     where: {
-      group_id: userGroupInfo.groups.group_id,
+      ...eventReadFilter,
 
       title: filters.title
         ? {
@@ -623,26 +494,6 @@ export const listEvents = async (
             lte: endDateObj,
           }
         : undefined,
-
-      OR: isLeader
-        ? undefined
-        : [
-            {
-              event_participants: {
-                some: {
-                  user_id: userGroupInfo.users.user_id,
-                },
-              },
-            },
-            {
-              creator_id: userGroupInfo.users.user_id,
-            },
-            {
-              visibility: {
-                name: EVENT_VISIBILITY.PUBLIC,
-              },
-            },
-          ],
     },
 
     orderBy: [{ start_time: 'asc' }, { event_id: 'asc' }],
@@ -673,60 +524,9 @@ export const listEvents = async (
   return eventList;
 };
 
-export const listEventStartDates = async (
-  userUuid: string,
-  groupUuid: string,
-): Promise<string[]> => {
-  const userGroupInfo = await prisma.group_profiles.findFirst({
-    where: {
-      users: {
-        uuid: userUuid,
-      },
-      groups: {
-        uuid: groupUuid,
-      },
-    },
-
-    include: {
-      users: true,
-      groups: true,
-      roles: true,
-    },
-  });
-
-  userGroupInfoValidate(userGroupInfo);
-
-  if (userGroupInfo.roles.type !== ROLES.LEADER && userGroupInfo.roles.type !== ROLES.MEMBER) {
-    throw new ForbiddenError('User must be part of the group to list event dates in it!');
-  }
-
-  const isLeader = userGroupInfo.roles.type === ROLES.LEADER;
-
+export const listEventStartDates = async (context: PermissionContext): Promise<string[]> => {
   const datesList = await prisma.events.findMany({
-    where: {
-      group_id: userGroupInfo.groups.group_id,
-
-      OR: isLeader
-        ? undefined
-        : [
-            {
-              event_participants: {
-                some: {
-                  user_id: userGroupInfo.users.user_id,
-                },
-              },
-            },
-            {
-              creator_id: userGroupInfo.users.user_id,
-            },
-            {
-              visibility: {
-                name: EVENT_VISIBILITY.PUBLIC,
-              },
-            },
-          ],
-    },
-
+    where: getEventReadFilter(context),
     orderBy: { start_time: 'asc' },
 
     select: {
@@ -742,11 +542,3 @@ export const listEventStartDates = async (
 
   return uniqueDates;
 };
-
-function userGroupInfoValidate(userGroupInfo: group_profiles | null): asserts userGroupInfo {
-  if (!userGroupInfo) {
-    throw new ForbiddenError(
-      'User either is not part of the group, or the group or the user does not exist!',
-    );
-  }
-}

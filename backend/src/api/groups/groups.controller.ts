@@ -57,17 +57,14 @@ class GroupsController extends BaseController {
 
   public inviteUsersToYourGroup = this.handleAsync(
     async (req: Request, res: Response): Promise<void> => {
-      const user = res.locals.user!;
-
-      const { groupUuid } = req.params;
-
-      const { invitedUserEmail, inviteWithRole } = req.body;
+      const context = res.locals.permissions!;
+      const { invitedUserEmail, inviteWithRole, customRoleUuid } = req.body;
 
       const createdInvite = await groupsService.inviteUsersToYourGroup(
-        user.uuid,
+        context,
         invitedUserEmail,
-        groupUuid as string,
         inviteWithRole,
+        customRoleUuid,
       );
 
       res.status(201).json({
@@ -106,13 +103,22 @@ class GroupsController extends BaseController {
     });
   });
 
+  public getMyPermissions = this.handleAsync((_req: Request, res: Response): void => {
+    const { systemRole, customRole, customPermissions, effectivePermissions } =
+      res.locals.permissions!;
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Your permissions in the group:',
+      data: { systemRole, customRole, customPermissions, effectivePermissions },
+    });
+  });
+
   public listAllInfosOfOneGroup = this.handleAsync(
     async (req: Request, res: Response): Promise<void> => {
-      const user = res.locals.user!;
+      const context = res.locals.permissions!;
 
-      const { groupUuid } = req.params;
-
-      const groupInfos = await groupsService.listAllInfosOfOneGroup(user.uuid, groupUuid as string);
+      const groupInfos = await groupsService.listAllInfosOfOneGroup(context);
 
       res.status(200).json({
         status: 'success',
@@ -123,11 +129,9 @@ class GroupsController extends BaseController {
   );
 
   public deleteGroup = this.handleAsync(async (req: Request, res: Response): Promise<void> => {
-    const user = res.locals.user!;
+    const context = res.locals.permissions!;
 
-    const { groupUuid } = req.params;
-
-    await groupsService.deleteGroup(user.uuid, groupUuid as string);
+    await groupsService.deleteGroup(context);
 
     res.status(200).json({
       status: 'success',
@@ -136,16 +140,10 @@ class GroupsController extends BaseController {
   });
 
   public updateGroup = this.handleAsync(async (req: Request, res: Response): Promise<void> => {
-    const user = res.locals.user!;
-    const { groupUuid } = req.params;
-
+    const context = res.locals.permissions!;
     const validatedData = req.body;
 
-    const updatedGroupInfos = await groupsService.updateGroup(
-      user.uuid,
-      groupUuid as string,
-      validatedData,
-    );
+    const updatedGroupInfos = await groupsService.updateGroup(context, validatedData);
 
     res.status(200).json({
       status: 'success',
@@ -154,17 +152,12 @@ class GroupsController extends BaseController {
     });
   });
 
-  public removeUserFromGroupByEmail = this.handleAsync(
+  public removeUserFromGroup = this.handleAsync(
     async (req: Request, res: Response): Promise<void> => {
-      const user = res.locals.user!;
+      const context = res.locals.permissions!;
+      const { userUuid } = req.params;
 
-      const { groupUuid, email: userToRemoveEmail } = req.params;
-
-      await groupsService.removeUserFromGroupByEmail(
-        user.uuid,
-        groupUuid as string,
-        userToRemoveEmail as string,
-      );
+      await groupsService.removeUserFromGroup(context, userUuid as string);
 
       res.status(200).json({
         status: 'success',
@@ -174,11 +167,9 @@ class GroupsController extends BaseController {
   );
 
   public userLeavingGroup = this.handleAsync(async (req: Request, res: Response): Promise<void> => {
-    const user = res.locals.user!;
+    const context = res.locals.permissions!;
 
-    const { groupUuid } = req.params;
-
-    await groupsService.userLeavingGroup(user.uuid, groupUuid as string);
+    await groupsService.userLeavingGroup(context);
 
     res.status(200).json({
       status: 'success',
@@ -186,35 +177,20 @@ class GroupsController extends BaseController {
     });
   });
 
-  public promoteUser = this.handleAsync(async (req: Request, res: Response): Promise<void> => {
-    const user = res.locals.user!;
+  public changeMemberRole = this.handleAsync(async (req: Request, res: Response): Promise<void> => {
+    const context = res.locals.permissions!;
+    const { userUuid } = req.params;
 
-    const groupUuid = req.params.groupUuid as string;
-
-    const { email } = req.body;
-
-    const promotedUserProfile = await groupsService.promoteUser(user.uuid, groupUuid, email);
-
-    res.status(200).json({
-      status: 'success',
-      message: 'Target user promoted successfully!',
-      data: promotedUserProfile,
-    });
-  });
-
-  public demoteUser = this.handleAsync(async (req: Request, res: Response): Promise<void> => {
-    const user = res.locals.user!;
-
-    const groupUuid = req.params.groupUuid as string;
-
-    const { email } = req.body;
-
-    const demotedUserProfile = await groupsService.demoteUser(user.uuid, groupUuid, email);
+    const updatedProfile = await groupsService.changeMemberRole(
+      context,
+      userUuid as string,
+      req.body,
+    );
 
     res.status(200).json({
       status: 'success',
-      message: 'Target User demoted successfully!',
-      data: demotedUserProfile,
+      message: 'Member role updated successfully!',
+      data: updatedProfile,
     });
   });
 }
