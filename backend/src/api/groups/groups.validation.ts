@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ROLES } from '../../constants/roles.constants';
+import { SYSTEM_ROLES } from '../../constants/roles.constants';
 import { emailSchema, groupNameSchema } from '../shared/common.validation';
 
 export const createGroupSchema = z.object({
@@ -8,9 +8,7 @@ export const createGroupSchema = z.object({
     .array(
       z.object({
         email: emailSchema,
-        role: z.enum([ROLES.INVITEDMEMBER, ROLES.INVITEDLEADER], {
-          message: `Role must be either "${ROLES.INVITEDMEMBER}" or "${ROLES.INVITEDLEADER}"!`,
-        }),
+        role: z.literal(SYSTEM_ROLES.MEMBER).default(SYSTEM_ROLES.MEMBER),
       }),
     )
     .max(50, 'You can only invite up to 50 users at once!')
@@ -35,24 +33,39 @@ export const groupUuidValidationSchema = z.object({
   groupUuid: z.uuid({ message: 'groupUuid parameter must be valid UUID!' }),
 });
 
-export const inviteUsersToYourGroupBodySchema = z.object({
-  invitedUserEmail: emailSchema,
+export const inviteUsersToYourGroupBodySchema = z
+  .object({
+    invitedUserEmail: emailSchema,
+    inviteWithRole: z.enum([SYSTEM_ROLES.MEMBER, SYSTEM_ROLES.CUSTOM]),
+    customRoleUuid: z.uuid('Invalid custom role UUID!').optional(),
+  })
+  .refine(
+    (data: { inviteWithRole: string; customRoleUuid?: string }): boolean =>
+      (data.inviteWithRole === SYSTEM_ROLES.CUSTOM) === (data.customRoleUuid !== undefined),
+    {
+      message: 'customRoleUuid is required only for Custom invitations!',
+    },
+  );
 
-  inviteWithRole: z.enum([ROLES.INVITEDLEADER, ROLES.INVITEDMEMBER], {
-    message: `Role must be either "${ROLES.INVITEDMEMBER}" or "${ROLES.INVITEDLEADER}"!`,
-  }),
-});
-
-export const removeUserFromGroupByEmailSchema = z.object({
-  groupUuid: z.uuid({ message: 'groupUuid parameter must be valid UUID!' }),
-
-  email: emailSchema,
+export const groupUserUuidSchema = groupUuidValidationSchema.extend({
+  userUuid: z.uuid('userUuid parameter must be valid UUID!'),
 });
 
 export const updatedGroupSchema = z.object({
   name: groupNameSchema.optional(),
 });
 
-export const targetUserEmailSchema = z.object({
-  email: emailSchema,
-});
+export const changeMemberRoleSchema = z
+  .object({
+    systemRole: z.enum([SYSTEM_ROLES.ADMIN, SYSTEM_ROLES.MEMBER, SYSTEM_ROLES.CUSTOM]),
+    customRoleUuid: z.uuid('Invalid custom role UUID!').optional(),
+  })
+  .refine(
+    (data: { systemRole: string; customRoleUuid?: string }): boolean =>
+      (data.systemRole === SYSTEM_ROLES.CUSTOM) === (data.customRoleUuid !== undefined),
+    {
+      message: 'customRoleUuid is required only for Custom members!',
+    },
+  );
+
+export type ChangeMemberRoleInput = z.infer<typeof changeMemberRoleSchema>;
