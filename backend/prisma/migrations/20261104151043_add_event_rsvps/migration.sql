@@ -1,9 +1,12 @@
+-- CreateEnum
+CREATE TYPE "event_rsvp_status" AS ENUM ('going', 'not_going', 'maybe');
+
 -- CreateTable
 CREATE TABLE "event_rsvps" (
     "event_id" INTEGER NOT NULL,
     "user_id" INTEGER NOT NULL,
     "group_id" INTEGER NOT NULL,
-    "status" VARCHAR(16) NOT NULL,
+    "status" "event_rsvp_status" NOT NULL,
     "created_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(6) NOT NULL,
 
