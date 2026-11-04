@@ -29,6 +29,10 @@ const mapContainer = ref<HTMLElement | null>(null);
 let map: L.Map | null = null;
 let markersGroup: L.LayerGroup | null = null;
 
+// the view is only set on the first render,
+// so refreshing the events does not move the map away from where the user is looking
+let isViewInitialized = false;
+
 const toast = useToast();
 
 const getCustomPin = (visibility?: 'private' | 'public') => {
@@ -69,7 +73,9 @@ const renderMarkers = () => {
   // default location if there are no events for the group yet
   // (or they aren't active anymore)
   if (!props.locations || props.locations.length === 0) {
-    map.setView([44.111979, 24.347248], 13);
+    if (!isViewInitialized) {
+      map.setView([44.111979, 24.347248], 13);
+    }
     return;
   }
 
@@ -101,6 +107,12 @@ const renderMarkers = () => {
     markersGroup!.addLayer(marker);
     bounds.extend([loc.lat, loc.lng]);
   });
+
+  if (isViewInitialized) {
+    return;
+  }
+
+  isViewInitialized = true;
 
   if (props.locations.length === 1) {
     map.setView([props.locations[0]!.lat, props.locations[0]!.lng], 13);
