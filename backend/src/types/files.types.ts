@@ -21,7 +21,7 @@ export type docSharedWithGroups = Prisma.file_sharesGetPayload<{
   select: {
     shared_by: true;
     shared_at: true;
-    access_level: true;
+    audience: true;
 
     groups: {
       select: {
@@ -65,10 +65,18 @@ export type PaginatedGroupFiles = {
   };
 };
 
+export type GroupMediaFile = Prisma.filesGetPayload<{
+  include: {
+    media_files: true;
+  };
+}>;
+
 export type GroupMemberPrivateDocument = Prisma.filesGetPayload<{
   include: {
-    documents: true;
     owner: typeof creatorSelect;
+    documents: true;
     file_shares: true;
   };
 }>;
+
+export type SharedPrivateDocumentMetadata = GroupMemberPrivateDocument;
