@@ -235,3 +235,7 @@ export const groupListingFilterQuerySchema = z
       path: ['end_date'],
     },
   );
+
+export type CreateEventInput = z.infer<typeof createEventSchema>;
+export type UpdateEventInput = z.infer<typeof updateEventSchema>;
+export type ListEventsQuery = z.infer<typeof groupListingFilterQuerySchema>;
