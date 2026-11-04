@@ -5,13 +5,77 @@ import { BadRequestError, ConflictError, ForbiddenError } from '../../utils/Serv
 import {
   docSharedWithGroups,
   GroupFile,
+  GroupMediaFile,
   PaginatedGroupFiles,
   privateDocumentMetadata,
   creatorSelect,
-  GroupMemberPrivateDocument,
+  SharedPrivateDocumentMetadata,
 } from '../../types/files.types';
-import { ROLES } from '../../constants/roles.constants';
 import * as FILE_CONSTANTS from '../../constants/files.constants';
+import { PermissionContext } from '../../types/permissions.types';
+import { PERMISSIONS } from '../../constants/permission.constants';
+import { assertPermission, loadPermissionContext } from '../shared/permissions.service';
+import { SharedDocumentsFilter } from './files.validation';
+
+const getOwnedPrivateDocument = async (
+  userId: number,
+  fileId: number,
+): Promise<privateDocumentMetadata> => {
+  const file = await prisma.files.findUniqueOrThrow({
+    where: {
+      file_id: fileId,
+      ownership_type: FILE_CONSTANTS.OWNERSHIP.PRIVATE,
+      documents: {
+        isNot: null,
+      },
+    },
+    include: {
+      documents: true,
+      creator: creatorSelect,
+    },
+  });
+
+  if (file.user_id !== userId) {
+    throw new ForbiddenError('Users can only manage their own private documents!');
+  }
+
+  return file;
+};
+
+const getReadableDocumentAudiences = (
+  context: PermissionContext,
+): FILE_CONSTANTS.DocumentAudience[] => {
+  const audiences: FILE_CONSTANTS.DocumentAudience[] = [];
+
+  if (context.effectivePermissions.includes(PERMISSIONS.DOCUMENTS_READ)) {
+    audiences.push(FILE_CONSTANTS.DOCUMENT_AUDIENCE.GROUP_MEMBERS);
+  }
+
+  if (context.effectivePermissions.includes(PERMISSIONS.PERSONAL_DOCUMENTS_READ_RESTRICTED)) {
+    audiences.push(FILE_CONSTANTS.DOCUMENT_AUDIENCE.DOCUMENT_REVIEWERS);
+  }
+
+  return audiences;
+};
+
+const assertGroupFileWriteAccess = (
+  context: PermissionContext,
+  uploadedBy: number | null,
+  type: FILE_CONSTANTS.GroupFileType,
+): void => {
+  const isUploader = uploadedBy === context.userId;
+
+  if (type === FILE_CONSTANTS.GROUP_FILE_TYPE.DOCUMENT) {
+    assertPermission(
+      context,
+      isUploader ? PERMISSIONS.DOCUMENTS_CONTRIBUTE : PERMISSIONS.DOCUMENTS_MANAGE,
+    );
+
+    return;
+  }
+
+  assertPermission(context, isUploader ? PERMISSIONS.MEDIA_CONTRIBUTE : PERMISSIONS.MEDIA_MANAGE);
+};
 
 export const uploadPrivateDocument = async (
   userUuid: string,
@@ -19,7 +83,7 @@ export const uploadPrivateDocument = async (
   document_type: string,
   issue_date?: string,
   expiry_date?: string,
-): Promise<files> => {
+): Promise<privateDocumentMetadata> => {
   const user = await prisma.users.findUniqueOrThrow({
     where: {
       uuid: userUuid,
@@ -68,6 +132,7 @@ export const uploadPrivateDocument = async (
 
     include: {
       documents: true,
+      creator: creatorSelect,
     },
   });
 
@@ -88,32 +153,47 @@ export const getPrivateDocumentUrl = async (
   const file = await prisma.files.findUniqueOrThrow({
     where: {
       file_id: fileId,
+      ownership_type: FILE_CONSTANTS.OWNERSHIP.PRIVATE,
+      documents: {
+        isNot: null,
+      },
     },
     include: {
-      file_shares: true,
+      file_shares: {
+        where: {
+          groups: {
+            group_profiles: {
+              some: {
+                user_id: user.user_id,
+              },
+            },
+          },
+        },
+        select: {
+          audience: true,
+          groups: {
+            select: {
+              uuid: true,
+            },
+          },
+        },
+      },
     },
   });
 
   const isOwner = file.user_id === user.user_id;
-
-  // check if the user has permission to the link bcs the file is shared in a group
   let hasGroupAccess = false;
 
-  if (!isOwner && file.file_shares.length > 0) {
-    const userGroups = await prisma.group_profiles.findMany({
-      where: {
-        user_id: user.user_id,
-      },
-      select: {
-        group_id: true,
-      },
-    });
+  if (!isOwner) {
+    for (const share of file.file_shares) {
+      const context = await loadPermissionContext(userUuid, share.groups.uuid);
+      const readableAudiences = getReadableDocumentAudiences(context);
 
-    const userGroupIds = userGroups.map((g: { group_id: number }) => g.group_id);
-
-    hasGroupAccess = file.file_shares.some((share: file_shares) =>
-      userGroupIds.includes(share.group_id),
-    );
+      if (readableAudiences.includes(share.audience)) {
+        hasGroupAccess = true;
+        break;
+      }
+    }
   }
 
   if (!isOwner && !hasGroupAccess) {
@@ -144,11 +224,7 @@ export const deletePrivateDocument = async (userUuid: string, fileId: number): P
     },
   });
 
-  const file = await prisma.files.findUniqueOrThrow({
-    where: {
-      file_id: fileId,
-    },
-  });
+  const file = await getOwnedPrivateDocument(user.user_id, fileId);
 
   // validate authorization
   if (file.user_id !== user.user_id) {
@@ -199,21 +275,14 @@ export const replacePrivateDocument = async (
   fileData?: Express.Multer.File,
   issue_date?: string,
   expiry_date?: string,
-): Promise<files> => {
+): Promise<privateDocumentMetadata> => {
   const user = await prisma.users.findUniqueOrThrow({
     where: {
       uuid: userUuid,
     },
   });
 
-  const file = await prisma.files.findUniqueOrThrow({
-    where: {
-      file_id: fileId,
-    },
-    include: {
-      documents: true,
-    },
-  });
+  const file = await getOwnedPrivateDocument(user.user_id, fileId);
 
   // is the file really a document
   if (!file.documents) {
@@ -276,6 +345,7 @@ export const replacePrivateDocument = async (
     data: updateData,
     include: {
       documents: true,
+      creator: creatorSelect,
     },
   });
 
@@ -286,57 +356,16 @@ export const shareDocumentsWithGroup = async (
   userUuid: string,
   groupUuid: string,
   fileId: number,
-  accessLevel: string,
+  audience: FILE_CONSTANTS.DocumentAudience,
 ): Promise<file_shares> => {
-  const user = await prisma.users.findUniqueOrThrow({
-    where: {
-      uuid: userUuid,
-    },
-  });
-
-  const group = await prisma.groups.findUniqueOrThrow({
-    where: {
-      uuid: groupUuid,
-    },
-  });
-
-  const file = await prisma.files.findUniqueOrThrow({
-    where: {
-      file_id: fileId,
-    },
-  });
-
-  // validate authorization
-  if (file.user_id !== user.user_id) {
-    throw new ForbiddenError('Users can only share their own files!');
-  }
-
-  // validate membership in group
-  const isPartOfTheGroup = await prisma.group_profiles.findFirst({
-    where: {
-      user_id: user.user_id,
-      group_id: group.group_id,
-      roles: {
-        type: {
-          in: [ROLES.LEADER, ROLES.MEMBER],
-        },
-      },
-    },
-  });
-
-  if (!isPartOfTheGroup) {
-    throw new ForbiddenError('Users can only share files to groups they are part of!');
-  }
-
-  if (file.ownership_type !== FILE_CONSTANTS.OWNERSHIP.PRIVATE) {
-    throw new BadRequestError('Users can share only their private files with other groups!');
-  }
+  const context = await loadPermissionContext(userUuid, groupUuid);
+  const file = await getOwnedPrivateDocument(context.userId, fileId);
 
   // is the file already shared
   const alreadyShared = await prisma.file_shares.findFirst({
     where: {
       file_id: file.file_id,
-      group_id: group.group_id,
+      group_id: context.groupId,
     },
   });
 
@@ -347,9 +376,9 @@ export const shareDocumentsWithGroup = async (
   const sharingData = await prisma.file_shares.create({
     data: {
       file_id: file.file_id,
-      group_id: group.group_id,
-      shared_by: user.user_id,
-      access_level: accessLevel,
+      group_id: context.groupId,
+      shared_by: context.userId,
+      audience,
     },
   });
 
@@ -373,11 +402,7 @@ export const deleteSharing = async (
     },
   });
 
-  const file = await prisma.files.findUniqueOrThrow({
-    where: {
-      file_id: fileId,
-    },
-  });
+  const file = await getOwnedPrivateDocument(user.user_id, fileId);
 
   // validate authorization
   if (file.user_id !== user.user_id) {
@@ -406,38 +431,16 @@ export const deleteSharing = async (
 };
 
 export const updateSharingConditions = async (
-  userUuid: string,
-  groupUuid: string,
+  context: PermissionContext,
   fileId: number,
-  accessLevel: string,
+  audience: FILE_CONSTANTS.DocumentAudience,
 ): Promise<file_shares> => {
-  const user = await prisma.users.findUniqueOrThrow({
-    where: {
-      uuid: userUuid,
-    },
-  });
-
-  const group = await prisma.groups.findUniqueOrThrow({
-    where: {
-      uuid: groupUuid,
-    },
-  });
-
-  const file = await prisma.files.findUniqueOrThrow({
-    where: {
-      file_id: fileId,
-    },
-  });
-
-  // validate authorization
-  if (file.user_id !== user.user_id) {
-    throw new ForbiddenError('Users can only update sharing conditions of their own files!');
-  }
+  const file = await getOwnedPrivateDocument(context.userId, fileId);
 
   const isShared = await prisma.file_shares.findFirst({
     where: {
       file_id: file.file_id,
-      group_id: group.group_id,
+      group_id: context.groupId,
     },
   });
 
@@ -449,11 +452,11 @@ export const updateSharingConditions = async (
     where: {
       file_id_group_id: {
         file_id: file.file_id,
-        group_id: group.group_id,
+        group_id: context.groupId,
       },
     },
     data: {
-      access_level: accessLevel,
+      audience,
     },
   });
 
@@ -470,11 +473,7 @@ export const listAllGroupsADocumentIsSharedWith = async (
     },
   });
 
-  const file = await prisma.files.findUniqueOrThrow({
-    where: {
-      file_id: fileId,
-    },
-  });
+  const file = await getOwnedPrivateDocument(user.user_id, fileId);
 
   // validate authorization
   if (file.user_id !== user.user_id) {
@@ -488,7 +487,7 @@ export const listAllGroupsADocumentIsSharedWith = async (
     select: {
       shared_by: true,
       shared_at: true,
-      access_level: true,
+      audience: true,
 
       groups: {
         select: {
@@ -502,35 +501,13 @@ export const listAllGroupsADocumentIsSharedWith = async (
 };
 
 export const uploadGroupDocument = async (
-  userUuid: string,
-  groupUuid: string,
+  context: PermissionContext,
   fileData: Express.Multer.File,
   document_type: string,
   issue_date?: string,
   expiry_date?: string,
-): Promise<files> => {
-  const user = await prisma.users.findUniqueOrThrow({
-    where: {
-      uuid: userUuid,
-    },
-  });
-
-  const group = await prisma.groups.findUniqueOrThrow({
-    where: {
-      uuid: groupUuid,
-    },
-  });
-
-  const isMember = await prisma.group_profiles.findFirst({
-    where: {
-      user_id: user.user_id,
-      group_id: group.group_id,
-    },
-  });
-
-  if (!isMember) {
-    throw new ForbiddenError('Only members of this group can upload files here!');
-  }
+): Promise<privateDocumentMetadata> => {
+  assertPermission(context, PERMISSIONS.DOCUMENTS_CONTRIBUTE);
 
   // uploading the document to the cloud
   const fileKey = await cloudOperations.uploadPrivateFileToCloud(
@@ -547,8 +524,8 @@ export const uploadGroupDocument = async (
       mime_type: fileData.mimetype,
       ownership_type: FILE_CONSTANTS.OWNERSHIP.GROUP,
       // it only has group_id, because the file belongs to a group, not to a single user
-      group_id: group.group_id,
-      uploaded_by: user.user_id,
+      group_id: context.groupId,
+      uploaded_by: context.userId,
 
       documents: {
         create: {
@@ -561,6 +538,7 @@ export const uploadGroupDocument = async (
 
     include: {
       documents: true,
+      creator: creatorSelect,
     },
   });
 
@@ -568,33 +546,11 @@ export const uploadGroupDocument = async (
 };
 
 export const uploadGroupMediaFile = async (
-  userUuid: string,
-  groupUuid: string,
+  context: PermissionContext,
   fileData: Express.Multer.File,
   description?: string,
-): Promise<files> => {
-  const user = await prisma.users.findUniqueOrThrow({
-    where: {
-      uuid: userUuid,
-    },
-  });
-
-  const group = await prisma.groups.findUniqueOrThrow({
-    where: {
-      uuid: groupUuid,
-    },
-  });
-
-  const isMember = await prisma.group_profiles.findFirst({
-    where: {
-      user_id: user.user_id,
-      group_id: group.group_id,
-    },
-  });
-
-  if (!isMember) {
-    throw new ForbiddenError('User must be part of the group to upload media!');
-  }
+): Promise<GroupMediaFile> => {
+  assertPermission(context, PERMISSIONS.MEDIA_CONTRIBUTE);
 
   const fileKey = await cloudOperations.uploadPrivateFileToCloud(
     fileData,
@@ -608,8 +564,8 @@ export const uploadGroupMediaFile = async (
       file_size: fileData.size,
       mime_type: fileData.mimetype,
       ownership_type: FILE_CONSTANTS.OWNERSHIP.GROUP,
-      group_id: group.group_id,
-      uploaded_by: user.user_id,
+      group_id: context.groupId,
+      uploaded_by: context.userId,
 
       media_files: {
         create: {
@@ -627,32 +583,28 @@ export const uploadGroupMediaFile = async (
 };
 
 export const updateGroupDocument = async (
-  userUuid: string,
-  groupUuid: string,
+  context: PermissionContext,
   fileId: number,
   document_type?: string,
   fileData?: Express.Multer.File,
   issue_date?: string,
   expiry_date?: string,
-): Promise<files> => {
-  const user = await prisma.users.findUniqueOrThrow({
-    where: {
-      uuid: userUuid,
-    },
-  });
-
-  const group = await prisma.groups.findUniqueOrThrow({
-    where: {
-      uuid: groupUuid,
-    },
-  });
-
+): Promise<privateDocumentMetadata> => {
   const file = await prisma.files.findUniqueOrThrow({
     where: {
       file_id: fileId,
+      group_id: context.groupId,
+      ownership_type: FILE_CONSTANTS.OWNERSHIP.GROUP,
+      documents: {
+        isNot: null,
+      },
+      media_files: {
+        is: null,
+      },
     },
     include: {
       documents: true,
+      creator: creatorSelect,
     },
   });
 
@@ -661,33 +613,7 @@ export const updateGroupDocument = async (
     throw new BadRequestError('This file is not a document!');
   }
 
-  // is the file uploaded in this group
-  if (file.group_id !== group.group_id) {
-    throw new BadRequestError('This file does not belong to this group!');
-  }
-
-  const groupProfile = await prisma.group_profiles.findFirst({
-    where: {
-      user_id: user.user_id,
-      group_id: group.group_id,
-    },
-    include: {
-      roles: true,
-    },
-  });
-
-  if (!groupProfile) {
-    throw new ForbiddenError('User must be part of the group to update a file!');
-  }
-
-  const isUploader = file.uploaded_by === user.user_id;
-  const isLeader = groupProfile.roles?.type === ROLES.LEADER;
-
-  if (!isUploader && !isLeader) {
-    throw new ForbiddenError(
-      'Only the uploader and the leaders of the group can update this file!',
-    );
-  }
+  assertGroupFileWriteAccess(context, file.uploaded_by, FILE_CONSTANTS.GROUP_FILE_TYPE.DOCUMENT);
 
   const effectiveIssueDate =
     issue_date === undefined
@@ -747,6 +673,7 @@ export const updateGroupDocument = async (
 
     include: {
       documents: true,
+      creator: creatorSelect,
     },
   });
 
@@ -754,27 +681,22 @@ export const updateGroupDocument = async (
 };
 
 export const updateGroupMediaFile = async (
-  userUuid: string,
-  groupUuid: string,
+  context: PermissionContext,
   fileId: number,
   fileData?: Express.Multer.File,
   description?: string,
-): Promise<files> => {
-  const user = await prisma.users.findUniqueOrThrow({
-    where: {
-      uuid: userUuid,
-    },
-  });
-
-  const group = await prisma.groups.findUniqueOrThrow({
-    where: {
-      uuid: groupUuid,
-    },
-  });
-
+): Promise<GroupMediaFile> => {
   const file = await prisma.files.findUniqueOrThrow({
     where: {
       file_id: fileId,
+      group_id: context.groupId,
+      ownership_type: FILE_CONSTANTS.OWNERSHIP.GROUP,
+      media_files: {
+        isNot: null,
+      },
+      documents: {
+        is: null,
+      },
     },
     include: {
       media_files: true,
@@ -786,32 +708,7 @@ export const updateGroupMediaFile = async (
     throw new BadRequestError('This file is not a media file!');
   }
 
-  if (file.group_id !== group.group_id) {
-    throw new BadRequestError('This file does not belong to this group!');
-  }
-
-  const groupProfile = await prisma.group_profiles.findFirst({
-    where: {
-      user_id: user.user_id,
-      group_id: group.group_id,
-    },
-    include: {
-      roles: true,
-    },
-  });
-
-  if (!groupProfile) {
-    throw new ForbiddenError('User must be part of the group to update a file!');
-  }
-
-  const isUploader = file.uploaded_by === user.user_id;
-  const isLeader = groupProfile.roles?.type === ROLES.LEADER;
-
-  if (!isUploader && !isLeader) {
-    throw new ForbiddenError(
-      'Only the uploader and the leaders of the group can update this file!',
-    );
-  }
+  assertGroupFileWriteAccess(context, file.uploaded_by, FILE_CONSTANTS.GROUP_FILE_TYPE.MEDIA_FILE);
 
   const updateData: Prisma.filesUpdateInput = {
     updated_at: new Date(),
@@ -852,54 +749,30 @@ export const updateGroupMediaFile = async (
 };
 
 export const deleteGroupFile = async (
-  userUuid: string,
-  groupUuid: string,
+  context: PermissionContext,
   fileId: number,
 ): Promise<void> => {
-  const user = await prisma.users.findUniqueOrThrow({
-    where: {
-      uuid: userUuid,
-    },
-  });
-
-  const group = await prisma.groups.findUniqueOrThrow({
-    where: {
-      uuid: groupUuid,
-    },
-  });
-
   const file = await prisma.files.findUniqueOrThrow({
     where: {
       file_id: fileId,
-    },
-  });
-
-  if (group.group_id !== file.group_id) {
-    throw new BadRequestError('This file does not belong to this group!');
-  }
-
-  const groupProfile = await prisma.group_profiles.findFirst({
-    where: {
-      user_id: user.user_id,
-      group_id: group.group_id,
+      group_id: context.groupId,
+      ownership_type: FILE_CONSTANTS.OWNERSHIP.GROUP,
     },
     include: {
-      roles: true,
+      documents: true,
+      media_files: true,
     },
   });
 
-  if (!groupProfile) {
-    throw new ForbiddenError('User must be part of the group to delete a file!');
+  if ((!file.documents && !file.media_files) || (file.documents && file.media_files)) {
+    throw new BadRequestError('Invalid group file type!');
   }
 
-  const isUploader = file.uploaded_by === user.user_id;
-  const isLeader = groupProfile.roles?.type === ROLES.LEADER;
+  const type = file.documents
+    ? FILE_CONSTANTS.GROUP_FILE_TYPE.DOCUMENT
+    : FILE_CONSTANTS.GROUP_FILE_TYPE.MEDIA_FILE;
 
-  if (!isUploader && !isLeader) {
-    throw new ForbiddenError(
-      'Only the uploader and the leaders of the group can delete this file!',
-    );
-  }
+  assertGroupFileWriteAccess(context, file.uploaded_by, type);
 
   await cloudOperations.deletePrivateFilesFromCloud([file.file_url]);
 
@@ -911,42 +784,51 @@ export const deleteGroupFile = async (
 };
 
 export const getGroupFiles = async (
-  userUuid: string,
-  groupUuid: string,
+  context: PermissionContext,
   limit: number,
   cursor?: number,
-  type?: string,
+  type?: FILE_CONSTANTS.GroupFileType,
 ): Promise<PaginatedGroupFiles> => {
-  const user = await prisma.users.findUniqueOrThrow({
-    where: {
-      uuid: userUuid,
-    },
-  });
-
-  const group = await prisma.groups.findUniqueOrThrow({
-    where: {
-      uuid: groupUuid,
-    },
-  });
-
-  const isMember = await prisma.group_profiles.findFirst({
-    where: {
-      user_id: user.user_id,
-      group_id: group.group_id,
-    },
-  });
-
-  if (!isMember) {
-    throw new ForbiddenError('Only users that are part of the group can view these files!');
+  if (type === FILE_CONSTANTS.GROUP_FILE_TYPE.DOCUMENT) {
+    assertPermission(context, PERMISSIONS.DOCUMENTS_READ);
   }
 
-  const queryOptions: Prisma.filesFindManyArgs = {
-    take: limit,
+  if (type === FILE_CONSTANTS.GROUP_FILE_TYPE.MEDIA_FILE) {
+    assertPermission(context, PERMISSIONS.MEDIA_READ);
+  }
+
+  const readableFileFilters: Prisma.filesWhereInput[] = [];
+
+  if (
+    type !== FILE_CONSTANTS.GROUP_FILE_TYPE.MEDIA_FILE &&
+    context.effectivePermissions.includes(PERMISSIONS.DOCUMENTS_READ)
+  ) {
+    readableFileFilters.push({
+      documents: { isNot: null },
+      media_files: { is: null },
+    });
+  }
+
+  if (
+    type !== FILE_CONSTANTS.GROUP_FILE_TYPE.DOCUMENT &&
+    context.effectivePermissions.includes(PERMISSIONS.MEDIA_READ)
+  ) {
+    readableFileFilters.push({
+      media_files: { isNot: null },
+      documents: { is: null },
+    });
+  }
+
+  if (readableFileFilters.length === 0) {
+    throw new ForbiddenError('User does not have permission to read group files!');
+  }
+
+  const queryOptions = {
+    take: limit + 1,
     where: {
-      group_id: group.group_id,
+      group_id: context.groupId,
       ownership_type: FILE_CONSTANTS.OWNERSHIP.GROUP,
-      ...(type === FILE_CONSTANTS.GROUP_FILE_TYPE.DOCUMENT && { documents: { isNot: null } }),
-      ...(type === FILE_CONSTANTS.GROUP_FILE_TYPE.MEDIA_FILE && { media_files: { isNot: null } }),
+      OR: readableFileFilters,
     },
     include: {
       documents: true,
@@ -955,17 +837,12 @@ export const getGroupFiles = async (
     },
 
     orderBy: [{ created_at: 'desc' }, { file_id: 'desc' }],
-  };
+    ...(cursor ? { cursor: { file_id: cursor }, skip: 1 } : {}),
+  } satisfies Prisma.filesFindManyArgs;
 
-  if (cursor) {
-    queryOptions.cursor = {
-      file_id: cursor,
-    };
-
-    queryOptions.skip = 1;
-  }
-
-  const groupFiles = (await prisma.files.findMany(queryOptions)) as GroupFile[];
+  const groupFiles = await prisma.files.findMany(queryOptions);
+  const hasNextPage = groupFiles.length > limit;
+  const pageFiles = groupFiles.slice(0, limit);
 
   // generating presigned URLs
   const filesWithUrls = await Promise.all(
@@ -979,11 +856,7 @@ export const getGroupFiles = async (
     }),
   );
 
-  let nextCursor = null;
-
-  if (groupFiles.length === limit) {
-    nextCursor = groupFiles[groupFiles.length - 1].file_id;
-  }
+  const nextCursor = hasNextPage ? pageFiles[pageFiles.length - 1].file_id : null;
 
   return {
     items: filesWithUrls,
@@ -997,44 +870,23 @@ export const getGroupFiles = async (
 };
 
 export const getAllPrivateDocumentsMetadataOfAllUsersInAGroup = async (
-  userUuid: string,
-  groupUuid: string,
-  filters: {
-    documentType?: string;
-    targetUserUuid?: string;
-  },
-): Promise<GroupMemberPrivateDocument[]> => {
-  const userGroupInfo = await prisma.group_profiles.findFirst({
-    where: {
-      users: {
-        uuid: userUuid,
-      },
-      groups: {
-        uuid: groupUuid,
-      },
-    },
-    select: {
-      users: true,
-      groups: true,
-      roles: true,
-    },
-  });
+  context: PermissionContext,
+  filters: SharedDocumentsFilter,
+): Promise<SharedPrivateDocumentMetadata[]> => {
+  const readableAudiences = getReadableDocumentAudiences(context);
 
-  if (!userGroupInfo) {
-    throw new ForbiddenError(
-      'User either is not part of the group, or the group or the user does not exist!',
-    );
-  }
-
-  if (userGroupInfo.roles.type !== ROLES.LEADER) {
-    throw new ForbiddenError('Only leaders can list all private documents of the group!');
+  if (readableAudiences.length === 0) {
+    throw new ForbiddenError('User does not have permission to read shared documents!');
   }
 
   const privateDocumentsList = await prisma.files.findMany({
     where: {
       file_shares: {
         some: {
-          group_id: userGroupInfo.groups.group_id,
+          group_id: context.groupId,
+          audience: {
+            in: readableAudiences,
+          },
         },
       },
 
@@ -1048,9 +900,13 @@ export const getAllPrivateDocumentsMetadataOfAllUsersInAGroup = async (
     include: {
       owner: creatorSelect,
       documents: true,
-
       file_shares: {
-        where: { group_id: userGroupInfo.groups.group_id },
+        where: {
+          group_id: context.groupId,
+          audience: {
+            in: readableAudiences,
+          },
+        },
       },
     },
 
