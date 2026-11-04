@@ -79,7 +79,7 @@ export const MODAL_CONFIG = {
 // 5. TOOLTIP CONFIG
 export const TOOLTIP_CONFIG = {
   slots: {
-    content: `${Z_INDEX_TOKENS.overlay} ${GLASS_TOKENS.strong} ${COLOR_TOKENS.text.primary} ${BORDER_TOKENS.ringBrandSubtle} ${RADIUS_TOKENS.md} ${SPACING_TOKENS.px.sm} ${SPACING_TOKENS.py.xs} ${TEXT_SIZES.xs} ${FONT_WEIGHTS.semibold} ${SHADOW_TOKENS.xl}`,
+    content: `${Z_INDEX_TOKENS.modal} ${GLASS_TOKENS.strong} ${COLOR_TOKENS.text.primary} ${BORDER_TOKENS.ringBrandSubtle} ${RADIUS_TOKENS.md} ${SPACING_TOKENS.px.sm} ${SPACING_TOKENS.py.xs} ${TEXT_SIZES.xs} ${FONT_WEIGHTS.semibold} ${SHADOW_TOKENS.xl}`,
     arrow: 'fill-surface-card/90',
   },
 } as const;
