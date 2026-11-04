@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { EVENT_VISIBILITY } from '../../constants/events.constants';
+import { EVENT_RSVP_STATUS, EVENT_VISIBILITY } from '../../constants/events.constants';
 import { emailSchema } from '../shared/common.validation';
 
 export const createEventSchema = z
@@ -197,6 +197,12 @@ export const addNewParticipantsBodySchema = z.object({
 
 export const participantUuidParamSchema = z.object({
   targetUuid: z.uuid('Invalid participant UUID format!'),
+});
+
+export const eventRsvpBodySchema = z.object({
+  status: z.enum([EVENT_RSVP_STATUS.GOING, EVENT_RSVP_STATUS.NOT_GOING, EVENT_RSVP_STATUS.MAYBE], {
+    message: `Status is required and must be one of ${EVENT_RSVP_STATUS.GOING}, ${EVENT_RSVP_STATUS.NOT_GOING} or ${EVENT_RSVP_STATUS.MAYBE}`,
+  }),
 });
 
 export const groupListingFilterQuerySchema = z

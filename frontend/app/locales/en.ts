@@ -289,6 +289,13 @@ export const UI_TEXT = {
     membersAdded: 'Members added successfully!',
     left: 'You have successfully left the event.',
     participantRemoved: 'Participant removed.',
+    rsvpLabel: 'Attendance:',
+    rsvpGoing: "I'll be there",
+    rsvpNotGoing: "I won't be there",
+    rsvpMaybe: 'Maybe',
+    rsvpRemove: 'Click again to remove your response',
+    goingSuffix: ' going',
+    noOneGoing: 'No one has confirmed yet.',
   },
   map: {
     location: (lat: number, lng: number) => `Location (${lat.toFixed(4)}, ${lng.toFixed(4)})`,

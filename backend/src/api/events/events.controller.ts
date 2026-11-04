@@ -96,6 +96,39 @@ class EventsController extends BaseController {
     },
   );
 
+  public setEventRsvp = this.handleAsync(async (req: Request, res: Response): Promise<void> => {
+    const user = res.locals.user!;
+
+    const groupUuid = req.params.groupUuid as string;
+
+    const eventUuid = req.params.eventUuid as string;
+
+    const { status } = req.body;
+
+    const rsvp = await eventService.setEventRsvp(user.uuid, groupUuid, eventUuid, status);
+
+    res.status(200).json({
+      status: 'success',
+      message: 'RSVP status saved successfully!',
+      data: rsvp,
+    });
+  });
+
+  public removeEventRsvp = this.handleAsync(async (req: Request, res: Response): Promise<void> => {
+    const user = res.locals.user!;
+
+    const groupUuid = req.params.groupUuid as string;
+
+    const eventUuid = req.params.eventUuid as string;
+
+    await eventService.removeEventRsvp(user.uuid, groupUuid, eventUuid);
+
+    res.status(200).json({
+      status: 'success',
+      message: 'RSVP status removed successfully!',
+    });
+  });
+
   public listEvents = this.handleAsync(async (req: Request, res: Response): Promise<void> => {
     const user = res.locals.user!;
 

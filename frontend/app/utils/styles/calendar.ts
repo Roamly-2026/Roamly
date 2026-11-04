@@ -61,6 +61,9 @@ export const CALENDAR_CONFIG = {
   metaValueLink: `${COLOR_TOKENS.text.brandHover} hover:${COLOR_TOKENS.text.brandAccent} underline underline-offset-2 ${INTERACTION_TOKENS.base}`,
 
   previewMapPlaceholder: `w-full h-64 ${SPACING_TOKENS.mt.sm} ${RADIUS_TOKENS.md} overflow-hidden relative flex items-center justify-center ${SHADOW_TOKENS.inner} ${BORDER_TOKENS.medium} bg-surface-card-hover/30`,
+  previewRsvpButtonGroup: `flex flex-wrap items-center ${SPACING_TOKENS.gap.sm}`,
+  previewRsvpButton: `${BUTTON_SIZES.xs} ${SPACING_TOKENS.gap.sm}`,
+  previewRsvpButtonIcon: 'size-5',
   emptyPreview: TYPOGRAPHY_CONFIG.emptyStateText,
 
   // Mobile Calendar Styles

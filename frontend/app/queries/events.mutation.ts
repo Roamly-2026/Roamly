@@ -2,7 +2,7 @@
 import { useMutation, useQueryCache } from '@pinia/colada';
 import type { Ref } from 'vue';
 import { eventsService } from '~/services/eventsService';
-import type { EventInDto } from '~/types/events.type';
+import type { EventInDto, RsvpStatus } from '~/types/events.type';
 import { useToast } from '#imports';
 import { getErrorMessage } from '../utils/error.utils';
 
@@ -163,6 +163,38 @@ export const useRemoveParticipantMutation = (
         description: UI_TEXT.events.participantRemoved,
         class: 'toast-success',
       });
+      queryCache.invalidateQueries({ key: ['events', groupUuid.value ?? null] });
+      options?.onSuccess?.();
+    },
+    onError: (error) => {
+      toast.add({
+        title: UI_TEXT.common.error,
+        description: getErrorMessage(error),
+        class: 'toast-error',
+      });
+      options?.onError?.(error);
+    },
+  });
+};
+
+export const useSetEventRsvpMutation = (
+  groupUuid: Ref<string | undefined>,
+  options?: MutationOptions,
+) => {
+  const queryCache = useQueryCache();
+  const toast = useToast();
+
+  return useMutation({
+    mutation: (data: { eventUuid: string; status: RsvpStatus | null }) => {
+      if (!groupUuid.value) throw new Error(UI_TEXT.errors.groupUuidRequired);
+      // a null status removes the user's response
+      if (!data.status) {
+        return eventsService.removeRsvp(groupUuid.value, data.eventUuid);
+      }
+      return eventsService.setRsvp(groupUuid.value, data.eventUuid, data.status);
+    },
+    // the highlighted button is the feedback
+    onSuccess: () => {
       queryCache.invalidateQueries({ key: ['events', groupUuid.value ?? null] });
       options?.onSuccess?.();
     },

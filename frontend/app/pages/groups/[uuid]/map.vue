@@ -11,7 +11,8 @@
       </template>
       <div :class="['fixed inset-0 z-0', GLASS_TOKENS.faint]">
         <MapDesktop
-          v-if="!isLoading && !error"
+          v-if="!isPending && !error"
+          :key="groupUuid"
           :locations="mapCoordinates"
           @marker-click="handleMarkerClick"
         />
@@ -51,7 +52,7 @@ const groupUuid = computed(() => route.params.uuid as string);
 const selectedDate = ref('ALL');
 
 /* --- API QUERIES --- */
-const { data: events, isLoading, error } = useEventsQuery(groupUuid, selectedDate);
+const { data: events, isPending, error } = useEventsQuery(groupUuid, selectedDate);
 
 /* --- MODAL LOGIC --- */
 const handleMarkerClick = (eventId: string | number) => {

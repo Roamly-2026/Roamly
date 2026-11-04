@@ -10,6 +10,14 @@ export interface RawEventParticipant {
   };
 }
 
+export type RsvpStatus = 'going' | 'not_going' | 'maybe';
+
+export interface EventRsvpMemberDto {
+  uuid: string;
+  username: string;
+  profile_image_url?: string | null;
+}
+
 export interface RawEventDto {
   uuid: string;
   title: string;
@@ -27,6 +35,8 @@ export interface RawEventDto {
   latitude?: number | null;
   longitude?: number | null;
   address?: string | null;
+  my_rsvp_status?: RsvpStatus | null;
+  going_members?: EventRsvpMemberDto[];
 }
 
 export interface EventCreatorDto {
@@ -48,6 +58,8 @@ export interface EventOutDto {
   latitude?: number | null;
   longitude?: number | null;
   address?: string | null;
+  my_rsvp_status: RsvpStatus | null;
+  going_members: EventRsvpMemberDto[];
 }
 
 export interface EventInDto {
