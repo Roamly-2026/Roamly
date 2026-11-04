@@ -1,5 +1,6 @@
 // frontend/app/types/user.type.ts
 export interface UserOutDto {
+  uuid: string;
   username: string;
   email: string;
   phone_number: string;

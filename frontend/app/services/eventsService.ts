@@ -1,5 +1,5 @@
 // frontend/app/services/events.service.ts
-import type { EventInDto, EventOutDto, RawEventDto } from '~/types/events.type';
+import type { EventInDto, EventOutDto, RawEventDto, RsvpStatus } from '~/types/events.type';
 import type { ApiResponse } from '~/types/api.type';
 
 /* --- MAPPER (UTILS) --- */
@@ -17,6 +17,10 @@ const mapRawEventToDto = (raw: RawEventDto): EventOutDto => ({
   latitude: raw.latitude ?? null,
   longitude: raw.longitude ?? null,
   address: raw.address ?? null,
+
+  //rsvp
+  my_rsvp_status: raw.my_rsvp_status ?? null,
+  going_members: raw.going_members ?? [],
 });
 
 /* --- SERVICE --- */
@@ -80,6 +84,14 @@ export const eventsService = {
     const api = useApi();
     return await api(`/events/${groupUuid}/${eventUuid}/participants/${targetUuid}`, {
       method: 'DELETE',
+    });
+  },
+
+  async setRsvp(groupUuid: string, eventUuid: string, status: RsvpStatus): Promise<void> {
+    const api = useApi();
+    return await api(`/events/${groupUuid}/${eventUuid}/rsvp`, {
+      method: 'PUT',
+      body: { status },
     });
   },
 };

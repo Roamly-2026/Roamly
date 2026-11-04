@@ -158,6 +158,68 @@
               </template>
             </div>
           </div>
+
+          <div :class="LAYOUT_CONFIG.modalFormGroup">
+            <span :class="CALENDAR_CONFIG.metaLabel">{{ UI_TEXT.events.rsvpLabel }}</span>
+            <div :class="CALENDAR_CONFIG.previewRsvpButtonGroup">
+              <BaseButton
+                icon="i-heroicons-check"
+                :label="UI_TEXT.events.rsvpGoing"
+                :class="CALENDAR_CONFIG.previewRsvpButton"
+                :ui="{ leadingIcon: CALENDAR_CONFIG.previewRsvpButtonIcon }"
+                :variant="
+                  myRsvpStatus === EVENT_RSVP_STATUS.GOING
+                    ? 'smallPrimaryActionButton'
+                    : 'smallGhostBrandButton'
+                "
+                :disabled="eventsStore.previewEvent.isExpired"
+                @click="handleRsvp(EVENT_RSVP_STATUS.GOING)"
+              />
+              <BaseButton
+                icon="i-heroicons-x-mark"
+                :label="UI_TEXT.events.rsvpNotGoing"
+                :class="CALENDAR_CONFIG.previewRsvpButton"
+                :ui="{ leadingIcon: CALENDAR_CONFIG.previewRsvpButtonIcon }"
+                :variant="
+                  myRsvpStatus === EVENT_RSVP_STATUS.NOT_GOING
+                    ? 'smallDangerActionButton'
+                    : 'smallGhostDangerButton'
+                "
+                :disabled="eventsStore.previewEvent.isExpired"
+                @click="handleRsvp(EVENT_RSVP_STATUS.NOT_GOING)"
+              />
+            </div>
+          </div>
+
+          <div :class="CALENDAR_CONFIG.metaRowItemCenter">
+            <span :class="CALENDAR_CONFIG.metaLabel"
+              >{{ goingMembers.length }}{{ UI_TEXT.events.goingSuffix }}</span
+            >
+            <div
+              v-if="goingMembers.length > 0"
+              :class="[
+                CALENDAR_CONFIG.participantsAvatars,
+                goingMembers.length > 5
+                  ? CALENDAR_CONFIG.participantsOverlap
+                  : CALENDAR_CONFIG.participantsGap,
+              ]"
+            >
+              <UTooltip v-for="m in displayGoingMembers" :key="m.uuid" :text="m.username">
+                <UAvatar
+                  :alt="m.username"
+                  :src="m.profile_image_url || undefined"
+                  icon="i-heroicons-user"
+                  size="sm"
+                  :class="CALENDAR_CONFIG.participantAvatar"
+                />
+              </UTooltip>
+              <div v-if="extraGoingCount > 0" :class="CALENDAR_CONFIG.participantMoreBadge">
+                +{{ extraGoingCount }}
+              </div>
+            </div>
+            <span v-else :class="CALENDAR_CONFIG.metaValue">{{ UI_TEXT.events.noOneGoing }}</span>
+          </div>
+
           <div :class="LAYOUT_CONFIG.modalFormGroup">
             <span :class="CALENDAR_CONFIG.metaLabel">{{ UI_TEXT.events.descriptionLabel }}</span>
             <span :class="CALENDAR_CONFIG.metaValue">{{
@@ -213,7 +275,8 @@ import { useEventsStore } from '~/stores/events.modals.store';
 import { useGroupsStore } from '~/stores/groups.modals.store';
 import { useCurrentUserQuery } from '~/queries/user.query';
 import { useGroupsQuery, useGroupInfosQuery } from '~/queries/groups.query';
-import type { EventCreatorDto } from '~/types/events.type';
+import { useSetEventRsvpMutation } from '~/queries/events.mutation';
+import type { EventCreatorDto, EventRsvpMemberDto, RsvpStatus } from '~/types/events.type';
 
 const eventsStore = useEventsStore();
 const groupsStore = useGroupsStore();
@@ -291,6 +354,51 @@ const handleOpenUserProfile = (user: EventCreatorDto) => {
     canViewDocuments: false,
   };
   groupsStore.isUserProfileModalOpen = true;
+};
+
+const myRsvpStatus = computed<RsvpStatus | null>(
+  () => eventsStore.previewEvent?.my_rsvp_status ?? null,
+);
+const goingMembers = computed<EventRsvpMemberDto[]>(
+  () => eventsStore.previewEvent?.going_members || [],
+);
+const displayGoingMembers = computed<EventRsvpMemberDto[]>(() => goingMembers.value.slice(0, 5));
+const extraGoingCount = computed<number>(() => Math.max(0, goingMembers.value.length - 5));
+
+// the response before the click, restored if saving the new one fails
+let previousRsvp: { status: RsvpStatus | null; members: EventRsvpMemberDto[] } | null = null;
+
+const setRsvpMutation = useSetEventRsvpMutation(
+  computed(() => eventsStore.selectedGroupUuid),
+  {
+    onError: () => {
+      if (eventsStore.previewEvent && previousRsvp) {
+        eventsStore.previewEvent.my_rsvp_status = previousRsvp.status;
+        eventsStore.previewEvent.going_members = previousRsvp.members;
+      }
+    },
+  },
+);
+
+// the modal shows a copy of the event, so it is updated here right away
+const handleRsvp = (status: RsvpStatus) => {
+  const event = eventsStore.previewEvent;
+  const user = currentUser.value;
+  if (!event || !user || event.my_rsvp_status === status) return;
+
+  previousRsvp = { status: event.my_rsvp_status, members: event.going_members };
+
+  const otherMembers = event.going_members.filter((m) => m.uuid !== user.uuid);
+  event.my_rsvp_status = status;
+  event.going_members =
+    status === EVENT_RSVP_STATUS.GOING
+      ? [
+          ...otherMembers,
+          { uuid: user.uuid, username: user.username, profile_image_url: user.profile_image_url },
+        ]
+      : otherMembers;
+
+  setRsvpMutation.mutate({ eventUuid: event.uuid, status });
 };
 </script>
 

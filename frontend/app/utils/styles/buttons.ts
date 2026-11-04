@@ -70,6 +70,9 @@ export const BUTTON_VARIANTS = {
   ghostBrandIconButton: `${INTERACTION_TOKENS.base} ${BUTTON_SIZES.iconSm} ${BUTTON_APPEARANCES.ghostBrand}`,
   ghostInverseIconButton: `${INTERACTION_TOKENS.base} ${BUTTON_SIZES.iconSm} ${BUTTON_APPEARANCES.ghostInverse}`,
 
+  smallGhostBrandButton: `${BASE_BUTTON} ${BUTTON_SIZES.sm} ${BORDER_TOKENS.ringSubtle} ${BUTTON_APPEARANCES.ghostBrand}`,
+  smallGhostDangerButton: `${BASE_BUTTON} ${BUTTON_SIZES.sm} ${BORDER_TOKENS.ringSubtle} ${BUTTON_APPEARANCES.ghostDanger}`,
+
   smallDangerActionButton: `${BASE_BUTTON} ${BUTTON_SIZES.sm} ${BUTTON_APPEARANCES.danger}`,
   actionDangerButton: `${BASE_BUTTON} ${BUTTON_SIZES.lg} ${BUTTON_APPEARANCES.dangerElevated}`,
 
