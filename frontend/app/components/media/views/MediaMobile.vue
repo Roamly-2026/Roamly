@@ -7,26 +7,26 @@
         icon="i-heroicons-users"
         variant="glassIconButton"
         :to="membersRoute"
-        :tooltip="UI_TEXT.common.members"
+        :tooltip="UI_TEXT.tooltips.members"
       />
       <BaseButton
         icon="i-heroicons-calendar"
         variant="glassIconButton"
         :to="eventsRoute"
-        :tooltip="UI_TEXT.common.calendar"
+        :tooltip="UI_TEXT.tooltips.calendar"
       />
       <BaseButton
         icon="i-heroicons-photo"
         variant="glassIconButton"
         class="text-brand-500"
         :to="mediaRoute"
-        :tooltip="UI_TEXT.common.photos"
+        :tooltip="UI_TEXT.tooltips.photos"
       />
       <BaseButton
         icon="i-heroicons-document-text"
         variant="glassIconButton"
         :to="documentsRoute"
-        :tooltip="UI_TEXT.common.documents"
+        :tooltip="UI_TEXT.tooltips.documents"
       />
     </div>
 
@@ -39,9 +39,9 @@
               <h1 :class="appConfig.typography.pageTitle" class="text-2xl! truncate">
                 <ClientOnly :fallback="UI_TEXT.common.loading">
                   {{
-                    isLoading
+                    isLoadingGroups
                       ? UI_TEXT.common.loading
-                      : currentGroupDetails?.name || UI_TEXT.documents.selectGroup
+                      : currentGroupDetails?.name || UI_TEXT.events.selectGroup
                   }}
                 </ClientOnly>
               </h1>
@@ -63,7 +63,7 @@
               ]"
             >
               <BaseButton
-                v-for="group in groups"
+                v-for="group in userGroupsList"
                 :key="group.uuid"
                 :class="appConfig.ui.wideDropdownMenu.slots.item"
                 variant="ghost"
@@ -72,7 +72,9 @@
                 <template #leading>
                   <UIcon
                     :name="
-                      group.uuid === selectedGroup ? 'i-heroicons-check' : 'i-heroicons-user-group'
+                      group.uuid === selectedGroupUuid
+                        ? 'i-heroicons-check'
+                        : 'i-heroicons-user-group'
                     "
                     :class="appConfig.ui.wideDropdownMenu.slots.itemLeadingIcon"
                   />
@@ -84,202 +86,99 @@
         </UPopover>
       </div>
 
-      <!-- TOOLBAR: search + upload -->
-      <div :class="appConfig.calendar.mobileToolbar">
-        <BaseSearchInput v-model="searchQuery" :placeholder="UI_TEXT.media.search" class="flex-1" />
+      <!-- SECTION HEADER + UPLOAD ACTION -->
+      <div
+        :class="`flex items-center justify-between w-full ${SPACING_TOKENS.px.sm} ${SPACING_TOKENS.mb.md}`"
+      >
+        <div :class="appConfig.typography.pageTitle" class="text-xl font-bold">
+          {{ UI_TEXT.media.groupPhotos }}
+        </div>
         <BaseButton
           icon="i-heroicons-plus"
-          variant="glassIconButton"
-          :tooltip="UI_TEXT.media.uploadPhoto"
-          @click="emit('upload')"
+          variant="glassIconButtonHighlight"
+          :tooltip="UI_TEXT.media.uploadHeading"
+          :disabled="!selectedGroupUuid"
+          @click="mediaStore.openUploadModal(selectedGroupUuid!)"
         />
       </div>
 
-      <!-- MEDIA LIST -->
-      <div :class="`${SPACING_TOKENS.px.sm} ${SPACING_TOKENS.pt.sm}`">
-        <div
-          v-if="isLoading"
-          :class="[appConfig.typography.statusLoading, SPACING_TOKENS.py.md, 'text-center']"
-        >
-          {{ ' ' + UI_TEXT.media.loading + ' ' }}
-        </div>
-
-        <div
-          v-else-if="filteredMedia.length > 0"
-          :class="`flex flex-col ${SPACING_TOKENS.gap.md} w-full`"
-        >
-          <BaseCard
-            v-for="mediaItem in filteredMedia"
-            :key="mediaItem.file_id"
-            variant="documentGlass"
-            class="relative w-full"
-          >
-            <!-- Title + delete -->
-            <div :class="appConfig.layout.documentCardHeader">
-              <p class="font-bold truncate pr-2 shadow-sm text-sm">{{ mediaItem.file_name }}</p>
-              <div :class="`flex items-center ${SPACING_TOKENS.gap.xs} shrink-0`">
-                <BaseButton
-                  v-if="isCurrentUserLeader"
-                  icon="i-heroicons-trash"
-                  variant="ghostDangerIconButton"
-                  class="text-surface-500 hover:text-error-500 w-6! h-6! p-0"
-                  :tooltip="UI_TEXT.common.delete"
-                  @click="emit('delete', mediaItem)"
-                />
-              </div>
-            </div>
-
-            <!-- Image preview -->
-            <div :class="appConfig.layout.documentCardImage" class="h-48! overflow-hidden">
-              <img
-                v-if="isImage(mediaItem.mime_type)"
-                :src="mediaItem.download_url || mediaItem.file_url"
-                :alt="mediaItem.file_name"
-                class="w-full h-full object-cover"
-              />
-              <div
-                v-else
-                :class="`flex flex-col items-center justify-center ${SPACING_TOKENS.gap.sm}`"
-              >
-                <UIcon name="i-heroicons-film" class="w-12 h-12 text-surface-500/50" />
-                <span class="text-xs text-surface-400">{{ mediaItem.mime_type }}</span>
-              </div>
-
-              <div :class="`absolute bottom-2 ${SPACING_TOKENS.px.md} w-full flex justify-between`">
-                <BaseButton
-                  icon="i-heroicons-eye"
-                  variant="ghostDangerIconButton"
-                  class="text-surface-500"
-                  :href="mediaItem.download_url || mediaItem.file_url"
-                  target="_blank"
-                  :tooltip="UI_TEXT.common.view"
-                />
-                <BaseButton
-                  icon="i-heroicons-arrow-down-tray"
-                  variant="ghostDangerIconButton"
-                  class="text-surface-500"
-                  :tooltip="UI_TEXT.common.download"
-                  @click.prevent="
-                    emit(
-                      'download',
-                      mediaItem.download_url || mediaItem.file_url,
-                      mediaItem.file_name,
-                    )
-                  "
-                />
-              </div>
-            </div>
-
-            <!-- Metadata -->
-            <div :class="appConfig.layout.documentCardMeta">
-              <p>
-                {{ ' ' + UI_TEXT.common.uploadedBy + ' '
-                }}<span class="font-bold text-dark-text">{{
-                  mediaItem.creator?.username || UI_TEXT.common.unknown
-                }}</span>
-              </p>
-              <p>
-                {{ ' ' + UI_TEXT.common.uploadedAt + ' '
-                }}<span class="font-bold text-dark-text">{{
-                  new Date(mediaItem.created_at).toLocaleDateString()
-                }}</span>
-              </p>
-              <div v-if="mediaItem.media_files?.description">
-                <div :class="appConfig.layout.divider"></div>
-                <p>
-                  {{ ' ' + UI_TEXT.events.descriptionLabel + ' '
-                  }}<span class="font-bold text-dark-text">{{
-                    mediaItem.media_files.description
-                  }}</span>
-                </p>
-              </div>
-              <div :class="appConfig.layout.divider"></div>
-              <div :class="appConfig.layout.flexBetween">
-                <p>
-                  {{ ' ' + UI_TEXT.media.type + ' '
-                  }}<span class="font-bold text-dark-text">{{
-                    mediaItem.mime_type?.split('/')[1] || UI_TEXT.common.unknown
-                  }}</span>
-                </p>
-                <p>
-                  {{ ' ' + UI_TEXT.media.size + ' '
-                  }}<span class="font-bold text-dark-text"
-                    >{{ (mediaItem.file_size / (1024 * 1024)).toFixed(2)
-                    }}{{ ' ' + UI_TEXT.common.megabytes }}</span
-                  >
-                </p>
-              </div>
-            </div>
-          </BaseCard>
-        </div>
-
-        <div
-          v-else
-          :class="[appConfig.typography.statusLoading, SPACING_TOKENS.py.md, 'text-center']"
-        >
-          {{ searchQuery ? UI_TEXT.media.noMatchingPhotos : UI_TEXT.media.noPhotos }}
-        </div>
+      <!-- MEDIA GRID -->
+      <div :class="`${SPACING_TOKENS.px.sm} ${SPACING_TOKENS.pt.xs}`">
+        <MediaGrid :media-list="mediaItems" :is-loading="isLoadingMedia" />
       </div>
     </div>
+
+    <!-- Modals -->
+    <GroupMediaModals />
+    <MediaLightboxModal />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { useAppConfig } from '#imports';
-import type { GroupFile } from '~/types/files.type';
-import type { GroupOutDto } from '~/types/groups.type';
+import { useMediaModalsStore } from '~/stores/media.modals.store';
+import { useGroupsQuery } from '~/queries/groups.query';
+import { useGroupFilesQuery } from '~/queries/files.query';
+import MediaGrid from '~/components/media/views/MediaGrid.vue';
+import GroupMediaModals from '~/components/media/modals/GroupMediaModals.vue';
+import MediaLightboxModal from '~/components/media/modals/MediaLightBoxModal.vue';
 
 const appConfig = useAppConfig();
-
-const selectedGroup = defineModel<string | undefined>('selectedGroup');
-const searchQuery = defineModel<string>('searchQuery', { default: '' });
-
-const props = defineProps<{
-  media: GroupFile[];
-  groups: GroupOutDto[];
-  isLoading: boolean;
-  isCurrentUserLeader: boolean;
-}>();
-
-const emit = defineEmits<{
-  delete: [file: GroupFile];
-  upload: [];
-  'delete-group': [];
-  'leave-group': [];
-  download: [url: string | undefined, filename: string];
-}>();
+const mediaStore = useMediaModalsStore();
+const route = useRoute();
+const router = useRouter();
 
 const isGroupDropdownOpen = ref(false);
+const selectedGroupUuid = computed(() => (route.query.groupId as string) || undefined);
 
+// Groups data
+const { data: groupsData, isLoading: isLoadingGroups } = useGroupsQuery();
+const userGroupsList = computed(() => groupsData.value?.items || []);
 const currentGroupDetails = computed(() =>
-  props.groups.find((g) => g.uuid === selectedGroup.value),
+  userGroupsList.value.find((g) => g.uuid === selectedGroupUuid.value),
+);
+
+// Auto-select the first available group if none is present in query parameters
+watch(
+  userGroupsList,
+  (groups) => {
+    if (!selectedGroupUuid.value && groups.length > 0 && groups[0]?.uuid) {
+      router.replace({ query: { ...route.query, groupId: groups[0].uuid } });
+    }
+  },
+  { immediate: true },
 );
 
 const selectGroup = (uuid: string) => {
-  selectedGroup.value = uuid;
   isGroupDropdownOpen.value = false;
+  router.push({ query: { ...route.query, groupId: uuid } });
 };
 
 // Contextual nav routes
 const membersRoute = computed(() =>
-  selectedGroup.value ? `/groups/${selectedGroup.value}/members` : '/groups',
+  selectedGroupUuid.value ? `/groups/${selectedGroupUuid.value}/members` : '/groups',
 );
 const eventsRoute = computed(() =>
-  selectedGroup.value ? `/events?groupId=${selectedGroup.value}` : '/events',
+  selectedGroupUuid.value ? `/events?groupId=${selectedGroupUuid.value}` : '/events',
 );
 const mediaRoute = computed(() =>
-  selectedGroup.value ? `/files/media?groupId=${selectedGroup.value}` : '/files/media',
+  selectedGroupUuid.value ? `/files/media?groupId=${selectedGroupUuid.value}` : '/files/media',
 );
 const documentsRoute = computed(() =>
-  selectedGroup.value ? `/files/documents?groupId=${selectedGroup.value}` : '/files/documents',
+  selectedGroupUuid.value
+    ? `/files/documents?groupId=${selectedGroupUuid.value}`
+    : '/files/documents',
 );
 
-const isImage = (mimeType: string) => mimeType?.startsWith('image/');
+// Fetch media files from backend API
+const { data: groupMediaData, isLoading: isLoadingMedia } = useGroupFilesQuery(
+  () => selectedGroupUuid.value || '',
+  () => 50,
+  () => undefined,
+  () => 'media',
+);
 
-const filteredMedia = computed<GroupFile[]>(() => {
-  const q = searchQuery.value.toLowerCase().trim();
-  if (!q) return props.media;
-  return props.media.filter((m) => m.file_name.toLowerCase().includes(q));
-});
+const mediaItems = computed(() => groupMediaData.value?.items || []);
 </script>

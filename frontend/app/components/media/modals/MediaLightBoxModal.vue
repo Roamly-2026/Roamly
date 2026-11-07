@@ -3,16 +3,21 @@
     :open="mediaStore.isLightboxOpen"
     :ui="{
       content:
-        '!w-[95vw] sm:!max-w-7xl h-[90vh] flex flex-col sm:flex-row overflow-hidden !bg-black/95 !ring-1 !ring-white/10 !rounded-2xl !p-0 shadow-2xl',
+        '!w-[95vw] lg:!max-w-7xl h-[92vh] sm:h-[90vh] flex flex-col landscape:flex-row lg:flex-row overflow-hidden !bg-black/95 !ring-1 !ring-white/10 !rounded-2xl !p-0 shadow-2xl',
       overlay: 'fixed inset-0 z-[100] bg-black/80 backdrop-blur-md',
     }"
     @update:open="mediaStore.closeLightbox()"
   >
     <template #content>
-      <div v-if="activeMedia" class="flex flex-col sm:flex-row w-full h-full min-h-0">
-        <!-- LEFT SIDE: IMAGE/VIDEO -->
+      <div
+        v-if="activeMedia"
+        class="flex flex-col landscape:flex-row lg:flex-row w-full h-full min-h-0"
+      >
+        <!-- IMAGE / VIDEO AREA -->
         <div
-          class="relative flex-1 flex items-center justify-center overflow-hidden bg-black group h-full min-h-0 min-w-0"
+          class="relative flex-1 flex items-center justify-center overflow-hidden bg-black group min-h-0 min-w-0 select-none"
+          @touchstart.passive="onTouchStart"
+          @touchend.passive="onTouchEnd"
         >
           <img
             v-if="activeMedia.mime_type?.startsWith('image/')"
@@ -27,25 +32,28 @@
             class="w-full h-full object-contain"
           ></video>
 
+          <!-- PREV BUTTON -->
           <button
             v-if="mediaStore.lightboxMediaList.length > 1"
-            class="absolute left-4 w-12 h-12 aspect-square flex items-center justify-center p-0 rounded-full bg-black/50 text-white hover:bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer z-10"
+            class="absolute left-3 sm:left-4 w-10 h-10 sm:w-12 sm:h-12 aspect-square flex items-center justify-center p-0 rounded-full bg-black/60 text-white hover:bg-black/80 active:scale-95 opacity-80 lg:opacity-0 lg:group-hover:opacity-100 transition-all cursor-pointer z-10 shadow-md ring-1 ring-white/20"
             @click.stop="mediaStore.prevMedia()"
           >
-            <UIcon name="i-heroicons-chevron-left" class="w-7 h-7" />
+            <UIcon name="i-heroicons-chevron-left" class="w-6 h-6 sm:w-7 sm:h-7" />
           </button>
+
+          <!-- NEXT BUTTON -->
           <button
             v-if="mediaStore.lightboxMediaList.length > 1"
-            class="absolute right-4 w-12 h-12 aspect-square flex items-center justify-center p-0 rounded-full bg-black/50 text-white hover:bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer z-10"
+            class="absolute right-3 sm:right-4 w-10 h-10 sm:w-12 sm:h-12 aspect-square flex items-center justify-center p-0 rounded-full bg-black/60 text-white hover:bg-black/80 active:scale-95 opacity-80 lg:opacity-0 lg:group-hover:opacity-100 transition-all cursor-pointer z-10 shadow-md ring-1 ring-white/20"
             @click.stop="mediaStore.nextMedia()"
           >
-            <UIcon name="i-heroicons-chevron-right" class="w-7 h-7" />
+            <UIcon name="i-heroicons-chevron-right" class="w-6 h-6 sm:w-7 sm:h-7" />
           </button>
         </div>
 
-        <!-- RIGHT SIDE: INFO BAR -->
+        <!-- INFO BAR: álló mobilon alul (max 42% magassággal), fekvőben és desktopon a jobb szélen -->
         <div
-          class="w-full sm:w-80 lg:w-96 bg-surface-500 flex flex-col h-full overflow-y-auto custom-scrollbar border-l border-white/10 shrink-0"
+          class="w-full landscape:w-80 lg:w-96 max-h-[42%] landscape:max-h-none lg:max-h-none landscape:h-full lg:h-full bg-surface-500 flex flex-col overflow-y-auto custom-scrollbar border-t landscape:border-t-0 lg:border-t-0 landscape:border-l lg:border-l border-white/10 shrink-0"
         >
           <div
             :class="`flex items-center justify-between ${SPACING_TOKENS.p.md} border-b border-dark-text/10 sticky top-0 bg-surface-500/90 backdrop-blur z-10`"
@@ -203,7 +211,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useAppConfig } from '#imports';
 import { useMediaModalsStore } from '~/stores/media.modals.store';
 import { useCurrentUserQuery } from '~/queries/user.query';
@@ -216,6 +224,34 @@ const { data: currentUser } = useCurrentUserQuery();
 const activeMedia = computed(() => mediaStore.activeMedia);
 
 const canManage = computed(() => !!currentUser.value);
+
+// Swipe gesture handling for mobile
+const touchStartX = ref(0);
+const touchStartY = ref(0);
+
+const onTouchStart = (e: TouchEvent) => {
+  touchStartX.value = e.changedTouches[0]?.screenX || 0;
+  touchStartY.value = e.changedTouches[0]?.screenY || 0;
+};
+
+const onTouchEnd = (e: TouchEvent) => {
+  if (mediaStore.lightboxMediaList.length <= 1) return;
+
+  const touchEndX = e.changedTouches[0]?.screenX || 0;
+  const touchEndY = e.changedTouches[0]?.screenY || 0;
+
+  const diffX = touchStartX.value - touchEndX;
+  const diffY = touchStartY.value - touchEndY;
+
+  // Horizontal swipe detection threshold
+  if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+    if (diffX > 0) {
+      mediaStore.nextMedia();
+    } else {
+      mediaStore.prevMedia();
+    }
+  }
+};
 
 const handleKeydown = (e: KeyboardEvent) => {
   if (!mediaStore.isLightboxOpen) return;
