@@ -85,7 +85,8 @@ export const useMediaModalsStore = defineStore('mediaModals', () => {
   const prevMedia = () => {
     if (lightboxMediaList.value.length === 0) return;
     activeMediaIndex.value =
-      (activeMediaIndex.value - 1 + lightboxMediaList.value.length) % lightboxMediaList.value.length;
+      (activeMediaIndex.value - 1 + lightboxMediaList.value.length) %
+      lightboxMediaList.value.length;
   };
 
   return {
