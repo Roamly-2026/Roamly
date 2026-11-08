@@ -34,6 +34,7 @@ import 'leaflet-control-geocoder';
 import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
 import iconUrl from 'leaflet/dist/images/marker-icon.png';
 import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
+import { getAddressFromCoordinates } from '~/utils/geocoding.utils';
 
 const props = defineProps<{
   // the starting location to display on the map, including coordinates and a formatted address
@@ -134,21 +135,13 @@ const initmap = () => {
     isLoadingAddress.value = true;
 
     // fetch for the reverse geocoding
-    try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`,
-      );
+    const address = await getAddressFromCoordinates(lat, lng);
 
-      const data = await response.json();
-
-      if (data && data.display_name && currentSelection.value) {
-        currentSelection.value.address = data.display_name;
-      }
-    } catch (error) {
-      console.error('Failed to fetch address:', error);
-    } finally {
-      isLoadingAddress.value = false;
+    if (currentSelection.value) {
+      currentSelection.value.address = address;
     }
+
+    isLoadingAddress.value = false;
   });
 
   setTimeout(() => {

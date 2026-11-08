@@ -18,6 +18,11 @@ export interface EventRsvpMemberDto {
   profile_image_url?: string | null;
 }
 
+export interface EventCoordinates {
+  latitude: number;
+  longitude: number;
+}
+
 export interface RawEventDto {
   uuid: string;
   title: string;
