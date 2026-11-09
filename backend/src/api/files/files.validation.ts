@@ -74,13 +74,14 @@ const parseJsonArray = (val: unknown): unknown => {
     try {
       return JSON.parse(val);
     } catch {
-      return [];
+      // Return original malformed string so Zod rejects it as non-array
+      return val;
     }
   }
   return val;
 };
 
-const groupMediaFields = {
+const groupMediaUploadFields = {
   description: z.preprocess(
     (val: unknown): unknown => (val === '' ? undefined : val),
     z.string().trim().max(512, 'Description can not be longer than 512 characters!').optional(),
@@ -99,13 +100,21 @@ const groupMediaFields = {
   latitude: z.preprocess(
     (val: unknown): unknown =>
       val === undefined || val === '' || val === null ? undefined : Number(val),
-    z.number().min(-90, 'Latitude must be between -90 and 90').max(90, 'Latitude must be between -90 and 90').optional(),
+    z
+      .number()
+      .min(-90, 'Latitude must be between -90 and 90')
+      .max(90, 'Latitude must be between -90 and 90')
+      .optional(),
   ),
 
   longitude: z.preprocess(
     (val: unknown): unknown =>
       val === undefined || val === '' || val === null ? undefined : Number(val),
-    z.number().min(-180, 'Longitude must be between -180 and 180').max(180, 'Longitude must be between -180 and 180').optional(),
+    z
+      .number()
+      .min(-180, 'Longitude must be between -180 and 180')
+      .max(180, 'Longitude must be between -180 and 180')
+      .optional(),
   ),
 
   tagged_user_uuids: z.preprocess(
@@ -114,32 +123,71 @@ const groupMediaFields = {
   ),
 };
 
-const validateCoordinates = (data: { latitude?: number; longitude?: number }): boolean => {
-  const hasLat = data.latitude !== undefined;
-  const hasLng = data.longitude !== undefined;
+const groupMediaUpdateFields = {
+  description: z
+    .string()
+    .trim()
+    .max(512, 'Description can not be longer than 512 characters!')
+    .optional(),
+
+  taken_at: z
+    .union([
+      z.literal(''),
+      z.iso.datetime('Invalid date format! Use ISO format (YYYY-MM-DDTHH:MM:SS.MSZ)'),
+    ])
+    .optional(),
+
+  location_name: z.string().trim().max(255).optional(),
+
+  latitude: z.preprocess(
+    (val: unknown): unknown =>
+      val === undefined ? undefined : val === '' || val === null ? null : Number(val),
+    z
+      .number()
+      .min(-90, 'Latitude must be between -90 and 90')
+      .max(90, 'Latitude must be between -90 and 90')
+      .nullable()
+      .optional(),
+  ),
+
+  longitude: z.preprocess(
+    (val: unknown): unknown =>
+      val === undefined ? undefined : val === '' || val === null ? null : Number(val),
+    z
+      .number()
+      .min(-180, 'Longitude must be between -180 and 180')
+      .max(180, 'Longitude must be between -180 and 180')
+      .nullable()
+      .optional(),
+  ),
+
+  tagged_user_uuids: z.preprocess(
+    parseJsonArray,
+    z.array(z.string().uuid('Invalid user UUID format!')).optional(),
+  ),
+};
+
+const validateCoordinates = (data: {
+  latitude?: number | null;
+  longitude?: number | null;
+}): boolean => {
+  const hasLat = data.latitude !== undefined && data.latitude !== null;
+  const hasLng = data.longitude !== undefined && data.longitude !== null;
   return hasLat === hasLng;
 };
 
-export const groupMediaDataSchema = z
-  .object(groupMediaFields)
-  .refine(
-    validateCoordinates,
-    {
-      message: 'Latitude and longitude must be provided together!',
-      path: ['latitude'],
-    },
-  );
+export const groupMediaDataSchema = z.object(groupMediaUploadFields).refine(validateCoordinates, {
+  message: 'Latitude and longitude must be provided together!',
+  path: ['latitude'],
+});
 
 export const groupMediaUpdateSchema = z
-  .object(groupMediaFields)
+  .object(groupMediaUpdateFields)
   .partial()
-  .refine(
-    validateCoordinates,
-    {
-      message: 'Latitude and longitude must be provided together!',
-      path: ['latitude'],
-    },
-  );
+  .refine(validateCoordinates, {
+    message: 'Latitude and longitude must be provided together!',
+    path: ['latitude'],
+  });
 
 export const groupDocumentUpdateSchema = z
   .object({

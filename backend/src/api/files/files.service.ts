@@ -807,8 +807,8 @@ export const updateGroupMediaFile = async (
   description?: string,
   taken_at?: string,
   location_name?: string,
-  latitude?: number,
-  longitude?: number,
+  latitude?: number | null,
+  longitude?: number | null,
   tagged_user_uuids?: string[],
 ): Promise<files> => {
   const user = await prisma.users.findUniqueOrThrow({
@@ -883,23 +883,10 @@ export const updateGroupMediaFile = async (
     media_files: {
       update: {
         description:
-          description === undefined
-            ? undefined
-            : description === ''
-              ? null
-              : description,
-        taken_at:
-          taken_at === undefined
-            ? undefined
-            : taken_at === ''
-              ? null
-              : new Date(taken_at),
+          description === undefined ? undefined : description === '' ? null : description,
+        taken_at: taken_at === undefined ? undefined : taken_at === '' ? null : new Date(taken_at),
         location_name:
-          location_name === undefined
-            ? undefined
-            : location_name === ''
-              ? null
-              : location_name,
+          location_name === undefined ? undefined : location_name === '' ? null : location_name,
         latitude: latitude === undefined ? undefined : latitude,
         longitude: longitude === undefined ? undefined : longitude,
 

@@ -1,20 +1,18 @@
+<!-- frontend/app/components/media/modals/GroupMediaModals.vue -->
 <template>
   <div>
     <!-- UPLOAD MODAL -->
     <BaseModal
       v-model:open="mediaStore.isUploadModalOpen"
       :title="UI_TEXT.media.uploadHeading"
-      :ui-size="appConfig.layout.modalSizeMd"
+      :ui-size="LAYOUT_CONFIG.modalSizeMd"
     >
       <template #body>
         <UForm
           id="upload-media-form"
           :schema="groupMediaSchema"
           :state="uploadForm"
-          :class="[
-            appConfig.layout.modalForm,
-            'overflow-y-auto max-h-[65vh] custom-scrollbar px-2',
-          ]"
+          :class="LAYOUT_CONFIG.modalScrollBody"
           @submit="handleUpload"
         >
           <BaseInput
@@ -32,11 +30,9 @@
             type="datetime-local"
           />
 
-          <div class="flex flex-col gap-1">
-            <label class="text-sm font-medium text-dark-text">{{
-              UI_TEXT.events.locationLabel
-            }}</label>
-            <div class="flex items-center gap-2">
+          <div :class="LAYOUT_CONFIG.modalFormGroup">
+            <label :class="TYPOGRAPHY_CONFIG.inputLabel">{{ UI_TEXT.events.locationLabel }}</label>
+            <div :class="`flex items-center ${SPACING_TOKENS.gap.sm}`">
               <BaseInput v-model="uploadForm.location_name" name="location_name" class="flex-1" />
               <BaseButton
                 icon="i-heroicons-map"
@@ -46,46 +42,50 @@
                 @click.prevent="openMapFor('upload')"
               />
               <BaseButton
-                v-if="uploadForm.latitude && uploadForm.longitude"
+                v-if="uploadForm.latitude != null && uploadForm.longitude != null"
                 icon="i-heroicons-x-mark"
                 variant="ghostDangerIconButton"
-                class="shrink-0 h-10 w-10 text-error-500"
+                class="shrink-0"
                 tooltip="Clear coordinates"
                 @click="clearUploadLocation"
               />
             </div>
             <div
-              v-if="uploadForm.latitude && uploadForm.longitude"
-              class="text-xs font-medium text-brand-600 pl-1"
+              v-if="uploadForm.latitude != null && uploadForm.longitude != null"
+              :class="TYPOGRAPHY_CONFIG.modalHighlight"
             >
               Coordinates attached
             </div>
           </div>
 
-          <div class="flex flex-col gap-2">
-            <span class="text-sm font-medium text-dark-text">{{
+          <div :class="LAYOUT_CONFIG.modalFormGroup">
+            <span :class="TYPOGRAPHY_CONFIG.inputLabel">{{
               UI_TEXT.events.participantsLabel
             }}</span>
-            <div class="flex flex-wrap gap-2.5">
+            <div :class="`flex flex-wrap ${SPACING_TOKENS.gap.sm}`">
               <div
                 v-for="user in availableMembers"
                 :key="user.uuid || user.username"
                 :class="[
-                  'cursor-pointer rounded-full flex items-center px-3 py-1.5 gap-2.5 border transition-all select-none',
+                  `cursor-pointer ${RADIUS_TOKENS.full} flex items-center ${SPACING_TOKENS.px.md} ${SPACING_TOKENS.py.xs} ${SPACING_TOKENS.gap.sm} ${INTERACTION_TOKENS.all} select-none transition-all`,
                   user.uuid && uploadForm.tagged_user_uuids?.includes(user.uuid)
-                    ? 'border-brand-500 bg-brand-50 text-brand-700 shadow-sm ring-1 ring-brand-500'
-                    : 'border-surface-200 bg-surface-50 text-dark-text/80 hover:bg-surface-100 hover:border-surface-300',
+                    ? '!bg-btn-primary !text-btn-primary-text font-semibold shadow-md ring-2 ring-btn-primary'
+                    : 'bg-black/30 border border-content-primary/20 text-content-primary/70 hover:bg-black/50 hover:text-content-primary',
                 ]"
                 @click="toggleUploadTag(user.uuid)"
               >
-                <!-- Enforce avatar size constraints defined by app config -->
                 <UAvatar
                   :src="user.profile_image_url || undefined"
                   :alt="user.username"
                   size="header"
-                  class="!w-6 !h-6 min-w-[24px] min-h-[24px] shrink-0"
+                  class="!w-6 !h-6 min-w-[24px] min-h-[24px] shrink-0 pointer-events-none"
                 />
-                <span class="text-sm font-medium">{{ user.username }}</span>
+                <span class="text-xs pointer-events-none">{{ user.username }}</span>
+                <UIcon
+                  v-if="user.uuid && uploadForm.tagged_user_uuids?.includes(user.uuid)"
+                  name="i-heroicons-check"
+                  class="w-3.5 h-3.5 shrink-0 pointer-events-none"
+                />
               </div>
             </div>
           </div>
@@ -100,13 +100,13 @@
             </template>
           </UFormField>
 
-          <div v-if="uploadError" :class="appConfig.typography.formStatusError">
+          <div v-if="uploadError" :class="TYPOGRAPHY_CONFIG.formStatusError">
             {{ getErrorMessage(uploadError) }}
           </div>
         </UForm>
       </template>
       <template #footer>
-        <div :class="appConfig.layout.flexBetween">
+        <div :class="LAYOUT_CONFIG.flexBetween">
           <BaseButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
@@ -127,15 +127,12 @@
     <BaseModal
       v-model:open="mediaStore.isUpdateModalOpen"
       title="Edit photo details"
-      :ui-size="appConfig.layout.modalSizeMd"
+      :ui-size="LAYOUT_CONFIG.modalSizeMd"
     >
       <template #body>
         <form
           id="update-media-form"
-          :class="[
-            appConfig.layout.modalForm,
-            'overflow-y-auto max-h-[65vh] custom-scrollbar px-2 flex flex-col gap-4',
-          ]"
+          :class="LAYOUT_CONFIG.modalScrollBody"
           @submit.prevent="handleUpdate"
         >
           <BaseInput
@@ -145,11 +142,9 @@
             type="datetime-local"
           />
 
-          <div class="flex flex-col gap-1">
-            <label class="text-sm font-medium text-dark-text">{{
-              UI_TEXT.events.locationLabel
-            }}</label>
-            <div class="flex items-center gap-2">
+          <div :class="LAYOUT_CONFIG.modalFormGroup">
+            <label :class="TYPOGRAPHY_CONFIG.inputLabel">{{ UI_TEXT.events.locationLabel }}</label>
+            <div :class="`flex items-center ${SPACING_TOKENS.gap.sm}`">
               <BaseInput v-model="updateForm.location_name" name="location_name" class="flex-1" />
               <BaseButton
                 icon="i-heroicons-map"
@@ -159,52 +154,56 @@
                 @click.prevent="openMapFor('update')"
               />
               <BaseButton
-                v-if="updateForm.latitude && updateForm.longitude"
+                v-if="updateForm.latitude != null && updateForm.longitude != null"
                 icon="i-heroicons-x-mark"
                 variant="ghostDangerIconButton"
-                class="shrink-0 h-10 w-10 text-error-500"
+                class="shrink-0"
                 tooltip="Clear coordinates"
                 @click="clearUpdateLocation"
               />
             </div>
             <div
-              v-if="updateForm.latitude && updateForm.longitude"
-              class="text-xs font-medium text-brand-600 pl-1"
+              v-if="updateForm.latitude != null && updateForm.longitude != null"
+              :class="TYPOGRAPHY_CONFIG.modalHighlight"
             >
               Coordinates attached
             </div>
           </div>
 
-          <div class="flex flex-col gap-2">
-            <span class="text-sm font-medium text-dark-text">{{
+          <div :class="LAYOUT_CONFIG.modalFormGroup">
+            <span :class="TYPOGRAPHY_CONFIG.inputLabel">{{
               UI_TEXT.events.participantsLabel
             }}</span>
-            <div class="flex flex-wrap gap-2.5">
+            <div :class="`flex flex-wrap ${SPACING_TOKENS.gap.sm}`">
               <div
                 v-for="user in availableMembers"
                 :key="user.uuid || user.username"
                 :class="[
-                  'cursor-pointer rounded-full flex items-center px-3 py-1.5 gap-2.5 border transition-all select-none',
+                  `cursor-pointer ${RADIUS_TOKENS.full} flex items-center ${SPACING_TOKENS.px.md} ${SPACING_TOKENS.py.xs} ${SPACING_TOKENS.gap.sm} ${INTERACTION_TOKENS.all} select-none transition-all`,
                   user.uuid && updateForm.tagged_user_uuids?.includes(user.uuid)
-                    ? 'border-brand-500 bg-brand-50 text-brand-700 shadow-sm ring-1 ring-brand-500'
-                    : 'border-surface-200 bg-surface-50 text-dark-text/80 hover:bg-surface-100 hover:border-surface-300',
+                    ? '!bg-btn-primary !text-btn-primary-text font-semibold shadow-md ring-2 ring-btn-primary'
+                    : 'bg-black/30 border border-content-primary/20 text-content-primary/70 hover:bg-black/50 hover:text-content-primary',
                 ]"
                 @click="toggleUpdateTag(user.uuid)"
               >
-                <!-- Enforce avatar size constraints defined by app config -->
                 <UAvatar
                   :src="user.profile_image_url || undefined"
                   :alt="user.username"
                   size="header"
-                  class="!w-6 !h-6 min-w-[24px] min-h-[24px] shrink-0"
+                  class="!w-6 !h-6 min-w-[24px] min-h-[24px] shrink-0 pointer-events-none"
                 />
-                <span class="text-sm font-medium">{{ user.username }}</span>
+                <span class="text-xs pointer-events-none">{{ user.username }}</span>
+                <UIcon
+                  v-if="user.uuid && updateForm.tagged_user_uuids?.includes(user.uuid)"
+                  name="i-heroicons-check"
+                  class="w-3.5 h-3.5 shrink-0 pointer-events-none"
+                />
               </div>
             </div>
           </div>
 
-          <div class="flex flex-col gap-1">
-            <label class="text-sm font-medium text-dark-text">{{
+          <div :class="LAYOUT_CONFIG.modalFormGroup">
+            <label :class="TYPOGRAPHY_CONFIG.inputLabel">{{
               UI_TEXT.events.descriptionLabel
             }}</label>
             <UTextarea
@@ -214,13 +213,13 @@
             />
           </div>
 
-          <div v-if="updateError" :class="appConfig.typography.formStatusError">
+          <div v-if="updateError" :class="TYPOGRAPHY_CONFIG.formStatusError">
             {{ getErrorMessage(updateError) }}
           </div>
         </form>
       </template>
       <template #footer>
-        <div :class="appConfig.layout.flexBetween">
+        <div :class="LAYOUT_CONFIG.flexBetween">
           <BaseButton
             :label="UI_TEXT.common.cancel"
             variant="actionCancelButton"
@@ -237,20 +236,19 @@
     </BaseModal>
 
     <!-- MAP SELECTOR MODAL (SHARED) -->
-    <BaseModal v-model:open="isMapSelectorOpen" :ui-size="appConfig.layout.modalSizeLg">
+    <BaseModal v-model:open="isMapSelectorOpen" :ui-size="LAYOUT_CONFIG.modalSizeLg">
       <template #header>
-        <div class="flex justify-between items-center w-full">
-          <h3 class="text-xl font-bold text-dark-text">{{ UI_TEXT.events.selectLocation }}</h3>
+        <div :class="LAYOUT_CONFIG.flexBetween">
+          <h3 :class="TYPOGRAPHY_CONFIG.cardTitle">{{ UI_TEXT.events.selectLocation }}</h3>
           <BaseButton
             icon="i-heroicons-x-mark"
-            variant="ghost"
-            class="hover:bg-error-50 hover:text-error-500 rounded-full transition-all duration-200"
+            variant="ghostDangerIconButton"
             @click="isMapSelectorOpen = false"
           />
         </div>
       </template>
       <template #body>
-        <div class="h-[45vh] w-full shrink-0">
+        <div :class="LAYOUT_CONFIG.modalMapWrapper">
           <ClientOnly>
             <EventMapSelector
               :is-open="isMapSelectorOpen"
@@ -269,14 +267,14 @@
       :cancel-text="UI_TEXT.common.cancel"
       :confirm-text="UI_TEXT.common.delete"
       :loading="deleteMutation.isLoading.value"
-      :ui-size="appConfig.layout.modalSizeMd"
+      :ui-size="LAYOUT_CONFIG.modalSizeMd"
       @cancel="mediaStore.closeDeleteModal()"
       @confirm="confirmDelete"
     >
       <template #body>
-        <p :class="appConfig.typography.modalText">
+        <p :class="TYPOGRAPHY_CONFIG.modalText">
           {{ UI_TEXT.documents.deleteDocumentBeforeName }}
-          <span :class="appConfig.typography.modalInlineHighlight">{{
+          <span :class="TYPOGRAPHY_CONFIG.modalInlineHighlight">{{
             mediaStore.mediaToDelete?.file_name
           }}</span
           >?
@@ -289,8 +287,6 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { useAppConfig } from '#imports';
-import type { FormSubmitEvent } from '#ui/types';
 import { useMediaModalsStore } from '~/stores/media.modals.store';
 import { useGroupInfosQuery } from '~/queries/groups.query';
 import {
@@ -303,7 +299,10 @@ import { getErrorMessage } from '~/utils/error.utils';
 import { extractImageMetadata } from '~/utils/exif.utils';
 import EventMapSelector from '~/components/events/map/EventMapSelector.client.vue';
 
-const appConfig = useAppConfig();
+const props = defineProps<{
+  groupUuid?: string;
+}>();
+
 const mediaStore = useMediaModalsStore();
 const route = useRoute();
 
@@ -313,9 +312,8 @@ const mapTarget = ref<'upload' | 'update'>('upload');
 const uploadError = ref<Error | null>(null);
 const updateError = ref<Error | null>(null);
 
-// Always resolve the valid group UUID from route query or store upload context
 const activeGroupUuid = computed(
-  () => (route.query.groupId as string) || mediaStore.uploadGroupUuid || '',
+  () => props.groupUuid || (route.query.groupId as string) || mediaStore.uploadGroupUuid || '',
 );
 
 const { data: groupInfos } = useGroupInfosQuery(activeGroupUuid);
@@ -357,7 +355,7 @@ const onFileChange = async (e: Event) => {
       uploadForm.taken_at = meta.takenAt;
     }
 
-    if (typeof meta.latitude === 'number' && typeof meta.longitude === 'number') {
+    if (meta.latitude != null && meta.longitude != null) {
       uploadForm.latitude = meta.latitude;
       uploadForm.longitude = meta.longitude;
     }
@@ -401,29 +399,32 @@ const uploadMutation = useUploadGroupMediaMutation(
   { onSuccess: closeUploadModal, onError: (err) => (uploadError.value = err as Error) },
 );
 
-const handleUpload = (event: FormSubmitEvent<GroupMediaFormState>) => {
-  if (!(event.data.file instanceof File)) return;
+const handleUpload = () => {
+  if (!(uploadForm.file instanceof File)) return;
   uploadError.value = null;
+
   const fd = new FormData();
-  fd.append('file', event.data.file);
-  if (event.data.description) fd.append('description', event.data.description);
-  if (event.data.taken_at) fd.append('taken_at', new Date(event.data.taken_at).toISOString());
+  fd.append('file', uploadForm.file);
+  if (uploadForm.description) fd.append('description', uploadForm.description.trim());
+  if (uploadForm.taken_at) fd.append('taken_at', new Date(uploadForm.taken_at).toISOString());
 
-  if (typeof event.data.latitude === 'number' && typeof event.data.longitude === 'number') {
-    fd.append('latitude', event.data.latitude.toString());
-    fd.append('longitude', event.data.longitude.toString());
+  if (uploadForm.latitude != null && uploadForm.longitude != null) {
+    fd.append('latitude', uploadForm.latitude.toString());
+    fd.append('longitude', uploadForm.longitude.toString());
   }
-  if (event.data.location_name) {
-    fd.append('location_name', event.data.location_name);
+  if (uploadForm.location_name) {
+    fd.append('location_name', uploadForm.location_name.trim());
   }
 
-  if (event.data.tagged_user_uuids?.length)
-    fd.append('tagged_user_uuids', JSON.stringify(event.data.tagged_user_uuids));
+  if (uploadForm.tagged_user_uuids?.length) {
+    fd.append('tagged_user_uuids', JSON.stringify(uploadForm.tagged_user_uuids));
+  }
+
   uploadMutation.mutate(fd);
 };
 
 // ------------------------------------------
-// 2. UPDATE LOGIC
+// 2. UPDATE LOGIC (Supports clearing existing fields)
 // ------------------------------------------
 const updateForm = reactive({
   description: '',
@@ -487,19 +488,21 @@ const handleUpdate = () => {
   if (!mediaStore.mediaToUpdate) return;
   updateError.value = null;
 
+  // Always append fields (including empty strings / []) so users can clear values
   const fd = new FormData();
-  if (updateForm.description) fd.append('description', updateForm.description);
-  if (updateForm.taken_at) fd.append('taken_at', new Date(updateForm.taken_at).toISOString());
-  if (typeof updateForm.latitude === 'number' && typeof updateForm.longitude === 'number') {
+  fd.append('description', updateForm.description.trim());
+  fd.append('taken_at', updateForm.taken_at ? new Date(updateForm.taken_at).toISOString() : '');
+  fd.append('location_name', updateForm.location_name.trim());
+
+  if (updateForm.latitude != null && updateForm.longitude != null) {
     fd.append('latitude', updateForm.latitude.toString());
     fd.append('longitude', updateForm.longitude.toString());
+  } else {
+    fd.append('latitude', '');
+    fd.append('longitude', '');
   }
-  if (updateForm.location_name) {
-    fd.append('location_name', updateForm.location_name);
-  }
-  if (updateForm.tagged_user_uuids?.length) {
-    fd.append('tagged_user_uuids', JSON.stringify(updateForm.tagged_user_uuids));
-  }
+
+  fd.append('tagged_user_uuids', JSON.stringify(updateForm.tagged_user_uuids || []));
 
   updateMutation.mutate({
     fileId: mediaStore.mediaToUpdate.file_id,
@@ -517,15 +520,11 @@ const openMapFor = (target: 'upload' | 'update') => {
 
 const activeMapInitialLocation = computed(() => {
   const current = mapTarget.value === 'upload' ? uploadForm : updateForm;
-  if (
-    typeof current.latitude === 'number' &&
-    typeof current.longitude === 'number' &&
-    current.location_name
-  ) {
+  if (current.latitude != null && current.longitude != null) {
     return {
       latitude: current.latitude,
       longitude: current.longitude,
-      address: current.location_name,
+      address: current.location_name || '',
     };
   }
   return null;

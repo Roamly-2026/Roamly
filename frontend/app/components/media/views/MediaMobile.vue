@@ -110,6 +110,7 @@
             v-if="viewMode === 'list'"
             :files="filteredMedia"
             :is-current-user-leader="isCurrentUserLeader"
+            @open="handleOpenFile"
             @delete="emit('delete', $event as GroupFile)"
             @download="(url, filename) => emit('download', url, filename)"
           />
@@ -125,15 +126,18 @@
     </div>
 
     <!-- Modals -->
-    <GroupMediaModals />
-    <MediaLightboxModal />
+    <GroupMediaModals :group-uuid="selectedGroup" />
+    <MediaLightboxModal
+      :is-current-user-leader="isCurrentUserLeader"
+      @download="(url, filename) => emit('download', url, filename)"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { useLocalStorage } from '@vueuse/core';
-import type { GroupFile } from '~/types/files.type';
+import type { GroupFile, PrivateDocumentMetadata } from '~/types/files.type';
 import type { GroupOutDto } from '~/types/groups.type';
 import type { ViewMode } from '~/components/files/ViewSwitcher.vue';
 import FilesListView from '~/components/files/FilesListView.vue';
@@ -195,4 +199,11 @@ const filteredMedia = computed<GroupFile[]>(() => {
 });
 
 const viewMode = useLocalStorage<ViewMode>('roamly_files_view_mode', 'grid');
+
+const handleOpenFile = (file: GroupFile | PrivateDocumentMetadata) => {
+  const index = filteredMedia.value.findIndex((f) => f.file_id === file.file_id);
+  if (index !== -1) {
+    mediaStore.openLightbox(filteredMedia.value, index);
+  }
+};
 </script>

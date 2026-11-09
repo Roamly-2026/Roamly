@@ -2,7 +2,7 @@
 <template>
   <div
     :class="[
-      'w-full',
+      'w-full cursor-pointer',
       GLASS_TOKENS.default,
       RADIUS_TOKENS.lg,
       BORDER_TOKENS.ringCard,
@@ -12,6 +12,7 @@
       SPACING_TOKENS.px.lg,
       SPACING_TOKENS.py.md,
     ]"
+    @click="emit('open', file)"
   >
     <!-- Desktop row -->
     <div :class="['hidden md:grid grid-cols-12 items-center w-full', SPACING_TOKENS.gap.md]">
@@ -80,22 +81,21 @@
           <BaseButton
             icon="i-heroicons-eye"
             variant="ghostBrandIconButton"
-            :href="fileUrl"
-            target="_blank"
             :tooltip="UI_TEXT.common.view"
+            @click.stop="emit('open', file)"
           />
           <BaseButton
             icon="i-heroicons-arrow-down-tray"
             variant="ghostBrandIconButton"
             :tooltip="UI_TEXT.common.download"
-            @click.prevent="emit('download', fileUrl, file.file_name)"
+            @click.stop.prevent="emit('download', fileUrl, file.file_name)"
           />
           <BaseButton
             v-if="isCurrentUserLeader"
             icon="i-heroicons-trash"
             variant="ghostDangerIconButton"
             :tooltip="UI_TEXT.common.delete"
-            @click="emit('delete', file)"
+            @click.stop="emit('delete', file)"
           />
         </div>
       </div>
@@ -140,19 +140,18 @@
           <BaseButton
             icon="i-heroicons-eye"
             variant="ghostBrandIconButton"
-            :href="fileUrl"
-            target="_blank"
+            @click.stop="emit('open', file)"
           />
           <BaseButton
             icon="i-heroicons-arrow-down-tray"
             variant="ghostBrandIconButton"
-            @click.prevent="emit('download', fileUrl, file.file_name)"
+            @click.stop.prevent="emit('download', fileUrl, file.file_name)"
           />
           <BaseButton
             v-if="isCurrentUserLeader"
             icon="i-heroicons-trash"
             variant="ghostDangerIconButton"
-            @click="emit('delete', file)"
+            @click.stop="emit('delete', file)"
           />
         </div>
       </div>
@@ -172,6 +171,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   delete: [file: GroupFile | PrivateDocumentMetadata];
   download: [url: string | undefined, filename: string];
+  open: [file: GroupFile | PrivateDocumentMetadata];
 }>();
 
 const fileUser = computed<FileUserDto | null>(() => {
