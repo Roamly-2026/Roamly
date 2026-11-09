@@ -15,6 +15,7 @@
           :key="groupUuid"
           :locations="mapCoordinates"
           @marker-click="handleMarkerClick"
+          @map-click="handleMapClick"
         />
 
         <div v-else-if="error" class="fixed inset-0 flex items-center justify-center z-0">
@@ -24,8 +25,6 @@
         </div>
       </div>
     </ClientOnly>
-
-    <EventPreviewModals />
   </div>
 </template>
 
@@ -73,6 +72,15 @@ const handleMarkerClick = (eventId: string | number) => {
       eventsStore.selectedGroupUuid = groupUuid.value;
     }
   }
+};
+
+const handleMapClick = (location: { lat: number; lng: number }) => {
+  eventsStore.selectedGroupUuid = groupUuid.value;
+
+  eventsStore.openAddEventModal({
+    latitude: location.lat,
+    longitude: location.lng,
+  });
 };
 
 /* --- MAP LOGIC --- */

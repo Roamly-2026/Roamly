@@ -73,14 +73,18 @@
                 UI_TEXT.events.optionalLocation
               }}</span>
               <BaseButton
+                v-if="!isLocationFromMap"
                 icon="i-heroicons-map"
                 :label="UI_TEXT.events.chooseLocation"
                 variant="glassOutlineButton"
                 @click="isMapSelectorOpen = true"
               />
-              <div v-if="formState.address" :class="LAYOUT_CONFIG.filePreviewChip">
+              <div
+                v-if="formState.address || isLoadingAddress"
+                :class="LAYOUT_CONFIG.filePreviewChip"
+              >
                 <span :class="CALENDAR_CONFIG.metaValue">
-                  {{ formState.address }}
+                  {{ isLoadingAddress ? UI_TEXT.map.loadingAddress : formState.address }}
                 </span>
                 <BaseButton
                   icon="i-heroicons-x-mark"
@@ -115,6 +119,7 @@
             variant="actionOkButton"
             :class="TYPOGRAPHY_CONFIG.modalActionBtnOk"
             :loading="createEventMutation.isLoading.value"
+            :disabled="isLoadingAddress"
           />
         </div>
       </template>
@@ -166,15 +171,27 @@ import type { FormSubmitEvent } from '#ui/types';
 import { useEventsStore } from '~/stores/events.modals.store';
 import { useCreateEventMutation } from '~/queries/events.mutation';
 import { createEventSchema } from '~/utils/schemas/events.schema';
+import { getAddressFromCoordinates } from '~/utils/geocoding.utils';
 
 const eventsStore = useEventsStore();
 
 const isMapSelectorOpen = ref(false);
 
+// the location was picked on the big map, so the small map selector is not needed
+const isLocationFromMap = ref(false);
+const isLoadingAddress = ref(false);
+
 const createEventMutation = useCreateEventMutation(
   computed(() => eventsStore.selectedGroupUuid),
   {
     onSuccess: () => {
+      if (isLocationFromMap.value && formState.latitude !== null && formState.longitude !== null) {
+        eventsStore.createdEventLocation = {
+          latitude: formState.latitude,
+          longitude: formState.longitude,
+        };
+      }
+
       closeAndResetForm();
     },
   },
@@ -205,8 +222,40 @@ watch([() => formState.endDate, () => formState.endTime], ([date, time]) => {
   if (date && time) formState.end_time = `${date}T${time}`;
 });
 
+// fills the location when the modal is opened from the big map
+watch(
+  () => eventsStore.isAddEventModalOpen,
+  async (isOpen) => {
+    if (!isOpen) {
+      // a location picked on the map only belongs to that click
+      if (isLocationFromMap.value) clearLocation();
+      return;
+    }
+
+    const location = eventsStore.prefilledLocation;
+    if (!location) return;
+
+    formState.latitude = location.latitude;
+    formState.longitude = location.longitude;
+    formState.address = null;
+    isLocationFromMap.value = true;
+    isLoadingAddress.value = true;
+
+    const address = await getAddressFromCoordinates(location.latitude, location.longitude);
+
+    // the location may have been cleared while the address was loading
+    if (formState.latitude === location.latitude && formState.longitude === location.longitude) {
+      formState.address = address;
+    }
+
+    isLoadingAddress.value = false;
+  },
+  { immediate: true },
+);
+
 const closeAndResetForm = () => {
   eventsStore.closeAddEventModal();
+  eventsStore.prefilledLocation = null;
   Object.assign(formState, {
     title: '',
     is_private: false,
@@ -221,6 +270,7 @@ const closeAndResetForm = () => {
     longitude: null,
     address: null,
   });
+  isLocationFromMap.value = false;
 };
 
 const onSubmit = (event: FormSubmitEvent<FormSchemaType>) => {
@@ -255,6 +305,8 @@ const clearLocation = () => {
   formState.latitude = null;
   formState.longitude = null;
   formState.address = null;
+  isLocationFromMap.value = false;
+  eventsStore.prefilledLocation = null;
 };
 </script>
 

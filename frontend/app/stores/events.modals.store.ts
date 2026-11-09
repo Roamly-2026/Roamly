@@ -1,7 +1,7 @@
 // frontend/app/stores/events.modals.store.ts
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { UiEvent, EventCreatorDto } from '~/types/events.type';
+import type { UiEvent, EventCreatorDto, EventCoordinates } from '~/types/events.type';
 
 /**
  * Manages modal visibility and active event context for itinerary and event operations.
@@ -26,7 +26,15 @@ export const useEventsStore = defineStore('events', () => {
   const previewDate = ref<string | undefined>(undefined);
   const participantToRemove = ref<EventCreatorDto | null>(null);
 
-  const openAddEventModal = () => (isAddEventModalOpen.value = true);
+  // location picked on the big map, used to prefill the event creation modal
+  const prefilledLocation = ref<EventCoordinates | null>(null);
+  // set after an event is created from the map, so the map can focus on it
+  const createdEventLocation = ref<EventCoordinates | null>(null);
+
+  const openAddEventModal = (location?: EventCoordinates) => {
+    prefilledLocation.value = location ?? null;
+    isAddEventModalOpen.value = true;
+  };
   const closeAddEventModal = () => (isAddEventModalOpen.value = false);
 
   // Transitions from the event preview modal directly to the delete confirmation modal
@@ -117,6 +125,8 @@ export const useEventsStore = defineStore('events', () => {
     previewEvent,
     previewDate,
     participantToRemove,
+    prefilledLocation,
+    createdEventLocation,
     openAddEventModal,
     closeAddEventModal,
     openDeleteEventModal,
