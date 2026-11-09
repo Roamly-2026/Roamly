@@ -235,7 +235,6 @@ watch(
     const location = eventsStore.prefilledLocation;
     if (!location) return;
 
-    // eventsStore.prefilledLocation = null;
     formState.latitude = location.latitude;
     formState.longitude = location.longitude;
     formState.address = null;
