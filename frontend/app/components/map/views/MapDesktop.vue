@@ -23,6 +23,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'marker-click', eventId: string | number): void;
+  (e: 'map-click', location: { lat: number; lng: number }): void;
 }>();
 
 const mapContainer = ref<HTMLElement | null>(null);
@@ -75,6 +76,7 @@ const renderMarkers = () => {
   if (!props.locations || props.locations.length === 0) {
     if (!isViewInitialized) {
       map.setView([44.111979, 24.347248], 13);
+      isViewInitialized = true;
     }
     return;
   }
@@ -117,7 +119,10 @@ const renderMarkers = () => {
   if (props.locations.length === 1) {
     map.setView([props.locations[0]!.lat, props.locations[0]!.lng], 13);
   } else {
-    map.fitBounds(bounds, { padding: [50, 50] });
+    map.fitBounds(bounds, {
+      paddingTopLeft: [50, 110],
+      paddingBottomRight: [50, 50],
+    });
   }
 };
 
@@ -139,6 +144,10 @@ const initMap = () => {
   }).addTo(map);
 
   map.attributionControl.setPrefix(false);
+
+  map.on('click', (e: L.LeafletMouseEvent) => {
+    emit('map-click', { lat: e.latlng.lat, lng: e.latlng.lng });
+  });
 
   renderMarkers();
 };

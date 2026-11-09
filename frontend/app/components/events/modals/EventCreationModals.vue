@@ -235,14 +235,13 @@ watch(
     const location = eventsStore.prefilledLocation;
     if (!location) return;
 
-    eventsStore.prefilledLocation = null;
+    // eventsStore.prefilledLocation = null;
     formState.latitude = location.latitude;
     formState.longitude = location.longitude;
     formState.address = null;
     isLocationFromMap.value = true;
+    isLoadingAddress.value = true;
 
-    isLoadingAddress.value = true;
-    isLoadingAddress.value = true;
     const address = await getAddressFromCoordinates(location.latitude, location.longitude);
 
     // the location may have been cleared while the address was loading
@@ -252,10 +251,12 @@ watch(
 
     isLoadingAddress.value = false;
   },
+  { immediate: true },
 );
 
 const closeAndResetForm = () => {
   eventsStore.closeAddEventModal();
+  eventsStore.prefilledLocation = null;
   Object.assign(formState, {
     title: '',
     is_private: false,
@@ -306,6 +307,7 @@ const clearLocation = () => {
   formState.longitude = null;
   formState.address = null;
   isLocationFromMap.value = false;
+  eventsStore.prefilledLocation = null;
 };
 </script>
 
