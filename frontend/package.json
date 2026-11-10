@@ -36,6 +36,7 @@
     "@tiptap/starter-kit": "^3.30.0",
     "@tiptap/suggestion": "^3.30.0",
     "@tiptap/vue-3": "^3.30.0",
+    "exifreader": "^4.54.0",
     "leaflet": "^1.9.4",
     "leaflet-control-geocoder": "^4.0.0",
     "libphonenumber-js": "^1.13.15",

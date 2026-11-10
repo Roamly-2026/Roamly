@@ -239,7 +239,17 @@ class FilesController extends BaseController {
 
       const groupUuid = req.params.groupUuid as string;
 
-      const { description } = req.body;
+      const description = req.body.description as string | undefined;
+
+      const taken_at = req.body.taken_at as string | undefined;
+
+      const location_name = req.body.location_name as string | undefined;
+
+      const latitude = req.body.latitude as number | undefined;
+
+      const longitude = req.body.longitude as number | undefined;
+
+      const tagged_user_uuids = req.body.tagged_user_uuids as string[] | undefined;
 
       if (!file) {
         res.status(400).json({
@@ -255,6 +265,11 @@ class FilesController extends BaseController {
         groupUuid,
         file,
         description,
+        taken_at,
+        location_name,
+        latitude,
+        longitude,
+        tagged_user_uuids,
       );
 
       res.status(201).json({
@@ -305,7 +320,17 @@ class FilesController extends BaseController {
 
       const file = req.file;
 
-      const { description } = req.body;
+      const description = req.body.description as string | undefined;
+
+      const taken_at = req.body.taken_at as string | undefined;
+
+      const location_name = req.body.location_name as string | undefined;
+
+      const latitude = req.body.latitude as number | undefined;
+
+      const longitude = req.body.longitude as number | undefined;
+
+      const tagged_user_uuids = req.body.tagged_user_uuids as string[] | undefined;
 
       const updatedGroupMedia = await fileService.updateGroupMediaFile(
         user.uuid,
@@ -313,6 +338,11 @@ class FilesController extends BaseController {
         fileId,
         file,
         description,
+        taken_at,
+        location_name,
+        latitude,
+        longitude,
+        tagged_user_uuids,
       );
 
       res.status(200).json({
@@ -343,9 +373,9 @@ class FilesController extends BaseController {
 
     const groupUuid = req.params.groupUuid as string;
 
-    const limit = req.query.limit as unknown as number;
+    const limit = parseInt(req.query.limit as string, 10) || 50;
 
-    const cursor = req.query.cursor as unknown as number | undefined;
+    const cursor = req.query.cursor ? parseInt(req.query.cursor as string, 10) : undefined;
 
     const type = req.query.type as unknown as string;
 

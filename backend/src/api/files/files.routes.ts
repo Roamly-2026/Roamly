@@ -107,7 +107,7 @@ router.patch(
     zodSchemas.groupUuidValidationSchema.extend(zodSchemas.fileIdValidationSchema.shape),
     'params',
   ),
-  validateData(zodSchemas.groupMediaDataSchema, 'body'),
+  validateData(zodSchemas.groupMediaUpdateSchema, 'body'),
   filesController.updateGroupMediaFile,
 );
 

@@ -50,10 +50,31 @@ export const groupDocumentSchema = z
     path: ['expiry_date'],
   });
 
-export const groupMediaSchema = z.object({
-  file: z.instanceof(File, { message: UI_TEXT.validation.fileRequired }),
-  description: z.string().max(512, UI_TEXT.validation.mediaDescriptionMax).optional(),
-});
+export const groupMediaSchema = z
+  .object({
+    file: z.custom<File | null>((val) => typeof File !== 'undefined' && val instanceof File, {
+      message: UI_TEXT.validation.fileRequired,
+    }),
+    description: z.string().max(512, UI_TEXT.validation.mediaDescriptionMax).optional(),
+    taken_at: z.string().optional(),
+    location_name: z.string().max(255).optional(),
+    latitude: z.number().min(-90).max(90).nullable().optional(),
+    longitude: z.number().min(-180).max(180).nullable().optional(),
+    tagged_user_uuids: z.array(z.string()).optional(),
+  })
+  .refine(
+    (data) => {
+      const hasLat = data.latitude !== undefined && data.latitude !== null;
+      const hasLng = data.longitude !== undefined && data.longitude !== null;
+      return hasLat === hasLng;
+    },
+    {
+      message: UI_TEXT.validation.location,
+      path: ['latitude'],
+    },
+  );
+
+export type GroupMediaFormState = z.infer<typeof groupMediaSchema>;
 
 export const sharingUpdateSchema = z.object({
   accessLevel: z.enum([ROLES.LEADER, ROLES.MEMBER], {

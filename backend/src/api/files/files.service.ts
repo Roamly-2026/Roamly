@@ -572,6 +572,11 @@ export const uploadGroupMediaFile = async (
   groupUuid: string,
   fileData: Express.Multer.File,
   description?: string,
+  taken_at?: string,
+  location_name?: string,
+  latitude?: number,
+  longitude?: number,
+  tagged_user_uuids?: string[],
 ): Promise<files> => {
   const user = await prisma.users.findUniqueOrThrow({
     where: {
@@ -596,6 +601,20 @@ export const uploadGroupMediaFile = async (
     throw new ForbiddenError('User must be part of the group to upload media!');
   }
 
+  let validTaggedUserIds: number[] = [];
+  if (tagged_user_uuids && tagged_user_uuids.length > 0) {
+    const validGroupProfiles = await prisma.group_profiles.findMany({
+      where: {
+        group_id: group.group_id,
+        users: {
+          uuid: { in: tagged_user_uuids },
+        },
+      },
+      select: { user_id: true },
+    });
+    validTaggedUserIds = validGroupProfiles.map((p: { user_id: number }): number => p.user_id);
+  }
+
   const fileKey = await cloudOperations.uploadPrivateFileToCloud(
     fileData,
     FILE_CONSTANTS.BUCKET_FOLDER_NAME.GROUP_FILES,
@@ -614,12 +633,39 @@ export const uploadGroupMediaFile = async (
       media_files: {
         create: {
           description: description || null,
+          taken_at: taken_at ? new Date(taken_at) : null,
+          location_name: location_name || null,
+          latitude: latitude ?? null,
+          longitude: longitude ?? null,
+
+          ...(validTaggedUserIds.length > 0 && {
+            media_tags: {
+              create: validTaggedUserIds.map((userId: number) => ({
+                user_id: userId,
+              })),
+            },
+          }),
         },
       },
     },
 
     include: {
-      media_files: true,
+      media_files: {
+        include: {
+          media_tags: {
+            include: {
+              users: {
+                select: {
+                  uuid: true,
+                  username: true,
+                  email: true,
+                  profile_image_url: true,
+                },
+              },
+            },
+          },
+        },
+      },
     },
   });
 
@@ -759,6 +805,11 @@ export const updateGroupMediaFile = async (
   fileId: number,
   fileData?: Express.Multer.File,
   description?: string,
+  taken_at?: string,
+  location_name?: string,
+  latitude?: number | null,
+  longitude?: number | null,
+  tagged_user_uuids?: string[],
 ): Promise<files> => {
   const user = await prisma.users.findUniqueOrThrow({
     where: {
@@ -813,12 +864,40 @@ export const updateGroupMediaFile = async (
     );
   }
 
+  let validTaggedUserIds: number[] | undefined = undefined;
+  if (tagged_user_uuids !== undefined) {
+    const validGroupProfiles = await prisma.group_profiles.findMany({
+      where: {
+        group_id: group.group_id,
+        users: {
+          uuid: { in: tagged_user_uuids },
+        },
+      },
+      select: { user_id: true },
+    });
+    validTaggedUserIds = validGroupProfiles.map((p: { user_id: number }): number => p.user_id);
+  }
+
   const updateData: Prisma.filesUpdateInput = {
     updated_at: new Date(),
     media_files: {
       update: {
         description:
           description === undefined ? undefined : description === '' ? null : description,
+        taken_at: taken_at === undefined ? undefined : taken_at === '' ? null : new Date(taken_at),
+        location_name:
+          location_name === undefined ? undefined : location_name === '' ? null : location_name,
+        latitude: latitude === undefined ? undefined : latitude,
+        longitude: longitude === undefined ? undefined : longitude,
+
+        ...(validTaggedUserIds !== undefined && {
+          media_tags: {
+            deleteMany: {},
+            create: validTaggedUserIds.map((userId: number) => ({
+              user_id: userId,
+            })),
+          },
+        }),
       },
     },
   };
@@ -844,7 +923,22 @@ export const updateGroupMediaFile = async (
     data: updateData,
 
     include: {
-      media_files: true,
+      media_files: {
+        include: {
+          media_tags: {
+            include: {
+              users: {
+                select: {
+                  uuid: true,
+                  username: true,
+                  email: true,
+                  profile_image_url: true,
+                },
+              },
+            },
+          },
+        },
+      },
     },
   });
 
@@ -950,7 +1044,22 @@ export const getGroupFiles = async (
     },
     include: {
       documents: true,
-      media_files: true,
+      media_files: {
+        include: {
+          media_tags: {
+            include: {
+              users: {
+                select: {
+                  uuid: true,
+                  username: true,
+                  email: true,
+                  profile_image_url: true,
+                },
+              },
+            },
+          },
+        },
+      },
       creator: creatorSelect,
     },
 

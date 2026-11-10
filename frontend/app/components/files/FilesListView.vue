@@ -8,6 +8,7 @@
       :key="file.file_id"
       :file="file"
       :is-current-user-leader="isCurrentUserLeader"
+      @open="emit('open', $event)"
       @delete="emit('delete', $event)"
       @download="(url: string | undefined, filename: string) => emit('download', url, filename)"
     />
@@ -29,6 +30,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   delete: [file: GroupFile | PrivateDocumentMetadata];
   download: [url: string | undefined, filename: string];
+  open: [file: GroupFile | PrivateDocumentMetadata];
 }>();
 
 const sortKey = ref<SortKey>('created_at');
