@@ -1,6 +1,7 @@
 //  avaliable permissions, contribute means, you can create and manage your own, and manage means you can modify all
 export const PERMISSIONS = {
   GROUP_MANAGE: 'group:manage',
+  GROUP_MANAGE_ROLES: 'group:manage_roles',
   MEMBERS_MANAGE: 'members:manage',
   EVENTS_READ: 'events:read',
   EVENTS_CONTRIBUTE: 'events:contribute',
