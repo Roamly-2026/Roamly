@@ -1,18 +1,29 @@
 import { Prisma } from '@prisma/client';
 
+export type CreatedGroup = Prisma.groupsGetPayload<{
+  include: {
+    group_profiles: {
+      include: {
+        custom_role: true;
+      };
+    };
+  };
+}>;
+
 export type GroupWithRole = Prisma.groupsGetPayload<{
   select: {
     uuid: true;
     name: true;
     current_size: true;
     created_at: true;
-  };
-
-  group_profiles: {
-    select: {
-      roles: {
-        select: {
-          type: true;
+    group_profiles: {
+      select: {
+        system_role: true;
+        custom_role: {
+          select: {
+            uuid: true;
+            name: true;
+          };
         };
       };
     };
@@ -29,9 +40,17 @@ export type PaginatedGroups = {
   };
 };
 
+export type GroupWithInvite = Omit<GroupWithRole, 'group_profiles'> & {
+  groupInvites: GroupWithRole['group_profiles'];
+};
+
+export type PaginatedInvites = Omit<PaginatedGroups, 'items'> & {
+  items: GroupWithInvite[];
+};
+
 export type profileRelatedToTheGroup = Prisma.group_profilesGetPayload<{
   include: {
-    roles: true;
+    custom_role: true;
   };
 }>;
 
@@ -43,9 +62,11 @@ export type GroupProfilesInfos = Prisma.group_profilesGetPayload<{
         username: true;
       };
     };
-    roles: {
+    system_role: true;
+    custom_role: {
       select: {
-        type: true;
+        uuid: true;
+        name: true;
       };
     };
   };
@@ -61,13 +82,17 @@ export type InfosOfTheGroupTheUserIsPartOf = Prisma.groupsGetPayload<{
       select: {
         users: {
           select: {
+            uuid: true;
             email: true;
             username: true;
+            profile_image_url: true;
           };
         };
-        roles: {
+        system_role: true;
+        custom_role: {
           select: {
-            type: true;
+            uuid: true;
+            name: true;
           };
         };
         nickname: true;
@@ -82,9 +107,11 @@ export type userGroupProfile = Prisma.group_profilesGetPayload<{
     nickname: true;
     description: true;
 
-    roles: {
+    system_role: true;
+    custom_role: {
       select: {
-        type: true;
+        uuid: true;
+        name: true;
       };
     };
   };
