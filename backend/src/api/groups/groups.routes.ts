@@ -10,11 +10,13 @@ import {
   requirePermission,
 } from '../../middlewares/permission.middleware';
 import { PERMISSIONS } from '../../constants/permission.constants';
+import rolesRouter from './roles/roles.routes';
 
 const router = Router();
 
 // all of the enpoints below need authentication
 router.use(requireAuth);
+router.use('/:groupUuid/roles', rolesRouter);
 
 router.post('/', validateData(zodSchemas.createGroupSchema), groupsController.createGroup);
 
