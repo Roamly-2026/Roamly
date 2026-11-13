@@ -25,3 +25,5 @@ export const URL_TYPE = {
 } as const;
 
 export type urlType = (typeof URL_TYPE)[keyof typeof URL_TYPE];
+
+export const MAX_PRIVATE_DOCUMENTS = 12;

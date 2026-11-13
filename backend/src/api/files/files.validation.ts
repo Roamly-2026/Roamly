@@ -2,18 +2,45 @@ import { z } from 'zod';
 import * as FILE_CONSTANTS from '../../constants/files.constants';
 import { ROLES } from '../../constants/roles.constants';
 
+const parseTagsArray = (val: unknown): unknown => {
+  if (Array.isArray(val)) return val;
+  if (typeof val === 'string') {
+    const trimmed = val.trim();
+    if (trimmed === '') return [];
+    if (trimmed.startsWith('[')) {
+      try {
+        return JSON.parse(trimmed);
+      } catch {
+        return val;
+      }
+    }
+    return trimmed
+      .split(',')
+      .map((t: string) => t.trim())
+      .filter(Boolean);
+  }
+  return val;
+};
+
+const tagsValidation = z.preprocess(
+  parseTagsArray,
+  z
+    .array(
+      z.string().trim().min(1, 'Tag cannot be empty!').max(32, 'Tag cannot exceed 32 characters!'),
+    )
+    .optional(),
+);
+
 export const privateDocumentDataSchema = z
   .object({
-    document_type: z.enum(['ID', 'PASSPORT', 'DRIVING_LICENSE', 'OTHER'], {
-      message: 'Invalid document type!, Must be ID, PASSPORT, DRIVING_LICENSE or OTHER',
-    }),
+    tags: tagsValidation,
 
     issue_date: z.iso.date('Invalid date format! Use ISO format (YYYY-MM-DD)').optional(),
 
     expiry_date: z.iso.date('Invalid date format! Use ISO format (YYYY-MM-DD)').optional(),
   })
   .refine(
-    (data: { document_type: string; issue_date?: string; expiry_date?: string }) => {
+    (data: { issue_date?: string; expiry_date?: string }) => {
       if (data.issue_date && data.expiry_date) {
         return new Date(data.expiry_date) > new Date(data.issue_date);
       }
@@ -42,20 +69,14 @@ export const sharingUpdateSchema = z.object({
 
 export const groupDocumentDataSchema = z
   .object({
-    document_type: z.enum(
-      ['TICKET', 'BOOKING_CONFIRMATION', 'HOTEL_VOUCHER', 'GUEST_REGISTRATION_CARD', 'OTHER'],
-      {
-        message:
-          'Invalid document type!, Must be TICKET, BOOKING_CONFIRMATION, HOTEL_VOUCHER, GUEST_REGISTRATION_CARD, or OTHER',
-      },
-    ),
+    tags: tagsValidation,
 
     issue_date: z.iso.date('Invalid date format! Use ISO format (YYYY-MM-DD)').optional(),
 
     expiry_date: z.iso.date('Invalid date format! Use ISO format (YYYY-MM-DD)').optional(),
   })
   .refine(
-    (data: { document_type: string; issue_date?: string; expiry_date?: string }) => {
+    (data: { issue_date?: string; expiry_date?: string }) => {
       if (data.issue_date && data.expiry_date) {
         return new Date(data.expiry_date) > new Date(data.issue_date);
       }
@@ -121,6 +142,7 @@ const groupMediaUploadFields = {
     parseJsonArray,
     z.array(z.string().uuid('Invalid user UUID format!')).optional(),
   ),
+  tags: tagsValidation,
 };
 
 const groupMediaUpdateFields = {
@@ -165,6 +187,7 @@ const groupMediaUpdateFields = {
     parseJsonArray,
     z.array(z.string().uuid('Invalid user UUID format!')).optional(),
   ),
+  tags: tagsValidation,
 };
 
 const validateCoordinates = (data: {
@@ -191,22 +214,14 @@ export const groupMediaUpdateSchema = z
 
 export const groupDocumentUpdateSchema = z
   .object({
-    document_type: z
-      .enum(
-        ['TICKET', 'BOOKING_CONFIRMATION', 'HOTEL_VOUCHER', 'GUEST_REGISTRATION_CARD', 'OTHER'],
-        {
-          message:
-            'Invalid document type!, Must be TICKET, BOOKING_CONFIRMATION, HOTEL_VOUCHER, GUEST_REGISTRATION_CARD, or OTHER',
-        },
-      )
-      .optional(),
+    tags: tagsValidation,
 
     issue_date: z.iso.date('Invalid date format! Use ISO format (YYYY-MM-DD)').optional(),
 
     expiry_date: z.iso.date('Invalid date format! Use ISO format (YYYY-MM-DD)').optional(),
   })
   .refine(
-    (data: { document_type?: string; issue_date?: string; expiry_date?: string }) => {
+    (data: { issue_date?: string; expiry_date?: string }) => {
       if (data.issue_date && data.expiry_date) {
         return new Date(data.expiry_date) > new Date(data.issue_date);
       }
@@ -250,12 +265,7 @@ export const documentUrlQuerySchema = z.object({
 });
 
 export const getAllFilterQuerySchema = z.object({
-  documentType: z
-    .enum(['ID', 'PASSPORT', 'DRIVING_LICENSE', 'OTHER'], {
-      message:
-        'Invalid document type!, Must be TICKET, BOOKING_CONFIRMATION, HOTEL_VOUCHER, GUEST_REGISTRATION_CARD, or OTHER',
-    })
-    .optional(),
+  tags: tagsValidation,
 
   targetUserUuid: z.uuid('Target user query param must be a valid uuid!').optional(),
 });

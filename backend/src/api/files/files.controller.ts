@@ -10,7 +10,7 @@ class FilesController extends BaseController {
 
       const file = req.file;
 
-      const { document_type, issue_date, expiry_date } = req.body;
+      const { tags, issue_date, expiry_date } = req.body;
 
       if (!file) {
         res.status(400).json({
@@ -24,7 +24,7 @@ class FilesController extends BaseController {
       const newFile = await fileService.uploadPrivateDocument(
         user.uuid,
         file,
-        document_type,
+        tags,
         issue_date,
         expiry_date,
       );
@@ -97,12 +97,12 @@ class FilesController extends BaseController {
 
       const oldFileId = parseInt(req.params.fileId as string, 10);
 
-      const { document_type, issue_date, expiry_date } = req.body;
+      const { tags, issue_date, expiry_date } = req.body;
 
       const updatedFile = await fileService.replacePrivateDocument(
         user.uuid,
         oldFileId,
-        document_type,
+        tags,
         file,
         issue_date,
         expiry_date,
@@ -203,7 +203,7 @@ class FilesController extends BaseController {
       const user = res.locals.user!;
       const file = req.file;
       const groupUuid = req.params.groupUuid as string;
-      const { document_type, issue_date, expiry_date } = req.body;
+      const { tags, issue_date, expiry_date } = req.body;
 
       if (!file) {
         res.status(400).json({
@@ -218,7 +218,7 @@ class FilesController extends BaseController {
         user.uuid,
         groupUuid,
         file,
-        document_type,
+        tags,
         issue_date,
         expiry_date,
       );
@@ -251,6 +251,8 @@ class FilesController extends BaseController {
 
       const tagged_user_uuids = req.body.tagged_user_uuids as string[] | undefined;
 
+      const tags = req.body.tags as string[] | undefined;
+
       if (!file) {
         res.status(400).json({
           status: 'error',
@@ -270,6 +272,7 @@ class FilesController extends BaseController {
         latitude,
         longitude,
         tagged_user_uuids,
+        tags,
       );
 
       res.status(201).json({
@@ -290,13 +293,13 @@ class FilesController extends BaseController {
 
       const file = req.file;
 
-      const { document_type, issue_date, expiry_date } = req.body;
+      const { tags, issue_date, expiry_date } = req.body;
 
       const updatedGroupDocument = await fileService.updateGroupDocument(
         user.uuid,
         groupUuid,
         fileId,
-        document_type,
+        tags,
         file,
         issue_date,
         expiry_date,
@@ -332,6 +335,8 @@ class FilesController extends BaseController {
 
       const tagged_user_uuids = req.body.tagged_user_uuids as string[] | undefined;
 
+      const tags = req.body.tags as string[] | undefined;
+
       const updatedGroupMedia = await fileService.updateGroupMediaFile(
         user.uuid,
         groupUuid,
@@ -343,6 +348,7 @@ class FilesController extends BaseController {
         latitude,
         longitude,
         tagged_user_uuids,
+        tags,
       );
 
       res.status(200).json({
@@ -379,12 +385,18 @@ class FilesController extends BaseController {
 
     const type = req.query.type as unknown as string;
 
+    const query = req.query.query as string | undefined;
+
+    const tags = req.query.tags as string[] | undefined;
+
     const paginatedFiles = await fileService.getGroupFiles(
       user.uuid,
       groupUuid,
       limit,
       cursor,
       type,
+      query,
+      tags,
     );
 
     res.status(200).json({
@@ -401,7 +413,7 @@ class FilesController extends BaseController {
       const groupUuid = req.params.groupUuid as string;
 
       const filters = {
-        documentType: req.query.documentType as string | undefined,
+        tags: req.query.tags as string[] | undefined,
         targetUserUuid: req.query.targetUserUuid as string | undefined,
       };
 

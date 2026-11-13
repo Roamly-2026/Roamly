@@ -138,7 +138,6 @@ model documents {
   file_id       Int       @id
   issue_date    DateTime? @db.Date
   expiry_date   DateTime? @db.Date
-  document_type String?   @db.VarChar(64)
   files         files     @relation(fields: [file_id], references: [file_id], onDelete: Cascade, onUpdate: NoAction)
 }
 
@@ -155,6 +154,7 @@ model files {
   group_id        Int?
   created_at      DateTime      @default(now()) @db.Timestamp(6)
   updated_at      DateTime      @updatedAt @db.Timestamp(6)
+  tags            String[]      @default([])
   documents       documents?
   file_shares     file_shares[]
   groups          groups?       @relation(fields: [group_id], references: [group_id], onDelete: Cascade, onUpdate: NoAction)
