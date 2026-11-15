@@ -2,9 +2,6 @@
 
 export type OwnershipType = 'PRIVATE' | 'GROUP';
 export type AccessLevel = 'LEADER' | 'MEMBER';
-export type PrivateDocumentType = 'ID' | 'PASSPORT' | 'DRIVING_LICENSE' | 'OTHER';
-export type GroupDocumentType =
-  'TICKET' | 'BOOKING_CONFIRMATION' | 'HOTEL_VOUCHER' | 'GUEST_REGISTRATION_CARD' | 'OTHER';
 
 export interface FileUserDto {
   uuid: string;
@@ -14,8 +11,7 @@ export interface FileUserDto {
 }
 
 export interface DocumentDto {
-  document_id: number;
-  document_type: string;
+  file_id: number;
   issue_date: string | null;
   expiry_date: string | null;
 }
@@ -30,7 +26,7 @@ export interface MediaTagDto {
 }
 
 export interface MediaDto {
-  media_id: number;
+  file_id: number;
   description: string | null;
   taken_at?: string | null;
   location_name?: string | null;
@@ -51,6 +47,7 @@ export interface FileDto {
   uploaded_by: number;
   created_at: string;
   updated_at: string;
+  tags: string[];
 }
 
 export interface PrivateDocumentMetadata extends FileDto {
