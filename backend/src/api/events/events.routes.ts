@@ -59,12 +59,16 @@ router.put(
   '/:groupUuid/:eventUuid/rsvp',
   validateData(zodSchemas.groupEventUuidParamSchema, 'params'),
   validateData(zodSchemas.eventRsvpBodySchema, 'body'),
+  requireGroupAccess,
+  requirePermission(PERMISSIONS.EVENTS_READ),
   eventsController.setEventRsvp,
 );
 
 router.delete(
   '/:groupUuid/:eventUuid/rsvp',
   validateData(zodSchemas.groupEventUuidParamSchema, 'params'),
+  requireGroupAccess,
+  requirePermission(PERMISSIONS.EVENTS_READ),
   eventsController.removeEventRsvp,
 );
 

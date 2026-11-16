@@ -10,7 +10,7 @@ import * as sendMail from '../shared/email.service';
 import { logger } from '../../config/logger.config';
 import { PERMISSIONS } from '../../constants/permission.constants';
 import { PermissionContext } from '../../types/permissions.types';
-import { assertPermission, loadPermissionContext } from '../shared/permissions.service';
+import { assertPermission } from '../shared/permissions.service';
 import {
   CreatedEvent,
   EventMember,
@@ -447,6 +447,22 @@ export const removeParticipantFromEvent = async (
     },
   });
 
+  const participant = await prisma.event_participants.findUnique({
+    where: {
+      event_id_user_id: {
+        event_id: existingEvent.event_id,
+        user_id: targetUser.user_id,
+      },
+    },
+    select: {
+      user_id: true,
+    },
+  });
+
+  if (!participant) {
+    throw new BadRequestError('User is not a participant of this event!');
+  }
+
   await prisma.$transaction([
     prisma.event_rsvps.deleteMany({
       where: {
@@ -466,12 +482,11 @@ export const removeParticipantFromEvent = async (
 };
 
 export const setEventRsvp = async (
-  userUuid: string,
-  groupUuid: string,
+  context: PermissionContext,
   eventUuid: string,
   status: EventRsvpStatus,
 ): Promise<{ status: EventRsvpStatus }> => {
-  const { userId, eventId, groupId } = await validateRsvpAccess(userUuid, groupUuid, eventUuid);
+  const { userId, eventId, groupId } = await validateRsvpAccess(context, eventUuid);
 
   return prisma.event_rsvps.upsert({
     where: {
@@ -496,11 +511,10 @@ export const setEventRsvp = async (
 };
 
 export const removeEventRsvp = async (
-  userUuid: string,
-  groupUuid: string,
+  context: PermissionContext,
   eventUuid: string,
 ): Promise<void> => {
-  const { userId, eventId } = await validateRsvpAccess(userUuid, groupUuid, eventUuid);
+  const { userId, eventId } = await validateRsvpAccess(context, eventUuid);
 
   // deleteMany, so removing a response that does not exist is not an error
   await prisma.event_rsvps.deleteMany({
@@ -646,12 +660,9 @@ export const listEventStartDates = async (context: PermissionContext): Promise<s
 
 // a user can respond to an event if they can see it and it has not ended yet
 async function validateRsvpAccess(
-  userUuid: string,
-  groupUuid: string,
+  context: PermissionContext,
   eventUuid: string,
 ): Promise<{ userId: number; eventId: number; groupId: number }> {
-  const context = await loadPermissionContext(userUuid, groupUuid);
-
   const existingEvent = await prisma.events.findUniqueOrThrow({
     where: {
       uuid: eventUuid,
