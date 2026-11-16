@@ -87,15 +87,13 @@ class EventsController extends BaseController {
   );
 
   public setEventRsvp = this.handleAsync(async (req: Request, res: Response): Promise<void> => {
-    const user = res.locals.user!;
-
-    const groupUuid = req.params.groupUuid as string;
+    const context = res.locals.permissions!;
 
     const eventUuid = req.params.eventUuid as string;
 
     const { status } = req.body;
 
-    const rsvp = await eventService.setEventRsvp(user.uuid, groupUuid, eventUuid, status);
+    const rsvp = await eventService.setEventRsvp(context, eventUuid, status);
 
     res.status(200).json({
       status: 'success',
@@ -105,13 +103,11 @@ class EventsController extends BaseController {
   });
 
   public removeEventRsvp = this.handleAsync(async (req: Request, res: Response): Promise<void> => {
-    const user = res.locals.user!;
-
-    const groupUuid = req.params.groupUuid as string;
+    const context = res.locals.permissions!;
 
     const eventUuid = req.params.eventUuid as string;
 
-    await eventService.removeEventRsvp(user.uuid, groupUuid, eventUuid);
+    await eventService.removeEventRsvp(context, eventUuid);
 
     res.status(200).json({
       status: 'success',
