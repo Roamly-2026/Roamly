@@ -31,9 +31,42 @@ const tagsValidation = z.preprocess(
     .optional(),
 );
 
+const privateDocumentTypesArray = Object.values(FILE_CONSTANTS.PRIVATE_DOCUMENT_TYPES) as [
+  string,
+  ...string[],
+];
+
 export const privateDocumentDataSchema = z
   .object({
-    tags: tagsValidation,
+    document_type: z.enum(privateDocumentTypesArray, {
+      message: `Document type is required and must be one of: ${privateDocumentTypesArray.join(', ')}!`,
+    }),
+
+    issue_date: z.iso.date('Invalid date format! Use ISO format (YYYY-MM-DD)').optional(),
+
+    expiry_date: z.iso.date('Invalid date format! Use ISO format (YYYY-MM-DD)').optional(),
+  })
+  .refine(
+    (data: { issue_date?: string; expiry_date?: string }) => {
+      if (data.issue_date && data.expiry_date) {
+        return new Date(data.expiry_date) > new Date(data.issue_date);
+      }
+
+      return true;
+    },
+    {
+      message: 'Expiry date must be after the issue date!',
+      path: ['expiry_date'],
+    },
+  );
+
+export const privateDocumentUpdateSchema = z
+  .object({
+    document_type: z
+      .enum(privateDocumentTypesArray, {
+        message: `Document type must be one of: ${privateDocumentTypesArray.join(', ')}!`,
+      })
+      .optional(),
 
     issue_date: z.iso.date('Invalid date format! Use ISO format (YYYY-MM-DD)').optional(),
 
@@ -254,6 +287,10 @@ export const paginatedQuerySchema = z.object({
   type: z
     .enum([FILE_CONSTANTS.GROUP_FILE_TYPE.DOCUMENT, FILE_CONSTANTS.GROUP_FILE_TYPE.MEDIA_FILE])
     .optional(),
+
+  query: z.string().trim().min(1).optional(),
+
+  tags: tagsValidation,
 });
 
 export const documentUrlQuerySchema = z.object({
@@ -265,7 +302,7 @@ export const documentUrlQuerySchema = z.object({
 });
 
 export const getAllFilterQuerySchema = z.object({
-  tags: tagsValidation,
+  documentType: z.enum(privateDocumentTypesArray).optional(),
 
   targetUserUuid: z.uuid('Target user query param must be a valid uuid!').optional(),
 });

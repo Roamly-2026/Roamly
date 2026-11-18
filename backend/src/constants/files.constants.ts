@@ -12,6 +12,16 @@ export const BUCKET_FOLDER_NAME = {
 
 export type BucketFolderName = (typeof BUCKET_FOLDER_NAME)[keyof typeof BUCKET_FOLDER_NAME];
 
+export const PRIVATE_DOCUMENT_TYPES = {
+  ID: 'ID',
+  PASSPORT: 'PASSPORT',
+  DRIVING_LICENSE: 'DRIVING_LICENSE',
+  OTHER: 'OTHER',
+} as const;
+
+export type PrivateDocumentType =
+  (typeof PRIVATE_DOCUMENT_TYPES)[keyof typeof PRIVATE_DOCUMENT_TYPES];
+
 export const GROUP_FILE_TYPE = {
   DOCUMENT: 'document',
   MEDIA_FILE: 'media',
@@ -26,4 +36,4 @@ export const URL_TYPE = {
 
 export type urlType = (typeof URL_TYPE)[keyof typeof URL_TYPE];
 
-export const MAX_PRIVATE_DOCUMENTS = 12;
+export const MAX_DOCUMENTS_PER_TYPE = 3;

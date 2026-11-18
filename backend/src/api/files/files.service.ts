@@ -16,7 +16,7 @@ import * as FILE_CONSTANTS from '../../constants/files.constants';
 export const uploadPrivateDocument = async (
   userUuid: string,
   fileData: Express.Multer.File,
-  tags: string[] = [],
+  document_type: string,
   issue_date?: string,
   expiry_date?: string,
 ): Promise<files> => {
@@ -30,13 +30,15 @@ export const uploadPrivateDocument = async (
     where: {
       user_id: user.user_id,
       ownership_type: FILE_CONSTANTS.OWNERSHIP.PRIVATE,
-      documents: { isNot: null },
+      documents: {
+        document_type,
+      },
     },
   });
 
-  if (existingDocsCount >= FILE_CONSTANTS.MAX_PRIVATE_DOCUMENTS) {
+  if (existingDocsCount >= FILE_CONSTANTS.MAX_DOCUMENTS_PER_TYPE) {
     throw new BadRequestError(
-      `You have reached the maximum limit of ${FILE_CONSTANTS.MAX_PRIVATE_DOCUMENTS} private documents. Please delete or replace an existing one!`,
+      `You have reached the maximum limit of ${FILE_CONSTANTS.MAX_DOCUMENTS_PER_TYPE} documents for type ${document_type}. Please delete or replace an existing one!`,
     );
   }
 
@@ -54,10 +56,10 @@ export const uploadPrivateDocument = async (
       ownership_type: FILE_CONSTANTS.OWNERSHIP.PRIVATE,
       user_id: user.user_id,
       uploaded_by: user.user_id,
-      tags,
 
       documents: {
         create: {
+          document_type,
           issue_date: issue_date ? new Date(issue_date) : null,
           expiry_date: expiry_date ? new Date(expiry_date) : null,
         },
@@ -193,7 +195,7 @@ export const getAllPrivateDocumentsMetadataOfAUser = async (
 export const replacePrivateDocument = async (
   userUuid: string,
   fileId: number,
-  tags?: string[],
+  document_type?: string,
   fileData?: Express.Multer.File,
   issue_date?: string,
   expiry_date?: string,
@@ -223,6 +225,24 @@ export const replacePrivateDocument = async (
     throw new ForbiddenError('Users can only replace their own files!');
   }
 
+  if (document_type && document_type !== file.documents.document_type) {
+    const targetTypeCount = await prisma.files.count({
+      where: {
+        user_id: user.user_id,
+        ownership_type: FILE_CONSTANTS.OWNERSHIP.PRIVATE,
+        documents: {
+          document_type,
+        },
+      },
+    });
+
+    if (targetTypeCount >= FILE_CONSTANTS.MAX_DOCUMENTS_PER_TYPE) {
+      throw new BadRequestError(
+        `You have reached the maximum limit of ${FILE_CONSTANTS.MAX_DOCUMENTS_PER_TYPE} documents for type ${document_type}. Please delete or replace an existing one!`,
+      );
+    }
+  }
+
   const effectiveIssueDate =
     issue_date === undefined
       ? file.documents.issue_date
@@ -243,9 +263,9 @@ export const replacePrivateDocument = async (
 
   const updateData: Prisma.filesUpdateInput = {
     updated_at: new Date(),
-    ...(tags !== undefined && { tags }),
     documents: {
       update: {
+        ...(document_type !== undefined && { document_type }),
         issue_date: issue_date === undefined ? undefined : effectiveIssueDate,
         expiry_date: expiry_date === undefined ? undefined : effectiveExpiryDate,
       },
@@ -1119,7 +1139,7 @@ export const getAllPrivateDocumentsMetadataOfAllUsersInAGroup = async (
   userUuid: string,
   groupUuid: string,
   filters: {
-    tags?: string[];
+    documentType?: string;
     targetUserUuid?: string;
   },
 ): Promise<GroupMemberPrivateDocument[]> => {
@@ -1161,12 +1181,15 @@ export const getAllPrivateDocumentsMetadataOfAllUsersInAGroup = async (
 
       owner: filters.targetUserUuid ? { uuid: filters.targetUserUuid } : undefined,
 
-      documents: { isNot: null },
-
-      ...(filters.tags &&
-        filters.tags.length > 0 && {
-          tags: { hasEvery: filters.tags },
-        }),
+      documents: filters.documentType
+        ? {
+            is: {
+              document_type: filters.documentType,
+            },
+          }
+        : {
+            isNot: null,
+          },
     },
 
     include: {

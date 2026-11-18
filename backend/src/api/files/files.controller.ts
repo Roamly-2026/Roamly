@@ -10,7 +10,7 @@ class FilesController extends BaseController {
 
       const file = req.file;
 
-      const { tags, issue_date, expiry_date } = req.body;
+      const { document_type, issue_date, expiry_date } = req.body;
 
       if (!file) {
         res.status(400).json({
@@ -24,7 +24,7 @@ class FilesController extends BaseController {
       const newFile = await fileService.uploadPrivateDocument(
         user.uuid,
         file,
-        tags,
+        document_type,
         issue_date,
         expiry_date,
       );
@@ -97,12 +97,12 @@ class FilesController extends BaseController {
 
       const oldFileId = parseInt(req.params.fileId as string, 10);
 
-      const { tags, issue_date, expiry_date } = req.body;
+      const { document_type, issue_date, expiry_date } = req.body;
 
       const updatedFile = await fileService.replacePrivateDocument(
         user.uuid,
         oldFileId,
-        tags,
+        document_type,
         file,
         issue_date,
         expiry_date,
@@ -413,7 +413,7 @@ class FilesController extends BaseController {
       const groupUuid = req.params.groupUuid as string;
 
       const filters = {
-        tags: req.query.tags as string[] | undefined,
+        documentType: req.query.documentType as string | undefined,
         targetUserUuid: req.query.targetUserUuid as string | undefined,
       };
 
