@@ -79,13 +79,7 @@
 
       <!-- MULTI-TAG FILTER WITH AUTOCOMPLETE -->
       <div :class="[LAYOUT_CONFIG.fullWidth, SPACING_TOKENS.mb.md]">
-        <BaseTagInput
-          v-model="selectedTags"
-          :suggestions="availableTags"
-          :allow-create="false"
-          clearable
-          :placeholder="UI_TEXT.files.filterByTagsPlaceholder"
-        />
+        <TagFilterDropdown v-model="selectedTags" :available-tags="availableTags" />
       </div>
 
       <div>

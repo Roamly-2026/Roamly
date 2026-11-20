@@ -106,15 +106,8 @@
           </div>
 
           <!-- MULTI-TAG FILTER WITH AUTOCOMPLETE -->
-          <div class="w-48">
-            <BaseTagInput
-              v-model="selectedTags"
-              :suggestions="availableTags"
-              :allow-create="false"
-              clearable
-              compact
-              :placeholder="UI_TEXT.files.filterByTagsPlaceholder"
-            />
+          <div class="min-w-44 max-w-64">
+            <TagFilterDropdown v-model="selectedTags" :available-tags="availableTags" />
           </div>
 
           <!-- VIEW SWITCHER (List vs Grid) -->

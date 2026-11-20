@@ -7,12 +7,13 @@
     <!-- Chips + Input container -->
     <div
       :class="[
-        `w-full flex flex-wrap items-center cursor-text`,
+        `relative w-full flex flex-wrap items-center cursor-text`,
         compact
           ? `${INPUT_SIZES.sm} ${RADIUS_TOKENS.full}`
           : `${INPUT_SIZES.md} ${RADIUS_TOKENS.md}`,
         SPACING_TOKENS.gap.xs,
         SPACING_TOKENS.px.md,
+        clearable && modelValue.length > 0 ? '!pr-8' : '',
         compact ? SPACING_TOKENS.py['2xs'] : SPACING_TOKENS.py.xs,
         INPUT_APPEARANCES.glass,
         'focus-within:ring-2 focus-within:ring-field-focus',
@@ -52,7 +53,7 @@
         :placeholder="modelValue.length === 0 ? placeholder : ''"
         :class="[
           `flex-1 bg-transparent border-none outline-none`,
-          compact ? 'min-w-20' : 'min-w-28',
+          compact ? 'min-w-12' : 'min-w-28',
           TEXT_SIZES.sm,
           COLOR_TOKENS.text.primary,
           'placeholder:text-field-placeholder',
@@ -69,7 +70,7 @@
         v-if="clearable && modelValue.length > 0"
         type="button"
         :class="[
-          `ml-auto inline-flex items-center justify-center`,
+          `absolute right-2 top-1/2 -translate-y-1/2 inline-flex items-center justify-center shrink-0`,
           INTERACTION_TOKENS.base,
           BUTTON_APPEARANCES.ghostDanger,
           SPACING_TOKENS.p.xs,
