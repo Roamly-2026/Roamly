@@ -82,9 +82,7 @@
           </div>
 
           <!-- MULTI-TAG FILTER WITH AUTOCOMPLETE -->
-          <div class="min-w-44 max-w-64">
-            <TagFilterDropdown v-model="selectedTags" :available-tags="availableTags" />
-          </div>
+          <TagFilterDropdown v-model="selectedTags" :available-tags="availableTags" />
 
           <!-- VIEW SWITCHER -->
           <ViewSwitcher v-model="viewMode" />
@@ -125,6 +123,8 @@
             v-if="viewMode === 'list'"
             :files="section.items"
             :is-current-user-leader="isCurrentUserLeader"
+            can-edit
+            @edit="emit('edit', $event as GroupFile)"
             @delete="emit('delete', $event as GroupFile)"
             @download="(url, filename) => emit('download', url, filename)"
           />

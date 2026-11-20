@@ -102,6 +102,8 @@
               v-if="viewMode === 'list'"
               :files="section.items"
               :is-current-user-leader="isCurrentUserLeader"
+              can-edit
+              @edit="emit('edit', $event as GroupFile)"
               @delete="emit('delete', $event as GroupFile)"
               @download="(url, filename) => emit('download', url, filename)"
             />

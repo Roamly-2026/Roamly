@@ -104,6 +104,13 @@
             @click.stop.prevent="emit('download', fileUrl, file.file_name)"
           />
           <BaseButton
+            v-if="isCurrentUserLeader && canEdit"
+            icon="i-heroicons-pencil-square"
+            variant="ghostBrandIconButton"
+            :tooltip="UI_TEXT.common.edit"
+            @click.stop="emit('edit', file)"
+          />
+          <BaseButton
             v-if="isCurrentUserLeader"
             icon="i-heroicons-trash"
             variant="ghostDangerIconButton"
@@ -161,6 +168,12 @@
             @click.stop.prevent="emit('download', fileUrl, file.file_name)"
           />
           <BaseButton
+            v-if="isCurrentUserLeader && canEdit"
+            icon="i-heroicons-pencil-square"
+            variant="ghostBrandIconButton"
+            @click.stop="emit('edit', file)"
+          />
+          <BaseButton
             v-if="isCurrentUserLeader"
             icon="i-heroicons-trash"
             variant="ghostDangerIconButton"
@@ -179,9 +192,11 @@ import type { GroupFile, PrivateDocumentMetadata, FileUserDto } from '~/types/fi
 const props = defineProps<{
   file: GroupFile | PrivateDocumentMetadata;
   isCurrentUserLeader: boolean;
+  canEdit?: boolean;
 }>();
 
 const emit = defineEmits<{
+  edit: [file: GroupFile | PrivateDocumentMetadata];
   delete: [file: GroupFile | PrivateDocumentMetadata];
   download: [url: string | undefined, filename: string];
   open: [file: GroupFile | PrivateDocumentMetadata];

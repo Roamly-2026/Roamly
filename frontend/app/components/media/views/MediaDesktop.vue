@@ -106,9 +106,7 @@
           </div>
 
           <!-- MULTI-TAG FILTER WITH AUTOCOMPLETE -->
-          <div class="min-w-44 max-w-64">
-            <TagFilterDropdown v-model="selectedTags" :available-tags="availableTags" />
-          </div>
+          <TagFilterDropdown v-model="selectedTags" :available-tags="availableTags" />
 
           <!-- VIEW SWITCHER (List vs Grid) -->
           <ViewSwitcher v-model="viewMode" />

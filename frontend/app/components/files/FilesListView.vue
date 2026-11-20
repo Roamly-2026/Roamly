@@ -8,7 +8,9 @@
       :key="file.file_id"
       :file="file"
       :is-current-user-leader="isCurrentUserLeader"
+      :can-edit="canEdit"
       @open="emit('open', $event)"
+      @edit="emit('edit', $event)"
       @delete="emit('delete', $event)"
       @download="(url: string | undefined, filename: string) => emit('download', url, filename)"
     />
@@ -25,9 +27,11 @@ import FilesListRow from '~/components/files/FilesListRow.vue';
 const props = defineProps<{
   files: (GroupFile | PrivateDocumentMetadata)[];
   isCurrentUserLeader: boolean;
+  canEdit?: boolean;
 }>();
 
 const emit = defineEmits<{
+  edit: [file: GroupFile | PrivateDocumentMetadata];
   delete: [file: GroupFile | PrivateDocumentMetadata];
   download: [url: string | undefined, filename: string];
   open: [file: GroupFile | PrivateDocumentMetadata];
