@@ -36,12 +36,7 @@ export const privateDocumentSchema = z
 export const groupDocumentSchema = z
   .object({
     file: z.instanceof(File, { message: UI_TEXT.validation.fileRequired }),
-    document_type: z.enum(
-      ['TICKET', 'BOOKING_CONFIRMATION', 'HOTEL_VOUCHER', 'GUEST_REGISTRATION_CARD', 'OTHER'],
-      {
-        message: UI_TEXT.validation.documentType,
-      },
-    ),
+    tags: z.array(z.string().trim().min(1).max(32)).optional(),
     issue_date: z.string().optional(),
     expiry_date: z.string().optional(),
   })
@@ -61,6 +56,7 @@ export const groupMediaSchema = z
     latitude: z.number().min(-90).max(90).nullable().optional(),
     longitude: z.number().min(-180).max(180).nullable().optional(),
     tagged_user_uuids: z.array(z.string()).optional(),
+    tags: z.array(z.string().trim().min(1).max(32)).optional(),
   })
   .refine(
     (data) => {

@@ -42,15 +42,28 @@
         </span>
       </div>
 
-      <!-- Type tag (2 cols) -->
-      <div class="col-span-2 flex items-center min-w-0">
-        <span :class="[TYPOGRAPHY_CONFIG.badgeRole, 'truncate max-w-full']">
-          {{
-            file.documents?.document_type ||
-            getFileExtension(file.file_name) ||
-            file.mime_type?.split('/')[1] ||
-            '—'
-          }}
+      <!-- Type / Tags (2 cols) -->
+      <div :class="['col-span-2 flex items-center flex-wrap min-w-0', SPACING_TOKENS.gap.xs]">
+        <span
+          v-if="file.documents?.document_type"
+          :class="[TYPOGRAPHY_CONFIG.badgeRole, 'truncate max-w-full']"
+        >
+          {{ file.documents.document_type }}
+        </span>
+        <template v-else-if="file.tags && file.tags.length > 0">
+          <span
+            v-for="tag in file.tags.slice(0, 2)"
+            :key="tag"
+            :class="[TYPOGRAPHY_CONFIG.badgeRole, 'truncate max-w-full']"
+          >
+            #{{ tag }}
+          </span>
+          <span v-if="file.tags.length > 2" :class="TYPOGRAPHY_CONFIG.captionMuted">
+            +{{ file.tags.length - 2 }}
+          </span>
+        </template>
+        <span v-else :class="[TYPOGRAPHY_CONFIG.badgeRole, 'truncate max-w-full']">
+          {{ getFileExtension(file.file_name) || file.mime_type?.split('/')[1] || '—' }}
         </span>
       </div>
 

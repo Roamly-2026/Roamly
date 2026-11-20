@@ -152,12 +152,12 @@ export const filesService = {
   getGroupMemberDocuments(
     groupUuid: string,
     targetUserUuid?: string,
-    tags?: string[],
+    documentType?: string,
   ): Promise<ApiResponse<PrivateDocumentMetadata[]>> {
     const api = useApi();
     const params = new URLSearchParams();
     if (targetUserUuid) params.append('targetUserUuid', targetUserUuid);
-    if (tags && tags.length > 0) params.append('tags', JSON.stringify(tags));
+    if (documentType) params.append('documentType', documentType);
     const qs = params.toString() ? `?${params.toString()}` : '';
     return api(`/files/documents/group/${groupUuid}${qs}`);
   },

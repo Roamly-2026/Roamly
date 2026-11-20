@@ -12,6 +12,7 @@ export interface FileUserDto {
 
 export interface DocumentDto {
   file_id: number;
+  document_type?: string | null;
   issue_date: string | null;
   expiry_date: string | null;
 }
