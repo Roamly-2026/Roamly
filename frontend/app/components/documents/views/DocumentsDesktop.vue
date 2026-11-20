@@ -81,36 +81,8 @@
             <BaseSearchInput v-model="searchQuery" :placeholder="UI_TEXT.documents.search" />
           </div>
 
-          <UPopover>
-            <BaseButton
-              icon="i-heroicons-funnel"
-              :label="
-                filterType === 'ALL'
-                  ? UI_TEXT.common.filter
-                  : documentTypes.find((d) => d.value === filterType)?.label
-              "
-              variant="glassButton"
-            />
-            <template #content="{ close }">
-              <div :class="DROPDOWN_MENU_CONFIG.slots.content">
-                <button
-                  v-for="type in documentTypes"
-                  :key="type.value"
-                  :class="DROPDOWN_MENU_CONFIG.slots.item"
-                  @click="
-                    filterType = type.value;
-                    close();
-                  "
-                >
-                  <UIcon
-                    :name="filterType === type.value ? 'i-heroicons-check' : 'i-heroicons-funnel'"
-                    :class="DROPDOWN_MENU_CONFIG.slots.itemLeadingIcon"
-                  />
-                  <span>{{ type.label }}</span>
-                </button>
-              </div>
-            </template>
-          </UPopover>
+          <!-- MULTI-TAG FILTER WITH AUTOCOMPLETE -->
+          <TagFilterDropdown v-model="selectedTags" :available-tags="availableTags" />
 
           <!-- VIEW SWITCHER -->
           <ViewSwitcher v-model="viewMode" />
@@ -131,140 +103,177 @@
         </div>
       </div>
 
-      <!-- DOCUMENT CONTENT -->
+      <!-- DOCUMENT CONTENT (SECTIONED BY TAGS) -->
       <div v-if="isLoading" :class="TYPOGRAPHY_CONFIG.statusLoading">
         {{ UI_TEXT.documents.loading }}
       </div>
 
       <template v-else-if="documents.length > 0">
-        <!-- LIST VIEW -->
-        <FilesListView
-          v-if="viewMode === 'list'"
-          :files="documents"
-          :is-current-user-leader="isCurrentUserLeader"
-          @delete="emit('delete', $event as GroupFile)"
-          @download="(url, filename) => emit('download', url, filename)"
-        />
+        <div
+          v-for="section in documentSections"
+          :key="section.key"
+          :class="[LAYOUT_CONFIG.sectionWrapper, SPACING_TOKENS.mb.xl]"
+        >
+          <h2 :class="TYPOGRAPHY_CONFIG.sectionTitleTransparent">
+            {{ section.label }}
+          </h2>
 
-        <!-- GRID VIEW -->
-        <div v-else :class="LAYOUT_CONFIG.documentGrid">
-          <BaseCard
-            v-for="doc in documents"
-            :key="doc.file_id"
-            variant="documentGlass"
-            :class="LAYOUT_CONFIG.headerRelative"
-          >
-            <div :class="LAYOUT_CONFIG.documentCardHeader">
-              <p :class="TYPOGRAPHY_CONFIG.documentHeaderTitle">{{ doc.file_name }}</p>
-              <div :class="LAYOUT_CONFIG.headerTitleRow">
-                <BaseButton
-                  v-if="isCurrentUserLeader"
-                  icon="i-heroicons-trash"
-                  variant="ghostDangerIconButton"
-                  :tooltip="UI_TEXT.common.delete"
-                  @click="emit('delete', doc)"
-                />
-              </div>
-            </div>
+          <!-- LIST VIEW -->
+          <FilesListView
+            v-if="viewMode === 'list'"
+            :files="section.items"
+            :is-current-user-leader="isCurrentUserLeader"
+            can-edit
+            @edit="emit('edit', $event as GroupFile)"
+            @delete="emit('delete', $event as GroupFile)"
+            @download="(url, filename) => emit('download', url, filename)"
+          />
 
-            <div :class="LAYOUT_CONFIG.documentCardImage">
-              <UIcon
-                :name="getFileIcon(doc.mime_type, doc.file_name)"
-                :class="TYPOGRAPHY_CONFIG.iconWatermarkLg"
-              />
-
-              <div :class="LAYOUT_CONFIG.documentCardBottomActions">
-                <BaseButton
-                  icon="i-heroicons-eye"
-                  variant="ghostDangerIconButton"
-                  :href="doc.download_url || doc.file_url"
-                  target="_blank"
-                  :tooltip="UI_TEXT.common.view"
-                />
-                <BaseButton
-                  icon="i-heroicons-arrow-down-tray"
-                  variant="ghostBrandIconButton"
-                  :class="COLOR_TOKENS.text.primaryMuted"
-                  :tooltip="UI_TEXT.common.download"
-                  @click.prevent="emit('download', doc.download_url || doc.file_url, doc.file_name)"
-                />
-              </div>
-            </div>
-
-            <div :class="LAYOUT_CONFIG.documentCardMeta">
-              <!-- Creator with Avatar -->
-              <div :class="['flex items-center', SPACING_TOKENS.mb.xs, SPACING_TOKENS.gap.xs]">
-                <UAvatar
-                  :src="doc.creator?.profile_image_url || undefined"
-                  :alt="doc.creator?.username"
-                  class="w-6! h-6! text-[10px] shrink-0 rounded-full object-cover"
-                />
-                <span :class="TYPOGRAPHY_CONFIG.metaHighlight">
-                  {{ doc.creator?.username || UI_TEXT.common.unknown }}
-                </span>
+          <!-- GRID VIEW -->
+          <div v-else :class="LAYOUT_CONFIG.documentGrid">
+            <BaseCard
+              v-for="doc in section.items"
+              :key="`${section.key}-${doc.file_id}`"
+              variant="documentGlass"
+              :class="LAYOUT_CONFIG.headerRelative"
+            >
+              <div :class="LAYOUT_CONFIG.documentCardHeader">
+                <p :class="TYPOGRAPHY_CONFIG.documentHeaderTitle">{{ doc.file_name }}</p>
+                <div :class="LAYOUT_CONFIG.headerTitleRow">
+                  <BaseButton
+                    v-if="isCurrentUserLeader"
+                    icon="i-heroicons-pencil-square"
+                    variant="ghostInverseIconButton"
+                    :tooltip="UI_TEXT.common.edit || 'Edit'"
+                    @click="emit('edit', doc)"
+                  />
+                  <BaseButton
+                    v-if="isCurrentUserLeader"
+                    icon="i-heroicons-trash"
+                    variant="ghostDangerIconButton"
+                    :tooltip="UI_TEXT.common.delete"
+                    @click="emit('delete', doc)"
+                  />
+                </div>
               </div>
 
-              <p>
-                {{ ' ' + UI_TEXT.common.uploadedAt + ' ' }}
-                <span :class="TYPOGRAPHY_CONFIG.metaHighlight">
-                  {{ new Date(doc.created_at).toLocaleDateString() }}
-                </span>
-              </p>
-              <p>
-                {{ ' ' + UI_TEXT.documents.documentType + ' ' }}
-                <span :class="TYPOGRAPHY_CONFIG.metaHighlight">
-                  {{ doc.documents?.document_type?.toLowerCase() || UI_TEXT.common.notAvailable }}
-                </span>
-              </p>
-              <div :class="LAYOUT_CONFIG.divider"></div>
-              <div :class="LAYOUT_CONFIG.flexBetween">
+              <div :class="LAYOUT_CONFIG.documentCardImage">
+                <UIcon
+                  :name="getFileIcon(doc.mime_type, doc.file_name)"
+                  :class="TYPOGRAPHY_CONFIG.iconWatermarkLg"
+                />
+
+                <div :class="LAYOUT_CONFIG.documentCardBottomActions">
+                  <BaseButton
+                    icon="i-heroicons-eye"
+                    variant="ghostDangerIconButton"
+                    :href="doc.download_url || doc.file_url"
+                    target="_blank"
+                    :tooltip="UI_TEXT.common.view"
+                  />
+                  <BaseButton
+                    icon="i-heroicons-arrow-down-tray"
+                    variant="ghostBrandIconButton"
+                    :class="COLOR_TOKENS.text.primaryMuted"
+                    :tooltip="UI_TEXT.common.download"
+                    @click.prevent="
+                      emit('download', doc.download_url || doc.file_url, doc.file_name)
+                    "
+                  />
+                </div>
+              </div>
+
+              <div :class="LAYOUT_CONFIG.documentCardMeta">
+                <!-- Creator with Avatar -->
+                <div :class="['flex items-center', SPACING_TOKENS.mb.xs, SPACING_TOKENS.gap.xs]">
+                  <UAvatar
+                    :src="doc.creator?.profile_image_url || undefined"
+                    :alt="doc.creator?.username"
+                    class="w-6! h-6! text-[10px] shrink-0 rounded-full object-cover"
+                  />
+                  <span :class="TYPOGRAPHY_CONFIG.metaHighlight">
+                    {{ doc.creator?.username || UI_TEXT.common.unknown }}
+                  </span>
+                </div>
+
                 <p>
-                  {{ ' ' + UI_TEXT.documents.fileType + ' ' }}
+                  {{ ' ' + UI_TEXT.common.uploadedAt + ' ' }}
+                  <span :class="TYPOGRAPHY_CONFIG.metaHighlight">
+                    {{ new Date(doc.created_at).toLocaleDateString() }}
+                  </span>
+                </p>
+
+                <!-- Tags row -->
+                <div
+                  v-if="doc.tags && doc.tags.length > 0"
+                  :class="`flex flex-wrap ${SPACING_TOKENS.gap.xs} ${SPACING_TOKENS.my.xs}`"
+                >
+                  <button
+                    v-for="tag in doc.tags"
+                    :key="tag"
+                    type="button"
+                    :class="[
+                      `${TEXT_SIZES.xs} ${FONT_WEIGHTS.semibold} ${SPACING_TOKENS.px.sm} ${SPACING_TOKENS.py['2xs']} ${RADIUS_TOKENS.full} ${INTERACTION_TOKENS.base}`,
+                      selectedTags.some((t) => t.toLowerCase() === tag.toLowerCase())
+                        ? 'bg-btn-primary text-btn-primary-text'
+                        : `${COLOR_TOKENS.surface.brandTint} ${COLOR_TOKENS.text.brandHover}`,
+                    ]"
+                    @click="toggleTagFilter(tag)"
+                  >
+                    #{{ tag }}
+                  </button>
+                </div>
+
+                <div :class="LAYOUT_CONFIG.divider"></div>
+                <div :class="LAYOUT_CONFIG.flexBetween">
+                  <p>
+                    {{ ' ' + UI_TEXT.documents.fileType + ' ' }}
+                    <span :class="TYPOGRAPHY_CONFIG.metaHighlight">
+                      {{
+                        getFileExtension(doc.file_name) ||
+                        doc.mime_type.split('/')[1] ||
+                        UI_TEXT.common.unknown
+                      }}
+                    </span>
+                  </p>
+                  <p>
+                    {{ ' ' + UI_TEXT.documents.fileSize + ' ' }}
+                    <span :class="TYPOGRAPHY_CONFIG.metaHighlight">
+                      {{ formatFileSize(doc.file_size) }}
+                    </span>
+                  </p>
+                </div>
+                <div :class="LAYOUT_CONFIG.divider"></div>
+                <p>
+                  {{ ' ' + UI_TEXT.documents.issued + ' ' }}
                   <span :class="TYPOGRAPHY_CONFIG.metaHighlight">
                     {{
-                      getFileExtension(doc.file_name) ||
-                      doc.mime_type.split('/')[1] ||
-                      UI_TEXT.common.unknown
+                      doc.documents?.issue_date
+                        ? new Date(doc.documents.issue_date).toLocaleDateString()
+                        : UI_TEXT.common.notAvailable
                     }}
                   </span>
                 </p>
                 <p>
-                  {{ ' ' + UI_TEXT.documents.fileSize + ' ' }}
+                  {{ ' ' + UI_TEXT.documents.ends + ' ' }}
                   <span :class="TYPOGRAPHY_CONFIG.metaHighlight">
-                    {{ formatFileSize(doc.file_size) }}
+                    {{
+                      doc.documents?.expiry_date
+                        ? new Date(doc.documents.expiry_date).toLocaleDateString()
+                        : UI_TEXT.common.notAvailable
+                    }}
                   </span>
                 </p>
               </div>
-              <div :class="LAYOUT_CONFIG.divider"></div>
-              <p>
-                {{ ' ' + UI_TEXT.documents.issued + ' ' }}
-                <span :class="TYPOGRAPHY_CONFIG.metaHighlight">
-                  {{
-                    doc.documents?.issue_date
-                      ? new Date(doc.documents.issue_date).toLocaleDateString()
-                      : UI_TEXT.common.notAvailable
-                  }}
-                </span>
-              </p>
-              <p>
-                {{ ' ' + UI_TEXT.documents.ends + ' ' }}
-                <span :class="TYPOGRAPHY_CONFIG.metaHighlight">
-                  {{
-                    doc.documents?.expiry_date
-                      ? new Date(doc.documents.expiry_date).toLocaleDateString()
-                      : UI_TEXT.common.notAvailable
-                  }}
-                </span>
-              </p>
-            </div>
-          </BaseCard>
+            </BaseCard>
+          </div>
         </div>
       </template>
 
       <!-- EMPTY STATE -->
       <div v-else :class="TYPOGRAPHY_CONFIG.statusLoading">
         {{
-          searchQuery || filterType !== 'ALL'
+          searchQuery || selectedTags.length > 0
             ? UI_TEXT.documents.noMatchingDocuments
             : UI_TEXT.documents.noDocuments
         }}
@@ -331,12 +340,9 @@
           {{ UI_TEXT.documents.memberDocumentsHeading }}
         </div>
 
-        <div :class="LAYOUT_CONFIG.headerActionRight">
-          <!-- intentionally empty — leaders cannot upload on behalf of members -->
-        </div>
+        <div :class="LAYOUT_CONFIG.headerActionRight"></div>
       </div>
 
-      <!-- Loading -->
       <div v-if="isLoadingMemberDocuments" :class="TYPOGRAPHY_CONFIG.statusLoading">
         {{ ' ' + UI_TEXT.documents.loadingMemberDocuments + ' ' }}
       </div>
@@ -354,9 +360,7 @@
             {{ type.label }}
           </h2>
 
-          <!-- Documents of this type -->
           <div v-if="filteredMemberDocuments(type.value).length > 0">
-            <!-- LIST VIEW -->
             <FilesListView
               v-if="viewMode === 'list'"
               :files="filteredMemberDocuments(type.value)"
@@ -364,7 +368,6 @@
               @download="(url, filename) => emit('download', url, filename)"
             />
 
-            <!-- GRID VIEW -->
             <div v-else :class="LAYOUT_CONFIG.documentGrid">
               <BaseCard
                 v-for="doc in filteredMemberDocuments(type.value)"
@@ -468,7 +471,6 @@
             </div>
           </div>
 
-          <!-- Empty per-type state -->
           <div v-else :class="TYPOGRAPHY_CONFIG.statusLoading">
             <UIcon name="i-heroicons-document-text" :class="TYPOGRAPHY_CONFIG.iconEmptyState" />
             <p :class="TEXT_SIZES.sm">
@@ -497,22 +499,23 @@ import ViewSwitcher from '~/components/files/ViewSwitcher.vue';
 
 const selectedGroup = defineModel<string | undefined>('selectedGroup');
 const searchQuery = defineModel<string>('searchQuery', { default: '' });
-const filterType = defineModel<string>('filterType', { default: 'ALL' });
+const selectedTags = defineModel<string[]>('selectedTags', { default: () => [] });
 const memberSearchQuery = defineModel<string>('memberSearchQuery', { default: '' });
 const memberFilterType = defineModel<string>('memberFilterType', { default: 'ALL' });
 
 const props = defineProps<{
   documents: GroupFile[];
+  availableTags: string[];
   memberDocuments: PrivateDocumentMetadata[];
   isLoadingMemberDocuments: boolean;
   groups: GroupOutDto[];
   isLoading: boolean;
   isCurrentUserLeader: boolean;
-  documentTypes: { label: string; value: string }[];
   privateDocumentTypes: { label: string; value: string }[];
 }>();
 
 const emit = defineEmits<{
+  edit: [file: GroupFile];
   delete: [file: GroupFile];
   upload: [];
   'delete-group': [];
@@ -531,7 +534,50 @@ const selectGroup = (uuid: string) => {
   isGroupDropdownOpen.value = false;
 };
 
-// Filters private member documents by specific category and case-insensitive filename search
+const toggleTagFilter = (tag: string) => {
+  const lower = tag.toLowerCase();
+  const idx = selectedTags.value.findIndex((t) => t.toLowerCase() === lower);
+  if (idx === -1) {
+    selectedTags.value = [...selectedTags.value, tag];
+  } else {
+    const next = [...selectedTags.value];
+    next.splice(idx, 1);
+    selectedTags.value = next;
+  }
+};
+
+// Group documents into sections by tag (plus an 'Untagged' section for docs with no tags)
+const documentSections = computed(() => {
+  const map = new Map<string, { key: string; label: string; items: GroupFile[] }>();
+  const untagged: GroupFile[] = [];
+
+  for (const doc of props.documents) {
+    const tags = doc.tags || [];
+    if (tags.length === 0) {
+      untagged.push(doc);
+      continue;
+    }
+
+    for (const tag of tags) {
+      const lower = tag.toLowerCase();
+      if (!map.has(lower)) {
+        map.set(lower, { key: lower, label: `#${tag}`, items: [] });
+      }
+      map.get(lower)!.items.push(doc);
+    }
+  }
+
+  const sections = Array.from(map.values()).sort((a, b) => a.label.localeCompare(b.label));
+  if (untagged.length > 0) {
+    sections.push({
+      key: '__untagged__',
+      label: UI_TEXT.documentTypes?.other || 'Untagged',
+      items: untagged,
+    });
+  }
+  return sections;
+});
+
 const filteredMemberDocuments = (typeValue: string): PrivateDocumentMetadata[] => {
   const query = memberSearchQuery.value.toLowerCase().trim();
   return props.memberDocuments.filter((doc) => {
@@ -545,6 +591,5 @@ const getMemberDocUser = (doc: PrivateDocumentMetadata): FileUserDto | null => {
   return doc.creator || doc.owner || null;
 };
 
-// Persisted view mode switcher (shared across the files domain)
 const viewMode = useLocalStorage<ViewMode>('roamly_files_view_mode', 'grid');
 </script>

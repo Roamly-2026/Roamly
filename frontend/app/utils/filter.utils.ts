@@ -22,23 +22,30 @@ export const filterEventsByQuery = (events: UiEvent[], query: string): UiEvent[]
 export const filterGroupDocuments = (
   documents: GroupFile[],
   query?: string,
-  filterType?: string,
+  selectedTags?: string[],
 ): GroupFile[] => {
   if (!documents || !Array.isArray(documents)) return [];
 
   let filtered = documents;
 
-  const safeFilterType = (filterType || 'ALL').toUpperCase();
-  if (safeFilterType !== 'ALL') {
-    filtered = filtered.filter(
-      (doc) => doc.documents?.document_type?.toUpperCase() === safeFilterType,
-    );
+  if (selectedTags && selectedTags.length > 0) {
+    const requiredLower = selectedTags.map((t) => t.toLowerCase().trim()).filter(Boolean);
+    filtered = filtered.filter((doc) => {
+      const docTagsLower = new Set((doc.tags || []).map((t) => t.toLowerCase()));
+      return requiredLower.every((reqTag) => docTagsLower.has(reqTag));
+    });
   }
 
   const safeQuery = (query || '').toLowerCase().trim();
   if (safeQuery) {
-    filtered = filtered.filter((doc) => doc.file_name?.toLowerCase().includes(safeQuery));
+    filtered = filtered.filter(
+      (doc) =>
+        doc.file_name?.toLowerCase().includes(safeQuery) ||
+        doc.tags?.some((t) => t.toLowerCase().includes(safeQuery)),
+    );
   }
 
   return filtered;
 };
+
+export const filterGroupFiles = filterGroupDocuments;

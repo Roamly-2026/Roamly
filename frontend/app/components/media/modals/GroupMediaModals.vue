@@ -90,6 +90,13 @@
             </div>
           </div>
 
+          <BaseTagInput
+            v-model="uploadForm.tags"
+            :suggestions="availableTags"
+            :label="UI_TEXT.files.tagsLabel"
+            :placeholder="UI_TEXT.files.addMediaTagsPlaceholder"
+          />
+
           <UFormField name="description" :label="UI_TEXT.events.descriptionLabel">
             <template #default="{ error }">
               <UTextarea
@@ -202,6 +209,13 @@
             </div>
           </div>
 
+          <BaseTagInput
+            v-model="updateForm.tags"
+            :suggestions="availableTags"
+            label="Tags"
+            placeholder="Add tags (e.g. beach, sunset)..."
+          />
+
           <div :class="LAYOUT_CONFIG.modalFormGroup">
             <label :class="TYPOGRAPHY_CONFIG.inputLabel">{{
               UI_TEXT.events.descriptionLabel
@@ -299,9 +313,16 @@ import { getErrorMessage } from '~/utils/error.utils';
 import { extractImageMetadata } from '~/utils/exif.utils';
 import EventMapSelector from '~/components/events/map/EventMapSelector.client.vue';
 
-const props = defineProps<{
-  groupUuid?: string;
-}>();
+const props = withDefaults(
+  defineProps<{
+    groupUuid?: string;
+    availableTags?: string[];
+  }>(),
+  {
+    groupUuid: undefined,
+    availableTags: () => [],
+  },
+);
 
 const mediaStore = useMediaModalsStore();
 const route = useRoute();
@@ -329,7 +350,7 @@ const availableMembers = computed(
 // ------------------------------------------
 // 1. UPLOAD LOGIC
 // ------------------------------------------
-const uploadForm = reactive<GroupMediaFormState>({
+const uploadForm = reactive<GroupMediaFormState & { tags: string[] }>({
   file: null,
   description: '',
   taken_at: '',
@@ -337,6 +358,7 @@ const uploadForm = reactive<GroupMediaFormState>({
   latitude: null,
   longitude: null,
   tagged_user_uuids: [],
+  tags: [],
 });
 
 const onFileChange = async (e: Event) => {
@@ -390,6 +412,7 @@ const closeUploadModal = () => {
     latitude: null,
     longitude: null,
     tagged_user_uuids: [],
+    tags: [],
   });
   uploadError.value = null;
 };
@@ -420,6 +443,10 @@ const handleUpload = () => {
     fd.append('tagged_user_uuids', JSON.stringify(uploadForm.tagged_user_uuids));
   }
 
+  if (uploadForm.tags?.length) {
+    fd.append('tags', JSON.stringify(uploadForm.tags));
+  }
+
   uploadMutation.mutate(fd);
 };
 
@@ -433,9 +460,9 @@ const updateForm = reactive({
   latitude: null as number | null,
   longitude: null as number | null,
   tagged_user_uuids: [] as string[],
+  tags: [] as string[],
 });
 
-// Sync existing record data into form
 watch(
   () => mediaStore.mediaToUpdate,
   (media) => {
@@ -455,6 +482,7 @@ watch(
     updateForm.latitude = media.media_files?.latitude ?? null;
     updateForm.longitude = media.media_files?.longitude ?? null;
     updateForm.tagged_user_uuids = media.media_files?.media_tags?.map((t) => t.users.uuid) || [];
+    updateForm.tags = [...(media.tags || [])];
   },
   { immediate: true },
 );
@@ -488,7 +516,6 @@ const handleUpdate = () => {
   if (!mediaStore.mediaToUpdate) return;
   updateError.value = null;
 
-  // Always append fields (including empty strings / []) so users can clear values
   const fd = new FormData();
   fd.append('description', updateForm.description.trim());
   fd.append('taken_at', updateForm.taken_at ? new Date(updateForm.taken_at).toISOString() : '');
@@ -503,6 +530,7 @@ const handleUpdate = () => {
   }
 
   fd.append('tagged_user_uuids', JSON.stringify(updateForm.tagged_user_uuids || []));
+  fd.append('tags', JSON.stringify(updateForm.tags || []));
 
   updateMutation.mutate({
     fileId: mediaStore.mediaToUpdate.file_id,

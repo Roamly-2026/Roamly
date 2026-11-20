@@ -134,11 +134,15 @@ export const filesService = {
     limit: number,
     cursor?: number,
     type?: string,
+    query?: string,
+    tags?: string[],
   ): Promise<ApiResponse<PaginatedGroupFiles>> {
     const api = useApi();
     const params = new URLSearchParams({ limit: limit.toString() });
     if (cursor) params.append('cursor', cursor.toString());
     if (type) params.append('type', type);
+    if (query) params.append('query', query);
+    if (tags && tags.length > 0) params.append('tags', JSON.stringify(tags));
 
     return api(`/files/group/${groupUuid}?${params.toString()}`);
   },

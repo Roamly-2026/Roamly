@@ -12,17 +12,18 @@
         v-if="!isMobile"
         v-model:selected-group="selectedGroupUuid"
         v-model:search-query="searchQuery"
-        v-model:filter-type="filterType"
+        v-model:selected-tags="selectedTags"
         v-model:member-search-query="memberSearchQuery"
         v-model:member-filter-type="memberFilterType"
         :documents="filteredDocuments"
+        :available-tags="availableTags"
         :member-documents="memberDocuments"
         :is-loading-member-documents="isLoadingMemberDocuments"
-        :document-types="documentTypes"
         :private-document-types="privateDocumentTypes"
         :groups="groupsList"
         :is-loading="isLoadingFiles"
         :is-current-user-leader="isCurrentUserLeader"
+        @edit="handleEdit"
         @delete="handleDelete"
         @upload="openUploadModal"
         @delete-group="handleDeleteGroup"
@@ -33,17 +34,18 @@
         v-else
         v-model:selected-group="selectedGroupUuid"
         v-model:search-query="searchQuery"
-        v-model:filter-type="filterType"
+        v-model:selected-tags="selectedTags"
         v-model:member-search-query="memberSearchQuery"
         v-model:member-filter-type="memberFilterType"
         :documents="filteredDocuments"
+        :available-tags="availableTags"
         :member-documents="memberDocuments"
         :is-loading-member-documents="isLoadingMemberDocuments"
-        :document-types="documentTypes"
         :private-document-types="privateDocumentTypes"
         :groups="groupsList"
         :is-loading="isLoadingFiles"
         :is-current-user-leader="isCurrentUserLeader"
+        @edit="handleEdit"
         @delete="handleDelete"
         @upload="openUploadModal"
         @delete-group="handleDeleteGroup"
@@ -52,10 +54,10 @@
       />
     </ClientOnly>
 
-    <!-- Group document modals -->
-    <GroupDocumentsModals :document-types="documentTypes" />
+    <!-- Group document modals (custom tags) -->
+    <GroupDocumentsModals :available-tags="availableTags" />
 
-    <!-- Private document modals (used for the member documents section) -->
+    <!-- Private document modals (fixed document types for member documents section) -->
     <PrivateDocumentsModals :private-document-types="privateDocumentTypes" />
   </div>
 </template>
@@ -82,19 +84,10 @@ const toast = useToast();
 const route = useRoute();
 
 const searchQuery = ref('');
-const filterType = ref('ALL');
+const selectedTags = ref<string[]>([]);
 
 const memberSearchQuery = ref('');
 const memberFilterType = ref('ALL');
-
-const documentTypes = [
-  { label: UI_TEXT.common.allTypes, value: 'ALL' },
-  { label: UI_TEXT.documentTypes.ticket, value: 'TICKET' },
-  { label: UI_TEXT.documentTypes.bookingConfirmation, value: 'BOOKING_CONFIRMATION' },
-  { label: UI_TEXT.documentTypes.hotelVoucher, value: 'HOTEL_VOUCHER' },
-  { label: UI_TEXT.documentTypes.guestRegistrationCard, value: 'GUEST_REGISTRATION_CARD' },
-  { label: UI_TEXT.documentTypes.other, value: 'OTHER' },
-];
 
 const privateDocumentTypes = [
   { label: UI_TEXT.common.allTypes, value: 'ALL' },
@@ -118,6 +111,11 @@ watch(
   { immediate: true },
 );
 
+// Reset selected tag filters when switching groups
+watch(selectedGroupUuid, () => {
+  selectedTags.value = [];
+});
+
 const currentGroup = computed(() =>
   groupsList.value.find((g) => g.uuid === selectedGroupUuid.value),
 );
@@ -136,9 +134,24 @@ const { data: filesData, isLoading: isLoadingFiles } = useGroupFilesQuery(
   () => 'document',
 );
 
+const allGroupDocuments = computed<GroupFile[]>(() => filesData.value?.items || []);
+
+// Unique sorted tags across all documents in the active group
+const availableTags = computed<string[]>(() => {
+  const tagMap = new Map<string, string>();
+  for (const doc of allGroupDocuments.value) {
+    for (const tag of doc.tags || []) {
+      const lower = tag.toLowerCase();
+      if (!tagMap.has(lower)) {
+        tagMap.set(lower, tag);
+      }
+    }
+  }
+  return Array.from(tagMap.values()).sort((a, b) => a.localeCompare(b));
+});
+
 const filteredDocuments = computed<GroupFile[]>(() => {
-  const docs = filesData.value?.items || [];
-  return filterGroupDocuments(docs, searchQuery.value, filterType.value);
+  return filterGroupDocuments(allGroupDocuments.value, searchQuery.value, selectedTags.value);
 });
 
 // Member private documents — only fetched when the current user is a leader
@@ -151,6 +164,18 @@ const { data: memberDocumentsData, isLoading: isLoadingMemberDocuments } =
 const memberDocuments = computed<PrivateDocumentMetadata[]>(() => memberDocumentsData.value ?? []);
 
 // Handlers
+const handleEdit = (file: GroupFile) => {
+  if (!selectedGroupUuid.value) return;
+  documentsStore.openGroupUpdateModal({
+    fileId: file.file_id,
+    groupUuid: selectedGroupUuid.value,
+    fileName: file.file_name,
+    tags: file.tags || [],
+    issueDate: file.documents?.issue_date ? file.documents.issue_date.slice(0, 10) : '',
+    expiryDate: file.documents?.expiry_date ? file.documents.expiry_date.slice(0, 10) : '',
+  });
+};
+
 const handleDelete = (file: GroupFile) => {
   if (!selectedGroupUuid.value) return;
   documentsStore.openDeleteModal({

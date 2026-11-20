@@ -8,7 +8,9 @@
       :key="file.file_id"
       :file="file"
       :is-current-user-leader="isCurrentUserLeader"
+      :can-edit="canEdit"
       @open="emit('open', $event)"
+      @edit="emit('edit', $event)"
       @delete="emit('delete', $event)"
       @download="(url: string | undefined, filename: string) => emit('download', url, filename)"
     />
@@ -25,9 +27,11 @@ import FilesListRow from '~/components/files/FilesListRow.vue';
 const props = defineProps<{
   files: (GroupFile | PrivateDocumentMetadata)[];
   isCurrentUserLeader: boolean;
+  canEdit?: boolean;
 }>();
 
 const emit = defineEmits<{
+  edit: [file: GroupFile | PrivateDocumentMetadata];
   delete: [file: GroupFile | PrivateDocumentMetadata];
   download: [url: string | undefined, filename: string];
   open: [file: GroupFile | PrivateDocumentMetadata];
@@ -54,8 +58,8 @@ const sortedFiles = computed(() => {
       aVal = a.file_name.toLowerCase();
       bVal = b.file_name.toLowerCase();
     } else if (sortKey.value === 'type') {
-      aVal = a.documents?.document_type || a.mime_type || '';
-      bVal = b.documents?.document_type || b.mime_type || '';
+      aVal = a.documents?.document_type || a.tags?.[0] || a.mime_type || '';
+      bVal = b.documents?.document_type || b.tags?.[0] || b.mime_type || '';
     } else if (sortKey.value === 'file_size') {
       aVal = a.file_size || 0;
       bVal = b.file_size || 0;

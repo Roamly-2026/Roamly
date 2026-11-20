@@ -98,6 +98,11 @@
         />
       </div>
 
+      <!-- MULTI-TAG FILTER WITH AUTOCOMPLETE -->
+      <div :class="[LAYOUT_CONFIG.fullWidth, SPACING_TOKENS.mb.md]">
+        <TagFilterDropdown v-model="selectedTags" :available-tags="availableTags" />
+      </div>
+
       <!-- MEDIA LIST -->
       <div>
         <div v-if="isLoading" :class="TYPOGRAPHY_CONFIG.statusLoading">
@@ -120,13 +125,17 @@
         </template>
 
         <div v-else :class="TYPOGRAPHY_CONFIG.statusLoading">
-          {{ searchQuery ? UI_TEXT.media.noMatchingPhotos : UI_TEXT.media.noPhotos }}
+          {{
+            searchQuery || selectedTags.length > 0
+              ? UI_TEXT.media.noMatchingPhotos
+              : UI_TEXT.media.noPhotos
+          }}
         </div>
       </div>
     </div>
 
     <!-- Modals -->
-    <GroupMediaModals :group-uuid="selectedGroup" />
+    <GroupMediaModals :group-uuid="selectedGroup" :available-tags="availableTags" />
     <MediaLightboxModal
       :is-current-user-leader="isCurrentUserLeader"
       @download="(url, filename) => emit('download', url, filename)"
@@ -135,7 +144,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useLocalStorage } from '@vueuse/core';
 import type { GroupFile, PrivateDocumentMetadata } from '~/types/files.type';
 import type { GroupOutDto } from '~/types/groups.type';
@@ -143,6 +152,7 @@ import type { ViewMode } from '~/components/files/ViewSwitcher.vue';
 import FilesListView from '~/components/files/FilesListView.vue';
 import ViewSwitcher from '~/components/files/ViewSwitcher.vue';
 import { useMediaModalsStore } from '~/stores/media.modals.store';
+import { filterGroupFiles } from '~/utils/filter.utils';
 import MediaGrid from '~/components/media/views/MediaGrid.vue';
 import GroupMediaModals from '~/components/media/modals/GroupMediaModals.vue';
 import MediaLightboxModal from '~/components/media/modals/MediaLightBoxModal.vue';
@@ -168,6 +178,11 @@ const emit = defineEmits<{
 }>();
 
 const isGroupDropdownOpen = ref(false);
+const selectedTags = ref<string[]>([]);
+
+watch(selectedGroup, () => {
+  selectedTags.value = [];
+});
 
 const currentGroupDetails = computed(() =>
   props.groups.find((g) => g.uuid === selectedGroup.value),
@@ -192,10 +207,21 @@ const documentsRoute = computed(() =>
   selectedGroup.value ? `/files/documents?groupId=${selectedGroup.value}` : '/files/documents',
 );
 
+const availableTags = computed<string[]>(() => {
+  const tagMap = new Map<string, string>();
+  for (const item of props.media) {
+    for (const tag of item.tags || []) {
+      const lower = tag.toLowerCase();
+      if (!tagMap.has(lower)) {
+        tagMap.set(lower, tag);
+      }
+    }
+  }
+  return Array.from(tagMap.values()).sort((a, b) => a.localeCompare(b));
+});
+
 const filteredMedia = computed<GroupFile[]>(() => {
-  const q = searchQuery.value.toLowerCase().trim();
-  if (!q) return props.media;
-  return props.media.filter((m) => m.file_name.toLowerCase().includes(q));
+  return filterGroupFiles(props.media, searchQuery.value, selectedTags.value);
 });
 
 const viewMode = useLocalStorage<ViewMode>('roamly_files_view_mode', 'grid');
