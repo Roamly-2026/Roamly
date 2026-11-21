@@ -20,7 +20,7 @@ export const useAppearance = () => {
   const colorModeState = useColorMode();
   const { isAuthenticated } = useAuth();
   const { data: user } = useCurrentUserQuery();
-  const { mutate: saveAppearance } = useUpdateAppearanceMutation();
+  const { mutateAsync: saveAppearance } = useUpdateAppearanceMutation();
 
   const themeCookie = useCookie<string>('theme_key', {
     default: () => 'default',
@@ -49,14 +49,21 @@ export const useAppearance = () => {
     { immediate: true },
   );
 
+  // Apply instantly; roll back if the save fails (the mutation already shows the error toast)
   const setTheme = (key: ThemeKey) => {
+    const previous = themeCookie.value;
     themeCookie.value = key;
-    if (isAuthenticated.value) saveAppearance({ theme_key: key });
+    if (isAuthenticated.value) {
+      saveAppearance({ theme_key: key }).catch(() => (themeCookie.value = previous));
+    }
   };
 
   const setColorMode = (mode: ColorMode) => {
+    const previous = colorModeState.preference;
     colorModeState.preference = TO_PREFERENCE[mode];
-    if (isAuthenticated.value) saveAppearance({ color_mode: mode });
+    if (isAuthenticated.value) {
+      saveAppearance({ color_mode: mode }).catch(() => (colorModeState.preference = previous));
+    }
   };
 
   return { themeKey, colorMode, setTheme, setColorMode };
