@@ -2,6 +2,7 @@
 import { useApi } from '~/composables/useApi';
 import type { UserOutDto, UserInDto, UpdateThemePreferencesDto } from '~/types/user.type';
 import type { ApiResponse } from '~/types/api.type';
+import type { ColorMode } from '~/utils/themes';
 
 export const userService = {
   getUsers() {
@@ -27,7 +28,13 @@ export const userService = {
     return api<ApiResponse<UserOutDto>>('/users/me');
   },
 
-  updateProfile(data: { username?: string; email?: string; phone_number?: string }) {
+  updateProfile(data: {
+    username?: string;
+    email?: string;
+    phone_number?: string;
+    theme_key?: string;
+    color_mode?: ColorMode;
+  }) {
     const api = useApi();
     return api<ApiResponse<UserOutDto>>('/users/me', {
       method: 'PATCH',

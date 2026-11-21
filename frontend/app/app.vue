@@ -14,6 +14,9 @@
 import { ref, onMounted } from 'vue';
 import { useNuxtApp } from '#imports';
 import { useTheme } from './composables/useTheme';
+import { useAppearance } from '~/composables/useAppearance';
+
+useAppearance();
 
 const isAppLoading = ref(true);
 const nuxtApp = useNuxtApp();

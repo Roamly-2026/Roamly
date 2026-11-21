@@ -81,6 +81,13 @@ export const UI_TEXT = {
     resent: 'A new code was sent to your email!',
     backToRegister: 'Back to Register',
   },
+  appearance: {
+    heading: 'Appearance',
+    colorModeLabel: 'Color mode',
+    modes: { LIGHT: 'Light', DARK: 'Dark', SYSTEM: 'System' },
+    themeLabel: 'Theme',
+    themes: { default: 'Forest', ocean: 'Ocean' },
+  },
   profile: {
     heading: 'Your Profile',
     documentsHeading: 'Your Documents:',
