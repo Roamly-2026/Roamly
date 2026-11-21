@@ -3,11 +3,13 @@ import { z } from 'zod';
 import { emailSchema, newPasswordSchema, usernameSchema } from '../shared/common.validation';
 import {
   BACKGROUND_TYPES,
+  COLOR_MODES,
   PRESET_BACKGROUNDS,
   THEME_PALETTES,
 } from '../../constants/theme.constants';
+import { UpdateProfileInput } from '../../types/users.types';
 
-export const updateProfileScheme = z.object({
+export const updateProfileScheme: z.ZodType<UpdateProfileInput> = z.object({
   username: usernameSchema.optional(),
   email: emailSchema.optional(),
 
@@ -46,6 +48,7 @@ export const updateThemePreferencesSchema = z
         THEME_PALETTES.MINIMAL,
       ])
       .optional(),
+    color_mode: z.enum([COLOR_MODES.LIGHT, COLOR_MODES.DARK, COLOR_MODES.SYSTEM]).optional(),
     // 'custom' is set only by the upload endpoint, so the stored value is always a key we created.
     background_type: z
       .enum([BACKGROUND_TYPES.SYSTEM, BACKGROUND_TYPES.NONE, BACKGROUND_TYPES.PRESET])

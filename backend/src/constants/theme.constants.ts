@@ -19,3 +19,12 @@ export type BackgroundType = (typeof BACKGROUND_TYPES)[keyof typeof BACKGROUND_T
 export const PRESET_BACKGROUNDS = ['mountains', 'forest', 'ocean', 'minimal-grid'] as const;
 
 export type PresetBackground = (typeof PRESET_BACKGROUNDS)[number];
+
+// Mirrors the Prisma color_mode enum
+export const COLOR_MODES = {
+  LIGHT: 'LIGHT',
+  DARK: 'DARK',
+  SYSTEM: 'SYSTEM',
+} as const;
+
+export type ColorMode = (typeof COLOR_MODES)[keyof typeof COLOR_MODES];
