@@ -1,5 +1,7 @@
 // frontend/types/files.type.ts
 
+import type { MemoryReactionDto } from '~/types/memories.type';
+
 export type OwnershipType = 'PRIVATE' | 'GROUP';
 export type AccessLevel = 'LEADER' | 'MEMBER';
 export type PrivateDocumentType = 'ID' | 'PASSPORT' | 'DRIVING_LICENSE' | 'OTHER';
@@ -67,6 +69,7 @@ export interface GroupFile extends FileDto {
   media_files: MediaDto | null;
   creator: FileUserDto;
   download_url?: string;
+  reactions: MemoryReactionDto[];
 }
 
 export interface PaginatedGroupFiles {

@@ -156,16 +156,22 @@
         </div>
       </div>
     </div>
+    <!-- Reactions (media only) -->
+    <div v-if="showReactions && 'reactions' in file" :class="LAYOUT_CONFIG.mediaListRowReactions">
+      <MemoryReactionBar :media="file" />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { GroupFile, PrivateDocumentMetadata, FileUserDto } from '~/types/files.type';
+import MemoryReactionBar from '~/components/media/MemoryReactionBar.vue';
 
 const props = defineProps<{
   file: GroupFile | PrivateDocumentMetadata;
   isCurrentUserLeader: boolean;
+  showReactions?: boolean;
 }>();
 
 const emit = defineEmits<{

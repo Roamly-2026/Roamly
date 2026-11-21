@@ -216,6 +216,16 @@
                 </div>
               </div>
             </div>
+            <!-- Reactions -->
+            <div :class="`flex flex-col ${SPACING_TOKENS.gap.sm}`">
+              <span :class="TYPOGRAPHY_CONFIG.captionUppercase">{{ UI_TEXT.media.reactions }}</span>
+              <MemoryReactionBar :media="activeMedia" />
+            </div>
+
+            <div :class="LAYOUT_CONFIG.divider" class="my-0!"></div>
+
+            <!-- Comments -->
+            <MemoryCommentSection :media="activeMedia" />
           </div>
         </div>
       </div>
@@ -228,6 +238,8 @@ import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useMediaModalsStore } from '~/stores/media.modals.store';
 import { useCurrentUserQuery } from '~/queries/user.query';
 import EventMapPreview from '~/components/events/map/EventMapPreview.client.vue';
+import MemoryReactionBar from '~/components/media/MemoryReactionBar.vue';
+import MemoryCommentSection from '~/components/media/MemoryCommentSection.vue';
 
 const props = withDefaults(
   defineProps<{
@@ -289,6 +301,9 @@ const onTouchEnd = (e: TouchEvent) => {
 
 const handleKeydown = (e: KeyboardEvent) => {
   if (!mediaStore.isLightboxOpen) return;
+  // typing in the comment field should not switch images
+  const target = e.target as HTMLElement | null;
+  if (target?.closest('input, textarea')) return;
   if (e.key === 'ArrowRight') mediaStore.nextMedia();
   if (e.key === 'ArrowLeft') mediaStore.prevMedia();
   if (e.key === 'Escape') mediaStore.closeLightbox();

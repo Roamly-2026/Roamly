@@ -10,6 +10,7 @@ import {
   creatorSelect,
   GroupMemberPrivateDocument,
 } from '../../types/files.types';
+import { summarizeReactions } from '../memories/memories.service';
 import { ROLES } from '../../constants/roles.constants';
 import * as FILE_CONSTANTS from '../../constants/files.constants';
 
@@ -1058,6 +1059,12 @@ export const getGroupFiles = async (
               },
             },
           },
+          media_reactions: {
+            select: {
+              emoji: true,
+              user_id: true,
+            },
+          },
         },
       },
       creator: creatorSelect,
@@ -1081,9 +1088,24 @@ export const getGroupFiles = async (
     groupFiles.map(async (file: GroupFile) => {
       const presignedUrl = await cloudOperations.getPrivatePresignedUrl(file.file_url);
 
+      const { media_files: mediaFile, ...fileData } = file;
+
+      if (!mediaFile) {
+        return {
+          ...fileData,
+          media_files: null,
+          download_url: presignedUrl,
+          reactions: [],
+        };
+      }
+
+      const { media_reactions, ...mediaData } = mediaFile;
+
       return {
-        ...file,
+        ...fileData,
+        media_files: mediaData,
         download_url: presignedUrl,
+        reactions: summarizeReactions(media_reactions, user.user_id),
       };
     }),
   );

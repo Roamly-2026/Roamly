@@ -43,6 +43,11 @@
           </div>
         </div>
 
+        <!-- REACTIONS (always visible) -->
+        <div :class="LAYOUT_CONFIG.mediaCardReactions">
+          <MemoryReactionBar :media="media" overlay />
+        </div>
+
         <!-- METADATA OVERLAY (Location, Date & Tagged Participants) -->
         <div
           :class="`absolute inset-x-0 bottom-0 bg-linear-to-t from-black/85 via-black/45 to-transparent ${SPACING_TOKENS.p.sm} ${SPACING_TOKENS.pt.xl} flex flex-col ${SPACING_TOKENS.gap.xs} sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300`"
@@ -104,6 +109,7 @@
 
 <script setup lang="ts">
 import { useMediaModalsStore } from '~/stores/media.modals.store';
+import MemoryReactionBar from '~/components/media/MemoryReactionBar.vue';
 import type { GroupFile } from '~/types/files.type';
 
 defineProps<{

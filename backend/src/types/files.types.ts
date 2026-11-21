@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client';
+import type { MemoryReactionSummary } from './memories.types';
 
 export const creatorSelect = {
   select: {
@@ -33,14 +34,25 @@ export type docSharedWithGroups = Prisma.file_sharesGetPayload<{
 export type GroupFile = Prisma.filesGetPayload<{
   include: {
     documents: true;
-    media_files: true;
+    media_files: {
+      include: {
+        media_reactions: {
+          select: {
+            emoji: true;
+            user_id: true;
+          };
+        };
+      };
+    };
 
     creator: typeof creatorSelect;
   };
 }>;
 
-export type GroupFileWithUrl = GroupFile & {
+export type GroupFileWithUrl = Omit<GroupFile, 'media_files'> & {
+  media_files: Omit<NonNullable<GroupFile['media_files']>, 'media_reactions'> | null;
   download_url: string;
+  reactions: MemoryReactionSummary[];
 };
 
 export type PaginatedGroupFiles = {

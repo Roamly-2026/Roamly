@@ -2,6 +2,7 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import type { GroupFile } from '~/types/files.type';
+import type { MemoryReactionDto } from '~/types/memories.type';
 
 export const useMediaModalsStore = defineStore('mediaModals', () => {
   // ==========================================
@@ -89,6 +90,25 @@ export const useMediaModalsStore = defineStore('mediaModals', () => {
       lightboxMediaList.value.length;
   };
 
+  // ==========================================
+  // REACTIONS
+  // ==========================================
+  // the loaded media list is not deeply reactive (pinia colada keeps it in a shallowRef)
+  // and refetching it would generate new image urls, so toggled reactions are kept here
+  const reactionOverrides = ref<Record<number, MemoryReactionDto[]>>({});
+
+  const getReactions = (media: GroupFile): MemoryReactionDto[] =>
+    reactionOverrides.value[media.file_id] ?? media.reactions ?? [];
+
+  const setReactions = (fileId: number, reactions: MemoryReactionDto[]) => {
+    reactionOverrides.value[fileId] = reactions;
+  };
+
+  // a freshly loaded media list is up to date again
+  const clearReactionOverrides = () => {
+    reactionOverrides.value = {};
+  };
+
   return {
     isUploadModalOpen,
     isUpdateModalOpen,
@@ -110,5 +130,9 @@ export const useMediaModalsStore = defineStore('mediaModals', () => {
     closeLightbox,
     nextMedia,
     prevMedia,
+    reactionOverrides,
+    getReactions,
+    setReactions,
+    clearReactionOverrides,
   };
 });
