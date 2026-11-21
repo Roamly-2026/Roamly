@@ -122,6 +122,16 @@ export const LAYOUT_CONFIG = {
   mediaCardReactions: `absolute top-2 left-2 right-2 ${Z_INDEX_TOKENS.base}`,
   mediaListRowReactions: `${BORDER_TOKENS.dividerTop} ${SPACING_TOKENS.pt.xs} ${SPACING_TOKENS.mt.sm}`,
 
+  // Media comments
+  mediaCommentSection: `flex flex-col ${SPACING_TOKENS.gap.sm}`,
+  mediaCommentList: `flex flex-col ${SPACING_TOKENS.gap.md}`,
+  mediaCommentItem: `flex items-start ${SPACING_TOKENS.gap.sm}`,
+  mediaCommentAvatar: '!w-7 !h-7 min-w-[28px] min-h-[28px] shrink-0',
+  mediaCommentBody: 'flex flex-col flex-1 min-w-0',
+  mediaCommentHeader: `flex flex-wrap items-baseline ${SPACING_TOKENS.gap.sm}`,
+  mediaCommentText: `${TYPOGRAPHY_CONFIG.bodySmSoft} whitespace-pre-wrap break-words`,
+  mediaCommentForm: `flex items-start ${SPACING_TOKENS.gap.sm} ${BORDER_TOKENS.dividerTop} ${SPACING_TOKENS.pt.sm}`,
+
   fileInput: `w-full ${TEXT_SIZES.sm} ${COLOR_TOKENS.text.primaryMuted} file:${SPACING_TOKENS.mr.md} file:${SPACING_TOKENS.py.sm} file:${SPACING_TOKENS.px.lg} file:${RADIUS_TOKENS.full} file:border-0 file:${TEXT_SIZES.xs} file:${FONT_WEIGHTS.semibold} file:bg-transparent file:${COLOR_TOKENS.text.brandAccent} file:ring-1 file:ring-btn-primary/40 hover:file:bg-btn-primary/20 file:transition-colors file:cursor-pointer cursor-pointer`,
 
   // ------------------- MODAL LAYOUTS -------------------
