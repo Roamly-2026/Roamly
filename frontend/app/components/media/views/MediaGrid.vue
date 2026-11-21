@@ -36,7 +36,7 @@
           <!-- PLAY ICON -->
           <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div
-              :class="`w-12 h-12 aspect-square flex items-center justify-center ${RADIUS_TOKENS.full} bg-black/60 ${COLOR_TOKENS.text.inverse} group-hover:bg-btn-primary transition-all`"
+              :class="`w-12 h-12 aspect-square flex items-center justify-center ${RADIUS_TOKENS.full} bg-black/60 ${COLOR_TOKENS.text.onMedia} group-hover:bg-btn-primary transition-all`"
             >
               <UIcon name="i-heroicons-play" :class="`${SIZE_TOKENS.icon.lg} translate-x-0.5`" />
             </div>
@@ -54,7 +54,7 @@
         >
           <div
             v-if="media.media_files?.location_name"
-            :class="`flex items-center ${SPACING_TOKENS.gap.xs} ${COLOR_TOKENS.text.inverse}`"
+            :class="`flex items-center ${SPACING_TOKENS.gap.xs} ${COLOR_TOKENS.text.onMedia}`"
           >
             <UIcon name="i-heroicons-map-pin" :class="`${SIZE_TOKENS.icon.sm} shrink-0`" />
             <span :class="`${TEXT_SIZES.xs} ${FONT_WEIGHTS.medium} truncate`">
@@ -64,7 +64,7 @@
 
           <div :class="`flex items-end justify-between ${SPACING_TOKENS.mt.xs}`">
             <span
-              :class="`${TEXT_SIZES.xs} ${COLOR_TOKENS.text.inverse} ${OPACITY_TOKENS.soft} ${FONT_WEIGHTS.medium}`"
+              :class="`${TEXT_SIZES.xs} ${COLOR_TOKENS.text.onMedia} ${OPACITY_TOKENS.soft} ${FONT_WEIGHTS.medium}`"
             >
               {{
                 media.media_files?.taken_at

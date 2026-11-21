@@ -132,7 +132,7 @@
                       v-if="canManageFile(doc)"
                       icon="i-heroicons-trash"
                       variant="ghostDangerIconButton"
-                      class="text-surface-500 hover:text-error-500 w-6! h-6! p-0"
+                      class="text-content-muted hover:text-status-error w-6! h-6! p-0"
                       :tooltip="UI_TEXT.common.delete"
                       @click="emit('delete', doc)"
                     />
@@ -142,7 +142,7 @@
                 <div :class="LAYOUT_CONFIG.documentCardImage" class="h-40!">
                   <UIcon
                     :name="getFileIcon(doc.mime_type, doc.file_name)"
-                    class="w-12 h-12 text-surface-500/50"
+                    class="w-12 h-12 text-content-muted/50"
                   />
                   <div
                     :class="`absolute bottom-2 ${SPACING_TOKENS.px.md} w-full flex justify-between`"
@@ -150,7 +150,7 @@
                     <BaseButton
                       icon="i-heroicons-eye"
                       variant="ghostDangerIconButton"
-                      class="text-surface-500"
+                      class="text-content-muted"
                       :href="doc.download_url || doc.file_url"
                       :tooltip="UI_TEXT.common.view"
                       target="_blank"
@@ -354,12 +354,12 @@
                 </div>
 
                 <div :class="LAYOUT_CONFIG.documentCardImage" class="h-32!">
-                  <UIcon name="i-heroicons-document-text" class="w-12 h-12 text-surface-500/50" />
+                  <UIcon name="i-heroicons-document-text" class="w-12 h-12 text-content-muted/50" />
                   <div :class="`absolute bottom-2 ${SPACING_TOKENS.px.md} w-full flex justify-end`">
                     <BaseButton
                       icon="i-heroicons-eye"
                       variant="ghostDangerIconButton"
-                      class="text-surface-500"
+                      class="text-content-muted"
                       :href="doc.file_url"
                       :tooltip="UI_TEXT.common.view"
                       target="_blank"

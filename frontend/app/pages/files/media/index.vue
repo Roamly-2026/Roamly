@@ -75,7 +75,7 @@
           />
 
           <!-- Error -->
-          <div v-if="uploadError" class="text-sm text-error-500 font-medium">
+          <div v-if="uploadError" class="text-sm text-status-error font-medium">
             {{ uploadError }}
           </div>
         </div>
@@ -120,7 +120,7 @@
         </p>
         <div
           v-if="deleteError"
-          :class="`text-sm text-error-500 font-medium ${SPACING_TOKENS.mt.sm}`"
+          :class="`text-sm text-status-error font-medium ${SPACING_TOKENS.mt.sm}`"
         >
           {{ deleteError }}
         </div>
@@ -138,7 +138,7 @@
           <BaseButton
             :label="UI_TEXT.common.delete"
             variant="actionOkButton"
-            class="bg-error-500 hover:bg-error-600 text-white"
+            class="bg-btn-danger hover:bg-btn-danger-hover text-btn-danger-text"
             :loading="isDeleting"
             @click="confirmDelete"
           />
