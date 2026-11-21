@@ -110,6 +110,7 @@
             v-if="viewMode === 'list'"
             :files="filteredMedia"
             :is-current-user-leader="isCurrentUserLeader"
+            show-reactions
             @open="handleOpenFile"
             @delete="emit('delete', $event as GroupFile)"
             @download="(url, filename) => emit('download', url, filename)"

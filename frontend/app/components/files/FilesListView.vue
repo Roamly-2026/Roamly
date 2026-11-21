@@ -8,6 +8,7 @@
       :key="file.file_id"
       :file="file"
       :is-current-user-leader="isCurrentUserLeader"
+      :show-reactions="showReactions"
       @open="emit('open', $event)"
       @delete="emit('delete', $event)"
       @download="(url: string | undefined, filename: string) => emit('download', url, filename)"
@@ -25,6 +26,7 @@ import FilesListRow from '~/components/files/FilesListRow.vue';
 const props = defineProps<{
   files: (GroupFile | PrivateDocumentMetadata)[];
   isCurrentUserLeader: boolean;
+  showReactions?: boolean;
 }>();
 
 const emit = defineEmits<{
