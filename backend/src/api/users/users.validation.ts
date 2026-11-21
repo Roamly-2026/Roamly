@@ -1,8 +1,9 @@
 import parsePhoneNumberFromString from 'libphonenumber-js';
 import { z } from 'zod';
 import { emailSchema, newPasswordSchema, usernameSchema } from '../shared/common.validation';
+import { UpdateProfileInput } from '../../types/users.types';
 
-export const updateProfileScheme = z.object({
+export const updateProfileScheme: z.ZodType<UpdateProfileInput> = z.object({
   username: usernameSchema.optional(),
   email: emailSchema.optional(),
 
@@ -24,6 +25,10 @@ export const updateProfileScheme = z.object({
       return phoneNumber.number;
     })
     .optional(),
+
+  theme_key: z.string().trim().min(1).max(32).optional(),
+  color_mode: z.enum(['LIGHT', 'DARK', 'SYSTEM']).optional(),
+  custom_background_url: z.url().max(2048).nullable().optional(),
 });
 
 export const changePasswordScheme = z.object({

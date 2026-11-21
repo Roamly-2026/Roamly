@@ -1,6 +1,6 @@
 import prisma from '../../prisma';
 import { hashPassword, validatePassword } from '../../utils/password.utils';
-import { userProfileInfo } from '../../types/users.types';
+import { UpdateProfileInput, userProfileInfo, userProfileSelect } from '../../types/users.types';
 import { BadRequestError } from '../../utils/ServerError';
 import { deletePublicFileFromCloud, uploadPublicFileToCloud } from '../../utils/storage.util';
 import { ROLES } from '../../constants/roles.constants';
@@ -11,15 +11,7 @@ export const getProfile = async (uuid: string): Promise<userProfileInfo> => {
     where: {
       uuid: uuid,
     },
-    select: {
-      username: true,
-      email: true,
-      phone_number: true,
-      uuid: true,
-      created_at: true,
-      updated_at: true,
-      profile_image_url: true,
-    },
+    select: userProfileSelect,
   });
 
   return user;
@@ -27,17 +19,14 @@ export const getProfile = async (uuid: string): Promise<userProfileInfo> => {
 
 export const updateProfile = async (
   userUuid: string,
-  updateData: { username?: string; email?: string; phoneNumber?: string },
+  updateData: UpdateProfileInput,
 ): Promise<userProfileInfo> => {
   const updatedUser = await prisma.users.update({
     where: {
       uuid: userUuid,
     },
     data: updateData,
-    omit: {
-      password: true,
-      user_id: true,
-    },
+    select: userProfileSelect,
   });
 
   return updatedUser;
@@ -181,15 +170,7 @@ export const uploadProfilePicture = async (
     data: {
       profile_image_url: cloudPublicUrl,
     },
-    select: {
-      username: true,
-      email: true,
-      phone_number: true,
-      uuid: true,
-      created_at: true,
-      updated_at: true,
-      profile_image_url: true,
-    },
+    select: userProfileSelect,
   });
 
   return updatedUser;
@@ -215,15 +196,7 @@ export const deleteProfilePicture = async (userUuid: string): Promise<userProfil
     data: {
       profile_image_url: null,
     },
-    select: {
-      username: true,
-      email: true,
-      phone_number: true,
-      uuid: true,
-      created_at: true,
-      updated_at: true,
-      profile_image_url: true,
-    },
+    select: userProfileSelect,
   });
 
   return updatedUser;
