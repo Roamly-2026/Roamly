@@ -103,6 +103,7 @@
               :files="section.items"
               :is-current-user-leader="isCurrentUserLeader"
               can-edit
+              @open="openInNewTab"
               @edit="emit('edit', $event as GroupFile)"
               @delete="emit('delete', $event as GroupFile)"
               @download="(url, filename) => emit('download', url, filename)"
@@ -337,6 +338,7 @@
               v-if="viewMode === 'list'"
               :files="filteredMemberDocuments(type.value)"
               :is-current-user-leader="false"
+              @open="openInNewTab"
               @download="(url, filename) => emit('download', url, filename)"
             />
 
@@ -565,4 +567,10 @@ const getMemberDocUser = (doc: PrivateDocumentMetadata): FileUserDto | null => {
 };
 
 const viewMode = useLocalStorage<ViewMode>('roamly_files_view_mode', 'grid');
+
+// the list rows only emit open, the documents are opened in a new tab like in the grid view
+const openInNewTab = (file: GroupFile | PrivateDocumentMetadata) => {
+  const url = 'download_url' in file && file.download_url ? file.download_url : file.file_url;
+  window.open(url, '_blank', 'noopener');
+};
 </script>
