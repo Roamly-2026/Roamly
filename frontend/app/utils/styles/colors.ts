@@ -35,7 +35,7 @@ export const COLOR_TOKENS = {
     primaryFaint: 'text-content-primary/50',
     secondary: 'text-content-secondary',
     muted: 'text-content-muted',
-    inverse: 'text-content-inverse',
+    inverse: 'text-content-inverse text-shadow-(--theme-text-inverse-shadow)',
     onMedia: 'text-content-on-media',
     brand: 'text-content-brand',
     brandAccent: 'text-btn-primary',

@@ -1,6 +1,8 @@
 /* Theme-independent: text over photos and black media overlays */
 :root {
   --theme-text-on-media: #faf9f6;
+  /* Shadow keeping light text-inverse readable over busy parts of the background photo */
+  --theme-text-inverse-shadow: 0 1px 3px rgb(0 0 0 / 0.7);
 }
 
 :root,
@@ -313,10 +315,6 @@
   --theme-btn-tertiary-hover: #283a48;
   --theme-btn-tertiary-active: #324756;
   --theme-btn-tertiary-text: #e3ecf2;
-  --theme-btn-danger-bg: #dc2626;
-  --theme-btn-danger-hover: #ef4444;
-  --theme-btn-danger-active: #991b1b;
-  --theme-btn-danger-text: #fef2f2;
   --theme-btn-disabled-bg: #22313c;
   --theme-btn-disabled-text: #64748b;
   --theme-text-primary: #e3ecf2;
@@ -332,11 +330,5 @@
   --theme-border-default: #243441;
   --theme-border-strong: #33485a;
   --theme-border-focus: #6aa3c6;
-  --theme-status-success: #4ade80;
-  --theme-status-error: #f87171;
-  --theme-status-error-bg: #2a1414;
-  --theme-status-error-border: #7f1d1d;
-  --theme-status-error-text: #fecaca;
   --theme-toast-success-border: #6aa3c6;
-  --theme-toast-error-border: #f87171;
 }

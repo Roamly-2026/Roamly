@@ -2,13 +2,11 @@
 
 export type ColorMode = 'LIGHT' | 'DARK' | 'SYSTEM';
 
-// Keys must match the [data-theme='<key>'] blocks in assets/css/tokens.css
-export const THEMES = [
-  { key: 'default', label: UI_TEXT.appearance.themes.default, preview: '#7a9a82' },
-  { key: 'ocean', label: UI_TEXT.appearance.themes.ocean, preview: '#4f86a8' },
-] as const;
+// Adding a theme: a key here, its blocks in assets/css/tokens.css,
+// a label in UI_TEXT.appearance.themes and images in public/themes/<key>/
+export const THEME_KEYS = ['default', 'ocean'] as const;
 
-export type ThemeKey = (typeof THEMES)[number]['key'];
+export type ThemeKey = (typeof THEME_KEYS)[number];
 
 export const resolveThemeKey = (key?: string | null): ThemeKey =>
-  THEMES.find((theme) => theme.key === key)?.key ?? 'default';
+  THEME_KEYS.find((themeKey) => themeKey === key) ?? 'default';

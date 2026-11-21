@@ -1,7 +1,7 @@
 // frontend/app/queries/user.mutation.ts
 import { useMutation, useQueryCache } from '@pinia/colada';
 import { userService } from '~/services/userService';
-import type { UpdateThemePreferencesDto, UserInDto } from '~/types/user.type';
+import type { UpdateThemePreferencesDto, UserInDto, UserOutDto } from '~/types/user.type';
 import { useToast } from '#imports';
 import { getErrorMessage } from '../utils/error.utils';
 import type { ColorMode } from '~/utils/themes';
@@ -70,8 +70,10 @@ export const useUpdateAppearanceMutation = () => {
   return useMutation({
     mutation: (data: { theme_key?: string; color_mode?: ColorMode }) =>
       userService.updateProfile(data),
-    onSuccess: () => {
-      queryCache.invalidateQueries({ key: ['users', 'current'] });
+    // Write the response into the cache instead of refetching: a refetch flips isLoading,
+    // which swaps whole pages to their loading state and makes them flash
+    onSuccess: (response) => {
+      queryCache.setQueriesData<UserOutDto>({ key: ['users', 'current'] }, () => response.data);
     },
     onError: (error) => {
       toast.add({
