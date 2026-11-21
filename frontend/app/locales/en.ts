@@ -503,6 +503,8 @@ export const UI_TEXT = {
     documentType: 'Invalid document type!',
     expiryDate: 'Expiry date must be after the issue date!',
     mediaDescriptionMax: 'Description can not be longer then 512 characters!',
+    commentRequired: 'Comment can not be empty!',
+    commentMax: 'Comment can not be longer than 255 characters!',
     accessLevel: 'Access level must be LEADER or MEMBER!',
     selectFile: 'Please select a file to upload.',
     selectDocumentType: 'Please select a document type.',
