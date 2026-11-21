@@ -107,6 +107,21 @@ export const LAYOUT_CONFIG = {
   documentCardBottomActionEnd: `absolute bottom-2 ${SPACING_TOKENS.px.md} w-full flex justify-end`,
   mediaCoverImage: 'w-full h-full object-cover',
 
+  // Media reactions
+  mediaReactionBar: `flex flex-wrap items-center ${SPACING_TOKENS.gap.xs}`,
+  mediaReactionChip: `inline-flex items-center ${SPACING_TOKENS.gap.xs} ${SPACING_TOKENS.px.sm} ${SPACING_TOKENS.py['2xs']} ${RADIUS_TOKENS.full} ${TEXT_SIZES.xs} ${FONT_WEIGHTS.semibold} ${INTERACTION_TOKENS.all} disabled:cursor-wait`,
+  mediaReactionChipDefault: `${COLOR_TOKENS.surface.subtle} ${BORDER_TOKENS.ringSubtle} ${COLOR_TOKENS.text.primary} hover:bg-btn-primary/10`,
+  mediaReactionChipActive: `${COLOR_TOKENS.surface.brandTint} ${BORDER_TOKENS.ringBrand} ${COLOR_TOKENS.text.brandAccent}`,
+  mediaReactionChipOverlay:
+    'bg-black/50 backdrop-blur-md ring-1 ring-white/20 text-white hover:bg-black/70',
+  mediaReactionChipOverlayActive: `bg-btn-primary/80 ${BORDER_TOKENS.ringBrand} text-btn-primary-text`,
+  mediaReactionPicker: `${MENU_APPEARANCES.content} flex ${SPACING_TOKENS.gap.xs} ${SPACING_TOKENS.p.sm}`,
+  mediaReactionPickerIcon: SIZE_TOKENS.icon.sm,
+  mediaReactionPickerItem: `w-9 h-9 flex items-center justify-center ${RADIUS_TOKENS.full} ${TEXT_SIZES.lg} ${INTERACTION_TOKENS.all} hover:bg-btn-primary/10 hover:scale-110`,
+  mediaReactionPickerItemActive: COLOR_TOKENS.surface.brandTint,
+  mediaCardReactions: `absolute top-2 left-2 right-2 ${Z_INDEX_TOKENS.base}`,
+  mediaListRowReactions: `${BORDER_TOKENS.dividerTop} ${SPACING_TOKENS.pt.xs} ${SPACING_TOKENS.mt.sm}`,
+
   fileInput: `w-full ${TEXT_SIZES.sm} ${COLOR_TOKENS.text.primaryMuted} file:${SPACING_TOKENS.mr.md} file:${SPACING_TOKENS.py.sm} file:${SPACING_TOKENS.px.lg} file:${RADIUS_TOKENS.full} file:border-0 file:${TEXT_SIZES.xs} file:${FONT_WEIGHTS.semibold} file:bg-transparent file:${COLOR_TOKENS.text.brandAccent} file:ring-1 file:ring-btn-primary/40 hover:file:bg-btn-primary/20 file:transition-colors file:cursor-pointer cursor-pointer`,
 
   // ------------------- MODAL LAYOUTS -------------------

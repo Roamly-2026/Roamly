@@ -216,6 +216,11 @@
                 </div>
               </div>
             </div>
+            <!-- Reactions -->
+            <div :class="`flex flex-col ${SPACING_TOKENS.gap.sm}`">
+              <span :class="TYPOGRAPHY_CONFIG.captionUppercase">{{ UI_TEXT.media.reactions }}</span>
+              <MemoryReactionBar :media="activeMedia" />
+            </div>
           </div>
         </div>
       </div>
@@ -228,6 +233,7 @@ import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useMediaModalsStore } from '~/stores/media.modals.store';
 import { useCurrentUserQuery } from '~/queries/user.query';
 import EventMapPreview from '~/components/events/map/EventMapPreview.client.vue';
+import MemoryReactionBar from '~/components/media/MemoryReactionBar.vue';
 
 const props = withDefaults(
   defineProps<{

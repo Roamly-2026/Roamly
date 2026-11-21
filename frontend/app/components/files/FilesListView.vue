@@ -9,6 +9,7 @@
       :file="file"
       :is-current-user-leader="isCurrentUserLeader"
       :can-edit="canEdit"
+      :show-reactions="showReactions"
       @open="emit('open', $event)"
       @edit="emit('edit', $event)"
       @delete="emit('delete', $event)"
@@ -28,6 +29,7 @@ const props = defineProps<{
   files: (GroupFile | PrivateDocumentMetadata)[];
   isCurrentUserLeader: boolean;
   canEdit?: boolean;
+  showReactions?: boolean;
 }>();
 
 const emit = defineEmits<{
