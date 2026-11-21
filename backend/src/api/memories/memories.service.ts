@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import prisma from '../../prisma';
 import { ROLES } from '../../constants/roles.constants';
 import { MEMORY_REACTION_EMOJIS, MemoryReactionEmoji } from '../../constants/memories.constants';
@@ -70,35 +71,41 @@ export const toggleReaction = async (
 
   const reaction = { file_id: fileId, user_id: userId, emoji };
 
-  const existingReaction = await prisma.media_reactions.findUnique({
-    where: {
-      file_id_user_id_emoji: reaction,
-    },
-  });
+  // the memory row is locked until the end of the transaction, so toggles of the
+  // same memory run one after the other and each one sees the result of the previous
+  return prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+    await tx.$queryRaw`SELECT file_id FROM media_files WHERE file_id = ${fileId} FOR UPDATE`;
 
-  // deleteMany and skipDuplicates, so a double click can not cause an error
-  if (existingReaction) {
-    await prisma.media_reactions.deleteMany({
-      where: reaction,
+    const existingReaction = await tx.media_reactions.findUnique({
+      where: {
+        file_id_user_id_emoji: reaction,
+      },
     });
-  } else {
-    await prisma.media_reactions.createMany({
-      data: [reaction],
-      skipDuplicates: true,
+
+    if (existingReaction) {
+      await tx.media_reactions.delete({
+        where: {
+          file_id_user_id_emoji: reaction,
+        },
+      });
+    } else {
+      await tx.media_reactions.create({
+        data: reaction,
+      });
+    }
+
+    const reactions = await tx.media_reactions.findMany({
+      where: {
+        file_id: fileId,
+      },
+      select: {
+        emoji: true,
+        user_id: true,
+      },
     });
-  }
 
-  const reactions = await prisma.media_reactions.findMany({
-    where: {
-      file_id: fileId,
-    },
-    select: {
-      emoji: true,
-      user_id: true,
-    },
+    return summarizeReactions(reactions, userId);
   });
-
-  return summarizeReactions(reactions, userId);
 };
 
 // counts per emoji, in the order of the emoji list, without the user ids
