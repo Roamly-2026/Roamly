@@ -1,5 +1,10 @@
 // frontend/app/types/user.type.ts
+import type { BackgroundType, ThemePaletteId } from '~/utils/constants/theme.constants';
+
 export interface UserOutDto {
+  theme_palette?: ThemePaletteId;
+  background_type?: BackgroundType;
+  background_value?: string | null;
   uuid: string;
   username: string;
   email: string;
@@ -23,4 +28,10 @@ export interface UserProfileModalDto {
   role: string;
   joinedAt: string;
   canViewDocuments: boolean;
+}
+
+export interface UpdateThemePreferencesDto {
+  theme_palette?: ThemePaletteId;
+  background_type?: BackgroundType;
+  background_value?: string | null;
 }

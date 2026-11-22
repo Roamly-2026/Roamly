@@ -9,5 +9,8 @@ export type userProfileInfo = Prisma.usersGetPayload<{
     created_at: true;
     updated_at: true;
     profile_image_url: true;
+    theme_palette: true;
+    background_type: true;
+    background_value: true;
   };
 }>;

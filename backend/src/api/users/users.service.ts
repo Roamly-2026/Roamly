@@ -2,27 +2,51 @@ import prisma from '../../prisma';
 import { hashPassword, validatePassword } from '../../utils/password.utils';
 import { userProfileInfo } from '../../types/users.types';
 import { BadRequestError } from '../../utils/ServerError';
-import { deletePublicFileFromCloud, uploadPublicFileToCloud } from '../../utils/storage.util';
+import {
+  deletePublicFileFromCloud,
+  uploadPublicFileToCloud,
+  uploadPrivateFileToCloud,
+  deletePrivateFilesFromCloud,
+  getPrivatePresignedUrl,
+} from '../../utils/storage.util';
 import { ROLES } from '../../constants/roles.constants';
 import { Prisma } from '@prisma/client';
+import { BACKGROUND_TYPES, BackgroundType, ThemePalette } from '../../constants/theme.constants';
+
+const userProfileSelect = {
+  username: true,
+  email: true,
+  phone_number: true,
+  uuid: true,
+  created_at: true,
+  updated_at: true,
+  profile_image_url: true,
+  theme_palette: true,
+  background_type: true,
+  background_value: true,
+} as const;
+
+const resolveUserBackground = async (user: userProfileInfo): Promise<userProfileInfo> => {
+  if (user.background_type === BACKGROUND_TYPES.CUSTOM && user.background_value) {
+    const signedUrl = await getPrivatePresignedUrl(user.background_value);
+    return {
+      ...user,
+      background_value: signedUrl,
+    };
+  }
+
+  return user;
+};
 
 export const getProfile = async (uuid: string): Promise<userProfileInfo> => {
   const user = await prisma.users.findFirstOrThrow({
     where: {
       uuid: uuid,
     },
-    select: {
-      username: true,
-      email: true,
-      phone_number: true,
-      uuid: true,
-      created_at: true,
-      updated_at: true,
-      profile_image_url: true,
-    },
+    select: userProfileSelect,
   });
 
-  return user;
+  return resolveUserBackground(user);
 };
 
 export const updateProfile = async (
@@ -40,7 +64,7 @@ export const updateProfile = async (
     },
   });
 
-  return updatedUser;
+  return resolveUserBackground(updatedUser);
 };
 
 export const deleteProfile = async (userUuid: string): Promise<void> => {
@@ -181,18 +205,10 @@ export const uploadProfilePicture = async (
     data: {
       profile_image_url: cloudPublicUrl,
     },
-    select: {
-      username: true,
-      email: true,
-      phone_number: true,
-      uuid: true,
-      created_at: true,
-      updated_at: true,
-      profile_image_url: true,
-    },
+    select: userProfileSelect,
   });
 
-  return updatedUser;
+  return resolveUserBackground(updatedUser);
 };
 
 export const deleteProfilePicture = async (userUuid: string): Promise<userProfileInfo> => {
@@ -215,16 +231,79 @@ export const deleteProfilePicture = async (userUuid: string): Promise<userProfil
     data: {
       profile_image_url: null,
     },
-    select: {
-      username: true,
-      email: true,
-      phone_number: true,
-      uuid: true,
-      created_at: true,
-      updated_at: true,
-      profile_image_url: true,
+    select: userProfileSelect,
+  });
+
+  return resolveUserBackground(updatedUser);
+};
+
+export const updateThemePreferences = async (
+  userUuid: string,
+  preferences: {
+    theme_palette?: ThemePalette;
+    background_type?: BackgroundType;
+    background_value?: string | null;
+  },
+): Promise<userProfileInfo> => {
+  const user = await prisma.users.findUniqueOrThrow({
+    where: {
+      uuid: userUuid,
     },
   });
 
-  return updatedUser;
+  if (
+    user.background_type === BACKGROUND_TYPES.CUSTOM &&
+    user.background_value &&
+    preferences.background_type &&
+    preferences.background_type !== BACKGROUND_TYPES.CUSTOM
+  ) {
+    await deletePrivateFilesFromCloud([user.background_value]);
+  }
+
+  const nextBackgroundValue =
+    preferences.background_type === BACKGROUND_TYPES.NONE ? null : preferences.background_value;
+
+  const updatedUser = await prisma.users.update({
+    where: {
+      user_id: user.user_id,
+    },
+    data: {
+      theme_palette: preferences.theme_palette,
+      background_type: preferences.background_type,
+      background_value: nextBackgroundValue,
+    },
+    select: userProfileSelect,
+  });
+
+  return resolveUserBackground(updatedUser);
+};
+
+export const uploadBackgroundImage = async (
+  userUuid: string,
+  fileData: Express.Multer.File,
+): Promise<userProfileInfo> => {
+  const user = await prisma.users.findUniqueOrThrow({
+    where: {
+      uuid: userUuid,
+    },
+  });
+
+  if (user.background_type === BACKGROUND_TYPES.CUSTOM && user.background_value) {
+    await deletePrivateFilesFromCloud([user.background_value]);
+  }
+
+  const fileKey = await uploadPrivateFileToCloud(fileData, 'backgrounds');
+
+  const updatedUser = await prisma.users.update({
+    where: {
+      user_id: user.user_id,
+    },
+    data: {
+      background_type: BACKGROUND_TYPES.CUSTOM,
+      background_value: fileKey,
+    },
+    select: userProfileSelect,
+  });
+
+  return resolveUserBackground(updatedUser);
 };

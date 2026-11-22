@@ -90,6 +90,45 @@ class UsersController extends BaseController {
       });
     },
   );
+
+  public updateThemePreferences = this.handleAsync(
+    async (req: Request, res: Response): Promise<void> => {
+      const user = res.locals.user!;
+
+      const updatedUser = await userService.updateThemePreferences(user.uuid, req.body);
+
+      res.status(200).json({
+        status: 'success',
+        message: 'Theme preferences updated successfully!',
+        data: updatedUser,
+      });
+    },
+  );
+
+  public uploadBackgroundImage = this.handleAsync(
+    async (req: Request, res: Response): Promise<void> => {
+      const user = res.locals.user!;
+
+      const file = req.file;
+
+      if (!file) {
+        res.status(400).json({
+          status: 'error',
+          message: 'No background image provided!',
+        });
+
+        return;
+      }
+
+      const updatedUser = await userService.uploadBackgroundImage(user.uuid, file);
+
+      res.status(200).json({
+        status: 'success',
+        message: 'Background image uploaded successfully!',
+        data: updatedUser,
+      });
+    },
+  );
 }
 
 export default new UsersController();

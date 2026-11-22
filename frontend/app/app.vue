@@ -13,6 +13,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useNuxtApp } from '#imports';
+import { useTheme } from './composables/useTheme';
 
 const isAppLoading = ref(true);
 const nuxtApp = useNuxtApp();
@@ -28,4 +29,5 @@ nuxtApp.hook('page:finish', () => {
 onMounted(() => {
   isAppLoading.value = false;
 });
+useTheme();
 </script>

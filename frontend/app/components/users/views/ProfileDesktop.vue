@@ -314,6 +314,8 @@
             }}
           </div>
         </div>
+        <!-- THEME SETTINGS SECTION -->
+        <ThemeSettingsSection />
       </div>
     </ClientOnly>
   </div>

@@ -1,6 +1,6 @@
 // frontend/app/services/userService.ts
 import { useApi } from '~/composables/useApi';
-import type { UserOutDto, UserInDto } from '~/types/user.type';
+import type { UserOutDto, UserInDto, UpdateThemePreferencesDto } from '~/types/user.type';
 import type { ApiResponse } from '~/types/api.type';
 
 export const userService = {
@@ -56,6 +56,25 @@ export const userService = {
     formData.append('picture', file);
 
     return api<ApiResponse<UserOutDto>>('/users/profile-picture', {
+      method: 'POST',
+      body: formData,
+    });
+  },
+
+  updateThemePreferences(data: UpdateThemePreferencesDto) {
+    const api = useApi();
+    return api<ApiResponse<UserOutDto>>('/users/me/themePreferences', {
+      method: 'PATCH',
+      body: data,
+    });
+  },
+
+  uploadBackgroundImage(file: File) {
+    const api = useApi();
+    const formData = new FormData();
+    formData.append('background', file);
+
+    return api<ApiResponse<UserOutDto>>('/users/me/themePreferences/background', {
       method: 'POST',
       body: formData,
     });
