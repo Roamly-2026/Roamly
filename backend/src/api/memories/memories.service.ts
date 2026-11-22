@@ -2,8 +2,9 @@ import { Prisma } from '@prisma/client';
 import prisma from '../../prisma';
 import { ROLES } from '../../constants/roles.constants';
 import { MEMORY_REACTION_EMOJIS, MemoryReactionEmoji } from '../../constants/memories.constants';
-import { BadRequestError, ForbiddenError } from '../../utils/ServerError';
+import { BadRequestError, ForbiddenError, NotFoundError } from '../../utils/ServerError';
 import { commentSelect, MemoryComment, MemoryReactionSummary } from '../../types/memories.types';
+import { createCommentSchema } from './memories.validation';
 
 export const listComments = async (userUuid: string, fileId: number): Promise<MemoryComment[]> => {
   await validateMemoryAccess(userUuid, fileId);
@@ -22,13 +23,17 @@ export const createComment = async (
   fileId: number,
   content: string,
 ): Promise<MemoryComment> => {
+  // the route validates too, but the service can be called from other places
+  // (tests, other controllers), so the content is trimmed and checked here as well
+  const { content: validContent } = createCommentSchema.parse({ content });
+
   const { userId } = await validateMemoryAccess(userUuid, fileId);
 
   return prisma.media_comments.create({
     data: {
       file_id: fileId,
       user_id: userId,
-      content,
+      content: validContent,
     },
     select: commentSelect,
   });
@@ -41,11 +46,15 @@ export const deleteComment = async (
 ): Promise<void> => {
   const { userId } = await validateMemoryAccess(userUuid, fileId);
 
-  const comment = await prisma.media_comments.findUniqueOrThrow({
+  const comment = await prisma.media_comments.findUnique({
     where: {
       comment_id: commentId,
     },
   });
+
+  if (!comment) {
+    throw new NotFoundError('Comment not found!');
+  }
 
   if (comment.file_id !== fileId) {
     throw new BadRequestError('This comment does not belong to this memory!');
@@ -131,7 +140,7 @@ export const summarizeReactions = (
 // only members and leaders of the memory's group can interact with it,
 // invited users are not part of the group yet
 async function validateMemoryAccess(userUuid: string, fileId: number): Promise<{ userId: number }> {
-  const memory = await prisma.media_files.findUniqueOrThrow({
+  const memory = await prisma.media_files.findUnique({
     where: {
       file_id: fileId,
     },
@@ -143,6 +152,10 @@ async function validateMemoryAccess(userUuid: string, fileId: number): Promise<{
       },
     },
   });
+
+  if (!memory) {
+    throw new NotFoundError('Memory not found!');
+  }
 
   if (memory.files.group_id === null) {
     throw new BadRequestError('This memory does not belong to a group!');
