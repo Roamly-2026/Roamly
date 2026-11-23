@@ -3,7 +3,7 @@ import usersController from './users.controller';
 import { requireAuth } from '../../middlewares/auth.middleware';
 import { validateData } from '../../middlewares/validate.middleware';
 import * as zodSchemas from './users.validation';
-import { uploadProfilePicture } from '../../middlewares/upload.middleware';
+import { uploadBackgroundImage, uploadProfilePicture } from '../../middlewares/upload.middleware';
 
 const router = Router();
 
@@ -27,5 +27,15 @@ router.post(
   usersController.uploadProfilePicture,
 );
 router.delete('/profile-picture', usersController.deleteProfilePicture);
+router.patch(
+  '/me/themePreferences',
+  validateData(zodSchemas.updateThemePreferencesSchema, 'body'),
+  usersController.updateThemePreferences,
+);
+router.post(
+  '/me/themePreferences/background',
+  uploadBackgroundImage.single('background'),
+  usersController.uploadBackgroundImage,
+);
 
 export default router;

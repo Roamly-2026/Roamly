@@ -80,4 +80,7 @@ const handleBack = () => {
     router.push('/');
   }
 };
+
+const { syncFromUser } = useTheme();
+watch(userProfile, (user) => syncFromUser(user), { immediate: true });
 </script>

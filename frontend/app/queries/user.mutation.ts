@@ -1,7 +1,7 @@
 // frontend/app/queries/user.mutation.ts
 import { useMutation, useQueryCache } from '@pinia/colada';
 import { userService } from '~/services/userService';
-import type { UserInDto } from '~/types/user.type';
+import type { UpdateThemePreferencesDto, UserInDto } from '~/types/user.type';
 import { useToast } from '#imports';
 import { getErrorMessage } from '../utils/error.utils';
 
@@ -132,6 +132,28 @@ export const useUploadProfilePictureMutation = (options?: MutationOptions) => {
         class: 'toast-error',
       });
       options?.onError?.(error);
+    },
+  });
+};
+
+export const useUpdateThemePreferencesMutation = () => {
+  const queryCache = useQueryCache();
+
+  return useMutation({
+    mutation: (data: UpdateThemePreferencesDto) => userService.updateThemePreferences(data),
+    onSuccess: () => {
+      queryCache.invalidateQueries({ key: ['users', 'current'] });
+    },
+  });
+};
+
+export const useUploadBackgroundMutation = () => {
+  const queryCache = useQueryCache();
+
+  return useMutation({
+    mutation: (file: File) => userService.uploadBackgroundImage(file),
+    onSuccess: () => {
+      queryCache.invalidateQueries({ key: ['users', 'current'] });
     },
   });
 };

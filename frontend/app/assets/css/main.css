@@ -81,6 +81,12 @@ html {
 
 body {
   padding-right: 0 !important;
+  background-color: var(--theme-bg-page);
+  background-image: var(--app-bg-image, none);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
 }
 
 /*Global input padding override to fix tailwinf v4 universal reset*/

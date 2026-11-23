@@ -26,7 +26,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRoute, useAppConfig } from '#imports';
+const { preferences } = useTheme();
 
+const isMounted = ref(false);
 const route = useRoute();
 const appConfig = useAppConfig();
 
@@ -36,8 +38,16 @@ const pageName = computed(() => {
   return name ?? 'home';
 });
 
+onMounted(() => {
+  isMounted.value = true;
+});
+
 // Background class
 const bgClass = computed(() => {
+  if (isMounted.value && preferences.value.background_type !== 'system') {
+    return '!bg-transparent';
+  }
+
   switch (pageName.value) {
     case 'groups':
       return CONST_BG_GROUPS;

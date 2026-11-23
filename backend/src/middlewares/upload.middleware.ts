@@ -105,3 +105,12 @@ export const uploadMedia = multer({
     fileSize: 200 * 1024 * 1024,
   },
 });
+
+// exporting background image uploader
+export const uploadBackgroundImage = multer({
+  storage,
+  fileFilter: ProfilePictureFilter,
+  limits: {
+    fileSize: 10 * 1024 * 1024,
+  },
+});
