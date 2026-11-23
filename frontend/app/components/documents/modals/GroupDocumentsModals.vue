@@ -28,19 +28,12 @@
             />
           </UFormField>
 
-          <UFormField :label="UI_TEXT.documents.typeLabel" name="documentType">
-            <template #default>
-              <USelect
-                v-model="uploadForm.documentType"
-                :items="selectableDocumentTypes"
-                label-key="label"
-                value-key="value"
-                :placeholder="UI_TEXT.documents.selectType"
-                :popper="{ strategy: 'fixed', placement: 'bottom-start' }"
-                :ui="{ content: Z_INDEX_TOKENS.modal }"
-              />
-            </template>
-          </UFormField>
+          <BaseTagInput
+            v-model="uploadForm.tags"
+            :suggestions="availableTags"
+            :label="UI_TEXT.files.tagsLabel"
+            :placeholder="UI_TEXT.files.addDocumentTagsPlaceholder"
+          />
 
           <div :class="LAYOUT_CONFIG.modalFormGrid2Col">
             <BaseInput
@@ -76,7 +69,7 @@
             variant="actionOkButton"
             :class="TYPOGRAPHY_CONFIG.modalActionBtnOk"
             :loading="uploadMutation.isLoading.value"
-            :disabled="!uploadForm.file || !uploadForm.documentType"
+            :disabled="!uploadForm.file"
             @click="submitUploadForm"
           />
         </div>
@@ -114,19 +107,12 @@
             />
           </UFormField>
 
-          <UFormField :label="UI_TEXT.documents.typeLabel" name="documentType">
-            <template #default>
-              <USelect
-                v-model="updateForm.documentType"
-                :items="selectableDocumentTypes"
-                label-key="label"
-                value-key="value"
-                :placeholder="UI_TEXT.documents.selectType"
-                :popper="{ strategy: 'fixed', placement: 'bottom-start' }"
-                :ui="{ content: Z_INDEX_TOKENS.modal }"
-              />
-            </template>
-          </UFormField>
+          <BaseTagInput
+            v-model="updateForm.tags"
+            :suggestions="availableTags"
+            label="Tags"
+            :placeholder="UI_TEXT.files.addDocumentTagsPlaceholder"
+          />
 
           <div :class="LAYOUT_CONFIG.modalFormGrid2Col">
             <BaseInput
@@ -203,14 +189,15 @@ import {
 } from '~/queries/files.mutation';
 import { getErrorMessage } from '~/utils/error.utils';
 import type { ApiError } from '~/types/apiError.type';
+import { tagsSchema } from '~/utils/schemas/files.schema';
 
-const props = defineProps<{
-  // a list of available document types for categorization, formatted as label-value pairs
-  documentTypes?: { label: string; value: string }[];
-}>();
-
-const selectableDocumentTypes = computed(() =>
-  (props.documentTypes || []).filter((t) => t.value !== 'ALL'),
+withDefaults(
+  defineProps<{
+    availableTags?: string[];
+  }>(),
+  {
+    availableTags: () => [],
+  },
 );
 
 const documentsStore = useDocumentsStore();
@@ -230,7 +217,7 @@ const uploadDocumentSchema = z.object({
   file: z.any().refine((val) => val instanceof File, {
     message: UI_TEXT.validation.selectFile,
   }),
-  documentType: z.string().min(1, UI_TEXT.validation.selectDocumentType),
+  tags: tagsSchema.default([]),
   issueDate: z.string().optional(),
   expiryDate: z.string().optional(),
 });
@@ -239,7 +226,7 @@ type UploadFormState = z.infer<typeof uploadDocumentSchema>;
 
 const uploadForm = reactive<UploadFormState>({
   file: null,
-  documentType: '',
+  tags: [],
   issueDate: '',
   expiryDate: '',
 });
@@ -271,7 +258,7 @@ const submitUploadForm = () => {
 const closeUploadModal = () => {
   documentsStore.closeUploadModal();
   uploadForm.file = null;
-  uploadForm.documentType = '';
+  uploadForm.tags = [];
   uploadForm.issueDate = '';
   uploadForm.expiryDate = '';
   uploadError.value = null;
@@ -282,8 +269,8 @@ const handleUpload = (event: FormSubmitEvent<UploadFormState>) => {
 
   const formData = new FormData();
   formData.append('file', event.data.file);
+  formData.append('tags', JSON.stringify(event.data.tags || []));
 
-  if (event.data.documentType) formData.append('document_type', event.data.documentType);
   if (event.data.issueDate) formData.append('issue_date', event.data.issueDate);
   if (event.data.expiryDate) formData.append('expiry_date', event.data.expiryDate);
 
@@ -296,7 +283,7 @@ const handleUpload = (event: FormSubmitEvent<UploadFormState>) => {
 
 const updateDocumentSchema = z.object({
   file: z.any().optional(),
-  documentType: z.string().min(1, UI_TEXT.validation.selectDocumentType),
+  tags: tagsSchema.default([]),
   issueDate: z.string().optional(),
   expiryDate: z.string().optional(),
 });
@@ -305,7 +292,7 @@ type UpdateFormState = z.infer<typeof updateDocumentSchema>;
 
 const updateForm = reactive<UpdateFormState>({
   file: null,
-  documentType: '',
+  tags: [],
   issueDate: '',
   expiryDate: '',
 });
@@ -319,7 +306,7 @@ watch(
   (file) => {
     if (file) {
       updateForm.file = null;
-      updateForm.documentType = file.documentType ?? '';
+      updateForm.tags = [...(file.tags || [])];
       updateForm.issueDate = file.issueDate ?? '';
       updateForm.expiryDate = file.expiryDate ?? '';
     }
@@ -340,7 +327,7 @@ const submitUpdateForm = () => {
 const closeUpdateModal = () => {
   documentsStore.closeGroupUpdateModal();
   updateForm.file = null;
-  updateForm.documentType = '';
+  updateForm.tags = [];
   updateForm.issueDate = '';
   updateForm.expiryDate = '';
   updateError.value = null;
@@ -362,7 +349,7 @@ const handleUpdate = (event: FormSubmitEvent<UpdateFormState>) => {
 
   const formData = new FormData();
   if (event.data.file instanceof File) formData.append('file', event.data.file);
-  if (event.data.documentType) formData.append('document_type', event.data.documentType);
+  formData.append('tags', JSON.stringify(event.data.tags || []));
   if (event.data.issueDate) formData.append('issue_date', event.data.issueDate);
   if (event.data.expiryDate) formData.append('expiry_date', event.data.expiryDate);
 

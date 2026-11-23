@@ -25,12 +25,21 @@ export function useGroupFilesQuery(
   limit: () => number,
   cursor?: () => number | undefined,
   type?: () => string | undefined,
+  query?: () => string | undefined,
+  tags?: () => string[] | undefined,
 ) {
   return useQuery({
-    key: () => ['group-files', groupUuid(), type?.() ?? null, cursor?.() ?? null],
+    key: () => [
+      'group-files',
+      groupUuid(),
+      type?.() ?? null,
+      cursor?.() ?? null,
+      query?.() ?? null,
+      tags?.()?.join(',') ?? null,
+    ],
     query: () =>
       filesService
-        .getGroupFiles(groupUuid(), limit(), cursor?.(), type?.())
+        .getGroupFiles(groupUuid(), limit(), cursor?.(), type?.(), query?.(), tags?.())
         .then((res) => res.data),
     enabled: () => !!groupUuid(),
   });

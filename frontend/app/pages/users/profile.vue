@@ -126,7 +126,7 @@ const handleEdit = (doc: PrivateDocumentMetadata) => {
   documentsStore.openPrivateUpdateModal({
     fileId: doc.file_id,
     fileName: doc.file_name,
-    documentType: doc.documents?.document_type,
+    documentType: doc.documents?.document_type ?? undefined,
     issueDate: doc.documents?.issue_date
       ? new Date(doc.documents.issue_date).toISOString().split('T')[0]
       : undefined,

@@ -31,14 +31,14 @@ export const uploadPrivateDocument = async (
       user_id: user.user_id,
       ownership_type: FILE_CONSTANTS.OWNERSHIP.PRIVATE,
       documents: {
-        document_type: document_type,
+        document_type,
       },
     },
   });
 
-  if (existingDocsCount >= 3) {
+  if (existingDocsCount >= FILE_CONSTANTS.MAX_DOCUMENTS_PER_TYPE) {
     throw new BadRequestError(
-      `You already uploaded 3 files of type: ${document_type}, if you want to replace one, try the replace option!`,
+      `You have reached the maximum limit of ${FILE_CONSTANTS.MAX_DOCUMENTS_PER_TYPE} documents for type ${document_type}. Please delete or replace an existing one!`,
     );
   }
 
@@ -59,7 +59,7 @@ export const uploadPrivateDocument = async (
 
       documents: {
         create: {
-          document_type: document_type,
+          document_type,
           issue_date: issue_date ? new Date(issue_date) : null,
           expiry_date: expiry_date ? new Date(expiry_date) : null,
         },
@@ -195,7 +195,7 @@ export const getAllPrivateDocumentsMetadataOfAUser = async (
 export const replacePrivateDocument = async (
   userUuid: string,
   fileId: number,
-  document_type: string,
+  document_type?: string,
   fileData?: Express.Multer.File,
   issue_date?: string,
   expiry_date?: string,
@@ -225,6 +225,24 @@ export const replacePrivateDocument = async (
     throw new ForbiddenError('Users can only replace their own files!');
   }
 
+  if (document_type && document_type !== file.documents.document_type) {
+    const targetTypeCount = await prisma.files.count({
+      where: {
+        user_id: user.user_id,
+        ownership_type: FILE_CONSTANTS.OWNERSHIP.PRIVATE,
+        documents: {
+          document_type,
+        },
+      },
+    });
+
+    if (targetTypeCount >= FILE_CONSTANTS.MAX_DOCUMENTS_PER_TYPE) {
+      throw new BadRequestError(
+        `You have reached the maximum limit of ${FILE_CONSTANTS.MAX_DOCUMENTS_PER_TYPE} documents for type ${document_type}. Please delete or replace an existing one!`,
+      );
+    }
+  }
+
   const effectiveIssueDate =
     issue_date === undefined
       ? file.documents.issue_date
@@ -247,7 +265,7 @@ export const replacePrivateDocument = async (
     updated_at: new Date(),
     documents: {
       update: {
-        document_type: document_type,
+        ...(document_type !== undefined && { document_type }),
         issue_date: issue_date === undefined ? undefined : effectiveIssueDate,
         expiry_date: expiry_date === undefined ? undefined : effectiveExpiryDate,
       },
@@ -505,7 +523,7 @@ export const uploadGroupDocument = async (
   userUuid: string,
   groupUuid: string,
   fileData: Express.Multer.File,
-  document_type: string,
+  tags: string[] = [],
   issue_date?: string,
   expiry_date?: string,
 ): Promise<files> => {
@@ -549,10 +567,10 @@ export const uploadGroupDocument = async (
       // it only has group_id, because the file belongs to a group, not to a single user
       group_id: group.group_id,
       uploaded_by: user.user_id,
+      tags,
 
       documents: {
         create: {
-          document_type: document_type,
           issue_date: issue_date ? new Date(issue_date) : null,
           expiry_date: expiry_date ? new Date(expiry_date) : null,
         },
@@ -577,6 +595,7 @@ export const uploadGroupMediaFile = async (
   latitude?: number,
   longitude?: number,
   tagged_user_uuids?: string[],
+  tags: string[] = [],
 ): Promise<files> => {
   const user = await prisma.users.findUniqueOrThrow({
     where: {
@@ -629,6 +648,7 @@ export const uploadGroupMediaFile = async (
       ownership_type: FILE_CONSTANTS.OWNERSHIP.GROUP,
       group_id: group.group_id,
       uploaded_by: user.user_id,
+      tags,
 
       media_files: {
         create: {
@@ -676,7 +696,7 @@ export const updateGroupDocument = async (
   userUuid: string,
   groupUuid: string,
   fileId: number,
-  document_type?: string,
+  tags?: string[],
   fileData?: Express.Multer.File,
   issue_date?: string,
   expiry_date?: string,
@@ -755,13 +775,12 @@ export const updateGroupDocument = async (
 
   const updateData: Prisma.filesUpdateInput = {
     updated_at: new Date(),
+    ...(tags !== undefined && { tags }),
     documents: {
       update: {
         // if the user did not send anything, the data stays the same,
         // if the user sent an empty string the new data will be null in the database,
         // and if the user sent a valid date we will put that in the database
-        document_type:
-          document_type === undefined ? undefined : document_type === '' ? null : document_type,
         issue_date:
           issue_date === undefined ? undefined : issue_date === '' ? null : new Date(issue_date),
         expiry_date:
@@ -810,6 +829,7 @@ export const updateGroupMediaFile = async (
   latitude?: number | null,
   longitude?: number | null,
   tagged_user_uuids?: string[],
+  tags?: string[],
 ): Promise<files> => {
   const user = await prisma.users.findUniqueOrThrow({
     where: {
@@ -880,6 +900,7 @@ export const updateGroupMediaFile = async (
 
   const updateData: Prisma.filesUpdateInput = {
     updated_at: new Date(),
+    ...(tags !== undefined && { tags }),
     media_files: {
       update: {
         description:
@@ -1010,6 +1031,8 @@ export const getGroupFiles = async (
   limit: number,
   cursor?: number,
   type?: string,
+  query?: string,
+  tags?: string[],
 ): Promise<PaginatedGroupFiles> => {
   const user = await prisma.users.findUniqueOrThrow({
     where: {
@@ -1041,6 +1064,13 @@ export const getGroupFiles = async (
       ownership_type: FILE_CONSTANTS.OWNERSHIP.GROUP,
       ...(type === FILE_CONSTANTS.GROUP_FILE_TYPE.DOCUMENT && { documents: { isNot: null } }),
       ...(type === FILE_CONSTANTS.GROUP_FILE_TYPE.MEDIA_FILE && { media_files: { isNot: null } }),
+      ...(query && {
+        file_name: { contains: query, mode: 'insensitive' },
+      }),
+      ...(tags &&
+        tags.length > 0 && {
+          tags: { hasEvery: tags },
+        }),
     },
     include: {
       documents: true,
@@ -1151,7 +1181,15 @@ export const getAllPrivateDocumentsMetadataOfAllUsersInAGroup = async (
 
       owner: filters.targetUserUuid ? { uuid: filters.targetUserUuid } : undefined,
 
-      documents: filters.documentType ? { document_type: filters.documentType } : { isNot: null },
+      documents: filters.documentType
+        ? {
+            is: {
+              document_type: filters.documentType,
+            },
+          }
+        : {
+            isNot: null,
+          },
     },
 
     include: {

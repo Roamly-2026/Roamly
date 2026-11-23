@@ -20,7 +20,7 @@ export const useDocumentsStore = defineStore('documentsModals', () => {
     fileId: number;
     groupUuid: string;
     fileName: string;
-    documentType?: string;
+    tags?: string[];
     issueDate?: string;
     expiryDate?: string;
   } | null>(null);
@@ -49,7 +49,7 @@ export const useDocumentsStore = defineStore('documentsModals', () => {
     fileId: number;
     groupUuid: string;
     fileName: string;
-    documentType?: string;
+    tags?: string[];
     issueDate?: string;
     expiryDate?: string;
   }) => {

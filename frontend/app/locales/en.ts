@@ -43,6 +43,7 @@ export const UI_TEXT = {
     uploadedAt: 'Uploaded at:',
     megabytes: 'MB',
     menu: 'Menu',
+    edit: 'Edit',
   },
   auth: {
     loginTitle: 'Log in',
@@ -497,6 +498,7 @@ export const UI_TEXT = {
     accessLevel: 'Access level must be LEADER or MEMBER!',
     selectFile: 'Please select a file to upload.',
     selectDocumentType: 'Please select a document type.',
+    tagMaxLength: 'Each tag must be at most 32 characters long!',
   },
   fallback: {
     login: 'Login',
@@ -525,5 +527,13 @@ export const UI_TEXT = {
     actions: 'Actions',
     gridView: 'Grid View',
     listView: 'List View',
+    tagsLabel: 'Tags',
+    addTagPlaceholder: 'Add tag (Enter or comma)...',
+    addDocumentTagsPlaceholder: 'Add tags (e.g. ticket, hotel)...',
+    addMediaTagsPlaceholder: 'Add tags (e.g. beach, sunset)...',
+    filterByTagsPlaceholder: 'Filter by tags...',
+    clearAllTags: 'Clear all tags',
+    removeTagAria: (tag: string) => `Remove ${tag}`,
+    untaggedSection: 'Untagged',
   },
 };
