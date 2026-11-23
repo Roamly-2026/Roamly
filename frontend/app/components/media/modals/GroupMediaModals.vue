@@ -212,8 +212,8 @@
           <BaseTagInput
             v-model="updateForm.tags"
             :suggestions="availableTags"
-            label="Tags"
-            placeholder="Add tags (e.g. beach, sunset)..."
+            :label="UI_TEXT.files.tagsLabel"
+            :placeholder="UI_TEXT.files.addMediaTagsPlaceholder"
           />
 
           <div :class="LAYOUT_CONFIG.modalFormGroup">

@@ -543,7 +543,7 @@ const documentSections = computed(() => {
   if (untagged.length > 0) {
     sections.push({
       key: '__untagged__',
-      label: UI_TEXT.documentTypes?.other || 'Untagged',
+      label: UI_TEXT.files.untaggedSection,
       items: untagged,
     });
   }

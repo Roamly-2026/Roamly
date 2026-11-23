@@ -17,6 +17,11 @@ const dateRefine = (data: { issue_date?: string; expiry_date?: string }) => {
   return true;
 };
 
+export const tagsSchema = z
+  .array(z.string().trim().min(1).max(32, { message: UI_TEXT.validation.tagMaxLength }))
+  .max(15)
+  .optional();
+
 export const privateDocumentSchema = z
   .object({
     file: z
@@ -36,7 +41,7 @@ export const privateDocumentSchema = z
 export const groupDocumentSchema = z
   .object({
     file: z.instanceof(File, { message: UI_TEXT.validation.fileRequired }),
-    tags: z.array(z.string().trim().min(1).max(32)).optional(),
+    tags: tagsSchema,
     issue_date: z.string().optional(),
     expiry_date: z.string().optional(),
   })
@@ -56,7 +61,7 @@ export const groupMediaSchema = z
     latitude: z.number().min(-90).max(90).nullable().optional(),
     longitude: z.number().min(-180).max(180).nullable().optional(),
     tagged_user_uuids: z.array(z.string()).optional(),
-    tags: z.array(z.string().trim().min(1).max(32)).optional(),
+    tags: tagsSchema,
   })
   .refine(
     (data) => {

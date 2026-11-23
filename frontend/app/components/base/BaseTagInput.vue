@@ -59,6 +59,7 @@
           'placeholder:text-field-placeholder',
           SPACING_TOKENS.py['2xs'],
         ]"
+        :maxlength="maxLength"
         @focus="isOpen = true"
         @input="isOpen = true"
         @keydown="handleKeydown"
@@ -135,6 +136,7 @@ const props = withDefaults(
     clearable?: boolean;
     compact?: boolean;
     maxTags?: number;
+    maxLength?: number;
   }>(),
   {
     suggestions: () => [],
@@ -144,6 +146,7 @@ const props = withDefaults(
     clearable: false,
     compact: false,
     maxTags: 15,
+    maxLength: 32,
   },
 );
 
@@ -181,8 +184,10 @@ const addTag = (raw: string) => {
   if (parts.length === 0) return;
 
   const next = [...props.modelValue];
-  for (const part of parts) {
+  for (const rawPart of parts) {
     if (next.length >= props.maxTags) break;
+    const part = rawPart.slice(0, props.maxLength).trim();
+    if (!part) continue;
     const exists = next.some((t) => t.toLowerCase() === part.toLowerCase());
     if (!exists) {
       next.push(part);

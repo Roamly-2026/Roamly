@@ -498,6 +498,7 @@ export const UI_TEXT = {
     accessLevel: 'Access level must be LEADER or MEMBER!',
     selectFile: 'Please select a file to upload.',
     selectDocumentType: 'Please select a document type.',
+    tagMaxLength: 'Each tag must be at most 32 characters long!',
   },
   fallback: {
     login: 'Login',

@@ -111,7 +111,7 @@
             v-model="updateForm.tags"
             :suggestions="availableTags"
             label="Tags"
-            placeholder="Add tags (e.g. ticket, hotel)..."
+            :placeholder="UI_TEXT.files.addDocumentTagsPlaceholder"
           />
 
           <div :class="LAYOUT_CONFIG.modalFormGrid2Col">
@@ -189,6 +189,7 @@ import {
 } from '~/queries/files.mutation';
 import { getErrorMessage } from '~/utils/error.utils';
 import type { ApiError } from '~/types/apiError.type';
+import { tagsSchema } from '~/utils/schemas/files.schema';
 
 withDefaults(
   defineProps<{
@@ -216,7 +217,7 @@ const uploadDocumentSchema = z.object({
   file: z.any().refine((val) => val instanceof File, {
     message: UI_TEXT.validation.selectFile,
   }),
-  tags: z.array(z.string()).default([]),
+  tags: tagsSchema.default([]),
   issueDate: z.string().optional(),
   expiryDate: z.string().optional(),
 });
@@ -282,7 +283,7 @@ const handleUpload = (event: FormSubmitEvent<UploadFormState>) => {
 
 const updateDocumentSchema = z.object({
   file: z.any().optional(),
-  tags: z.array(z.string()).default([]),
+  tags: tagsSchema.default([]),
   issueDate: z.string().optional(),
   expiryDate: z.string().optional(),
 });
