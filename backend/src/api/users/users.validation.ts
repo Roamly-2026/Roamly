@@ -46,16 +46,20 @@ export const updateThemePreferencesSchema = z
         THEME_PALETTES.MINIMAL,
       ])
       .optional(),
+    // 'custom' is set only by the upload endpoint, so the stored value is always a key we created.
     background_type: z
-      .enum([
-        BACKGROUND_TYPES.SYSTEM,
-        BACKGROUND_TYPES.NONE,
-        BACKGROUND_TYPES.PRESET,
-        BACKGROUND_TYPES.CUSTOM,
-      ])
+      .enum([BACKGROUND_TYPES.SYSTEM, BACKGROUND_TYPES.NONE, BACKGROUND_TYPES.PRESET])
       .optional(),
     background_value: z.string().trim().max(2048).nullable().optional(),
   })
+  .refine(
+    (data: { background_type?: string; background_value?: string | null }) =>
+      data.background_value === undefined || data.background_type !== undefined,
+    {
+      message: 'background_value can only be sent together with background_type!',
+      path: ['background_value'],
+    },
+  )
   .refine(
     (data: { background_type?: string; background_value?: string | null }) => {
       if (data.background_type === BACKGROUND_TYPES.PRESET) {

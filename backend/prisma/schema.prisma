@@ -148,7 +148,7 @@ model users {
   password           String               @db.VarChar(255)
   profile_image_url  String?
   theme_palette      String               @default("default") @db.VarChar(32)
-  background_type    String               @default("none") @db.VarChar(16)
+  background_type    String               @default("system") @db.VarChar(16)
   background_value   String?              @db.Text
   created_at         DateTime             @default(now()) @db.Timestamp(6)
   updated_at         DateTime             @updatedAt @db.Timestamp(6)

@@ -257,11 +257,17 @@ export const updateThemePreferences = async (
     preferences.background_type &&
     preferences.background_type !== BACKGROUND_TYPES.CUSTOM;
 
-  const nextBackgroundValue =
-    preferences.background_type === BACKGROUND_TYPES.NONE ||
-    preferences.background_type === BACKGROUND_TYPES.SYSTEM
-      ? null
-      : preferences.background_value;
+  if (preferences.background_type === BACKGROUND_TYPES.CUSTOM) {
+    throw new BadRequestError('Custom backgrounds can only be set by uploading an image!');
+  }
+
+  // background_value is only written together with a background_type, so a stored
+  // custom file key can never be swapped for an arbitrary one.
+  const nextBackgroundValue = !preferences.background_type
+    ? undefined
+    : preferences.background_type === BACKGROUND_TYPES.PRESET
+      ? preferences.background_value
+      : null;
 
   const updatedUser = await prisma.users.update({
     where: {
