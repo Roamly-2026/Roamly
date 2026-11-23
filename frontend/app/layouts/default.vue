@@ -18,7 +18,6 @@ import { computed } from 'vue';
 import { useRoute, useAppConfig } from '#imports';
 const { preferences } = useTheme();
 
-const isMounted = ref(false);
 const route = useRoute();
 const appConfig = useAppConfig();
 
@@ -27,12 +26,9 @@ const pageName = computed(() => {
   return name ?? 'home';
 });
 
-onMounted(() => {
-  isMounted.value = true;
-});
-
 const bgClass = computed(() => {
-  if (isMounted.value && preferences.value.background_type !== 'system') {
+  // The user's own background (or none) is painted on <body>, see useTheme
+  if (preferences.value.background_type !== 'system') {
     return '!bg-transparent';
   }
 

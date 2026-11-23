@@ -1,5 +1,7 @@
 export type ThemePaletteId = 'default' | 'forest' | 'ocean' | 'minimal';
 export type BackgroundType = 'system' | 'none' | 'preset' | 'custom';
+// Mirrors the backend color_mode enum
+export type ColorMode = 'LIGHT' | 'DARK' | 'SYSTEM';
 
 export interface ThemePaletteOption {
   id: ThemePaletteId;
@@ -41,4 +43,10 @@ export const PRESET_BACKGROUND_OPTIONS: PresetBackgroundOption[] = [
   { id: 'forest', label: 'Forest', url: '/backgrounds/forest.webp' },
   { id: 'ocean', label: 'Ocean', url: '/backgrounds/ocean.webp' },
   { id: 'minimal-grid', label: 'Minimalist', url: '/backgrounds/minimal.webp' },
+];
+
+export const COLOR_MODE_OPTIONS: { id: ColorMode; icon: string }[] = [
+  { id: 'LIGHT', icon: 'i-heroicons-sun' },
+  { id: 'DARK', icon: 'i-heroicons-moon' },
+  { id: 'SYSTEM', icon: 'i-heroicons-computer-desktop' },
 ];

@@ -1,16 +1,44 @@
-<!-- frontend/app/components/users/ThemeSettingsSection.vue -->
+<!-- frontend/app/components/users/views/ThemeSettingsSection.vue -->
 <template>
   <div :class="LAYOUT_CONFIG.sectionWrapper">
-    <h2 :class="TYPOGRAPHY_CONFIG.sectionTitleTransparent">Appearance</h2>
+    <h2 :class="TYPOGRAPHY_CONFIG.sectionTitleTransparent">{{ UI_TEXT.appearance.heading }}</h2>
 
     <div :class="['flex flex-col', SPACING_TOKENS.gap.lg]">
+      <!-- COLOR MODE SELECTOR -->
+      <BaseCard>
+        <div :class="['flex flex-col', SPACING_TOKENS.gap.md]">
+          <div>
+            <h3 :class="TYPOGRAPHY_CONFIG.cardTitle">{{ UI_TEXT.appearance.colorModeTitle }}</h3>
+            <p :class="TYPOGRAPHY_CONFIG.bodySmMuted">
+              {{ UI_TEXT.appearance.colorModeDescription }}
+            </p>
+          </div>
+
+          <div :class="['flex flex-wrap', SPACING_TOKENS.gap.sm]">
+            <BaseButton
+              v-for="mode in COLOR_MODE_OPTIONS"
+              :key="mode.id"
+              :icon="mode.icon"
+              :label="UI_TEXT.appearance.modes[mode.id]"
+              :variant="
+                preferences.color_mode === mode.id
+                  ? 'smallPrimaryActionButton'
+                  : 'smallHollowActionButton'
+              "
+              :aria-pressed="preferences.color_mode === mode.id"
+              @click="setColorMode(mode.id)"
+            />
+          </div>
+        </div>
+      </BaseCard>
+
       <!-- COLOR PALETTE SELECTOR -->
       <BaseCard>
         <div :class="['flex flex-col', SPACING_TOKENS.gap.md]">
           <div>
-            <h3 :class="TYPOGRAPHY_CONFIG.cardTitle">Color Palette</h3>
+            <h3 :class="TYPOGRAPHY_CONFIG.cardTitle">{{ UI_TEXT.appearance.paletteTitle }}</h3>
             <p :class="TYPOGRAPHY_CONFIG.bodySmMuted">
-              Choose a theme palette. Changes apply immediately and sync across your devices.
+              {{ UI_TEXT.appearance.paletteDescription }}
             </p>
           </div>
 
@@ -59,9 +87,11 @@
         <div :class="['flex flex-col', SPACING_TOKENS.gap.md]">
           <div :class="LAYOUT_CONFIG.flexBetween">
             <div>
-              <h3 :class="TYPOGRAPHY_CONFIG.cardTitle">Background Image</h3>
+              <h3 :class="TYPOGRAPHY_CONFIG.cardTitle">
+                {{ UI_TEXT.appearance.backgroundTitle }}
+              </h3>
               <p :class="TYPOGRAPHY_CONFIG.bodySmMuted">
-                Select a preset background or upload your own custom image (max 10MB).
+                {{ UI_TEXT.appearance.backgroundDescription }}
               </p>
             </div>
 
@@ -75,7 +105,7 @@
               />
               <BaseButton
                 icon="i-heroicons-arrow-up-tray"
-                label="Upload Custom"
+                :label="UI_TEXT.appearance.uploadCustom"
                 variant="actionOkButton"
                 :loading="isUploadingBackground"
                 @click="triggerFileInput"
@@ -104,7 +134,9 @@
               <div
                 class="absolute inset-x-0 bottom-0 bg-black/55 px-2 py-1 flex items-center justify-between"
               >
-                <span class="text-xs font-medium text-white truncate">Default</span>
+                <span class="text-xs font-medium text-white truncate">{{
+                  UI_TEXT.appearance.backgrounds.system
+                }}</span>
                 <UIcon
                   v-if="preferences.background_type === 'system'"
                   name="i-heroicons-check-circle-solid"
@@ -127,7 +159,9 @@
               @click="clearBackground()"
             >
               <UIcon name="i-heroicons-no-symbol" :class="TYPOGRAPHY_CONFIG.iconMutedSm" />
-              <span :class="[TYPOGRAPHY_CONFIG.captionMuted, SPACING_TOKENS.mt.xs]">None</span>
+              <span :class="[TYPOGRAPHY_CONFIG.captionMuted, SPACING_TOKENS.mt.xs]">{{
+                UI_TEXT.appearance.backgrounds.none
+              }}</span>
             </button>
 
             <!-- PRESET BACKGROUNDS -->
@@ -180,7 +214,9 @@
               <div
                 class="absolute inset-x-0 bottom-0 bg-black/55 px-2 py-1 flex items-center justify-between"
               >
-                <span class="text-xs font-medium text-white truncate">Custom</span>
+                <span class="text-xs font-medium text-white truncate">{{
+                  UI_TEXT.appearance.backgrounds.custom
+                }}</span>
                 <UIcon name="i-heroicons-check-circle-solid" class="w-4 h-4 text-white shrink-0" />
               </div>
             </div>
@@ -195,6 +231,7 @@
 import { ref } from 'vue';
 import { useToast } from '#imports';
 import {
+  COLOR_MODE_OPTIONS,
   THEME_PALETTE_OPTIONS,
   PRESET_BACKGROUND_OPTIONS,
 } from '~/utils/constants/theme.constants';
@@ -204,6 +241,7 @@ import { useTheme } from '~/composables/useTheme';
 const {
   preferences,
   setPalette,
+  setColorMode,
   setSystemBackground,
   setPresetBackground,
   clearBackground,
@@ -227,7 +265,7 @@ const handleFileSelected = async (event: Event) => {
     await uploadCustomBackground(file);
     toast.add({
       title: UI_TEXT.common.success,
-      description: 'Background image updated!',
+      description: UI_TEXT.appearance.uploadSuccess,
       class: 'toast-success',
     });
   } catch (err) {

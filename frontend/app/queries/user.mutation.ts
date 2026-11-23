@@ -1,10 +1,9 @@
 // frontend/app/queries/user.mutation.ts
 import { useMutation, useQueryCache } from '@pinia/colada';
 import { userService } from '~/services/userService';
-import type { UpdateThemePreferencesDto, UserInDto, UserOutDto } from '~/types/user.type';
+import type { UpdateThemePreferencesDto, UserInDto } from '~/types/user.type';
 import { useToast } from '#imports';
 import { getErrorMessage } from '../utils/error.utils';
-import type { ColorMode } from '~/utils/themes';
 
 interface MutationOptions {
   onSuccess?: () => void;
@@ -58,29 +57,6 @@ export const useUpdateProfileMutation = (options?: MutationOptions) => {
         class: 'toast-error',
       });
       options?.onError?.(error);
-    },
-  });
-};
-
-// Silent save for theme / color mode switches (no success toast)
-export const useUpdateAppearanceMutation = () => {
-  const queryCache = useQueryCache();
-  const toast = useToast();
-
-  return useMutation({
-    mutation: (data: { theme_key?: string; color_mode?: ColorMode }) =>
-      userService.updateProfile(data),
-    // Write the response into the cache instead of refetching: a refetch flips isLoading,
-    // which swaps whole pages to their loading state and makes them flash
-    onSuccess: (response) => {
-      queryCache.setQueriesData<UserOutDto>({ key: ['users', 'current'] }, () => response.data);
-    },
-    onError: (error) => {
-      toast.add({
-        title: UI_TEXT.common.error,
-        description: getErrorMessage(error),
-        class: 'toast-error',
-      });
     },
   });
 };
@@ -160,24 +136,25 @@ export const useUploadProfilePictureMutation = (options?: MutationOptions) => {
   });
 };
 
+// Theme mutations don't touch the user cache: useTheme writes the final local state into it
+// once every save has settled. A refetch would flip isLoading and make pages flash.
 export const useUpdateThemePreferencesMutation = () => {
-  const queryCache = useQueryCache();
+  const toast = useToast();
 
   return useMutation({
     mutation: (data: UpdateThemePreferencesDto) => userService.updateThemePreferences(data),
-    onSuccess: () => {
-      queryCache.invalidateQueries({ key: ['users', 'current'] });
+    onError: (error) => {
+      toast.add({
+        title: UI_TEXT.common.error,
+        description: getErrorMessage(error),
+        class: 'toast-error',
+      });
     },
   });
 };
 
 export const useUploadBackgroundMutation = () => {
-  const queryCache = useQueryCache();
-
   return useMutation({
     mutation: (file: File) => userService.uploadBackgroundImage(file),
-    onSuccess: () => {
-      queryCache.invalidateQueries({ key: ['users', 'current'] });
-    },
   });
 };

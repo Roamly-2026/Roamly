@@ -113,8 +113,6 @@
           </div>
         </div>
 
-        <AppearanceSettings />
-
         <!-- DOCUMENT SECTION -->
         <div :class="LAYOUT_CONFIG.sectionWrapper">
           <div :class="LAYOUT_CONFIG.pageHeader">
