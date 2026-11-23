@@ -9,7 +9,7 @@ import {
   useUpdateThemePreferencesMutation,
   useUploadBackgroundMutation,
 } from '~/queries/user.mutation';
-import type { UserOutDto } from '~/types/user.type';
+import type { UpdateThemePreferencesDto, UserOutDto } from '~/types/user.type';
 
 interface StoredThemePreferences {
   theme_palette: ThemePaletteId;
@@ -19,9 +19,11 @@ interface StoredThemePreferences {
 
 const DEFAULT_PREFERENCES: StoredThemePreferences = {
   theme_palette: 'default',
-  background_type: 'none',
+  background_type: 'system',
   background_value: null,
 };
+
+let pendingMutations = 0;
 
 export const useTheme = () => {
   const preferences = useLocalStorage<StoredThemePreferences>(
@@ -52,19 +54,41 @@ export const useTheme = () => {
   watch(preferences, (newPrefs) => applyToDom(newPrefs), { deep: true, immediate: true });
 
   const syncFromUser = (user?: UserOutDto | null) => {
-    if (!user || !user.theme_palette) return;
+    if (!user || !user.theme_palette || pendingMutations > 0) return;
     preferences.value = {
       theme_palette: user.theme_palette,
-      background_type: user.background_type || 'none',
+      background_type: user.background_type || 'system',
       background_value: user.background_value ?? null,
     };
   };
 
+  const persistPreferences = async (payload: UpdateThemePreferencesDto) => {
+    if (!isAuthenticated.value) return;
+    pendingMutations++;
+    try {
+      await updatePreferencesMutation.mutateAsync(payload);
+    } catch (err) {
+      console.error('Failed to save theme preferences:', err);
+    } finally {
+      pendingMutations = Math.max(0, pendingMutations - 1);
+    }
+  };
+
   const setPalette = (palette: ThemePaletteId) => {
     preferences.value = { ...preferences.value, theme_palette: palette };
-    if (isAuthenticated.value) {
-      updatePreferencesMutation.mutate({ theme_palette: palette });
-    }
+    void persistPreferences({ theme_palette: palette });
+  };
+
+  const setSystemBackground = () => {
+    preferences.value = {
+      ...preferences.value,
+      background_type: 'system',
+      background_value: null,
+    };
+    void persistPreferences({
+      background_type: 'system',
+      background_value: null,
+    });
   };
 
   const setPresetBackground = (presetId: string) => {
@@ -73,12 +97,10 @@ export const useTheme = () => {
       background_type: 'preset',
       background_value: presetId,
     };
-    if (isAuthenticated.value) {
-      updatePreferencesMutation.mutate({
-        background_type: 'preset',
-        background_value: presetId,
-      });
-    }
+    void persistPreferences({
+      background_type: 'preset',
+      background_value: presetId,
+    });
   };
 
   const clearBackground = () => {
@@ -87,23 +109,26 @@ export const useTheme = () => {
       background_type: 'none',
       background_value: null,
     };
-    if (isAuthenticated.value) {
-      updatePreferencesMutation.mutate({
-        background_type: 'none',
-        background_value: null,
-      });
-    }
+    void persistPreferences({
+      background_type: 'none',
+      background_value: null,
+    });
   };
 
   const uploadCustomBackground = async (file: File) => {
-    const response = await uploadBackgroundMutation.mutateAsync(file);
-    const updated = response?.data;
-    if (updated?.background_value) {
-      preferences.value = {
-        ...preferences.value,
-        background_type: 'custom',
-        background_value: updated.background_value,
-      };
+    pendingMutations++;
+    try {
+      const response = await uploadBackgroundMutation.mutateAsync(file);
+      const updated = response?.data;
+      if (updated?.background_value) {
+        preferences.value = {
+          ...preferences.value,
+          background_type: 'custom',
+          background_value: updated.background_value,
+        };
+      }
+    } finally {
+      pendingMutations = Math.max(0, pendingMutations - 1);
     }
   };
 
@@ -111,6 +136,7 @@ export const useTheme = () => {
     preferences,
     syncFromUser,
     setPalette,
+    setSystemBackground,
     setPresetBackground,
     clearBackground,
     uploadCustomBackground,

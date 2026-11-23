@@ -84,6 +84,35 @@
           </div>
 
           <div :class="['grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5', SPACING_TOKENS.gap.md]">
+            <!-- SYSTEM DEFAULT OPTION -->
+            <button
+              type="button"
+              :class="[
+                'group relative aspect-video cursor-pointer overflow-hidden transition-all',
+                RADIUS_TOKENS.md,
+                preferences.background_type === 'system'
+                  ? 'ring-2 ring-btn-primary'
+                  : 'ring-1 ring-line-default hover:ring-btn-primary/60',
+              ]"
+              @click="setSystemBackground()"
+            >
+              <img
+                src="/groups/groups-background.jpg"
+                alt="Default background"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+              <div
+                class="absolute inset-x-0 bottom-0 bg-black/55 px-2 py-1 flex items-center justify-between"
+              >
+                <span class="text-xs font-medium text-white truncate">Default</span>
+                <UIcon
+                  v-if="preferences.background_type === 'system'"
+                  name="i-heroicons-check-circle-solid"
+                  class="w-4 h-4 text-white shrink-0"
+                />
+              </div>
+            </button>
+
             <!-- NONE OPTION -->
             <button
               type="button"
@@ -175,6 +204,7 @@ import { useTheme } from '~/composables/useTheme';
 const {
   preferences,
   setPalette,
+  setSystemBackground,
   setPresetBackground,
   clearBackground,
   uploadCustomBackground,

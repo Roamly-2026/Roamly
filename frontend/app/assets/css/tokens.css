@@ -1,10 +1,10 @@
 :root,
 [data-theme='default'] {
   /* Surfaces and Backgrounds */
-  --theme-bg-page: #faf9f6;
-  --theme-bg-card: #edf1ee;
-  --theme-bg-card-hover: #e2e8e4;
-  --theme-bg-modal: #faf9f6;
+  --theme-bg-page: #4a6652;
+  --theme-bg-card: #e7ece8;
+  --theme-bg-card-hover: #dbe3dd;
+  --theme-bg-modal: #f4efe4;
   --theme-bg-subtle: #f0fdf4;
   --theme-bg-overlay: rgba(5, 46, 22, 0.5);
 
@@ -69,10 +69,10 @@
 }
 
 [data-theme='forest'] {
-  --theme-bg-page: #f2f5f3;
-  --theme-bg-card: #e3ebe5;
-  --theme-bg-card-hover: #d5e2d8;
-  --theme-bg-modal: #f2f5f3;
+  --theme-bg-page: #1f4736;
+  --theme-bg-card: #cee1d4;
+  --theme-bg-card-hover: #bdd6c5;
+  --theme-bg-modal: #e8f2eb;
   --theme-bg-subtle: #dcfce7;
   --theme-bg-overlay: rgba(6, 40, 20, 0.55);
 
@@ -126,10 +126,10 @@
 }
 
 [data-theme='ocean'] {
-  --theme-bg-page: #f0f7fa;
-  --theme-bg-card: #e0eff5;
-  --theme-bg-card-hover: #cde4ee;
-  --theme-bg-modal: #f0f7fa;
+  --theme-bg-page: #1b5273;
+  --theme-bg-card: #c7e3f1;
+  --theme-bg-card-hover: #b3d7ea;
+  --theme-bg-modal: #e7f4fa;
   --theme-bg-subtle: #e0f2fe;
   --theme-bg-overlay: rgba(8, 47, 73, 0.55);
 
@@ -183,7 +183,7 @@
 }
 
 [data-theme='minimal'] {
-  --theme-bg-page: #ffffff;
+  --theme-bg-page: #2e2e33;
   --theme-bg-card: #f4f4f5;
   --theme-bg-card-hover: #e4e4e7;
   --theme-bg-modal: #ffffff;

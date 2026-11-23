@@ -251,17 +251,17 @@ export const updateThemePreferences = async (
     },
   });
 
-  if (
+  const shouldDeleteOldCustomBg =
     user.background_type === BACKGROUND_TYPES.CUSTOM &&
     user.background_value &&
     preferences.background_type &&
-    preferences.background_type !== BACKGROUND_TYPES.CUSTOM
-  ) {
-    await deletePrivateFilesFromCloud([user.background_value]);
-  }
+    preferences.background_type !== BACKGROUND_TYPES.CUSTOM;
 
   const nextBackgroundValue =
-    preferences.background_type === BACKGROUND_TYPES.NONE ? null : preferences.background_value;
+    preferences.background_type === BACKGROUND_TYPES.NONE ||
+    preferences.background_type === BACKGROUND_TYPES.SYSTEM
+      ? null
+      : preferences.background_value;
 
   const updatedUser = await prisma.users.update({
     where: {
@@ -274,6 +274,10 @@ export const updateThemePreferences = async (
     },
     select: userProfileSelect,
   });
+
+  if (shouldDeleteOldCustomBg && user.background_value) {
+    await deletePrivateFilesFromCloud([user.background_value]).catch(() => {});
+  }
 
   return resolveUserBackground(updatedUser);
 };
@@ -288,22 +292,31 @@ export const uploadBackgroundImage = async (
     },
   });
 
-  if (user.background_type === BACKGROUND_TYPES.CUSTOM && user.background_value) {
-    await deletePrivateFilesFromCloud([user.background_value]);
-  }
+  const oldCustomBg =
+    user.background_type === BACKGROUND_TYPES.CUSTOM ? user.background_value : null;
 
   const fileKey = await uploadPrivateFileToCloud(fileData, 'backgrounds');
 
-  const updatedUser = await prisma.users.update({
-    where: {
-      user_id: user.user_id,
-    },
-    data: {
-      background_type: BACKGROUND_TYPES.CUSTOM,
-      background_value: fileKey,
-    },
-    select: userProfileSelect,
-  });
+  let updatedUser: userProfileInfo;
+  try {
+    updatedUser = await prisma.users.update({
+      where: {
+        user_id: user.user_id,
+      },
+      data: {
+        background_type: BACKGROUND_TYPES.CUSTOM,
+        background_value: fileKey,
+      },
+      select: userProfileSelect,
+    });
+  } catch (err) {
+    await deletePrivateFilesFromCloud([fileKey]).catch(() => {});
+    throw err;
+  }
+
+  if (oldCustomBg) {
+    await deletePrivateFilesFromCloud([oldCustomBg]).catch(() => {});
+  }
 
   return resolveUserBackground(updatedUser);
 };

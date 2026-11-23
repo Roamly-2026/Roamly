@@ -32,11 +32,7 @@ onMounted(() => {
 });
 
 const bgClass = computed(() => {
-  if (
-    isMounted.value &&
-    preferences.value.background_type !== 'none' &&
-    preferences.value.background_value
-  ) {
+  if (isMounted.value && preferences.value.background_type !== 'system') {
     return '!bg-transparent';
   }
 

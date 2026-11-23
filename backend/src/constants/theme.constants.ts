@@ -8,6 +8,7 @@ export const THEME_PALETTES = {
 export type ThemePalette = (typeof THEME_PALETTES)[keyof typeof THEME_PALETTES];
 
 export const BACKGROUND_TYPES = {
+  SYSTEM: 'system',
   NONE: 'none',
   PRESET: 'preset',
   CUSTOM: 'custom',

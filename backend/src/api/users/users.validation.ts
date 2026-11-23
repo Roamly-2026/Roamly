@@ -47,7 +47,12 @@ export const updateThemePreferencesSchema = z
       ])
       .optional(),
     background_type: z
-      .enum([BACKGROUND_TYPES.NONE, BACKGROUND_TYPES.PRESET, BACKGROUND_TYPES.CUSTOM])
+      .enum([
+        BACKGROUND_TYPES.SYSTEM,
+        BACKGROUND_TYPES.NONE,
+        BACKGROUND_TYPES.PRESET,
+        BACKGROUND_TYPES.CUSTOM,
+      ])
       .optional(),
     background_value: z.string().trim().max(2048).nullable().optional(),
   })

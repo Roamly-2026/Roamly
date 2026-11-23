@@ -1,5 +1,5 @@
 export type ThemePaletteId = 'default' | 'forest' | 'ocean' | 'minimal';
-export type BackgroundType = 'none' | 'preset' | 'custom';
+export type BackgroundType = 'system' | 'none' | 'preset' | 'custom';
 
 export interface ThemePaletteOption {
   id: ThemePaletteId;
@@ -17,22 +17,22 @@ export const THEME_PALETTE_OPTIONS: ThemePaletteOption[] = [
   {
     id: 'default',
     label: 'Default',
-    colors: ['#faf9f6', '#edf1ee', '#7a9a82', '#e5a93b'],
+    colors: ['#4a6652', '#e7ece8', '#7a9a82', '#e5a93b'],
   },
   {
     id: 'forest',
     label: 'Forest',
-    colors: ['#f2f5f3', '#e3ebe5', '#2d6a4f', '#d97706'],
+    colors: ['#1f4736', '#cee1d4', '#2d6a4f', '#d97706'],
   },
   {
     id: 'ocean',
     label: 'Ocean',
-    colors: ['#f0f7fa', '#e0eff5', '#0284c7', '#f59e0b'],
+    colors: ['#1b5273', '#c7e3f1', '#0284c7', '#f59e0b'],
   },
   {
     id: 'minimal',
     label: 'Minimal',
-    colors: ['#ffffff', '#f4f4f5', '#18181b', '#71717a'],
+    colors: ['#2e2e33', '#f4f4f5', '#18181b', '#71717a'],
   },
 ];
 

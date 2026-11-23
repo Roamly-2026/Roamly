@@ -154,6 +154,6 @@ export const LAYOUT_CONFIG = {
 
 // 2. FOOTER CLASSES
 export const FOOTER_CONFIG = {
-  base: `${SPACING_TOKENS.py.md} ${SPACING_TOKENS.px.md} md:${SPACING_TOKENS.px.lg} flex items-center justify-between ${TEXT_SIZES.xs} ${COLOR_TOKENS.text.primary} ${GLASS_TOKENS.page} ${SHADOW_TOKENS.footer} relative ${Z_INDEX_TOKENS.base}`,
+  base: `${SPACING_TOKENS.py.md} ${SPACING_TOKENS.px.md} md:${SPACING_TOKENS.px.lg} flex items-center justify-between ${TEXT_SIZES.xs} ${COLOR_TOKENS.text.primary} ${GLASS_TOKENS.default} ${BORDER_TOKENS.dividerTop} ${SHADOW_TOKENS.footer} relative ${Z_INDEX_TOKENS.base}`,
   text: `${FONT_WEIGHTS.medium} ${OPACITY_TOKENS.soft}`,
 } as const;
