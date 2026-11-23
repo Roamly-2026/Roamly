@@ -90,14 +90,16 @@ model groups {
 }
 
 model media_files {
-  file_id       Int          @id
-  description   String?      @db.VarChar(512)
-  taken_at      DateTime?    @db.Timestamp(6)
-  location_name String?      @db.VarChar(255)
-  latitude      Float?
-  longitude     Float?
-  files         files        @relation(fields: [file_id], references: [file_id], onDelete: Cascade, onUpdate: NoAction)
-  media_tags    media_tags[]
+  file_id         Int               @id
+  description     String?           @db.VarChar(512)
+  taken_at        DateTime?         @db.Timestamp(6)
+  location_name   String?           @db.VarChar(255)
+  latitude        Float?
+  longitude       Float?
+  files           files             @relation(fields: [file_id], references: [file_id], onDelete: Cascade, onUpdate: NoAction)
+  media_tags      media_tags[]
+  media_comments  media_comments[]
+  media_reactions media_reactions[]
 }
 
 model media_tags {
@@ -107,6 +109,29 @@ model media_tags {
   users         users        @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
 
   @@id([file_id, user_id])
+}
+
+model media_comments {
+  comment_id  Int         @id @default(autoincrement())
+  file_id     Int
+  user_id     Int
+  content     String      @db.VarChar(255)
+  created_at  DateTime    @default(now()) @db.Timestamp(6)
+  media_files media_files @relation(fields: [file_id], references: [file_id], onDelete: Cascade, onUpdate: NoAction)
+  users       users       @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([file_id, created_at])
+}
+
+model media_reactions {
+  file_id     Int
+  user_id     Int
+  emoji       String      @db.VarChar(16)
+  created_at  DateTime    @default(now()) @db.Timestamp(6)
+  media_files media_files @relation(fields: [file_id], references: [file_id], onDelete: Cascade, onUpdate: NoAction)
+  users       users       @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([file_id, user_id, emoji])
 }
 
 model roles {
@@ -132,6 +157,8 @@ model users {
   owned_files        files[]              @relation("FilesOwnedByUser")
   group_profiles     group_profiles[]
   media_tags         media_tags[]
+  media_comments     media_comments[]
+  media_reactions    media_reactions[]
 }
 
 model documents {

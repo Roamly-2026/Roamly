@@ -69,31 +69,7 @@
       </div>
 
       <div :class="LAYOUT_CONFIG.headerActionRight">
-        <BaseButton
-          icon="i-heroicons-users"
-          variant="glassIconButton"
-          :to="membersRoute"
-          :tooltip="UI_TEXT.tooltips.members"
-        />
-        <BaseButton
-          icon="i-heroicons-calendar"
-          variant="glassIconButton"
-          :to="eventsRoute"
-          :tooltip="UI_TEXT.tooltips.calendar"
-        />
-        <BaseButton
-          icon="i-heroicons-photo"
-          variant="glassIconButton"
-          class="text-brand-500"
-          :to="mediaRoute"
-          :tooltip="UI_TEXT.tooltips.photos"
-        />
-        <BaseButton
-          icon="i-heroicons-document-text"
-          variant="glassIconButton"
-          :to="documentsRoute"
-          :tooltip="UI_TEXT.tooltips.documents"
-        />
+        <NavigationMenu :group-uuid="selectedGroup" active-tab="media" :is-mobile="false" />
       </div>
     </div>
 
@@ -137,6 +113,7 @@
           v-if="viewMode === 'list'"
           :files="filteredMedia"
           :is-current-user-leader="isCurrentUserLeader"
+          show-reactions
           @open="handleOpenFile"
           @delete="emit('delete', $event as GroupFile)"
           @download="(url, filename) => emit('download', url, filename)"
@@ -213,20 +190,6 @@ const selectGroup = (uuid: string) => {
   selectedGroup.value = uuid;
   isGroupDropdownOpen.value = false;
 };
-
-// Navigation routes
-const membersRoute = computed(() =>
-  selectedGroup.value ? `/groups/${selectedGroup.value}/members` : '/groups',
-);
-const eventsRoute = computed(() =>
-  selectedGroup.value ? `/events?groupId=${selectedGroup.value}` : '/events',
-);
-const mediaRoute = computed(() =>
-  selectedGroup.value ? `/files/media?groupId=${selectedGroup.value}` : '/files/media',
-);
-const documentsRoute = computed(() =>
-  selectedGroup.value ? `/files/documents?groupId=${selectedGroup.value}` : '/files/documents',
-);
 
 const availableTags = computed<string[]>(() => {
   const tagMap = new Map<string, string>();

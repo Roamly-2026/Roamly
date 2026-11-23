@@ -159,6 +159,7 @@ import { useQueryCache } from '@pinia/colada';
 import { filesService } from '~/services/files.service';
 import type { GroupFile } from '~/types/files.type';
 import type { GroupOutDto } from '~/types/groups.type';
+import { useMediaModalsStore } from '~/stores/media.modals.store';
 
 definePageMeta({ layout: 'general', middleware: ['auth'] });
 
@@ -203,6 +204,11 @@ const { data: mediaData, isLoading: isLoadingMedia } = useGroupFilesQuery(
 );
 
 const mediaFiles = computed<GroupFile[]>(() => mediaData.value?.items || []);
+
+const mediaStore = useMediaModalsStore();
+
+// a freshly loaded list already contains the saved reactions
+watch(mediaData, () => mediaStore.clearReactionOverrides());
 
 // ---- UPLOAD ----
 const isUploadModalOpen = ref(false);
