@@ -14,6 +14,8 @@
         :is-loading="isLoading"
         :error="error"
         :is-fetching-next-page="isFetchingNextPage"
+        :can-delete-group="canDeleteGroup"
+        :can-leave-group="canLeaveListedGroup"
         @load-more="fetchNextPage"
       />
 
@@ -23,6 +25,8 @@
         :is-loading="isLoading"
         :error="error"
         :is-fetching-next-page="isFetchingNextPage"
+        :can-delete-group="canDeleteGroup"
+        :can-leave-group="canLeaveListedGroup"
         @load-more="fetchNextPage"
       />
     </ClientOnly>
@@ -36,6 +40,8 @@ import { useScreenSize } from '~/composables/useScreenSize';
 import { useProtectedPage } from '~/composables/useProtectedPage';
 import { useGroupsQuery } from '~/queries/groups.query';
 import type { GroupOutDto } from '~/types/groups.type';
+import { SYSTEM_ROLES } from '~/utils/constants/permissions.constants';
+import { canLeaveGroup } from '~/utils/groups.utils';
 
 /* --- PAGE CONFIGURATION --- */
 definePageMeta({ layout: 'general', middleware: ['auth'] });
@@ -49,6 +55,12 @@ const isFetchingNextPage = ref(false);
 
 /* --- API QUERIES --- */
 const { data: groupsData, isLoading, error } = useGroupsQuery(15, currentCursor);
+
+const canDeleteGroup = (group: GroupOutDto) =>
+  !isLoading.value && !error.value && group.system_role === SYSTEM_ROLES.OWNER;
+
+const canLeaveListedGroup = (group: GroupOutDto) =>
+  !isLoading.value && !error.value && canLeaveGroup(group.system_role, group.current_size);
 
 /* --- WATCHERS (PAGINATION LOGIC) --- */
 watch(

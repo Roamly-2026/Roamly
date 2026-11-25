@@ -2,6 +2,7 @@
 import { useQuery } from '@pinia/colada';
 import type { Ref } from 'vue';
 import { eventsService } from '~/services/eventsService';
+import type { EventOutDto } from '~/types/events.type';
 
 export const useDatesQuery = (groupUuid: Ref<string | undefined>) => {
   return useQuery({

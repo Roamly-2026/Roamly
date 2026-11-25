@@ -47,46 +47,38 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useEventPermissions } from '~/composables/useEventPermissions';
 import { useEventsStore } from '~/stores/events.modals.store';
-import { useCurrentUserQuery } from '~/queries/user.query';
 import { useDeleteEventMutation, useLeaveEventMutation } from '~/queries/events.mutation';
 
 const eventsStore = useEventsStore();
+const groupUuid = computed(() => eventsStore.selectedGroupUuid);
+const { currentUserUuid, canManageEvent, canLeaveEvent } = useEventPermissions(groupUuid);
 
-const { data: currentUser } = useCurrentUserQuery();
-const currentUserEmail = computed(() => currentUser.value?.email);
-
-const deleteEventMutation = useDeleteEventMutation(
-  computed(() => eventsStore.selectedGroupUuid),
-  {
-    onSuccess: () => {
-      eventsStore.closeDeleteEventModal();
-      eventsStore.closePreviewModal();
-    },
+const deleteEventMutation = useDeleteEventMutation(groupUuid, {
+  onSuccess: () => {
+    eventsStore.closeDeleteEventModal();
+    eventsStore.closePreviewModal();
   },
-);
+});
 
-const leaveEventMutation = useLeaveEventMutation(
-  computed(() => eventsStore.selectedGroupUuid),
-  {
-    onSuccess: () => {
-      eventsStore.closeLeaveEventModal();
-      eventsStore.closePreviewModal();
-    },
+const leaveEventMutation = useLeaveEventMutation(groupUuid, {
+  onSuccess: () => {
+    eventsStore.closeLeaveEventModal();
+    eventsStore.closePreviewModal();
   },
-);
+});
 
 const handleConfirmDelete = () => {
-  const eventToDelete = eventsStore.selectedEventToDelete;
-  if (eventToDelete) deleteEventMutation.mutate(eventToDelete.uuid);
+  const event = eventsStore.selectedEventToDelete;
+  if (event && canManageEvent(event)) deleteEventMutation.mutate(event.uuid);
 };
 
 const handleConfirmLeave = () => {
-  const eventToLeave = eventsStore.selectedEventToLeave;
-  if (!eventToLeave) return;
-  const myRecord = eventToLeave.members.find((m) => m.email === currentUserEmail.value);
-  if (myRecord) {
-    leaveEventMutation.mutate({ eventUuid: eventToLeave.uuid, targetUuid: myRecord.uuid });
-  }
+  const event = eventsStore.selectedEventToLeave;
+  const userUuid = currentUserUuid.value;
+  if (!event || !userUuid || !canLeaveEvent(event)) return;
+
+  leaveEventMutation.mutate({ eventUuid: event.uuid, targetUuid: userUuid });
 };
 </script>

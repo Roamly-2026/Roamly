@@ -124,7 +124,7 @@
             form="upload-media-form"
             :label="UI_TEXT.common.upload"
             :loading="uploadMutation.isLoading.value"
-            :disabled="!uploadForm.file"
+            :disabled="!uploadForm.file || !canUpload"
           />
         </div>
       </template>
@@ -311,12 +311,15 @@ import {
 import { groupMediaSchema, type GroupMediaFormState } from '~/utils/schemas/files.schema';
 import { getErrorMessage } from '~/utils/error.utils';
 import { extractImageMetadata } from '~/utils/exif.utils';
+import type { GroupFile } from '~/types/files.type';
 import EventMapSelector from '~/components/events/map/EventMapSelector.client.vue';
 
 const props = withDefaults(
   defineProps<{
     groupUuid?: string;
     availableTags?: string[];
+    canUpload: boolean;
+    canManageFile: (file: GroupFile) => boolean;
   }>(),
   {
     groupUuid: undefined,
@@ -423,7 +426,7 @@ const uploadMutation = useUploadGroupMediaMutation(
 );
 
 const handleUpload = () => {
-  if (!(uploadForm.file instanceof File)) return;
+  if (!props.canUpload || !(uploadForm.file instanceof File)) return;
   uploadError.value = null;
 
   const fd = new FormData();
@@ -513,7 +516,8 @@ const updateMutation = useUpdateGroupMediaMutation(
 );
 
 const handleUpdate = () => {
-  if (!mediaStore.mediaToUpdate) return;
+  const media = mediaStore.mediaToUpdate;
+  if (!media || !props.canManageFile(media)) return;
   updateError.value = null;
 
   const fd = new FormData();
@@ -533,7 +537,7 @@ const handleUpdate = () => {
   fd.append('tags', JSON.stringify(updateForm.tags || []));
 
   updateMutation.mutate({
-    fileId: mediaStore.mediaToUpdate.file_id,
+    fileId: media.file_id,
     formData: fd,
   });
 };
@@ -587,7 +591,8 @@ const deleteMutation = useDeleteGroupFileMutation(
 );
 
 const confirmDelete = () => {
-  if (mediaStore.mediaToDelete) deleteMutation.mutate(mediaStore.mediaToDelete.file_id);
+  const media = mediaStore.mediaToDelete;
+  if (media && props.canManageFile(media)) deleteMutation.mutate(media.file_id);
 };
 </script>
 

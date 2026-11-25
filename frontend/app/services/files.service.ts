@@ -7,6 +7,7 @@ import type {
   FileShareDto,
 } from '~/types/files.type';
 import type { ApiResponse } from '~/types/api.type';
+import type { DocumentAudience } from '~/utils/schemas/files.schema';
 
 export const filesService = {
   // --- PRIVATE DOCUMENTS ---
@@ -52,12 +53,12 @@ export const filesService = {
   shareDocument(
     fileId: number,
     groupUuid: string,
-    accessLevel: string,
-  ): Promise<ApiResponse<FileShareDto>> {
+    audience: DocumentAudience,
+  ): Promise<ApiResponse<Omit<FileShareDto, 'groups'>>> {
     const api = useApi();
     return api(`/files/documents/share/${fileId}`, {
       method: 'POST',
-      body: { groupUuid, accessLevel },
+      body: { groupUuid, audience },
     });
   },
 
@@ -69,12 +70,12 @@ export const filesService = {
   updateSharingConditions(
     fileId: number,
     groupUuid: string,
-    accessLevel: string,
-  ): Promise<ApiResponse<FileShareDto>> {
+    audience: DocumentAudience,
+  ): Promise<ApiResponse<Omit<FileShareDto, 'groups'>>> {
     const api = useApi();
     return api(`/files/documents/share/${fileId}/${groupUuid}`, {
       method: 'PATCH',
-      body: { accessLevel },
+      body: { audience },
     });
   },
 
@@ -147,7 +148,7 @@ export const filesService = {
     return api(`/files/group/${groupUuid}?${params.toString()}`);
   },
 
-  // --- MEMBER DOCUMENTS (leader-only) ---
+  // --- MEMBER DOCUMENTS ---
   // Backend route: GET /files/documents/group/:groupUuid?targetUserUuid=&documentType=
   getGroupMemberDocuments(
     groupUuid: string,

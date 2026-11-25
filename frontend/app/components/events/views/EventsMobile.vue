@@ -107,6 +107,7 @@
         <BaseSearchInput v-model="searchQuery" :placeholder="UI_TEXT.events.searchPlaceholder" />
 
         <BaseButton
+          v-if="canCreateEvent"
           icon="i-heroicons-plus"
           variant="glassIconButton"
           :tooltip="UI_TEXT.tooltips.addEvent"
@@ -243,8 +244,7 @@ defineProps<{
   sortedDaysList: UiDay[];
   filteredAndSortedEventsList: UiEvent[];
   selectedDayDetails?: UiDay;
-  isCurrentUserLeader: boolean;
-  currentUserEmail?: string;
+  canCreateEvent: boolean;
 }>();
 
 const emit = defineEmits<{

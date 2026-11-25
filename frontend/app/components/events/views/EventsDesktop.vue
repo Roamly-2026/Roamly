@@ -4,13 +4,14 @@
     <div :class="LAYOUT_CONFIG.headerRow">
       <div :class="LAYOUT_CONFIG.headerActionLeft">
         <BaseButton
-          v-if="isCurrentUserLeader"
+          v-if="canDeleteGroup"
           icon="i-heroicons-trash"
           variant="glassIconButtonDanger"
           :tooltip="UI_TEXT.groups.deleteGroup"
           @click="$emit('delete-group')"
         />
         <BaseButton
+          v-if="canLeaveGroup"
           icon="i-heroicons-arrow-right-on-rectangle"
           variant="glassIconButtonDanger"
           :tooltip="UI_TEXT.groups.leaveGroup"
@@ -131,6 +132,7 @@
       </div>
       <div :class="LAYOUT_CONFIG.headerActionRight">
         <BaseButton
+          v-if="canCreateEvent"
           icon="i-heroicons-plus"
           :label="UI_TEXT.tooltips.addEvent"
           variant="smallPrimaryActionButton"
@@ -256,7 +258,7 @@
 
             <div :class="LAYOUT_CONFIG.headerTitleRow">
               <BaseButton
-                v-if="selectedEvent.creator?.email === currentUserEmail && selectedEvent.is_private"
+                v-if="selectedEvent.is_private && canManageEvent(selectedEvent)"
                 icon="i-heroicons-user-plus"
                 variant="ghostBrandIconButton"
                 :class="COLOR_TOKENS.text.primarySoft"
@@ -418,7 +420,7 @@
 import type { GroupOutDto } from '~/types/groups.type';
 import type { EventCreatorDto, UiDay, UiEvent } from '~/types/events.type';
 
-const props = defineProps<{
+defineProps<{
   userGroupsList: GroupOutDto[];
   selectedGroupUuid?: string;
   selectedGroupDetails?: GroupOutDto;
@@ -430,8 +432,11 @@ const props = defineProps<{
   sortedDaysList: UiDay[];
   filteredAndSortedEventsList: UiEvent[];
   selectedDayDetails?: UiDay;
-  isCurrentUserLeader: boolean;
-  currentUserEmail?: string;
+  canCreateEvent: boolean;
+  canDeleteGroup: boolean;
+  canLeaveGroup: boolean;
+  canManageEvent: (event?: UiEvent | null) => boolean;
+  canLeaveEvent: (event?: UiEvent | null) => boolean;
 }>();
 
 defineEmits<{
@@ -444,19 +449,6 @@ defineEmits<{
   (e: 'open-delete-event' | 'open-leave-event' | 'open-add-members', event: UiEvent): void;
   (e: 'open-user-profile', user: EventCreatorDto): void;
 }>();
-
-// Group leaders and the event creator have permission to delete the event
-const canManageEvent = (event: UiEvent | null | undefined) => {
-  if (!event) return false;
-  return props.isCurrentUserLeader || event.creator?.email === props.currentUserEmail;
-};
-
-// Non-creator participants can leave an event they are currently assigned to
-const canLeaveEvent = (event: UiEvent | null | undefined) => {
-  if (!event) return false;
-  if (event.creator?.email === props.currentUserEmail) return false;
-  return event.members?.some((m) => m.email === props.currentUserEmail) ?? false;
-};
 
 const searchQuery = defineModel<string>('searchQuery', { default: '' });
 const filterStartDate = defineModel<string>('filterStartDate', { default: '' });

@@ -5,13 +5,14 @@
     <div :class="LAYOUT_CONFIG.pageHeader">
       <div :class="LAYOUT_CONFIG.headerActionLeft">
         <BaseButton
-          v-if="isCurrentUserLeader"
+          v-if="canDeleteGroup"
           icon="i-heroicons-trash"
           variant="glassIconButtonDanger"
           :tooltip="UI_TEXT.groups.deleteGroup"
           @click="emit('delete-group')"
         />
         <BaseButton
+          v-if="canLeaveGroup"
           icon="i-heroicons-arrow-right-on-rectangle"
           variant="glassIconButtonDanger"
           :tooltip="UI_TEXT.groups.leaveGroup"
@@ -94,7 +95,7 @@
 
         <div :class="LAYOUT_CONFIG.headerActionRight">
           <BaseButton
-            v-if="isCurrentUserLeader"
+            v-if="canUpload"
             icon="i-heroicons-plus"
             variant="glassIconButtonHighlight"
             :tooltip="UI_TEXT.documents.uploadTitle"
@@ -122,7 +123,7 @@
           <FilesListView
             v-if="viewMode === 'list'"
             :files="section.items"
-            :is-current-user-leader="isCurrentUserLeader"
+            :can-manage-file="canManageFile"
             can-edit
             @open="openInNewTab"
             @edit="emit('edit', $event as GroupFile)"
@@ -142,14 +143,14 @@
                 <p :class="TYPOGRAPHY_CONFIG.documentHeaderTitle">{{ doc.file_name }}</p>
                 <div :class="LAYOUT_CONFIG.headerTitleRow">
                   <BaseButton
-                    v-if="isCurrentUserLeader"
+                    v-if="canManageFile(doc)"
                     icon="i-heroicons-pencil-square"
                     variant="ghostInverseIconButton"
                     :tooltip="UI_TEXT.common.edit || 'Edit'"
                     @click="emit('edit', doc)"
                   />
                   <BaseButton
-                    v-if="isCurrentUserLeader"
+                    v-if="canManageFile(doc)"
                     icon="i-heroicons-trash"
                     variant="ghostDangerIconButton"
                     :tooltip="UI_TEXT.common.delete"
@@ -282,10 +283,10 @@
     </div>
 
     <!-- ========================= -->
-    <!-- MEMBER DOCUMENTS (leader) -->
+    <!-- MEMBER DOCUMENTS -->
     <!-- ========================= -->
     <div
-      v-if="isCurrentUserLeader"
+      v-if="canReadMemberDocuments"
       :class="[
         LAYOUT_CONFIG.sectionWrapper,
         'border-t border-dark-text/10',
@@ -341,7 +342,7 @@
           {{ UI_TEXT.documents.memberDocumentsHeading }}
         </div>
 
-        <div :class="LAYOUT_CONFIG.headerActionRight"></div>
+        <div :class="LAYOUT_CONFIG.headerActionRight" />
       </div>
 
       <div v-if="isLoadingMemberDocuments" :class="TYPOGRAPHY_CONFIG.statusLoading">
@@ -365,7 +366,6 @@
             <FilesListView
               v-if="viewMode === 'list'"
               :files="filteredMemberDocuments(type.value)"
-              :is-current-user-leader="false"
               @open="openInNewTab"
               @download="(url, filename) => emit('download', url, filename)"
             />
@@ -512,7 +512,11 @@ const props = defineProps<{
   isLoadingMemberDocuments: boolean;
   groups: GroupOutDto[];
   isLoading: boolean;
-  isCurrentUserLeader: boolean;
+  canUpload: boolean;
+  canManageFile: (file: GroupFile | PrivateDocumentMetadata) => boolean;
+  canReadMemberDocuments: boolean;
+  canDeleteGroup: boolean;
+  canLeaveGroup: boolean;
   privateDocumentTypes: { label: string; value: string }[];
 }>();
 

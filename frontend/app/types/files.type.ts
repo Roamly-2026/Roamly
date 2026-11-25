@@ -1,9 +1,9 @@
 // frontend/types/files.type.ts
 
 import type { MemoryReactionDto } from '~/types/memories.type';
+import type { DocumentAudience } from '~/utils/schemas/files.schema';
 
 export type OwnershipType = 'PRIVATE' | 'GROUP';
-export type AccessLevel = 'LEADER' | 'MEMBER';
 
 export interface FileUserDto {
   uuid: string;
@@ -55,8 +55,7 @@ export interface FileDto {
 
 export interface PrivateDocumentMetadata extends FileDto {
   documents: DocumentDto | null;
-  // Present when fetched via the leader-only group endpoint
-  // (getAllPrivateDocumentsMetadataOfAllUsersInAGroup).
+  // Present on shared documents returned by the group endpoint.
   creator?: FileUserDto;
 
   owner?: FileUserDto;
@@ -65,7 +64,7 @@ export interface PrivateDocumentMetadata extends FileDto {
 export interface GroupFile extends FileDto {
   documents: DocumentDto | null;
   media_files: MediaDto | null;
-  creator: FileUserDto;
+  creator: FileUserDto | null;
   download_url?: string;
   reactions: MemoryReactionDto[];
 }
@@ -83,7 +82,7 @@ export interface PaginatedGroupFiles {
 export interface FileShareDto {
   shared_by: number;
   shared_at: string;
-  access_level: AccessLevel;
+  audience: DocumentAudience;
   groups: {
     name: string;
   };

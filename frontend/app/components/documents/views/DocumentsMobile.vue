@@ -69,7 +69,7 @@
         <ViewSwitcher v-model="viewMode" />
 
         <BaseButton
-          v-if="isCurrentUserLeader"
+          v-if="canUpload"
           icon="i-heroicons-plus"
           variant="glassIconButton"
           :tooltip="UI_TEXT.documents.uploadTitle"
@@ -101,7 +101,7 @@
             <FilesListView
               v-if="viewMode === 'list'"
               :files="section.items"
-              :is-current-user-leader="isCurrentUserLeader"
+              :can-manage-file="canManageFile"
               can-edit
               @open="openInNewTab"
               @edit="emit('edit', $event as GroupFile)"
@@ -121,7 +121,7 @@
                   <p :class="TYPOGRAPHY_CONFIG.documentHeaderTitle">{{ doc.file_name }}</p>
                   <div :class="LAYOUT_CONFIG.headerTitleRow">
                     <BaseButton
-                      v-if="isCurrentUserLeader"
+                      v-if="canManageFile(doc)"
                       icon="i-heroicons-pencil-square"
                       variant="ghostInverseIconButton"
                       class="w-6! h-6! p-0"
@@ -129,7 +129,7 @@
                       @click="emit('edit', doc)"
                     />
                     <BaseButton
-                      v-if="isCurrentUserLeader"
+                      v-if="canManageFile(doc)"
                       icon="i-heroicons-trash"
                       variant="ghostDangerIconButton"
                       class="text-surface-500 hover:text-error-500 w-6! h-6! p-0"
@@ -263,8 +263,8 @@
       </div>
     </div>
 
-    <!-- MEMBER DOCUMENTS (leader) -->
-    <template v-if="isCurrentUserLeader">
+    <!-- MEMBER DOCUMENTS -->
+    <template v-if="canReadMemberDocuments">
       <div
         :class="[
           TYPOGRAPHY_CONFIG.sectionTitleTransparent,
@@ -337,7 +337,6 @@
             <FilesListView
               v-if="viewMode === 'list'"
               :files="filteredMemberDocuments(type.value)"
-              :is-current-user-leader="false"
               @open="openInNewTab"
               @download="(url, filename) => emit('download', url, filename)"
             />
@@ -484,7 +483,9 @@ const props = defineProps<{
   isLoadingMemberDocuments: boolean;
   groups: GroupOutDto[];
   isLoading: boolean;
-  isCurrentUserLeader: boolean;
+  canUpload: boolean;
+  canManageFile: (file: GroupFile | PrivateDocumentMetadata) => boolean;
+  canReadMemberDocuments: boolean;
   privateDocumentTypes: { label: string; value: string }[];
 }>();
 

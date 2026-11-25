@@ -67,10 +67,7 @@
             </span>
           </p>
           <p
-            v-if="
-              groupsStore.selectedGroupToLeave?.current_size === 1 &&
-              groupsStore.selectedGroupToLeave?.role?.toLowerCase() === 'leader'
-            "
+            v-if="groupsStore.selectedGroupToLeave?.system_role === SYSTEM_ROLES.OWNER"
             :class="TYPOGRAPHY_CONFIG.modalErrorBox"
           >
             {{ UI_TEXT.groups.leaveWarning }}
@@ -153,14 +150,18 @@ const handleCreateGroup = () => {
 };
 
 const confirmDelete = () => {
-  if (!groupsStore.selectedGroupToDelete) return;
+  const group = groupsStore.selectedGroupToDelete;
+  if (group?.system_role !== SYSTEM_ROLES.OWNER) return;
+
   deleteMutation.reset();
-  deleteMutation.mutate(groupsStore.selectedGroupToDelete.uuid);
+  deleteMutation.mutate(group.uuid);
 };
 
 const confirmLeave = () => {
-  if (!groupsStore.selectedGroupToLeave) return;
+  const group = groupsStore.selectedGroupToLeave;
+  if (!group || !canLeaveGroup(group.system_role, group.current_size)) return;
+
   leaveMutation.reset();
-  leaveMutation.mutate(groupsStore.selectedGroupToLeave.uuid);
+  leaveMutation.mutate(group.uuid);
 };
 </script>

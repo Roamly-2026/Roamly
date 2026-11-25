@@ -236,41 +236,24 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useMediaModalsStore } from '~/stores/media.modals.store';
-import { useCurrentUserQuery } from '~/queries/user.query';
+import type { GroupFile } from '~/types/files.type';
 import EventMapPreview from '~/components/events/map/EventMapPreview.client.vue';
 import MemoryReactionBar from '~/components/media/MemoryReactionBar.vue';
 import MemoryCommentSection from '~/components/media/MemoryCommentSection.vue';
 
-const props = withDefaults(
-  defineProps<{
-    isCurrentUserLeader?: boolean;
-  }>(),
-  {
-    isCurrentUserLeader: false,
-  },
-);
+const props = defineProps<{
+  canManageFile: (file: GroupFile) => boolean;
+}>();
 
 const emit = defineEmits<{
   download: [url: string | undefined, filename: string];
 }>();
 
 const mediaStore = useMediaModalsStore();
-const { data: currentUser } = useCurrentUserQuery();
 
 const activeMedia = computed(() => mediaStore.activeMedia);
 
-// Only the uploader or a group leader can edit/delete a media item
-const canManage = computed(() => {
-  if (!currentUser.value || !activeMedia.value) return false;
-  if (props.isCurrentUserLeader) return true;
-  if (activeMedia.value.creator?.uuid && currentUser.value.uuid) {
-    return activeMedia.value.creator.uuid === currentUser.value.uuid;
-  }
-  if (activeMedia.value.creator?.email && currentUser.value.email) {
-    return activeMedia.value.creator.email === currentUser.value.email;
-  }
-  return false;
-});
+const canManage = computed(() => !!activeMedia.value && props.canManageFile(activeMedia.value));
 
 // Swipe gesture handling for mobile
 const touchStartX = ref(0);

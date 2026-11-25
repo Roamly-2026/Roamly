@@ -46,11 +46,11 @@ export function useGroupFilesQuery(
 }
 
 /**
- * Fetches private documents shared with a group — leaders only.
+ * Fetches private documents shared with a group and visible to the current user.
  * Backend: GET /files/documents/group/:groupUuid?targetUserUuid=&documentType=
  *
  * targetUserUuid scopes the results to a single member (used by the
- * UserProfileModal). When omitted, all members' shared docs are returned
+ * UserProfileModal). When omitted, results include documents from all members
  * (used by the Documents page member section).
  */
 export function useGroupMemberDocumentsQuery(

@@ -1,3 +1,5 @@
+import type { GroupMembershipRole } from './groups.type';
+
 // frontend/app/types/user.type.ts
 import type { BackgroundType, ThemePaletteId } from '~/utils/constants/theme.constants';
 
@@ -25,9 +27,9 @@ export interface UserProfileModalDto {
   userUuid: string;
   username: string;
   email: string;
-  role: string;
+  system_role: GroupMembershipRole['system_role'] | null;
+  custom_role: GroupMembershipRole['custom_role'];
   joinedAt: string;
-  canViewDocuments: boolean;
 }
 
 export interface UpdateThemePreferencesDto {

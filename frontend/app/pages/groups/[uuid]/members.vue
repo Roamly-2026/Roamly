@@ -14,8 +14,13 @@
         :is-loading="isLoading"
         :error="error"
         :search-query="searchQuery"
-        :is-current-user-leader="isCurrentUserLeader"
-        :current-user-email="currentUser?.email"
+        :can-rename-group="canRenameGroup"
+        :can-invite-member="canInviteMember"
+        :can-remove-member="canRemoveMember"
+        :can-delete-group="canDeleteGroup"
+        :can-leave-group="canLeaveCurrentGroup"
+        :can-read-events="canReadEvents"
+        :current-user-uuid="currentUserUuid"
         @update:search-query="searchQuery = $event"
         @delete-group="handleDeleteCurrentGroup"
         @leave-group="handleLeaveCurrentGroup"
@@ -29,8 +34,13 @@
         :is-loading="isLoading"
         :error="error"
         :search-query="searchQuery"
-        :is-current-user-leader="isCurrentUserLeader"
-        :current-user-email="currentUser?.email"
+        :can-rename-group="canRenameGroup"
+        :can-invite-member="canInviteMember"
+        :can-remove-member="canRemoveMember"
+        :can-delete-group="canDeleteGroup"
+        :can-leave-group="canLeaveCurrentGroup"
+        :can-read-events="canReadEvents"
+        :current-user-uuid="currentUserUuid"
         @update:search-query="searchQuery = $event"
         @delete-group="handleDeleteCurrentGroup"
         @leave-group="handleLeaveCurrentGroup"
@@ -89,42 +99,47 @@ const filteredMembers = computed(() => {
   return groupInfos.value.group_profiles.filter(
     (profile) =>
       profile.users.username.toLowerCase().includes(query) ||
-      profile.roles.type.toLowerCase().includes(query),
+      getGroupRoleLabel(profile.system_role, profile.custom_role).toLowerCase().includes(query),
   );
 });
 
-/* --- PERMISSIONS --- */
-const isCurrentUserLeader = computed(() => {
-  const profile = groupInfos.value?.group_profiles?.find(
-    (p) => p.users.email === currentUser.value?.email,
-  );
-  return profile?.roles.type.toLowerCase() === 'leader';
-});
+const { currentUserUuid, systemRole, customRole, hasPermission } = useGroupPermission(groupUuid);
 
-/* --- MODAL HANDLERS --- */
-const handleLeaveCurrentGroup = () => {
-  const currentUserProfile = groupInfos.value?.group_profiles?.find(
-    (p) => p.users.email === currentUser.value?.email,
-  );
-  const dummyGroupToLeave: GroupOutDto = {
+const canRenameGroup = computed(() => hasPermission(PERMISSIONS.GROUP_MANAGE));
+const canInviteMember = computed(() => hasPermission(PERMISSIONS.MEMBERS_MANAGE));
+const canReadEvents = computed(() => hasPermission(PERMISSIONS.EVENTS_READ));
+const canDeleteGroup = computed(() => systemRole.value === SYSTEM_ROLES.OWNER);
+const canLeaveCurrentGroup = computed(() =>
+  canLeaveGroup(systemRole.value, groupInfos.value?.current_size),
+);
+
+const canRemoveMember = (profile: GroupProfileDto) =>
+  canInviteMember.value && canRemoveGroupMember(profile, systemRole.value, currentUserUuid.value);
+
+const currentGroup = computed<GroupOutDto | undefined>(() => {
+  const info = groupInfos.value;
+  if (!info || !systemRole.value) return;
+
+  return {
     uuid: groupUuid.value,
-    name: groupInfos.value?.name || '',
-    role: currentUserProfile?.roles.type || '',
-    current_size: groupInfos.value?.current_size || 0,
-    created_at: groupInfos.value?.created_at || '',
+    name: info.name,
+    current_size: info.current_size,
+    created_at: info.created_at,
+    system_role: systemRole.value,
+    custom_role: customRole.value,
   };
-  groupsStore.openLeaveModal(dummyGroupToLeave);
+});
+
+const handleLeaveCurrentGroup = () => {
+  if (currentGroup.value && canLeaveCurrentGroup.value) {
+    groupsStore.openLeaveModal(currentGroup.value);
+  }
 };
 
 const handleDeleteCurrentGroup = () => {
-  const dummyGroupToDelete: GroupOutDto = {
-    uuid: groupUuid.value,
-    name: groupInfos.value?.name || '',
-    role: 'leader',
-    current_size: groupInfos.value?.current_size || 0,
-    created_at: groupInfos.value?.created_at || '',
-  };
-  groupsStore.openDeleteModal(dummyGroupToDelete);
+  if (currentGroup.value && canDeleteGroup.value) {
+    groupsStore.openDeleteModal(currentGroup.value);
+  }
 };
 
 const handleOpenProfile = (profile: GroupProfileDto) => {
@@ -132,9 +147,9 @@ const handleOpenProfile = (profile: GroupProfileDto) => {
     userUuid: profile.users.uuid,
     username: profile.users.username,
     email: profile.users.email,
-    role: profile.roles.type,
-    joinedAt: groupInfos.value?.created_at || UI_TEXT.common.unknown,
-    canViewDocuments: isCurrentUserLeader.value,
+    system_role: profile.system_role,
+    custom_role: profile.custom_role,
+    joinedAt: groupInfos.value?.created_at ?? UI_TEXT.common.unknown,
   });
 };
 </script>

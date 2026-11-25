@@ -17,7 +17,7 @@
               {{ UI_TEXT.groups.roleSelectionLabel }}
             </p>
             <p :class="[TYPOGRAPHY_CONFIG.profileValue, 'capitalize']">
-              {{ userProfile?.role ?? '—' }}
+              {{ getGroupRoleLabel(userProfile?.system_role, userProfile?.custom_role) }}
             </p>
           </div>
           <div :class="LAYOUT_CONFIG.profileDetailRow">

@@ -7,7 +7,7 @@
       v-for="file in sortedFiles"
       :key="file.file_id"
       :file="file"
-      :is-current-user-leader="isCurrentUserLeader"
+      :can-manage="canManageFile?.(file) ?? false"
       :can-edit="canEdit"
       :show-reactions="showReactions"
       @open="emit('open', $event)"
@@ -27,7 +27,7 @@ import FilesListRow from '~/components/files/FilesListRow.vue';
 
 const props = defineProps<{
   files: (GroupFile | PrivateDocumentMetadata)[];
-  isCurrentUserLeader: boolean;
+  canManageFile?: (file: GroupFile | PrivateDocumentMetadata) => boolean;
   canEdit?: boolean;
   showReactions?: boolean;
 }>();

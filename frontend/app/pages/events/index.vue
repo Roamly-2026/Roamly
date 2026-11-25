@@ -26,8 +26,7 @@
       :sorted-days-list="sortedDaysList"
       :filtered-and-sorted-events-list="filteredAndSortedEventsList"
       :selected-day-details="selectedDayDetails"
-      :is-current-user-leader="isCurrentUserLeader"
-      :current-user-email="currentUserEmail"
+      :can-create-event="canCreateEvent"
       @select-group="selectGroup"
       @update:selected-day-id="selectedDayId = $event"
       @update:selected-event="selectedEvent = $event"
@@ -58,12 +57,15 @@
       :selected-event="selectedEvent"
       :is-loading-groups="isLoadingGroups"
       :is-loading-days="isLoadingDays"
+      :can-delete-group="canDeleteGroup"
+      :can-leave-group="canLeaveCurrentGroup"
+      :can-manage-event="canManageEvent"
+      :can-leave-event="canLeaveEvent"
       :is-loading-events="isLoadingEvents"
       :sorted-days-list="sortedDaysList"
       :filtered-and-sorted-events-list="filteredAndSortedEventsList"
       :selected-day-details="selectedDayDetails"
-      :is-current-user-leader="isCurrentUserLeader"
-      :current-user-email="currentUserEmail"
+      :can-create-event="canCreateEvent"
       @select-group="selectGroup"
       @update:selected-day-id="selectedDayId = $event"
       @update:selected-event="selectedEvent = $event"
@@ -84,7 +86,6 @@
 import { ref, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useScreenSize } from '~/composables/useScreenSize';
-import { useCurrentUserQuery } from '~/queries/user.query';
 import { useGroupsQuery, useGroupInfosQuery } from '~/queries/groups.query';
 import { useDatesQuery, useEventsQuery } from '~/queries/events.query';
 import { useEventsStore } from '~/stores/events.modals.store';
@@ -94,6 +95,7 @@ import type { GroupOutDto } from '~/types/groups.type';
 import type { UiDay, UiEvent, EventCreatorDto } from '~/types/events.type';
 import { processAvailableDates, processAndSortEvents } from '~/utils/sort.utils';
 import { filterEventsByQuery } from '~/utils/filter.utils';
+import { useEventPermissions } from '~/composables/useEventPermissions';
 
 definePageMeta({ layout: 'general', middleware: ['auth'] });
 
@@ -102,9 +104,14 @@ const router = useRouter();
 const { isMobile } = useScreenSize();
 const eventsStore = useEventsStore();
 const groupsStore = useGroupsStore();
-const { data: currentUser } = useCurrentUserQuery();
 
 const selectedGroupUuid = ref<string | undefined>((route.query.groupId as string) || undefined);
+const { systemRole, canReadEvents, canCreateEvent, canManageEvent, canLeaveEvent } =
+  useEventPermissions(selectedGroupUuid);
+
+const readableGroupUuid = computed(() =>
+  canReadEvents.value ? selectedGroupUuid.value : undefined,
+);
 const selectedDayId = ref<string | undefined>(undefined);
 const selectedEvent = ref<UiEvent | null | undefined>(null);
 
@@ -117,8 +124,6 @@ let searchTimeout: ReturnType<typeof setTimeout>;
 const filterStartDate = ref('');
 const filterEndDate = ref('');
 const showOnlyActiveEvents = ref(true);
-
-const currentUserEmail = computed(() => currentUser.value?.email);
 
 const { data: groupsData, isLoading: isLoadingGroups } = useGroupsQuery();
 const userGroupsList = computed<GroupOutDto[]>(() => groupsData.value?.items || []);
@@ -146,7 +151,7 @@ watch(
   { immediate: true },
 );
 
-const { data: datesResponse, isLoading: isLoadingDays } = useDatesQuery(selectedGroupUuid);
+const { data: datesResponse, isLoading: isLoadingDays } = useDatesQuery(readableGroupUuid);
 
 const sortedDaysList = computed<UiDay[]>(() => processAvailableDates(datesResponse.value || []));
 
@@ -168,7 +173,7 @@ const selectedDayDetails = computed<UiDay | undefined>(() =>
 );
 
 const { data: eventsData, isLoading: isLoadingEvents } = useEventsQuery(
-  selectedGroupUuid,
+  readableGroupUuid,
   selectedDayId,
 );
 const sortedEventsList = computed<UiEvent[]>(() => processAndSortEvents(eventsData.value || []));
@@ -237,8 +242,10 @@ watch(
 const selectedGroupDetails = computed(() =>
   userGroupsList.value.find((g) => g.uuid === selectedGroupUuid.value),
 );
-const isCurrentUserLeader = computed(
-  () => selectedGroupDetails.value?.role?.toLowerCase() === 'leader',
+
+const canDeleteGroup = computed(() => systemRole.value === SYSTEM_ROLES.OWNER);
+const canLeaveCurrentGroup = computed(() =>
+  canLeaveGroup(systemRole.value, selectedGroupDetails.value?.current_size),
 );
 
 const selectGroup = (uuid: string) => {
@@ -265,27 +272,19 @@ const handleOpenPreviewModal = (event: UiEvent) => {
   eventsStore.openPreviewModal(event, selectedDayDetails.value?.date);
 };
 
-const getGroupRole = (userEmail?: string | null): string => {
-  if (!userEmail || !groupInfosData.value?.group_profiles) return UI_TEXT.common.member;
-
-  const profile = groupInfosData.value.group_profiles.find(
-    (p) => p.users?.email?.toLowerCase() === userEmail.toLowerCase(),
+const handleOpenUserProfile = (user: EventCreatorDto) => {
+  const profile = groupInfosData.value?.group_profiles.find(
+    (item) => item.users.uuid === user.uuid,
   );
 
-  const roleType = profile?.roles?.type?.toLowerCase();
-  return roleType === 'leader' ? UI_TEXT.common.leader : UI_TEXT.common.member;
-};
-
-const handleOpenUserProfile = (user: EventCreatorDto) => {
-  groupsStore.selectedUserProfile = {
+  groupsStore.openUserProfileModal({
     userUuid: user.uuid,
     username: user.username,
     email: user.email || UI_TEXT.common.notAvailable,
-    role: getGroupRole(user.email), // <-- ITT VOLT A HARDKÓDOLT 'Participant'!
+    system_role: profile?.system_role ?? null,
+    custom_role: profile?.custom_role ?? null,
     joinedAt: UI_TEXT.common.unknown,
-    canViewDocuments: false,
-  };
-  groupsStore.isUserProfileModalOpen = true;
+  });
 };
 
 const openAllParticipantsModal = () => {

@@ -15,7 +15,10 @@
         :media="mediaFiles"
         :groups="groupsList"
         :is-loading="isLoadingMedia"
-        :is-current-user-leader="isCurrentUserLeader"
+        :can-upload="canUploadMedia"
+        :can-manage-file="canManageFile"
+        :can-delete-group="canDeleteGroup"
+        :can-leave-group="canLeaveCurrentGroup"
         @delete="handleDelete"
         @upload="isUploadModalOpen = true"
         @delete-group="handleDeleteGroup"
@@ -29,7 +32,8 @@
         :media="mediaFiles"
         :groups="groupsList"
         :is-loading="isLoadingMedia"
-        :is-current-user-leader="isCurrentUserLeader"
+        :can-upload="canUploadMedia"
+        :can-manage-file="canManageFile"
         @delete="handleDelete"
         @upload="isUploadModalOpen = true"
         @delete-group="handleDeleteGroup"
@@ -152,12 +156,15 @@ import { ref, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useMediaQuery } from '@vueuse/core';
 import { useToast } from '#imports';
+import { useGroupPermission } from '~/composables/useGroupPermission';
 import { useGroupFilesQuery } from '~/queries/files.query';
 import { useGroupsQuery } from '~/queries/groups.query';
 import { useGroupsStore } from '~/stores/groups.modals.store';
 import { useQueryCache } from '@pinia/colada';
 import { filesService } from '~/services/files.service';
-import type { GroupFile } from '~/types/files.type';
+import { PERMISSIONS, SYSTEM_ROLES } from '~/utils/constants/permissions.constants';
+import { canLeaveGroup } from '~/utils/groups.utils';
+import type { GroupFile, PrivateDocumentMetadata } from '~/types/files.type';
 import type { GroupOutDto } from '~/types/groups.type';
 import { useMediaModalsStore } from '~/stores/media.modals.store';
 
@@ -190,14 +197,26 @@ const currentGroup = computed(() =>
   groupsList.value.find((g) => g.uuid === selectedGroupUuid.value),
 );
 
-const isCurrentUserLeader = computed(() => {
-  const role = currentGroup.value?.role ?? '';
-  return role.toLowerCase() === 'leader';
-});
+const { currentUserUuid, systemRole, hasPermission } = useGroupPermission(selectedGroupUuid);
+
+const canReadMedia = computed(() => hasPermission(PERMISSIONS.MEDIA_READ));
+const canUploadMedia = computed(() => hasPermission(PERMISSIONS.MEDIA_CONTRIBUTE));
+const canDeleteGroup = computed(() => systemRole.value === SYSTEM_ROLES.OWNER);
+const canLeaveCurrentGroup = computed(() =>
+  canLeaveGroup(systemRole.value, currentGroup.value?.current_size),
+);
+
+const canManageFile = (file: GroupFile | PrivateDocumentMetadata) => {
+  if (file.ownership_type !== 'GROUP') return false;
+
+  const uploaderUuid = file.creator?.uuid;
+  const isUploader = !!uploaderUuid && uploaderUuid === currentUserUuid.value;
+  return hasPermission(isUploader ? PERMISSIONS.MEDIA_CONTRIBUTE : PERMISSIONS.MEDIA_MANAGE);
+};
 
 // ---- MEDIA QUERY ----
 const { data: mediaData, isLoading: isLoadingMedia } = useGroupFilesQuery(
-  () => selectedGroupUuid.value || '',
+  () => (canReadMedia.value ? (selectedGroupUuid.value ?? '') : ''),
   () => 50,
   () => undefined,
   () => 'media',
@@ -230,7 +249,7 @@ const closeUploadModal = () => {
 };
 
 const handleUpload = async () => {
-  if (!uploadFile.value || !selectedGroupUuid.value) return;
+  if (!uploadFile.value || !selectedGroupUuid.value || !canUploadMedia.value) return;
   isUploading.value = true;
   uploadError.value = '';
 
@@ -263,12 +282,14 @@ const deleteError = ref('');
 const isDeleting = ref(false);
 
 const handleDelete = (file: GroupFile) => {
+  if (!canManageFile(file)) return;
+
   fileToDelete.value = file;
   isDeleteModalOpen.value = true;
 };
 
 const confirmDelete = async () => {
-  if (!fileToDelete.value || !selectedGroupUuid.value) return;
+  if (!fileToDelete.value || !selectedGroupUuid.value || !canManageFile(fileToDelete.value)) return;
   isDeleting.value = true;
   deleteError.value = '';
 
@@ -291,11 +312,13 @@ const confirmDelete = async () => {
 
 // ---- GROUP ACTIONS ----
 const handleDeleteGroup = () => {
-  if (currentGroup.value) groupsStore.openDeleteModal(currentGroup.value);
+  if (currentGroup.value && canDeleteGroup.value) groupsStore.openDeleteModal(currentGroup.value);
 };
 
 const handleLeaveGroup = () => {
-  if (currentGroup.value) groupsStore.openLeaveModal(currentGroup.value);
+  if (currentGroup.value && canLeaveCurrentGroup.value) {
+    groupsStore.openLeaveModal(currentGroup.value);
+  }
 };
 
 const handleDownload = async (url: string | undefined, filename: string) => {

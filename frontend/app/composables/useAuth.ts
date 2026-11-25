@@ -25,6 +25,7 @@ export const useAuth = () => {
   const login = async (credentials: LoginFormState) => {
     clearAppDataAndCache();
     const response = await authService.login(credentials);
+    clearAppDataAndCache();
     token.value = response.token;
     return response;
   };

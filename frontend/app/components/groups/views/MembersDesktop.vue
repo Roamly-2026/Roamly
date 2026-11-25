@@ -6,13 +6,14 @@
       <div :class="LAYOUT_CONFIG.pageHeader">
         <div :class="LAYOUT_CONFIG.headerActionLeft">
           <BaseButton
-            v-if="isCurrentUserLeader"
+            v-if="canDeleteGroup"
             icon="i-heroicons-trash"
             variant="glassIconButtonDanger"
             :tooltip="UI_TEXT.tooltips.deleteGroup"
             @click="emit('deleteGroup')"
           />
           <BaseButton
+            v-if="canLeaveGroup"
             icon="i-heroicons-arrow-right-on-rectangle"
             variant="glassIconButtonDanger"
             :tooltip="UI_TEXT.tooltips.leaveGroup"
@@ -26,7 +27,7 @@
               {{ groupInfos?.name || UI_TEXT.common.loading }}
             </h1>
             <BaseButton
-              v-if="isCurrentUserLeader"
+              v-if="canRenameGroup"
               icon="i-heroicons-pencil"
               variant="ghostInverseIconButton"
               :tooltip="UI_TEXT.tooltips.editGroup"
@@ -54,7 +55,7 @@
 
         <div :class="LAYOUT_CONFIG.headerTitleRow">
           <BaseButton
-            v-if="isCurrentUserLeader"
+            v-if="canInviteMember"
             icon="i-heroicons-user-plus"
             variant="glassIconButtonHighlight"
             :tooltip="UI_TEXT.tooltips.inviteUser"
@@ -99,39 +100,28 @@
                       {{ profile.users.username }}
                     </h3>
                     <p
-                      v-if="isCurrentUser(profile.users.email)"
+                      v-if="profile.users.uuid === currentUserUuid"
                       :class="TYPOGRAPHY_CONFIG.modalHighlight"
                     >
                       {{ ' ' + UI_TEXT.common.you + ' ' }}
                     </p>
                   </div>
-
-                  <BaseButton
-                    v-if="isCurrentUserLeader && profile.roles.type.toLowerCase() === 'member'"
-                    icon="i-heroicons-arrow-up-circle"
-                    variant="ghostBrandIconButton"
-                    :class="COLOR_TOKENS.text.primaryMuted"
-                    :tooltip="UI_TEXT.tooltips.promoteUser"
-                    @click.stop="
-                      groupsStore.openPromoteUserModal(profile.users.email, profile.users.username)
-                    "
-                  />
                 </div>
 
                 <div :class="LAYOUT_CONFIG.cardFooter">
                   <p :class="TYPOGRAPHY_CONFIG.bodySmSoft">
                     {{ ' ' + UI_TEXT.groups.roleLabel + ' '
                     }}<span :class="TYPOGRAPHY_CONFIG.metaHighlightCap">{{
-                      profile.roles.type
+                      getGroupRoleLabel(profile.system_role, profile.custom_role)
                     }}</span>
                   </p>
 
                   <BaseButton
-                    v-if="isCurrentUserLeader && !isCurrentUser(profile.users.email)"
+                    v-if="canRemoveMember(profile)"
                     icon="i-heroicons-user-minus"
                     variant="ghostDangerIconButton"
                     :tooltip="UI_TEXT.tooltips.removeUser"
-                    @click.stop="groupsStore.openRemoveUserModal(profile.users.email)"
+                    @click.stop="groupsStore.openRemoveUserModal(profile)"
                   />
                 </div>
               </div>
@@ -241,7 +231,7 @@
                       >
                         <div
                           :class="CALENDAR_CONFIG.participantMoreBadge"
-                          @click.stop="eventsStore.openParticipantsModal(event)"
+                          @click.stop="openParticipants(event)"
                         >
                           +{{ (event.members?.length || 0) - 5 }}
                         </div>
@@ -287,8 +277,13 @@ const props = defineProps<{
   isLoading: boolean;
   error: ApiError | Error | null | undefined;
   searchQuery: string;
-  isCurrentUserLeader: boolean;
-  currentUserEmail: string | undefined;
+  canRenameGroup: boolean;
+  canInviteMember: boolean;
+  canRemoveMember: (profile: GroupProfileDto) => boolean;
+  canDeleteGroup: boolean;
+  canLeaveGroup: boolean;
+  canReadEvents: boolean;
+  currentUserUuid: string | undefined;
 }>();
 
 const emit = defineEmits<{
@@ -298,12 +293,22 @@ const emit = defineEmits<{
 }>();
 
 const navigateToEvent = (eventUuid: string) => {
-  router.push({ path: '/events', query: { eventId: eventUuid } });
+  router.push({ path: '/events', query: { groupId: groupUuid.value, eventId: eventUuid } });
 };
 
 const groupUuid = computed(() => route.params.uuid as string);
+
+const openParticipants = (event: UiEvent) => {
+  eventsStore.selectedGroupUuid = groupUuid.value;
+  eventsStore.openParticipantsModal(event);
+};
+
 const selectedDateId = ref<string | undefined>('ALL');
-const { data: eventsData, isLoading: isLoadingEvents } = useEventsQuery(groupUuid, selectedDateId);
+const readableGroupUuid = computed(() => (props.canReadEvents ? groupUuid.value : undefined));
+const { data: eventsData, isLoading: isLoadingEvents } = useEventsQuery(
+  readableGroupUuid,
+  selectedDateId,
+);
 
 const todayUpcomingEvents = computed(() => {
   const processedEvents = processAndSortEvents(eventsData.value || []);
@@ -332,8 +337,4 @@ const todayUpcomingEvents = computed(() => {
     .sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime())
     .slice(0, 3);
 });
-
-const isCurrentUser = (email: string) => {
-  return props.currentUserEmail === email;
-};
 </script>
