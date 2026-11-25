@@ -4,8 +4,7 @@ import { useGroupPermission } from '~/composables/useGroupPermission';
 import { PERMISSIONS } from '~/utils/constants/permissions.constants';
 
 export const useEventPermissions = (groupUuid: Ref<string | undefined>) => {
-  const { currentUserUuid, systemRole, hasPermission} =
-    useGroupPermission(groupUuid);
+  const { currentUserUuid, systemRole, hasPermission } = useGroupPermission(groupUuid);
 
   const canReadEvents = computed(() => hasPermission(PERMISSIONS.EVENTS_READ));
   const canCreateEvent = computed(() => hasPermission(PERMISSIONS.EVENTS_CONTRIBUTE));

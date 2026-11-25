@@ -39,10 +39,10 @@
           >
             <div :class="LAYOUT_CONFIG.cardCornerLeft">
               <BaseButton
+                v-if="canLeaveGroup(group)"
                 icon="i-heroicons-arrow-right-on-rectangle"
                 variant="ghostDangerIconButton"
                 :tooltip="UI_TEXT.tooltips.leaveGroup"
-                v-if="canLeaveGroup(group)"
                 @click.stop="groupsStore.openLeaveModal(group)"
               />
             </div>

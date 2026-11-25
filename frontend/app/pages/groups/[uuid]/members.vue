@@ -60,7 +60,6 @@ import { useRoute } from 'vue-router';
 import { useScreenSize } from '~/composables/useScreenSize';
 import { useProtectedPage } from '~/composables/useProtectedPage';
 import { useGroupInfosQuery } from '~/queries/groups.query';
-import { useCurrentUserQuery } from '~/queries/user.query';
 import { useGroupsStore } from '~/stores/groups.modals.store';
 import type { GroupOutDto, GroupProfileDto } from '~/types/groups.type';
 
@@ -80,7 +79,6 @@ const debouncedQuery = ref('');
 let debounceTimeout: ReturnType<typeof setTimeout>;
 
 /* --- API QUERIES --- */
-const { data: currentUser } = useCurrentUserQuery();
 const { data: groupInfos, isLoading, error } = useGroupInfosQuery(groupUuid);
 
 /* --- FILTER LOGIC --- */

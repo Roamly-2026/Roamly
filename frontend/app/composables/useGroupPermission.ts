@@ -26,5 +26,5 @@ export const useGroupPermission = (groupUuid: Ref<string | undefined>) => {
   const hasPermission = (permission: Permission) =>
     permissions.value?.effectivePermissions.includes(permission) ?? false;
 
-  return { currentUserUuid, systemRole, customRole, hasPermission};
+  return { currentUserUuid, systemRole, customRole, hasPermission };
 };
