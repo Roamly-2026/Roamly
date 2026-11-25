@@ -1,9 +1,10 @@
 import { Prisma } from '@prisma/client';
 import prisma from '../../prisma';
-import { ROLES } from '../../constants/roles.constants';
+import { PERMISSIONS } from '../../constants/permission.constants';
 import { MEMORY_REACTION_EMOJIS, MemoryReactionEmoji } from '../../constants/memories.constants';
 import { BadRequestError, ForbiddenError, NotFoundError } from '../../utils/ServerError';
 import { commentSelect, MemoryComment, MemoryReactionSummary } from '../../types/memories.types';
+import { assertPermission, loadPermissionContext } from '../shared/permissions.service';
 import { createCommentSchema } from './memories.validation';
 
 export const listComments = async (userUuid: string, fileId: number): Promise<MemoryComment[]> => {
@@ -137,8 +138,7 @@ export const summarizeReactions = (
   }).filter((summary: MemoryReactionSummary) => summary.count > 0);
 };
 
-// only members and leaders of the memory's group can interact with it,
-// invited users are not part of the group yet
+// Only active group members with media read permission can interact with a memory.
 async function validateMemoryAccess(userUuid: string, fileId: number): Promise<{ userId: number }> {
   const memory = await prisma.media_files.findUnique({
     where: {
@@ -147,7 +147,7 @@ async function validateMemoryAccess(userUuid: string, fileId: number): Promise<{
     select: {
       files: {
         select: {
-          group_id: true,
+          groups: { select: { uuid: true } },
         },
       },
     },
@@ -157,30 +157,13 @@ async function validateMemoryAccess(userUuid: string, fileId: number): Promise<{
     throw new NotFoundError('Memory not found!');
   }
 
-  if (memory.files.group_id === null) {
+  const groupUuid = memory.files.groups?.uuid;
+  if (!groupUuid) {
     throw new BadRequestError('This memory does not belong to a group!');
   }
 
-  const groupProfile = await prisma.group_profiles.findFirst({
-    where: {
-      users: {
-        uuid: userUuid,
-      },
-      group_id: memory.files.group_id,
-      roles: {
-        type: {
-          in: [ROLES.LEADER, ROLES.MEMBER],
-        },
-      },
-    },
-    select: {
-      user_id: true,
-    },
-  });
+  const context = await loadPermissionContext(userUuid, groupUuid);
+  assertPermission(context, PERMISSIONS.MEDIA_READ);
 
-  if (!groupProfile) {
-    throw new ForbiddenError('User must be part of the group to interact with this memory!');
-  }
-
-  return { userId: groupProfile.user_id };
+  return { userId: context.userId };
 }
