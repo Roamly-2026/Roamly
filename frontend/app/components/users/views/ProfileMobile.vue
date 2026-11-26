@@ -1,4 +1,4 @@
-<!-- frontend/app/components/views/mobile/users/ProfileMobile.vue -->
+<!-- frontend/app/components/users/views/ProfileMobile.vue -->
 <template>
   <div :class="LAYOUT_CONFIG.pageWrapper">
     <div>

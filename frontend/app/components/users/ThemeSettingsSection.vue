@@ -1,4 +1,4 @@
-<!-- frontend/app/components/users/views/ThemeSettingsSection.vue -->
+<!-- frontend/app/components/users/ThemeSettingsSection.vue -->
 <template>
   <div :class="LAYOUT_CONFIG.sectionWrapper">
     <h2 :class="TYPOGRAPHY_CONFIG.sectionTitleTransparent">{{ UI_TEXT.appearance.heading }}</h2>

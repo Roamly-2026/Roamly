@@ -1,8 +1,17 @@
-/* Theme-independent: text over photos and black media overlays */
+/* Palette-independent tokens. Palettes override them only where they differ. */
 :root {
+  /* Text over photos and black media overlays */
   --theme-text-on-media: #faf9f6;
   /* Shadow keeping light text-inverse readable over busy parts of the background photo */
   --theme-text-inverse-shadow: 0 1px 3px rgb(0 0 0 / 0.7);
+
+  /* Danger and error states (light) */
+  --theme-btn-danger-active: #7f1d1d;
+  --theme-btn-danger-text: #fef2f2;
+  --theme-status-error-bg: #fef2f2;
+  --theme-status-error-border: #fca5a5;
+  --theme-status-error-text: #7f1d1d;
+  --theme-toast-error-border: #7f1d1d;
 }
 
 :root,
@@ -37,8 +46,6 @@
   /* Danger (Delete / Error) */
   --theme-btn-danger-bg: #ef4444;
   --theme-btn-danger-hover: #f87171;
-  --theme-btn-danger-active: #7f1d1d;
-  --theme-btn-danger-text: #fef2f2;
 
   /* Disabled */
   --theme-btn-disabled-bg: #e2e8e4;
@@ -66,13 +73,9 @@
   /* Status / Feedback */
   --theme-status-success: #4ade80;
   --theme-status-error: #ef4444;
-  --theme-status-error-bg: #fef2f2;
-  --theme-status-error-border: #fca5a5;
-  --theme-status-error-text: #7f1d1d;
 
   /* Toasts */
   --theme-toast-success-border: #7a9a82;
-  --theme-toast-error-border: #7f1d1d;
 }
 
 [data-theme='forest'] {
@@ -100,8 +103,6 @@
 
   --theme-btn-danger-bg: #dc2626;
   --theme-btn-danger-hover: #ef4444;
-  --theme-btn-danger-active: #7f1d1d;
-  --theme-btn-danger-text: #fef2f2;
 
   --theme-btn-disabled-bg: #d5e2d8;
   --theme-btn-disabled-text: #849b8c;
@@ -124,12 +125,8 @@
 
   --theme-status-success: #22c55e;
   --theme-status-error: #dc2626;
-  --theme-status-error-bg: #fef2f2;
-  --theme-status-error-border: #fca5a5;
-  --theme-status-error-text: #7f1d1d;
 
   --theme-toast-success-border: #2d6a4f;
-  --theme-toast-error-border: #7f1d1d;
 }
 
 [data-theme='ocean'] {
@@ -157,8 +154,6 @@
 
   --theme-btn-danger-bg: #ef4444;
   --theme-btn-danger-hover: #f87171;
-  --theme-btn-danger-active: #7f1d1d;
-  --theme-btn-danger-text: #fef2f2;
 
   --theme-btn-disabled-bg: #cde4ee;
   --theme-btn-disabled-text: #7da3b8;
@@ -181,12 +176,8 @@
 
   --theme-status-success: #10b981;
   --theme-status-error: #ef4444;
-  --theme-status-error-bg: #fef2f2;
-  --theme-status-error-border: #fca5a5;
-  --theme-status-error-text: #7f1d1d;
 
   --theme-toast-success-border: #0284c7;
-  --theme-toast-error-border: #7f1d1d;
 }
 
 [data-theme='minimal'] {
@@ -214,8 +205,6 @@
 
   --theme-btn-danger-bg: #ef4444;
   --theme-btn-danger-hover: #dc2626;
-  --theme-btn-danger-active: #7f1d1d;
-  --theme-btn-danger-text: #fef2f2;
 
   --theme-btn-disabled-bg: #e4e4e7;
   --theme-btn-disabled-text: #a1a1aa;
@@ -238,18 +227,28 @@
 
   --theme-status-success: #22c55e;
   --theme-status-error: #ef4444;
-  --theme-status-error-bg: #fef2f2;
-  --theme-status-error-border: #fca5a5;
-  --theme-status-error-text: #7f1d1d;
 
   --theme-toast-success-border: #18181b;
-  --theme-toast-error-border: #7f1d1d;
 }
 
 /*
  * Dark mode: @nuxtjs/color-mode puts .dark on <html>. Only colors change here, never the
  * background image. Every dark block must set every variable its light block sets.
  */
+
+/* Palette-independent tokens (dark) */
+.dark {
+  --theme-btn-danger-bg: #dc2626;
+  --theme-btn-danger-hover: #ef4444;
+  --theme-btn-danger-active: #991b1b;
+  --theme-btn-danger-text: #fef2f2;
+  --theme-status-success: #4ade80;
+  --theme-status-error: #f87171;
+  --theme-status-error-bg: #2a1414;
+  --theme-status-error-border: #7f1d1d;
+  --theme-status-error-text: #fecaca;
+  --theme-toast-error-border: #f87171;
+}
 
 /* Default - dark */
 .dark,
@@ -272,10 +271,6 @@
   --theme-btn-tertiary-hover: #2c3830;
   --theme-btn-tertiary-active: #36443b;
   --theme-btn-tertiary-text: #e6ece7;
-  --theme-btn-danger-bg: #dc2626;
-  --theme-btn-danger-hover: #ef4444;
-  --theme-btn-danger-active: #991b1b;
-  --theme-btn-danger-text: #fef2f2;
   --theme-btn-disabled-bg: #2a332d;
   --theme-btn-disabled-text: #6b7280;
   --theme-text-primary: #e6ece7;
@@ -291,13 +286,7 @@
   --theme-border-default: #2a352e;
   --theme-border-strong: #3a473f;
   --theme-border-focus: #7a9a82;
-  --theme-status-success: #4ade80;
-  --theme-status-error: #f87171;
-  --theme-status-error-bg: #2a1414;
-  --theme-status-error-border: #7f1d1d;
-  --theme-status-error-text: #fecaca;
   --theme-toast-success-border: #7a9a82;
-  --theme-toast-error-border: #f87171;
 }
 
 /* Forest - dark */
@@ -320,10 +309,6 @@
   --theme-btn-tertiary-hover: #234333;
   --theme-btn-tertiary-active: #2d523f;
   --theme-btn-tertiary-text: #d8f3dc;
-  --theme-btn-danger-bg: #dc2626;
-  --theme-btn-danger-hover: #ef4444;
-  --theme-btn-danger-active: #991b1b;
-  --theme-btn-danger-text: #fef2f2;
   --theme-btn-disabled-bg: #1f3328;
   --theme-btn-disabled-text: #6b7f74;
   --theme-text-primary: #d8f3dc;
@@ -339,13 +324,7 @@
   --theme-border-default: #213a2e;
   --theme-border-strong: #2f4f3f;
   --theme-border-focus: #52b788;
-  --theme-status-success: #4ade80;
-  --theme-status-error: #f87171;
-  --theme-status-error-bg: #2a1414;
-  --theme-status-error-border: #7f1d1d;
-  --theme-status-error-text: #fecaca;
   --theme-toast-success-border: #52b788;
-  --theme-toast-error-border: #f87171;
 }
 
 /* Ocean - dark */
@@ -368,10 +347,6 @@
   --theme-btn-tertiary-hover: #1f3b52;
   --theme-btn-tertiary-active: #284860;
   --theme-btn-tertiary-text: #e0f2fe;
-  --theme-btn-danger-bg: #dc2626;
-  --theme-btn-danger-hover: #ef4444;
-  --theme-btn-danger-active: #991b1b;
-  --theme-btn-danger-text: #fef2f2;
   --theme-btn-disabled-bg: #1a2c3b;
   --theme-btn-disabled-text: #64748b;
   --theme-text-primary: #e0f2fe;
@@ -387,13 +362,7 @@
   --theme-border-default: #1d3549;
   --theme-border-strong: #2a4a63;
   --theme-border-focus: #38bdf8;
-  --theme-status-success: #4ade80;
-  --theme-status-error: #f87171;
-  --theme-status-error-bg: #2a1414;
-  --theme-status-error-border: #7f1d1d;
-  --theme-status-error-text: #fecaca;
   --theme-toast-success-border: #38bdf8;
-  --theme-toast-error-border: #f87171;
 }
 
 /* Minimal - dark */
@@ -416,10 +385,6 @@
   --theme-btn-tertiary-hover: #3f3f46;
   --theme-btn-tertiary-active: #52525b;
   --theme-btn-tertiary-text: #fafafa;
-  --theme-btn-danger-bg: #dc2626;
-  --theme-btn-danger-hover: #ef4444;
-  --theme-btn-danger-active: #991b1b;
-  --theme-btn-danger-text: #fef2f2;
   --theme-btn-disabled-bg: #27272a;
   --theme-btn-disabled-text: #71717a;
   --theme-text-primary: #fafafa;
@@ -435,11 +400,5 @@
   --theme-border-default: #27272a;
   --theme-border-strong: #3f3f46;
   --theme-border-focus: #fafafa;
-  --theme-status-success: #4ade80;
-  --theme-status-error: #f87171;
-  --theme-status-error-bg: #2a1414;
-  --theme-status-error-border: #7f1d1d;
-  --theme-status-error-text: #fecaca;
   --theme-toast-success-border: #fafafa;
-  --theme-toast-error-border: #f87171;
 }

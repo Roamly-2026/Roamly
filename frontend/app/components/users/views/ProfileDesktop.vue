@@ -1,4 +1,4 @@
-<!-- frontend/app/components/views/desktop/users/ProfileDesktop.vue -->
+<!-- frontend/app/components/users/views/ProfileDesktop.vue -->
 <template>
   <div :class="LAYOUT_CONFIG.pageWrapper">
     <div>
