@@ -22,7 +22,7 @@ export const COLOR_TOKENS = {
     tertiary:
       'bg-btn-tertiary hover:bg-btn-tertiary-hover active:bg-btn-tertiary-active text-btn-tertiary-text disabled:bg-btn-disabled disabled:text-btn-disabled-text',
     danger:
-      '!bg-red-600 hover:!bg-red-700 active:!bg-red-800 !text-white disabled:bg-btn-disabled disabled:text-btn-disabled-text',
+      '!bg-btn-danger hover:!bg-btn-danger-hover active:!bg-btn-danger-active !text-btn-danger-text disabled:bg-btn-disabled disabled:text-btn-disabled-text',
   },
 
   // Texts (including semantic opacity steps)
@@ -35,7 +35,8 @@ export const COLOR_TOKENS = {
     primaryFaint: 'text-content-primary/50',
     secondary: 'text-content-secondary',
     muted: 'text-content-muted',
-    inverse: 'text-content-inverse',
+    inverse: 'text-content-inverse text-shadow-(--theme-text-inverse-shadow)',
+    onMedia: 'text-content-on-media',
     brand: 'text-content-brand',
     brandAccent: 'text-btn-primary',
     brandHover: 'text-btn-primary-hover',

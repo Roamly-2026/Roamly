@@ -136,24 +136,25 @@ export const useUploadProfilePictureMutation = (options?: MutationOptions) => {
   });
 };
 
+// Theme mutations don't touch the user cache: useTheme writes the final local state into it
+// once every save has settled. A refetch would flip isLoading and make pages flash.
 export const useUpdateThemePreferencesMutation = () => {
-  const queryCache = useQueryCache();
+  const toast = useToast();
 
   return useMutation({
     mutation: (data: UpdateThemePreferencesDto) => userService.updateThemePreferences(data),
-    onSuccess: () => {
-      queryCache.invalidateQueries({ key: ['users', 'current'] });
+    onError: (error) => {
+      toast.add({
+        title: UI_TEXT.common.error,
+        description: getErrorMessage(error),
+        class: 'toast-error',
+      });
     },
   });
 };
 
 export const useUploadBackgroundMutation = () => {
-  const queryCache = useQueryCache();
-
   return useMutation({
     mutation: (file: File) => userService.uploadBackgroundImage(file),
-    onSuccess: () => {
-      queryCache.invalidateQueries({ key: ['users', 'current'] });
-    },
   });
 };

@@ -99,7 +99,7 @@ export const LAYOUT_CONFIG = {
 
   // Documents & Media Grid
   documentGrid: `grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 ${SPACING_TOKENS.responsive.gridGap} w-full ${SPACING_TOKENS.mt.md}`,
-  documentCardHeader: `absolute top-0 left-0 w-full ${SPACING_TOKENS.p.md} flex justify-between items-start ${Z_INDEX_TOKENS.base} bg-linear-to-b from-black/50 to-transparent ${COLOR_TOKENS.text.inverse}`,
+  documentCardHeader: `absolute top-0 left-0 w-full ${SPACING_TOKENS.p.md} flex justify-between items-start ${Z_INDEX_TOKENS.base} bg-linear-to-b from-black/50 to-transparent ${COLOR_TOKENS.text.onMedia}`,
   documentCardImage:
     'w-full h-40 bg-surface-card-hover/30 flex flex-col items-center justify-center relative overflow-hidden',
   documentCardMeta: `${SPACING_TOKENS.p.md} flex flex-col ${SPACING_TOKENS.gap.xs} ${TEXT_SIZES.xs} ${COLOR_TOKENS.text.primarySoft}`,

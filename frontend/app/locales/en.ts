@@ -81,6 +81,21 @@ export const UI_TEXT = {
     resent: 'A new code was sent to your email!',
     backToRegister: 'Back to Register',
   },
+  appearance: {
+    heading: 'Appearance',
+    colorModeTitle: 'Color Mode',
+    colorModeDescription:
+      'Light, dark, or follow your device. Your background image stays the same.',
+    modes: { LIGHT: 'Light', DARK: 'Dark', SYSTEM: 'System' },
+    paletteTitle: 'Color Palette',
+    paletteDescription:
+      'Choose a theme palette. Changes apply immediately and sync across your devices.',
+    backgroundTitle: 'Background Image',
+    backgroundDescription: 'Select a preset background or upload your own custom image (max 10MB).',
+    uploadCustom: 'Upload Custom',
+    uploadSuccess: 'Background image updated!',
+    backgrounds: { system: 'Default', none: 'None', custom: 'Custom' },
+  },
   profile: {
     heading: 'Your Profile',
     documentsHeading: 'Your Documents:',

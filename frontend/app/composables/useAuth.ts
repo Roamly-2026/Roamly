@@ -15,10 +15,13 @@ export const useAuth = () => {
   // Purges Pinia Colada query cache
   const clearAppDataAndCache = () => {
     queryCache.cancelQueries();
+    // inactive entries are left over from the previous session: remove them so they can't be read
     for (const entry of queryCache.getEntries({ active: false })) {
       queryCache.remove(entry);
     }
-    queryCache.invalidateQueries();
+    // Mark stale only, never refetch here: a refetch without a valid token gets a 401, whose
+    // handler calls logout() -> this function again, looping forever (and wiping a fresh login token)
+    queryCache.invalidateQueries(undefined, false);
   };
 
   // SSR-friendly global state for the authenticated user's profile

@@ -34,7 +34,7 @@ export const BUTTON_APPEARANCES = {
   glassBrand: `${GLASS_TOKENS.default} ${COLOR_TOKENS.text.brandAccent} ${BORDER_TOKENS.ringSubtle} hover:bg-surface-subtle`,
 
   // Ghost styles
-  ghostDanger: `${COLOR_TOKENS.text.primaryMuted} hover:!text-red-500 [&>span]:transition-colors hover:[&>span]:!text-red-500 hover:bg-red-500/10 ${RADIUS_TOKENS.full}`,
+  ghostDanger: `${COLOR_TOKENS.text.primaryMuted} hover:!text-status-error [&>span]:transition-colors hover:[&>span]:!text-status-error hover:bg-status-error/10 ${RADIUS_TOKENS.full}`,
   ghostBrand: `${COLOR_TOKENS.text.primaryMuted} hover:!text-btn-primary [&>span]:transition-colors hover:[&>span]:!text-btn-primary hover:bg-btn-primary/10 ${RADIUS_TOKENS.full}`,
   ghostSecondary: `${COLOR_TOKENS.text.primaryMuted} hover:!text-btn-secondary [&>span]:transition-colors hover:[&>span]:!text-btn-secondary hover:bg-btn-secondary/10 ${RADIUS_TOKENS.full}`,
   ghostInverse: `${COLOR_TOKENS.text.inverse} ${OPACITY_TOKENS.soft} hover:${OPACITY_TOKENS.full} hover:bg-surface-card/20 ${RADIUS_TOKENS.full}`,

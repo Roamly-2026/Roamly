@@ -88,7 +88,4 @@ const handleLogout = () => {
   logout();
   router.push('/login');
 };
-
-const { syncFromUser } = useTheme();
-watch(userProfile, (user) => syncFromUser(user), { immediate: true });
 </script>

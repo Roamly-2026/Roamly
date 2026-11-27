@@ -1,6 +1,6 @@
 import prisma from '../../prisma';
 import { hashPassword, validatePassword } from '../../utils/password.utils';
-import { userProfileInfo } from '../../types/users.types';
+import { UpdateProfileInput, userProfileInfo, userProfileSelect } from '../../types/users.types';
 import { BadRequestError } from '../../utils/ServerError';
 import {
   deletePublicFileFromCloud,
@@ -11,20 +11,12 @@ import {
 } from '../../utils/storage.util';
 import { SYSTEM_ROLES } from '../../constants/roles.constants';
 import { Prisma } from '@prisma/client';
-import { BACKGROUND_TYPES, BackgroundType, ThemePalette } from '../../constants/theme.constants';
-
-const userProfileSelect = {
-  username: true,
-  email: true,
-  phone_number: true,
-  uuid: true,
-  created_at: true,
-  updated_at: true,
-  profile_image_url: true,
-  theme_palette: true,
-  background_type: true,
-  background_value: true,
-} as const;
+import {
+  BACKGROUND_TYPES,
+  BackgroundType,
+  ColorMode,
+  ThemePalette,
+} from '../../constants/theme.constants';
 
 const resolveUserBackground = async (user: userProfileInfo): Promise<userProfileInfo> => {
   if (user.background_type === BACKGROUND_TYPES.CUSTOM && user.background_value) {
@@ -51,17 +43,14 @@ export const getProfile = async (uuid: string): Promise<userProfileInfo> => {
 
 export const updateProfile = async (
   userUuid: string,
-  updateData: { username?: string; email?: string; phoneNumber?: string },
+  updateData: UpdateProfileInput,
 ): Promise<userProfileInfo> => {
   const updatedUser = await prisma.users.update({
     where: {
       uuid: userUuid,
     },
     data: updateData,
-    omit: {
-      password: true,
-      user_id: true,
-    },
+    select: userProfileSelect,
   });
 
   return resolveUserBackground(updatedUser);
@@ -258,6 +247,7 @@ export const updateThemePreferences = async (
     theme_palette?: ThemePalette;
     background_type?: BackgroundType;
     background_value?: string | null;
+    color_mode?: ColorMode;
   },
 ): Promise<userProfileInfo> => {
   const user = await prisma.users.findUniqueOrThrow({
@@ -290,6 +280,7 @@ export const updateThemePreferences = async (
     },
     data: {
       theme_palette: preferences.theme_palette,
+      color_mode: preferences.color_mode,
       background_type: preferences.background_type,
       background_value: nextBackgroundValue,
     },

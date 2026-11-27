@@ -41,6 +41,7 @@
   --color-content-secondary: var(--theme-text-secondary);
   --color-content-muted: var(--theme-text-muted);
   --color-content-inverse: var(--theme-text-inverse);
+  --color-content-on-media: var(--theme-text-on-media);
   --color-content-brand: var(--theme-text-brand);
 
   /* Inputs (bg-field-*, border-field-*) */

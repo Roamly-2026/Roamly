@@ -1,7 +1,7 @@
 import type { GroupMembershipRole } from './groups.type';
 
 // frontend/app/types/user.type.ts
-import type { BackgroundType, ThemePaletteId } from '~/utils/constants/theme.constants';
+import type { BackgroundType, ColorMode, ThemePaletteId } from '~/utils/constants/theme.constants';
 
 export interface UserOutDto {
   theme_palette?: ThemePaletteId;
@@ -14,6 +14,7 @@ export interface UserOutDto {
   created_at: string | Date;
   updated_at: string | Date;
   profile_image_url?: string | null;
+  color_mode?: ColorMode;
 }
 
 export interface UserInDto {
@@ -34,6 +35,7 @@ export interface UserProfileModalDto {
 
 export interface UpdateThemePreferencesDto {
   theme_palette?: ThemePaletteId;
+  color_mode?: ColorMode;
   background_type?: BackgroundType;
   background_value?: string | null;
 }
