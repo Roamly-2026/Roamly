@@ -12,9 +12,12 @@ export const useAuth = () => {
   const token = useCookie<string | null>('auth_token', {/* ... */});
   const queryCache = useQueryCache();
 
-  // Purges Pinia Colada query cache to prevent cross-session data leaks when switching accounts
+  // Purges Pinia Colada query cache
   const clearAppDataAndCache = () => {
     queryCache.cancelQueries();
+    for (const entry of queryCache.getEntries({ active: false })) {
+      queryCache.remove(entry);
+    }
     queryCache.invalidateQueries();
   };
 
@@ -23,7 +26,6 @@ export const useAuth = () => {
   const isAuthenticated = computed(() => !!token.value);
 
   const login = async (credentials: LoginFormState) => {
-    clearAppDataAndCache();
     const response = await authService.login(credentials);
     clearAppDataAndCache();
     token.value = response.token;

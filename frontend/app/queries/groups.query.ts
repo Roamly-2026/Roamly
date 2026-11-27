@@ -42,5 +42,8 @@ export const useMyGroupPermissionsQuery = (
     key: () => ['groups', 'my-permissions', groupUuid.value ?? '', userUuid.value ?? ''],
     query: () => groupsService.getMyPermissions(groupUuid.value!),
     enabled: () => !!groupUuid.value && !!userUuid.value,
+    // don't refetch on every window focus; role changes should invalidate this key explicitly
+    staleTime: 1000 * 60,
+    gcTime: 1000 * 60 * 10,
   });
 };

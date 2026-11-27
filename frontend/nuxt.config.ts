@@ -17,13 +17,7 @@ export default defineNuxtConfig({
 
   vite: {
     optimizeDeps: {
-      include: [
-        '@vue/devtools-core',
-        'libphonenumber-js',
-        'zod',
-        'leaflet',
-        'leaflet-control-geocoder',
-      ],
+      include: ['libphonenumber-js', 'zod', 'leaflet', 'leaflet-control-geocoder'],
     },
   },
 

@@ -7,17 +7,17 @@ import type { Permission } from '~/utils/constants/permissions.constants';
 export const useGroupPermission = (groupUuid: Ref<string | undefined>) => {
   const { isAuthenticated } = useAuth();
   const currentUser = useCurrentUserQuery();
+
+  // data is kept during background refetches, the previous session's cache is purged on login
   const currentUserUuid = computed(() =>
-    isAuthenticated.value && currentUser.status.value === 'success' && !currentUser.isLoading.value
-      ? currentUser.data.value?.uuid
-      : undefined,
+    isAuthenticated.value ? currentUser.data.value?.uuid : undefined,
   );
 
   const query = useMyGroupPermissionsQuery(groupUuid, currentUserUuid);
+
+  // an error (e.g. the user was removed from the group) drops the previous permissions
   const permissions = computed(() =>
-    currentUserUuid.value && query.status.value === 'success' && !query.isLoading.value
-      ? query.data.value
-      : undefined,
+    currentUserUuid.value && query.status.value === 'success' ? query.data.value : undefined,
   );
 
   const systemRole = computed(() => permissions.value?.systemRole);
