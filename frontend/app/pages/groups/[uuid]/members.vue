@@ -48,7 +48,7 @@
       />
     </ClientOnly>
 
-    <!-- User profile modal — groupUuid enables per-user doc fetching for leaders -->
+    <!-- User profile modal — groupUuid enables fetching the member's shared documents -->
     <UserProfileModal :group-uuid="groupUuid" />
   </div>
 </template>
