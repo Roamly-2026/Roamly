@@ -11,7 +11,7 @@
       </template>
       <div :class="['fixed inset-0 z-0', GLASS_TOKENS.faint]">
         <MapDesktop
-          v-if="!isPending && !error"
+          v-if="!canReadEvents || (!isPending && !error)"
           :key="groupUuid"
           :locations="mapCoordinates"
           @marker-click="handleMarkerClick"
@@ -32,6 +32,7 @@
 /* --- IMPORTS --- */
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { useEventPermissions } from '~/composables/useEventPermissions';
 import { useProtectedPage } from '~/composables/useProtectedPage';
 import { useEventsQuery } from '~/queries/events.query';
 import { useEventsStore } from '~/stores/events.modals.store';
@@ -51,11 +52,13 @@ const groupUuid = computed(() => route.params.uuid as string);
 const selectedDate = ref('ALL');
 
 /* --- API QUERIES --- */
-const { data: events, isPending, error } = useEventsQuery(groupUuid, selectedDate);
+const { canReadEvents, canCreateEvent } = useEventPermissions(groupUuid);
+const readableGroupUuid = computed(() => (canReadEvents.value ? groupUuid.value : undefined));
+const { data: events, isPending, error } = useEventsQuery(readableGroupUuid, selectedDate);
 
 /* --- MODAL LOGIC --- */
 const handleMarkerClick = (eventId: string | number) => {
-  if (!events.value) {
+  if (!canReadEvents.value || !events.value) {
     return;
   }
 
@@ -75,6 +78,7 @@ const handleMarkerClick = (eventId: string | number) => {
 };
 
 const handleMapClick = (location: { lat: number; lng: number }) => {
+  if (!canCreateEvent.value) return;
   eventsStore.selectedGroupUuid = groupUuid.value;
 
   eventsStore.openAddEventModal({
@@ -85,7 +89,7 @@ const handleMapClick = (location: { lat: number; lng: number }) => {
 
 /* --- MAP LOGIC --- */
 const mapCoordinates = computed(() => {
-  if (!events.value) {
+  if (!canReadEvents.value || !events.value) {
     return [];
   }
 

@@ -191,12 +191,16 @@ import { getErrorMessage } from '~/utils/error.utils';
 import type { ApiError } from '~/types/apiError.type';
 import { tagsSchema } from '~/utils/schemas/files.schema';
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     availableTags?: string[];
+    groupUuid?: string;
+    canUpload: boolean;
+    canManageDocument: (creatorUuid: string | null) => boolean;
   }>(),
   {
     availableTags: () => [],
+    groupUuid: undefined,
   },
 );
 
@@ -265,6 +269,8 @@ const closeUploadModal = () => {
 };
 
 const handleUpload = (event: FormSubmitEvent<UploadFormState>) => {
+  if (!props.canUpload || uploadGroupUuidRef.value !== props.groupUuid) return;
+
   uploadError.value = null;
 
   const formData = new FormData();
@@ -344,7 +350,11 @@ const updateMutation = useUpdateGroupDocumentMutation(updateGroupUuidRef, {
 });
 
 const handleUpdate = (event: FormSubmitEvent<UpdateFormState>) => {
-  if (!groupFileToUpdate.value) return;
+  const file = groupFileToUpdate.value;
+  if (!file || file.groupUuid !== props.groupUuid || !props.canManageDocument(file.creatorUuid)) {
+    return;
+  }
+
   updateError.value = null;
 
   const formData = new FormData();
@@ -353,7 +363,7 @@ const handleUpdate = (event: FormSubmitEvent<UpdateFormState>) => {
   if (event.data.issueDate) formData.append('issue_date', event.data.issueDate);
   if (event.data.expiryDate) formData.append('expiry_date', event.data.expiryDate);
 
-  updateMutation.mutate({ fileId: groupFileToUpdate.value.fileId, formData });
+  updateMutation.mutate({ fileId: file.fileId, formData });
 };
 
 // -------------------------
@@ -374,8 +384,12 @@ const deleteMutation = useDeleteGroupFileMutation(deleteGroupUuidRef, {
 });
 
 const confirmDelete = () => {
-  if (!fileToDelete.value) return;
+  const file = fileToDelete.value;
+  if (!file || file.groupUuid !== props.groupUuid || !props.canManageDocument(file.creatorUuid)) {
+    return;
+  }
+
   deleteError.value = null;
-  deleteMutation.mutate(fileToDelete.value.fileId);
+  deleteMutation.mutate(file.fileId);
 };
 </script>

@@ -4,13 +4,14 @@
     <div :class="LAYOUT_CONFIG.pageHeader">
       <div :class="LAYOUT_CONFIG.headerActionLeft">
         <BaseButton
-          v-if="isCurrentUserLeader"
+          v-if="canDeleteGroup"
           icon="i-heroicons-trash"
           variant="glassIconButtonDanger"
           :tooltip="UI_TEXT.groups.deleteGroup"
           @click="emit('delete-group')"
         />
         <BaseButton
+          v-if="canLeaveGroup"
           icon="i-heroicons-arrow-right-on-rectangle"
           variant="glassIconButtonDanger"
           :tooltip="UI_TEXT.groups.leaveGroup"
@@ -94,6 +95,7 @@
 
         <div :class="LAYOUT_CONFIG.headerActionRight">
           <BaseButton
+            v-if="canUpload"
             icon="i-heroicons-plus"
             variant="glassIconButtonHighlight"
             :tooltip="UI_TEXT.media.uploadHeading"
@@ -112,7 +114,7 @@
         <FilesListView
           v-if="viewMode === 'list'"
           :files="filteredMedia"
-          :is-current-user-leader="isCurrentUserLeader"
+          :can-manage-file="canManageFile"
           show-reactions
           @open="handleOpenFile"
           @delete="emit('delete', $event as GroupFile)"
@@ -133,9 +135,14 @@
     </div>
 
     <!-- Modals -->
-    <GroupMediaModals :group-uuid="selectedGroup" :available-tags="availableTags" />
+    <GroupMediaModals
+      :group-uuid="selectedGroup"
+      :available-tags="availableTags"
+      :can-upload="canUpload"
+      :can-manage-file="canManageFile"
+    />
     <MediaLightboxModal
-      :is-current-user-leader="isCurrentUserLeader"
+      :can-manage-file="canManageFile"
       @download="(url, filename) => emit('download', url, filename)"
     />
   </div>
@@ -164,7 +171,10 @@ const props = defineProps<{
   media: GroupFile[];
   groups: GroupOutDto[];
   isLoading: boolean;
-  isCurrentUserLeader: boolean;
+  canUpload: boolean;
+  canManageFile: (file: GroupFile | PrivateDocumentMetadata) => boolean;
+  canDeleteGroup: boolean;
+  canLeaveGroup: boolean;
 }>();
 
 const emit = defineEmits<{

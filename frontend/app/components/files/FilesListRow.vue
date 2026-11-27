@@ -104,14 +104,14 @@
             @click.stop.prevent="emit('download', fileUrl, file.file_name)"
           />
           <BaseButton
-            v-if="isCurrentUserLeader && canEdit"
+            v-if="canManage && canEdit"
             icon="i-heroicons-pencil-square"
             variant="ghostBrandIconButton"
             :tooltip="UI_TEXT.common.edit"
             @click.stop="emit('edit', file)"
           />
           <BaseButton
-            v-if="isCurrentUserLeader"
+            v-if="canManage"
             icon="i-heroicons-trash"
             variant="ghostDangerIconButton"
             :tooltip="UI_TEXT.common.delete"
@@ -168,13 +168,13 @@
             @click.stop.prevent="emit('download', fileUrl, file.file_name)"
           />
           <BaseButton
-            v-if="isCurrentUserLeader && canEdit"
+            v-if="canManage && canEdit"
             icon="i-heroicons-pencil-square"
             variant="ghostBrandIconButton"
             @click.stop="emit('edit', file)"
           />
           <BaseButton
-            v-if="isCurrentUserLeader"
+            v-if="canManage"
             icon="i-heroicons-trash"
             variant="ghostDangerIconButton"
             @click.stop="emit('delete', file)"
@@ -196,7 +196,7 @@ import MemoryReactionBar from '~/components/media/MemoryReactionBar.vue';
 
 const props = defineProps<{
   file: GroupFile | PrivateDocumentMetadata;
-  isCurrentUserLeader: boolean;
+  canManage: boolean;
   canEdit?: boolean;
   showReactions?: boolean;
 }>();

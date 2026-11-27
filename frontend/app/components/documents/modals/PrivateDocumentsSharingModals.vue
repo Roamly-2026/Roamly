@@ -143,7 +143,7 @@ const handleShareDocument = (groupUuid: string) => {
   shareMutation.mutate({
     fileId: privateFileToShare.value.fileId,
     groupUuid,
-    accessLevel: 'leader',
+    audience: 'DOCUMENT_REVIEWERS',
   });
 };
 

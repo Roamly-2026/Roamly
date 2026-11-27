@@ -3,6 +3,7 @@ import { useMutation, useQueryCache } from '@pinia/colada';
 import { filesService } from '~/services/files.service';
 import type { Ref } from 'vue';
 import { useToast } from '#imports';
+import type { DocumentAudience } from '~/utils/schemas/files.schema';
 import { getErrorMessage } from '../utils/error.utils';
 
 interface MutationOptions {
@@ -193,9 +194,9 @@ export const useShareDocumentMutation = (options?: MutationOptions) => {
   const toast = useToast();
 
   const mutation = useMutation({
-    mutation: (params: { fileId: number; groupUuid: string; accessLevel: string }) =>
-      filesService.shareDocument(params.fileId, params.groupUuid, params.accessLevel),
-    onSuccess: () => {
+    mutation: (params: { fileId: number; groupUuid: string; audience: DocumentAudience }) =>
+      filesService.shareDocument(params.fileId, params.groupUuid, params.audience),
+    onSuccess: (_, { groupUuid }) => {
       toast.add({
         title: UI_TEXT.common.success,
         description: UI_TEXT.documents.shared,
@@ -203,6 +204,7 @@ export const useShareDocumentMutation = (options?: MutationOptions) => {
       });
       queryCache.invalidateQueries({ key: ['group-files'] });
       queryCache.invalidateQueries({ key: ['document-shares'] });
+      queryCache.invalidateQueries({ key: ['group-member-documents', groupUuid] });
       options?.onSuccess?.();
     },
     onError: (error) => {
@@ -225,13 +227,14 @@ export const useDeleteSharingMutation = (options?: MutationOptions) => {
   const mutation = useMutation({
     mutation: (params: { fileId: number; groupUuid: string }) =>
       filesService.deleteSharing(params.fileId, params.groupUuid),
-    onSuccess: () => {
+    onSuccess: (_, { groupUuid }) => {
       toast.add({
         title: UI_TEXT.common.success,
         description: UI_TEXT.documents.sharingDeleted,
         class: 'toast-success',
       });
       queryCache.invalidateQueries({ key: ['document-shares'] });
+      queryCache.invalidateQueries({ key: ['group-member-documents', groupUuid] });
       options?.onSuccess?.();
     },
     onError: (error) => {

@@ -1,38 +1,34 @@
-// frontend/app/types/groups.type.ts
-export interface GroupInDto {
-  name: string;
-  role: string;
-}
+import type { Permission, SystemRole } from '~/utils/constants/permissions.constants';
 
-export interface GroupOutDto {
+export interface CustomGroupRole {
   uuid: string;
   name: string;
-  role: string;
-  created_at: string;
-  current_size: number;
 }
 
-export interface RawGroupDto {
+export interface GroupMembershipRole {
+  system_role: SystemRole;
+  custom_role: CustomGroupRole | null;
+}
+
+export interface GroupSummary {
   uuid: string;
   name: string;
   current_size: number;
   created_at: string;
-  group_profiles?: {
-    roles?: {
-      type: string;
-    };
-  }[];
 }
 
-export interface GroupProfileDto {
+export type GroupOutDto = GroupSummary & GroupMembershipRole;
+
+export interface RawGroupDto extends GroupSummary {
+  group_profiles: GroupMembershipRole[];
+}
+
+export interface GroupProfileDto extends GroupMembershipRole {
   users: {
     uuid: string;
     email: string;
     username: string;
     profile_image_url?: string | null;
-  };
-  roles: {
-    type: string;
   };
   nickname: string | null;
   description: string | null;
@@ -45,27 +41,20 @@ export interface GroupInfosOutDto {
   group_profiles: GroupProfileDto[];
 }
 
-export interface RawGroupInvitesDto {
-  uuid: string;
-  name: string;
-  current_size: number;
-  created_at: string;
-  group_profiles?: {
-    users?: {
-      username: string;
-      email: string;
-      profile_image_url?: string | null;
-    };
-    roles?: {
-      type: string;
-    };
-  }[];
+export interface RawGroupInvitesDto extends GroupSummary {
+  groupInvites: GroupMembershipRole[];
 }
 
-export interface GroupInvitesOutDto {
-  uuid: string;
+export type GroupInvitesOutDto = GroupOutDto;
+
+export interface MyGroupPermissionsDto {
+  systemRole: SystemRole;
+  customRole: CustomGroupRole | null;
+  effectivePermissions: Permission[];
+}
+
+export interface AvailableGroupRoleDto {
+  id: string;
   name: string;
-  leaders: string[];
-  created_at: string;
-  current_size: number;
+  isSystem: boolean;
 }

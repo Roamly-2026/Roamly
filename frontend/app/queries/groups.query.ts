@@ -28,7 +28,22 @@ export const useGroupInfosQuery = (groupUuid: Ref<string> | string) => {
   return useQuery({
     key: () => ['groups', 'infos', unref(groupUuid)] as const,
     query: () => groupsService.getGroupInfos(unref(groupUuid)),
+    enabled: () => !!unref(groupUuid),
     staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10,
+  });
+};
+
+export const useMyGroupPermissionsQuery = (
+  groupUuid: Ref<string | undefined>,
+  userUuid: Ref<string | undefined>,
+) => {
+  return useQuery({
+    key: () => ['groups', 'my-permissions', groupUuid.value ?? '', userUuid.value ?? ''],
+    query: () => groupsService.getMyPermissions(groupUuid.value!),
+    enabled: () => !!groupUuid.value && !!userUuid.value,
+    // don't refetch on every window focus; role changes should invalidate this key explicitly
+    staleTime: 1000 * 60,
     gcTime: 1000 * 60 * 10,
   });
 };

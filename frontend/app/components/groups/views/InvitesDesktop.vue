@@ -20,25 +20,8 @@
             :class="[LAYOUT_CONFIG.headerRelative, INTERACTION_TOKENS.base]"
             @click="groupsStore.openJoinModal(group)"
           >
-            <div :class="LAYOUT_CONFIG.cardCornerRight">
-              <BaseButton
-                icon="i-heroicons-x-mark"
-                variant="ghostDangerIconButton"
-                :tooltip="UI_TEXT.tooltips.declineInvite"
-                @click.stop="groupsStore.openDeclineModal(group)"
-              />
-            </div>
-
             <div :class="LAYOUT_CONFIG.cardContent">
               <h3 :class="TYPOGRAPHY_CONFIG.cardTitleCenter">{{ group.name }}</h3>
-              <p :class="TYPOGRAPHY_CONFIG.bodySmSoft">
-                {{
-                  group.leaders.length > 1
-                    ? UI_TEXT.groups.leadersLabel
-                    : UI_TEXT.groups.leaderLabel
-                }}
-                <span :class="TYPOGRAPHY_CONFIG.metaHighlight">{{ group.leaders.join(', ') }}</span>
-              </p>
               <div :class="LAYOUT_CONFIG.cardFooter">
                 <div>
                   <p :class="TYPOGRAPHY_CONFIG.metaLabelSoft">

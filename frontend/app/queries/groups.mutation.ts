@@ -3,6 +3,7 @@ import { useMutation, useQueryCache } from '@pinia/colada';
 import { groupsService } from '~/services/groupsService';
 import { useToast } from '#imports';
 import { getErrorMessage } from '../utils/error.utils';
+import type { CreateGroupInput } from '~/utils/schemas/groups.schema';
 
 interface MutationOptions {
   onSuccess?: () => void;
@@ -14,7 +15,7 @@ export const useCreateGroupMutation = (options?: MutationOptions) => {
   const toast = useToast();
 
   return useMutation({
-    mutation: (data: { groupName: string }) => groupsService.createGroup(data),
+    mutation: (data: CreateGroupInput) => groupsService.createGroup(data),
     onSuccess: () => {
       toast.add({
         title: UI_TEXT.common.success,
@@ -178,8 +179,8 @@ export const useRemoveUserMutation = (options?: MutationOptions) => {
   const toast = useToast();
 
   return useMutation({
-    mutation: ({ groupUuid, email }: { groupUuid: string; email: string }) =>
-      groupsService.removeUserFromGroup(groupUuid, email),
+    mutation: ({ groupUuid, userUuid }: { groupUuid: string; userUuid: string }) =>
+      groupsService.removeUserFromGroup(groupUuid, userUuid),
     onSuccess: (data, variables) => {
       toast.add({
         title: UI_TEXT.common.success,
@@ -187,60 +188,7 @@ export const useRemoveUserMutation = (options?: MutationOptions) => {
         class: 'toast-success',
       });
       queryCache.invalidateQueries({ key: ['groups', 'infos', variables.groupUuid] });
-      options?.onSuccess?.();
-    },
-    onError: (error) => {
-      toast.add({
-        title: UI_TEXT.common.error,
-        description: getErrorMessage(error),
-        class: 'toast-error',
-      });
-      options?.onError?.(error);
-    },
-  });
-};
-
-export const usePromoteUserMutation = (options?: MutationOptions) => {
-  const queryCache = useQueryCache();
-  const toast = useToast();
-
-  return useMutation({
-    mutation: ({ groupUuid, email }: { groupUuid: string; email: string }) =>
-      groupsService.promoteUser(groupUuid, email),
-    onSuccess: (data, variables) => {
-      toast.add({
-        title: UI_TEXT.common.success,
-        description: UI_TEXT.groups.promoted,
-        class: 'toast-success',
-      });
-      queryCache.invalidateQueries({ key: ['groups', 'infos', variables.groupUuid] });
-      options?.onSuccess?.();
-    },
-    onError: (error) => {
-      toast.add({
-        title: UI_TEXT.common.error,
-        description: getErrorMessage(error),
-        class: 'toast-error',
-      });
-      options?.onError?.(error);
-    },
-  });
-};
-
-export const useDemoteUserMutation = (options?: MutationOptions) => {
-  const queryCache = useQueryCache();
-  const toast = useToast();
-
-  return useMutation({
-    mutation: ({ groupUuid, email }: { groupUuid: string; email: string }) =>
-      groupsService.demoteUser(groupUuid, email),
-    onSuccess: (data, variables) => {
-      toast.add({
-        title: UI_TEXT.common.success,
-        description: UI_TEXT.groups.demoted,
-        class: 'toast-success',
-      });
-      queryCache.invalidateQueries({ key: ['groups', 'infos', variables.groupUuid] });
+      queryCache.invalidateQueries({ key: ['groups', 'list'] });
       options?.onSuccess?.();
     },
     onError: (error) => {

@@ -14,18 +14,29 @@ export const useDocumentsStore = defineStore('documentsModals', () => {
   const isUploadModalOpen = ref(false);
   const isGroupUpdateModalOpen = ref(false);
 
-  const fileToDelete = ref<{ fileId: number; groupUuid: string; fileName: string } | null>(null);
+  const fileToDelete = ref<{
+    fileId: number;
+    groupUuid: string;
+    fileName: string;
+    creatorUuid: string | null;
+  } | null>(null);
   const uploadGroupUuid = ref<string | null>(null);
   const groupFileToUpdate = ref<{
     fileId: number;
     groupUuid: string;
     fileName: string;
+    creatorUuid: string | null;
     tags?: string[];
     issueDate?: string;
     expiryDate?: string;
   } | null>(null);
 
-  const openDeleteModal = (file: { fileId: number; groupUuid: string; fileName: string }) => {
+  const openDeleteModal = (file: {
+    fileId: number;
+    groupUuid: string;
+    fileName: string;
+    creatorUuid: string | null;
+  }) => {
     fileToDelete.value = file;
     isDeleteModalOpen.value = true;
   };
@@ -49,6 +60,7 @@ export const useDocumentsStore = defineStore('documentsModals', () => {
     fileId: number;
     groupUuid: string;
     fileName: string;
+    creatorUuid: string | null;
     tags?: string[];
     issueDate?: string;
     expiryDate?: string;

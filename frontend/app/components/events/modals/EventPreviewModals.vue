@@ -29,10 +29,7 @@
           </div>
           <div :class="LAYOUT_CONFIG.headerTitleRow">
             <BaseButton
-              v-if="
-                eventsStore.previewEvent.creator?.email === currentUserEmail &&
-                eventsStore.previewEvent.is_private
-              "
+              v-if="eventsStore.previewEvent.is_private && canManageEvent(eventsStore.previewEvent)"
               icon="i-heroicons-user-plus"
               variant="ghostBrandIconButton"
               :class="COLOR_TOKENS.text.primaryMuted"
@@ -40,14 +37,14 @@
               @click="eventsStore.openAddMembersModal(eventsStore.previewEvent!)"
             />
             <BaseButton
-              v-if="hasPermissionToDelete"
+              v-if="canManageEvent(eventsStore.previewEvent)"
               icon="i-heroicons-trash"
               variant="ghostDangerIconButton"
               :tooltip="UI_TEXT.events.deleteEvent"
               @click="eventsStore.openDeleteEventModal(eventsStore.previewEvent!)"
             />
             <BaseButton
-              v-else-if="canLeaveEvent"
+              v-if="canLeaveEvent(eventsStore.previewEvent)"
               icon="i-heroicons-arrow-right-on-rectangle"
               variant="ghostDangerIconButton"
               :tooltip="UI_TEXT.events.leaveEvent"
@@ -159,7 +156,7 @@
             </div>
           </div>
 
-          <div :class="LAYOUT_CONFIG.modalFormGroup">
+          <div v-if="canReadEvents" :class="LAYOUT_CONFIG.modalFormGroup">
             <span :class="CALENDAR_CONFIG.metaLabel">{{ UI_TEXT.events.rsvpLabel }}</span>
             <div :class="CALENDAR_CONFIG.previewRsvpButtonGroup">
               <BaseButton
@@ -295,44 +292,21 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useEventPermissions } from '~/composables/useEventPermissions';
 import { useEventsStore } from '~/stores/events.modals.store';
 import { useGroupsStore } from '~/stores/groups.modals.store';
 import { useCurrentUserQuery } from '~/queries/user.query';
-import { useGroupsQuery, useGroupInfosQuery } from '~/queries/groups.query';
+import { useGroupInfosQuery } from '~/queries/groups.query';
 import { useSetEventRsvpMutation } from '~/queries/events.mutation';
 import type { EventCreatorDto, EventRsvpMemberDto, RsvpStatus } from '~/types/events.type';
 
 const eventsStore = useEventsStore();
+const groupUuid = computed(() => eventsStore.selectedGroupUuid);
+const { canReadEvents, canManageEvent, canLeaveEvent } = useEventPermissions(groupUuid);
 const groupsStore = useGroupsStore();
 
 const { data: currentUser } = useCurrentUserQuery();
-const currentUserEmail = computed(() => currentUser.value?.email);
-
-const { data: groupsData } = useGroupsQuery();
-const { data: groupInfosData } = useGroupInfosQuery(
-  computed(() => eventsStore.selectedGroupUuid || ''),
-);
-
-const selectedGroupDetails = computed(() =>
-  groupsData.value?.items?.find((g) => g.uuid === eventsStore.selectedGroupUuid),
-);
-const isCurrentUserLeader = computed(
-  () => selectedGroupDetails.value?.role?.toLowerCase() === 'leader',
-);
-
-const hasPermissionToDelete = computed<boolean>(() => {
-  const creatorEmail = eventsStore.previewEvent?.creator?.email;
-  return (
-    isCurrentUserLeader.value ||
-    (!!creatorEmail && !!currentUserEmail.value && creatorEmail === currentUserEmail.value)
-  );
-});
-
-const canLeaveEvent = computed<boolean>(() => {
-  const event = eventsStore.previewEvent;
-  if (!event || hasPermissionToDelete.value) return false;
-  return event.members?.some((m) => m.email === currentUserEmail.value) ?? false;
-});
+const { data: groupInfosData } = useGroupInfosQuery(computed(() => groupUuid.value || ''));
 
 const displayParticipants = computed<EventCreatorDto[]>(
   () => eventsStore.previewEvent?.members?.slice(0, 5) || [],
@@ -347,35 +321,19 @@ const openAllParticipantsModal = () => {
   }
 };
 
-const getGroupRole = (user?: EventCreatorDto | null): string => {
-  if (!user || !groupInfosData.value?.group_profiles) return UI_TEXT.common.member;
-  const profile = groupInfosData.value.group_profiles.find(
-    (p: { users?: { email?: string; username?: string }; roles?: { type?: string } }) => {
-      const matchEmail =
-        user.email &&
-        p.users?.email &&
-        user.email.trim().toLowerCase() === p.users.email.trim().toLowerCase();
-      const matchUsername =
-        user.username &&
-        p.users?.username &&
-        user.username.trim().toLowerCase() === p.users.username.trim().toLowerCase();
-      return matchEmail || matchUsername;
-    },
-  );
-  const roleType = profile?.roles?.type?.toLowerCase();
-  return roleType === 'leader' ? UI_TEXT.common.leader : UI_TEXT.common.member;
-};
-
 const handleOpenUserProfile = (user: EventCreatorDto) => {
   eventsStore.closeParticipantsModal();
   eventsStore.closePreviewModal();
+  const profile = groupInfosData.value?.group_profiles.find(
+    (item) => item.users.uuid === user.uuid,
+  );
   groupsStore.selectedUserProfile = {
     userUuid: user.uuid || '',
     username: user.username,
     email: user.email || UI_TEXT.common.notAvailable,
-    role: getGroupRole(user),
+    system_role: profile?.system_role ?? null,
+    custom_role: profile?.custom_role ?? null,
     joinedAt: UI_TEXT.common.unknown,
-    canViewDocuments: false,
   };
   groupsStore.isUserProfileModalOpen = true;
 };
@@ -392,17 +350,14 @@ const extraGoingCount = computed<number>(() => Math.max(0, goingMembers.value.le
 // the response before the click, restored if saving the new one fails
 let previousRsvp: { status: RsvpStatus | null; members: EventRsvpMemberDto[] } | null = null;
 
-const setRsvpMutation = useSetEventRsvpMutation(
-  computed(() => eventsStore.selectedGroupUuid),
-  {
-    onError: () => {
-      if (eventsStore.previewEvent && previousRsvp) {
-        eventsStore.previewEvent.my_rsvp_status = previousRsvp.status;
-        eventsStore.previewEvent.going_members = previousRsvp.members;
-      }
-    },
+const setRsvpMutation = useSetEventRsvpMutation(groupUuid, {
+  onError: () => {
+    if (eventsStore.previewEvent && previousRsvp) {
+      eventsStore.previewEvent.my_rsvp_status = previousRsvp.status;
+      eventsStore.previewEvent.going_members = previousRsvp.members;
+    }
   },
-);
+});
 
 // the modal shows a copy of the event, so it is updated here right away
 // the modal shows a copy of the event, so it is updated here right away
@@ -410,7 +365,15 @@ const handleRsvp = (status: RsvpStatus) => {
   const event = eventsStore.previewEvent;
   const user = currentUser.value;
   // one request at a time, so a failed earlier request can not overwrite a later choice
-  if (!event || !user || setRsvpMutation.isLoading.value) return;
+  if (
+    !event ||
+    !canReadEvents.value ||
+    event.isExpired ||
+    !user ||
+    setRsvpMutation.isLoading.value
+  ) {
+    return;
+  }
 
   // clicking the selected button again removes the response
   const newStatus = event.my_rsvp_status === status ? null : status;

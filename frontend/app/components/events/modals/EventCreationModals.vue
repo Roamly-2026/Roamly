@@ -119,7 +119,7 @@
             variant="actionOkButton"
             :class="TYPOGRAPHY_CONFIG.modalActionBtnOk"
             :loading="createEventMutation.isLoading.value"
-            :disabled="isLoadingAddress"
+            :disabled="isLoadingAddress || !canCreateEvent"
           />
         </div>
       </template>
@@ -168,12 +168,15 @@
 import { computed, reactive, ref, watch } from 'vue';
 import type { z } from 'zod';
 import type { FormSubmitEvent } from '#ui/types';
+import { useEventPermissions } from '~/composables/useEventPermissions';
 import { useEventsStore } from '~/stores/events.modals.store';
 import { useCreateEventMutation } from '~/queries/events.mutation';
 import { createEventSchema } from '~/utils/schemas/events.schema';
 import { getAddressFromCoordinates } from '~/utils/geocoding.utils';
 
 const eventsStore = useEventsStore();
+const groupUuid = computed(() => eventsStore.selectedGroupUuid);
+const { canCreateEvent } = useEventPermissions(groupUuid);
 
 const isMapSelectorOpen = ref(false);
 
@@ -181,21 +184,18 @@ const isMapSelectorOpen = ref(false);
 const isLocationFromMap = ref(false);
 const isLoadingAddress = ref(false);
 
-const createEventMutation = useCreateEventMutation(
-  computed(() => eventsStore.selectedGroupUuid),
-  {
-    onSuccess: () => {
-      if (isLocationFromMap.value && formState.latitude !== null && formState.longitude !== null) {
-        eventsStore.createdEventLocation = {
-          latitude: formState.latitude,
-          longitude: formState.longitude,
-        };
-      }
+const createEventMutation = useCreateEventMutation(groupUuid, {
+  onSuccess: () => {
+    if (isLocationFromMap.value && formState.latitude !== null && formState.longitude !== null) {
+      eventsStore.createdEventLocation = {
+        latitude: formState.latitude,
+        longitude: formState.longitude,
+      };
+    }
 
-      closeAndResetForm();
-    },
+    closeAndResetForm();
   },
-);
+});
 
 const formState = reactive({
   title: '',
@@ -274,6 +274,8 @@ const closeAndResetForm = () => {
 };
 
 const onSubmit = (event: FormSubmitEvent<FormSchemaType>) => {
+  if (!canCreateEvent.value) return;
+
   const payload = {
     title: event.data.title,
     description: event.data.description || undefined,

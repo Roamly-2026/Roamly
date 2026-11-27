@@ -1,13 +1,6 @@
 import { z } from 'zod';
+import { SYSTEM_ROLES } from '~/utils/constants/permissions.constants';
 import { emailSchema, groupNameSchema } from './common.schema';
-
-// These roles are here only temporarily. In an upcoming feature the logic will be updated.
-const ROLES = {
-  INVITEDMEMBER: 'invitedMember',
-  INVITEDLEADER: 'invitedLeader',
-  MEMBER: 'member',
-  LEADER: 'leader',
-};
 
 export const createGroupSchema = z.object({
   groupName: groupNameSchema,
@@ -15,9 +8,7 @@ export const createGroupSchema = z.object({
     .array(
       z.object({
         email: emailSchema,
-        role: z.enum([ROLES.INVITEDMEMBER, ROLES.INVITEDLEADER], {
-          message: UI_TEXT.validation.inviteRole,
-        }),
+        role: z.literal(SYSTEM_ROLES.MEMBER).default(SYSTEM_ROLES.MEMBER),
       }),
     )
     .max(50, UI_TEXT.validation.maxInvites)
@@ -30,9 +21,7 @@ export const updateGroupSchema = z.object({
 
 export const inviteUserSchema = z.object({
   email: emailSchema,
-  role: z.enum([ROLES.INVITEDMEMBER, ROLES.INVITEDLEADER], {
-    message: UI_TEXT.validation.inviteRole,
-  }),
+  role: z.literal(SYSTEM_ROLES.MEMBER),
 });
 
 export type CreateGroupInput = z.infer<typeof createGroupSchema>;

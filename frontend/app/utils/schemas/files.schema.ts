@@ -1,13 +1,5 @@
 import { z } from 'zod';
 
-// These roles are here only temporarily. In an upcoming feature the logic will be updated.
-const ROLES = {
-  INVITEDMEMBER: 'invitedMember',
-  INVITEDLEADER: 'invitedLeader',
-  MEMBER: 'member',
-  LEADER: 'leader',
-};
-
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
 const dateRefine = (data: { issue_date?: string; expiry_date?: string }) => {
@@ -78,7 +70,7 @@ export const groupMediaSchema = z
 export type GroupMediaFormState = z.infer<typeof groupMediaSchema>;
 
 export const sharingUpdateSchema = z.object({
-  accessLevel: z.enum([ROLES.LEADER, ROLES.MEMBER], {
-    message: UI_TEXT.validation.accessLevel,
-  }),
+  audience: z.enum(['DOCUMENT_REVIEWERS', 'GROUP_MEMBERS']),
 });
+
+export type DocumentAudience = z.infer<typeof sharingUpdateSchema>['audience'];

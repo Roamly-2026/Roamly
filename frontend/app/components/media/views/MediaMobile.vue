@@ -66,6 +66,7 @@
         <BaseSearchInput v-model="searchQuery" :placeholder="UI_TEXT.media.search" class="flex-1" />
         <ViewSwitcher v-model="viewMode" />
         <BaseButton
+          v-if="canUpload"
           icon="i-heroicons-plus"
           variant="glassIconButton"
           :tooltip="UI_TEXT.media.uploadHeading"
@@ -90,7 +91,7 @@
           <FilesListView
             v-if="viewMode === 'list'"
             :files="filteredMedia"
-            :is-current-user-leader="isCurrentUserLeader"
+            :can-manage-file="canManageFile"
             show-reactions
             @open="handleOpenFile"
             @delete="emit('delete', $event as GroupFile)"
@@ -112,9 +113,14 @@
     </div>
 
     <!-- Modals -->
-    <GroupMediaModals :group-uuid="selectedGroup" :available-tags="availableTags" />
+    <GroupMediaModals
+      :group-uuid="selectedGroup"
+      :available-tags="availableTags"
+      :can-upload="canUpload"
+      :can-manage-file="canManageFile"
+    />
     <MediaLightboxModal
-      :is-current-user-leader="isCurrentUserLeader"
+      :can-manage-file="canManageFile"
       @download="(url, filename) => emit('download', url, filename)"
     />
   </div>
@@ -143,7 +149,8 @@ const props = defineProps<{
   media: GroupFile[];
   groups: GroupOutDto[];
   isLoading: boolean;
-  isCurrentUserLeader: boolean;
+  canUpload: boolean;
+  canManageFile: (file: GroupFile | PrivateDocumentMetadata) => boolean;
 }>();
 
 const emit = defineEmits<{

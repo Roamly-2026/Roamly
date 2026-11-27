@@ -22,7 +22,11 @@
         :private-document-types="privateDocumentTypes"
         :groups="groupsList"
         :is-loading="isLoadingFiles"
-        :is-current-user-leader="isCurrentUserLeader"
+        :can-upload="canUploadDocument"
+        :can-manage-file="canManageFile"
+        :can-read-member-documents="canReadMemberDocuments"
+        :can-delete-group="canDeleteGroup"
+        :can-leave-group="canLeaveCurrentGroup"
         @edit="handleEdit"
         @delete="handleDelete"
         @upload="openUploadModal"
@@ -44,7 +48,9 @@
         :private-document-types="privateDocumentTypes"
         :groups="groupsList"
         :is-loading="isLoadingFiles"
-        :is-current-user-leader="isCurrentUserLeader"
+        :can-upload="canUploadDocument"
+        :can-manage-file="canManageFile"
+        :can-read-member-documents="canReadMemberDocuments"
         @edit="handleEdit"
         @delete="handleDelete"
         @upload="openUploadModal"
@@ -55,7 +61,12 @@
     </ClientOnly>
 
     <!-- Group document modals (custom tags) -->
-    <GroupDocumentsModals :available-tags="availableTags" />
+    <GroupDocumentsModals
+      :available-tags="availableTags"
+      :group-uuid="selectedGroupUuid"
+      :can-upload="canUploadDocument"
+      :can-manage-document="canManageDocument"
+    />
 
     <!-- Private document modals (fixed document types for member documents section) -->
     <PrivateDocumentsModals :private-document-types="privateDocumentTypes" />
@@ -67,11 +78,14 @@ import { ref, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useMediaQuery } from '@vueuse/core';
 import { useToast } from '#imports';
+import { useGroupPermission } from '~/composables/useGroupPermission';
 import { useGroupFilesQuery, useGroupMemberDocumentsQuery } from '~/queries/files.query';
 import { useGroupsQuery } from '~/queries/groups.query';
 import { useDocumentsStore } from '~/stores/documents.modals.store';
 import { useGroupsStore } from '~/stores/groups.modals.store';
+import { PERMISSIONS, SYSTEM_ROLES } from '~/utils/constants/permissions.constants';
 import { filterGroupDocuments } from '~/utils/filter.utils';
+import { canLeaveGroup } from '~/utils/groups.utils';
 import type { GroupFile, PrivateDocumentMetadata } from '~/types/files.type';
 import type { GroupOutDto } from '~/types/groups.type';
 
@@ -120,15 +134,31 @@ const currentGroup = computed(() =>
   groupsList.value.find((g) => g.uuid === selectedGroupUuid.value),
 );
 
-const isCurrentUserLeader = computed(() => {
-  if (!currentGroup.value) return false;
-  const role = currentGroup.value.role;
-  return role === 'LEADER' || role === 'leader';
-});
+const { currentUserUuid, systemRole, hasPermission } = useGroupPermission(selectedGroupUuid);
+
+const canReadDocuments = computed(() => hasPermission(PERMISSIONS.DOCUMENTS_READ));
+const canUploadDocument = computed(() => hasPermission(PERMISSIONS.DOCUMENTS_CONTRIBUTE));
+const canReadMemberDocuments = computed(
+  () => canReadDocuments.value || hasPermission(PERMISSIONS.PERSONAL_DOCUMENTS_READ_RESTRICTED),
+);
+const canDeleteGroup = computed(() => systemRole.value === SYSTEM_ROLES.OWNER);
+const canLeaveCurrentGroup = computed(() =>
+  canLeaveGroup(systemRole.value, currentGroup.value?.current_size),
+);
+
+const canManageDocument = (uploaderUuid?: string | null) => {
+  const isUploader = !!uploaderUuid && uploaderUuid === currentUserUuid.value;
+  return hasPermission(
+    isUploader ? PERMISSIONS.DOCUMENTS_CONTRIBUTE : PERMISSIONS.DOCUMENTS_MANAGE,
+  );
+};
+
+const canManageFile = (file: GroupFile | PrivateDocumentMetadata) =>
+  file.ownership_type === 'GROUP' && canManageDocument(file.creator?.uuid);
 
 // Group documents
 const { data: filesData, isLoading: isLoadingFiles } = useGroupFilesQuery(
-  () => selectedGroupUuid.value || '',
+  () => (canReadDocuments.value ? (selectedGroupUuid.value ?? '') : ''),
   () => 15,
   () => undefined,
   () => 'document',
@@ -154,22 +184,25 @@ const filteredDocuments = computed<GroupFile[]>(() => {
   return filterGroupDocuments(allGroupDocuments.value, searchQuery.value, selectedTags.value);
 });
 
-// Member private documents — only fetched when the current user is a leader
+// Member private documents
 const { data: memberDocumentsData, isLoading: isLoadingMemberDocuments } =
   useGroupMemberDocumentsQuery(
     () => selectedGroupUuid.value || '',
-    () => isCurrentUserLeader.value,
+    () => canReadMemberDocuments.value,
   );
 
-const memberDocuments = computed<PrivateDocumentMetadata[]>(() => memberDocumentsData.value ?? []);
+const memberDocuments = computed<PrivateDocumentMetadata[]>(() =>
+  canReadMemberDocuments.value ? (memberDocumentsData.value ?? []) : [],
+);
 
 // Handlers
 const handleEdit = (file: GroupFile) => {
-  if (!selectedGroupUuid.value) return;
+  if (!selectedGroupUuid.value || !canManageFile(file)) return;
   documentsStore.openGroupUpdateModal({
     fileId: file.file_id,
     groupUuid: selectedGroupUuid.value,
     fileName: file.file_name,
+    creatorUuid: file.creator?.uuid ?? null,
     tags: file.tags || [],
     issueDate: file.documents?.issue_date ? file.documents.issue_date.slice(0, 10) : '',
     expiryDate: file.documents?.expiry_date ? file.documents.expiry_date.slice(0, 10) : '',
@@ -177,15 +210,18 @@ const handleEdit = (file: GroupFile) => {
 };
 
 const handleDelete = (file: GroupFile) => {
-  if (!selectedGroupUuid.value) return;
+  if (!selectedGroupUuid.value || !canManageFile(file)) return;
   documentsStore.openDeleteModal({
     fileId: file.file_id,
     groupUuid: selectedGroupUuid.value,
     fileName: file.file_name,
+    creatorUuid: file.creator?.uuid ?? null,
   });
 };
 
 const openUploadModal = () => {
+  if (!canUploadDocument.value) return;
+
   if (selectedGroupUuid.value) {
     documentsStore.openUploadModal(selectedGroupUuid.value);
   } else {
@@ -198,13 +234,13 @@ const openUploadModal = () => {
 };
 
 const handleDeleteGroup = () => {
-  if (currentGroup.value) {
+  if (currentGroup.value && canDeleteGroup.value) {
     groupsStore.openDeleteModal(currentGroup.value);
   }
 };
 
 const handleLeaveGroup = () => {
-  if (currentGroup.value) {
+  if (currentGroup.value && canLeaveCurrentGroup.value) {
     groupsStore.openLeaveModal(currentGroup.value);
   }
 };

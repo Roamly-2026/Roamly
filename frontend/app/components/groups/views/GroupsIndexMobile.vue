@@ -39,6 +39,7 @@
           >
             <div :class="LAYOUT_CONFIG.cardCornerLeft">
               <BaseButton
+                v-if="canLeaveGroup(group)"
                 icon="i-heroicons-arrow-right-on-rectangle"
                 variant="ghostDangerIconButton"
                 :tooltip="UI_TEXT.tooltips.leaveGroup"
@@ -46,10 +47,7 @@
               />
             </div>
 
-            <div
-              v-if="group.role.toLowerCase() === 'leader'"
-              :class="LAYOUT_CONFIG.cardCornerRight"
-            >
+            <div v-if="canDeleteGroup(group)" :class="LAYOUT_CONFIG.cardCornerRight">
               <BaseButton
                 icon="i-heroicons-trash"
                 variant="ghostDangerIconButton"
@@ -62,7 +60,9 @@
               <h3 :class="TYPOGRAPHY_CONFIG.cardTitleCenter">{{ group.name }}</h3>
               <p :class="TYPOGRAPHY_CONFIG.bodySmSoft">
                 {{ UI_TEXT.groups.yourRoleLabel }}
-                <span :class="TYPOGRAPHY_CONFIG.metaHighlightCap">{{ group.role }}</span>
+                <span :class="TYPOGRAPHY_CONFIG.metaHighlightCap">{{
+                  getGroupRoleLabel(group.system_role, group.custom_role)
+                }}</span>
               </p>
               <div :class="LAYOUT_CONFIG.cardFooter">
                 <div>
@@ -112,6 +112,8 @@ const props = defineProps<{
   isLoading: boolean;
   error: ApiError | Error | null | undefined;
   isFetchingNextPage: boolean;
+  canDeleteGroup: (group: GroupOutDto) => boolean;
+  canLeaveGroup: (group: GroupOutDto) => boolean;
 }>();
 
 const emit = defineEmits<{

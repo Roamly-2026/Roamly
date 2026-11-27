@@ -28,9 +28,6 @@
                 <div :class="LAYOUT_CONFIG.listCardInfo">
                   <div :class="LAYOUT_CONFIG.headerTitleRow">
                     <h4 :class="TYPOGRAPHY_CONFIG.listCardName">{{ user.username }}</h4>
-                    <UTooltip v-if="isGroupLeader(user)" :text="UI_TEXT.events.groupLeader">
-                      <UIcon name="i-heroicons-star" :class="TYPOGRAPHY_CONFIG.iconBrandSm" />
-                    </UTooltip>
                   </div>
                   <span :class="TYPOGRAPHY_CONFIG.badgeRole">
                     {{ isEventCreator(user) ? UI_TEXT.events.creator : UI_TEXT.events.participant }}
@@ -39,7 +36,7 @@
                 </div>
               </div>
               <BaseButton
-                v-if="hasPermissionToDelete && user.email !== currentUserEmail"
+                v-if="canManageEvent(eventsStore.previewEvent) && user.uuid !== currentUserUuid"
                 icon="i-heroicons-user-minus"
                 variant="ghostDangerIconButton"
                 :loading="removeParticipantMutation.isLoading.value"
@@ -159,7 +156,11 @@
             variant="actionOkButton"
             :class="TYPOGRAPHY_CONFIG.modalActionBtnOk"
             :loading="addParticipantsMutation.isLoading.value"
-            :disabled="selectedEmailsToAdd.length === 0"
+            :disabled="
+              selectedEmailsToAdd.length === 0 ||
+              !eventsStore.previewEvent?.is_private ||
+              !canManageEvent(eventsStore.previewEvent)
+            "
             @click="submitNewMembers"
           />
         </div>
@@ -170,10 +171,11 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import { useEventPermissions } from '~/composables/useEventPermissions';
 import { useEventsStore } from '~/stores/events.modals.store';
 import { useGroupsStore } from '~/stores/groups.modals.store';
 import { useCurrentUserQuery } from '~/queries/user.query';
-import { useGroupsQuery, useGroupInfosQuery } from '~/queries/groups.query';
+import { useGroupInfosQuery } from '~/queries/groups.query';
 import {
   useAddParticipantsMutation,
   useRemoveParticipantMutation,
@@ -181,73 +183,62 @@ import {
 import type { EventCreatorDto } from '~/types/events.type';
 
 const eventsStore = useEventsStore();
+const groupUuid = computed(() => eventsStore.selectedGroupUuid);
+const { currentUserUuid, canManageEvent } = useEventPermissions(groupUuid);
 const groupsStore = useGroupsStore();
 
 const { data: currentUser } = useCurrentUserQuery();
-const { data: groupsData } = useGroupsQuery();
-const { data: groupInfosData } = useGroupInfosQuery(
-  computed(() => eventsStore.selectedGroupUuid || ''),
-);
+const { data: groupInfosData } = useGroupInfosQuery(computed(() => groupUuid.value || ''));
 const currentUserEmail = computed(() => currentUser.value?.email);
 
-const removeParticipantMutation = useRemoveParticipantMutation(
-  computed(() => eventsStore.selectedGroupUuid),
-  {
-    onSuccess: () => {
-      if (eventsStore.participantToRemove) {
-        eventsStore.currentEventParticipants = eventsStore.currentEventParticipants.filter(
-          (p) => p.uuid !== eventsStore.participantToRemove!.uuid,
-        );
-      }
-      eventsStore.closeRemoveParticipantModal();
-    },
+const removeParticipantMutation = useRemoveParticipantMutation(groupUuid, {
+  onSuccess: () => {
+    if (eventsStore.participantToRemove) {
+      eventsStore.currentEventParticipants = eventsStore.currentEventParticipants.filter(
+        (p) => p.uuid !== eventsStore.participantToRemove!.uuid,
+      );
+    }
+    eventsStore.closeRemoveParticipantModal();
   },
-);
+});
 
-const addParticipantsMutation = useAddParticipantsMutation(
-  computed(() => eventsStore.selectedGroupUuid),
-  {
-    onSuccess: () => {
-      closeAddMembersModal();
-    },
+const addParticipantsMutation = useAddParticipantsMutation(groupUuid, {
+  onSuccess: () => {
+    closeAddMembersModal();
   },
-);
+});
 
 const confirmRemoveParticipant = () => {
-  if (!eventsStore.previewEvent || !eventsStore.participantToRemove) return;
-  removeParticipantMutation.mutate({
-    eventUuid: eventsStore.previewEvent.uuid,
-    targetUuid: eventsStore.participantToRemove.uuid,
-  });
+  const event = eventsStore.previewEvent;
+  const participant = eventsStore.participantToRemove;
+  if (
+    !event ||
+    !participant ||
+    !canManageEvent(event) ||
+    participant.uuid === currentUserUuid.value
+  ) {
+    return;
+  }
+
+  removeParticipantMutation.mutate({ eventUuid: event.uuid, targetUuid: participant.uuid });
 };
 
 const handleOpenUserProfile = (user: EventCreatorDto) => {
   eventsStore.closeParticipantsModal();
   eventsStore.closePreviewModal();
+  const profile = groupInfosData.value?.group_profiles.find(
+    (item) => item.users.uuid === user.uuid,
+  );
   groupsStore.selectedUserProfile = {
     userUuid: user.uuid || '',
     username: user.username,
     email: user.email || UI_TEXT.common.notAvailable,
-    role: getGroupRole(user),
+    system_role: profile?.system_role ?? null,
+    custom_role: profile?.custom_role ?? null,
     joinedAt: UI_TEXT.common.unknown,
-    canViewDocuments: false,
   };
   groupsStore.isUserProfileModalOpen = true;
 };
-
-const selectedGroupDetails = computed(() =>
-  groupsData.value?.items?.find((g) => g.uuid === eventsStore.selectedGroupUuid),
-);
-const isCurrentUserLeader = computed(
-  () => selectedGroupDetails.value?.role?.toLowerCase() === 'leader',
-);
-const hasPermissionToDelete = computed<boolean>(() => {
-  const creatorEmail = eventsStore.previewEvent?.creator?.email;
-  return (
-    isCurrentUserLeader.value ||
-    (!!creatorEmail && !!currentUserEmail.value && creatorEmail === currentUserEmail.value)
-  );
-});
 
 const availableGroupMembers = computed<EventCreatorDto[]>(() => {
   const rawProfiles = groupInfosData.value?.group_profiles || [];
@@ -270,29 +261,6 @@ const availableGroupMembers = computed<EventCreatorDto[]>(() => {
   );
 });
 
-const getGroupRole = (user?: EventCreatorDto | null): string => {
-  if (!user || !groupInfosData.value?.group_profiles) return UI_TEXT.common.member;
-
-  const profile = groupInfosData.value.group_profiles.find(
-    (p: { users?: { email?: string; username?: string }; roles?: { type?: string } }) => {
-      const matchEmail =
-        user.email &&
-        p.users?.email &&
-        user.email.trim().toLowerCase() === p.users.email.trim().toLowerCase();
-      const matchUsername =
-        user.username &&
-        p.users?.username &&
-        user.username.trim().toLowerCase() === p.users.username.trim().toLowerCase();
-      return matchEmail || matchUsername;
-    },
-  );
-
-  const roleType = profile?.roles?.type?.toLowerCase();
-  return roleType === 'leader' ? UI_TEXT.common.leader : UI_TEXT.common.member;
-};
-
-const isGroupLeader = (user: EventCreatorDto): boolean =>
-  getGroupRole(user) === UI_TEXT.common.leader;
 const isEventCreator = (user: EventCreatorDto): boolean => {
   const creator = eventsStore.previewEvent?.creator;
   if (!creator) return false;
@@ -320,9 +288,13 @@ const closeAddMembersModal = () => {
   eventsStore.closeAddMembersModal();
 };
 const submitNewMembers = () => {
-  if (selectedEmailsToAdd.value.length === 0 || !eventsStore.previewEvent) return;
+  const event = eventsStore.previewEvent;
+  if (!event?.is_private || !canManageEvent(event) || selectedEmailsToAdd.value.length === 0) {
+    return;
+  }
+
   addParticipantsMutation.mutate({
-    eventUuid: eventsStore.previewEvent.uuid,
+    eventUuid: event.uuid,
     participant_emails: selectedEmailsToAdd.value,
   });
 };

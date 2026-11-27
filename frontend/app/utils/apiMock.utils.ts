@@ -1,6 +1,7 @@
 // frontend/app/utils/apiMock.utils.ts
 
 import type { GroupOutDto } from '~/types/groups.type';
+import { SYSTEM_ROLES } from '~/utils/constants/permissions.constants';
 
 /* =========================================================
    INTERFACES
@@ -12,9 +13,7 @@ export interface MockUser {
   email: string;
   avatar: string | null;
   phone_number?: string;
-  role?: string;
   joinedAt?: string;
-  canViewDocuments?: boolean;
 }
 
 export interface MockDay {
@@ -47,9 +46,7 @@ export const MOCK_USERS: MockUser[] = [
     email: 'lehel@example.com',
     avatar: null,
     phone_number: '+40 712 345 678',
-    role: 'Leader',
     joinedAt: '2025-10-10',
-    canViewDocuments: true,
   },
   {
     id: 'u2',
@@ -57,9 +54,7 @@ export const MOCK_USERS: MockUser[] = [
     email: 'john@example.com',
     avatar: null,
     phone_number: '+1 555 012 3456',
-    role: 'Member',
     joinedAt: '2026-01-05',
-    canViewDocuments: false,
   },
   {
     id: 'u3',
@@ -67,9 +62,7 @@ export const MOCK_USERS: MockUser[] = [
     email: 'jane@example.com',
     avatar: null,
     phone_number: '+44 7700 900077',
-    role: 'Member',
     joinedAt: '2026-02-15',
-    canViewDocuments: true,
   },
   {
     id: 'u4',
@@ -77,9 +70,7 @@ export const MOCK_USERS: MockUser[] = [
     email: 'mike@example.com',
     avatar: null,
     phone_number: '+1 555 019 8765',
-    role: 'Member',
     joinedAt: '2026-03-20',
-    canViewDocuments: false,
   },
   {
     id: 'u5',
@@ -87,9 +78,7 @@ export const MOCK_USERS: MockUser[] = [
     email: 'sarah@example.com',
     avatar: null,
     phone_number: '+1 555 010 1122',
-    role: 'Member',
     joinedAt: '2026-04-10',
-    canViewDocuments: true,
   },
   {
     id: 'u6',
@@ -97,9 +86,7 @@ export const MOCK_USERS: MockUser[] = [
     email: 'tom@example.com',
     avatar: null,
     phone_number: '+44 7700 900123',
-    role: 'Member',
     joinedAt: '2026-05-05',
-    canViewDocuments: false,
   },
   {
     id: 'u7',
@@ -107,9 +94,7 @@ export const MOCK_USERS: MockUser[] = [
     email: 'emma@example.com',
     avatar: null,
     phone_number: '+44 7700 900456',
-    role: 'Member',
     joinedAt: '2026-06-01',
-    canViewDocuments: true,
   },
   {
     id: 'u8',
@@ -117,9 +102,7 @@ export const MOCK_USERS: MockUser[] = [
     email: 'bruce@example.com',
     avatar: null,
     phone_number: '+1 555 019 9999',
-    role: 'Member',
     joinedAt: '2026-07-15',
-    canViewDocuments: true,
   },
 ];
 
@@ -128,14 +111,16 @@ export const MOCK_GROUPS: GroupOutDto[] = [
   {
     uuid: 'g1',
     name: 'WebGurus Hackathon',
-    role: 'leader',
+    system_role: SYSTEM_ROLES.OWNER,
+    custom_role: null,
     current_size: 4,
     created_at: '2026-09-01',
   },
   {
     uuid: 'g2',
     name: 'Transylvania Road Trip',
-    role: 'member',
+    system_role: SYSTEM_ROLES.MEMBER,
+    custom_role: null,
     current_size: 8,
     created_at: '2026-08-15',
   },
